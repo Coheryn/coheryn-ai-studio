@@ -1,0 +1,14 @@
+Llama 2 is licensed under the LLAMA 2 Community License,
+Copyright (c) Meta Platforms, Inc. All Rights Reserved.
+
+The included LLaVA configuration, processor and chat-template research assets
+are identified by their publisher as using the llama2 license. Their original
+source revisions and file digests are recorded in fixtures/vlm/models.json.
+The agreement and acceptable-use policy accompany this distribution under
+resources/licensing/upstream/llama2-LICENSE.txt and llama2-USE_POLICY-md.txt.
+The original publisher model card is retained in the same directory.
+
+These assets are not relicensed under Coheryn's Apache-2.0 license.
+No LLaVA weights, tokenizer model or vision-projector payload is distributed.
+Native image inference remains unimplemented and these records are not a claim
+of executable model qualification or permission for every downstream use.

@@ -1,0 +1,13 @@
+/target/
+/.cache/
+__pycache__/
+*.pyc
+/fuzz/target/
+/fuzz/artifacts/
+/fuzz/corpus/
+/resources/*
+!/resources/policy/
+!/resources/reference-archive/
+.DS_Store
+!/resources/tool-assessment/
+!/resources/licensing/

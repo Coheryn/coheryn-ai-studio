@@ -1,0 +1,995 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-10-26",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "native_executable_sha256": "b7359ee945ab3ba64d9fe47130a3743a496e98bc32e47131f0900edb5fc059cd",
+  "rust_toolchain": {
+    "previous": "1.90.0",
+    "version": "1.99.1",
+    "source": "https://static.rust-lang.org/dist/channel-rust-stable.toml"
+  },
+  "direct_rust_dependencies": [
+    {
+      "package": "axum",
+      "version": "0.8.9",
+      "previous_requirement": "0.8",
+      "previous_resolved_versions": [
+        "0.8.9"
+      ],
+      "manifests": [
+        "crates/coheryn-api/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/axum"
+    },
+    {
+      "package": "clap",
+      "version": "4.6.7",
+      "previous_requirement": "4.5",
+      "previous_resolved_versions": [
+        "4.6.7"
+      ],
+      "manifests": [
+        "Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/clap"
+    },
+    {
+      "package": "ctrlc",
+      "version": "3.5.2",
+      "previous_requirement": "3.4",
+      "previous_resolved_versions": [
+        "3.5.2"
+      ],
+      "manifests": [
+        "crates/coheryn-cli/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/ctrlc"
+    },
+    {
+      "package": "fs2",
+      "version": "0.4.3",
+      "previous_requirement": "0.4",
+      "previous_resolved_versions": [
+        "0.4.3"
+      ],
+      "manifests": [
+        "crates/coheryn-api/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/fs2"
+    },
+    {
+      "package": "futures-util",
+      "version": "0.3.34",
+      "previous_requirement": "0.3",
+      "previous_resolved_versions": [
+        "0.3.34"
+      ],
+      "manifests": [
+        "crates/coheryn-api/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/futures-util"
+    },
+    {
+      "package": "half",
+      "version": "2.7.1",
+      "previous_requirement": "2.7",
+      "previous_resolved_versions": [
+        "2.7.1"
+      ],
+      "manifests": [
+        "crates/coheryn-engine/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/half"
+    },
+    {
+      "package": "libfuzzer-sys",
+      "version": "0.4.13",
+      "previous_requirement": "0.4",
+      "previous_resolved_versions": [
+        "0.4.13"
+      ],
+      "manifests": [
+        "fuzz/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/libfuzzer-sys"
+    },
+    {
+      "package": "minijinja",
+      "version": "3.0.3",
+      "previous_requirement": "2.12",
+      "previous_resolved_versions": [
+        "2.24.0"
+      ],
+      "manifests": [
+        "crates/coheryn-engine/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/minijinja"
+    },
+    {
+      "package": "rayon",
+      "version": "1.12.0",
+      "previous_requirement": "1.11",
+      "previous_resolved_versions": [
+        "1.12.0"
+      ],
+      "manifests": [
+        "crates/coheryn-engine/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/rayon"
+    },
+    {
+      "package": "reqwest",
+      "version": "0.13.5",
+      "previous_requirement": "0.12",
+      "previous_resolved_versions": [
+        "0.12.28"
+      ],
+      "manifests": [
+        "Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/reqwest"
+    },
+    {
+      "package": "serde",
+      "version": "1.0.229",
+      "previous_requirement": "1.0",
+      "previous_resolved_versions": [
+        "1.0.229"
+      ],
+      "manifests": [
+        "Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/serde"
+    },
+    {
+      "package": "serde_json",
+      "version": "1.0.154",
+      "previous_requirement": "1.0",
+      "previous_resolved_versions": [
+        "1.0.154"
+      ],
+      "manifests": [
+        "Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/serde_json"
+    },
+    {
+      "package": "sha2",
+      "version": "0.11.1",
+      "previous_requirement": "0.10",
+      "previous_resolved_versions": [
+        "0.10.9"
+      ],
+      "manifests": [
+        "Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/sha2"
+    },
+    {
+      "package": "subtle",
+      "version": "2.6.1",
+      "previous_requirement": "2.6",
+      "previous_resolved_versions": [
+        "2.6.1"
+      ],
+      "manifests": [
+        "crates/coheryn-api/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/subtle"
+    },
+    {
+      "package": "sysinfo",
+      "version": "0.39.6",
+      "previous_requirement": "0.37",
+      "previous_resolved_versions": [
+        "0.37.2"
+      ],
+      "manifests": [
+        "crates/coheryn-api/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/sysinfo"
+    },
+    {
+      "package": "tempfile",
+      "version": "3.27.0",
+      "previous_requirement": "3.23",
+      "previous_resolved_versions": [
+        "3.27.0"
+      ],
+      "manifests": [
+        "crates/coheryn-api/Cargo.toml",
+        "crates/coheryn-cli/Cargo.toml",
+        "crates/coheryn-engine/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/tempfile"
+    },
+    {
+      "package": "tokenizers",
+      "version": "0.23.2",
+      "previous_requirement": "0.22.1",
+      "previous_resolved_versions": [
+        "0.22.2"
+      ],
+      "manifests": [
+        "crates/coheryn-engine/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/tokenizers"
+    },
+    {
+      "package": "tokio",
+      "version": "1.54.1",
+      "previous_requirement": "1.48",
+      "previous_resolved_versions": [
+        "1.54.1"
+      ],
+      "manifests": [
+        "Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/tokio"
+    },
+    {
+      "package": "tokio-util",
+      "version": "0.7.20",
+      "previous_requirement": "0.7",
+      "previous_resolved_versions": [
+        "0.7.20"
+      ],
+      "manifests": [
+        "crates/coheryn-api/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/tokio-util"
+    },
+    {
+      "package": "tower",
+      "version": "0.5.3",
+      "previous_requirement": "0.5",
+      "previous_resolved_versions": [
+        "0.5.3"
+      ],
+      "manifests": [
+        "crates/coheryn-api/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/tower"
+    },
+    {
+      "package": "uuid",
+      "version": "1.29.0",
+      "previous_requirement": "1.18",
+      "previous_resolved_versions": [
+        "1.29.0"
+      ],
+      "manifests": [
+        "crates/coheryn-api/Cargo.toml"
+      ],
+      "source": "https://crates.io/api/v1/crates/uuid"
+    }
+  ],
+  "python_packages": [
+    {
+      "package": "cmake",
+      "version": "4.4.4",
+      "source": "https://pypi.org/pypi/cmake/json"
+    },
+    {
+      "package": "Jinja2",
+      "version": "3.1.6",
+      "source": "https://pypi.org/pypi/Jinja2/json"
+    },
+    {
+      "package": "MarkupSafe",
+      "version": "3.0.4",
+      "source": "https://pypi.org/pypi/MarkupSafe/json"
+    }
+  ],
+  "ci_actions": [
+    {
+      "repository": "actions/checkout",
+      "version": "v7.0.1",
+      "published_at": "2026-07-20T15:10:05Z",
+      "target_commitish": "main",
+      "source": "https://api.github.com/repos/actions/checkout/releases/latest"
+    },
+    {
+      "repository": "actions/setup-python",
+      "version": "v7.1.0",
+      "published_at": "2026-10-22T02:56:04Z",
+      "target_commitish": "main",
+      "source": "https://api.github.com/repos/actions/setup-python/releases/latest"
+    }
+  ],
+  "ci_python": {
+    "selector": "3.x",
+    "check_latest": true,
+    "prereleases": false,
+    "scope": "latest stable hosted distribution available to setup-python; local Python was not changed"
+  },
+  "lockfiles": {
+    "Cargo.lock": "44b5332e4a81e1bdd88b56f702456dda8b7a2aea8d3b08bdd240cccd961e040c",
+    "fuzz/Cargo.lock": "db7f13d839cdc6b0677fc417340ba17f6c1a81d0dec1d05a868de564480accec"
+  },
+  "upstream_transitive_constraints": [
+    {
+      "lockfile": "Cargo.lock",
+      "package": "base64",
+      "resolved": "0.13.1",
+      "latest_stable": "0.23.1",
+      "source": "https://crates.io/crates/base64",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "bit-set",
+      "resolved": "0.8.0",
+      "latest_stable": "0.11.1",
+      "source": "https://crates.io/crates/bit-set",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "bit-vec",
+      "resolved": "0.8.0",
+      "latest_stable": "0.10.1",
+      "source": "https://crates.io/crates/bit-vec",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "compact_str",
+      "resolved": "0.9.1",
+      "latest_stable": "0.10.0",
+      "source": "https://crates.io/crates/compact_str",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "daachorse",
+      "resolved": "3.0.3",
+      "latest_stable": "5.1.0",
+      "source": "https://crates.io/crates/daachorse",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "darling",
+      "resolved": "0.20.11",
+      "latest_stable": "0.24.1",
+      "source": "https://crates.io/crates/darling",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "darling_core",
+      "resolved": "0.20.11",
+      "latest_stable": "0.24.1",
+      "source": "https://crates.io/crates/darling_core",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "darling_macro",
+      "resolved": "0.20.11",
+      "latest_stable": "0.24.1",
+      "source": "https://crates.io/crates/darling_macro",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "fancy-regex",
+      "resolved": "0.17.0",
+      "latest_stable": "0.20.0",
+      "source": "https://crates.io/crates/fancy-regex",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "getrandom",
+      "resolved": "0.2.17",
+      "latest_stable": "0.4.3",
+      "source": "https://crates.io/crates/getrandom",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "getrandom",
+      "resolved": "0.3.4",
+      "latest_stable": "0.4.3",
+      "source": "https://crates.io/crates/getrandom",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "itertools",
+      "resolved": "0.14.0",
+      "latest_stable": "0.15.0",
+      "source": "https://crates.io/crates/itertools",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "matchit",
+      "resolved": "0.8.4",
+      "latest_stable": "0.9.2",
+      "source": "https://crates.io/crates/matchit",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "monostate",
+      "resolved": "0.1.18",
+      "latest_stable": "1.0.3",
+      "source": "https://crates.io/crates/monostate",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "monostate-impl",
+      "resolved": "0.1.18",
+      "latest_stable": "1.0.3",
+      "source": "https://crates.io/crates/monostate-impl",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "nom",
+      "resolved": "7.1.3",
+      "latest_stable": "8.0.0",
+      "source": "https://crates.io/crates/nom",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "quinn-udp",
+      "resolved": "0.5.16",
+      "latest_stable": "0.6.3",
+      "source": "https://crates.io/crates/quinn-udp",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "r-efi",
+      "resolved": "5.3.0",
+      "latest_stable": "7.1.0",
+      "source": "https://crates.io/crates/r-efi",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "r-efi",
+      "resolved": "6.0.0",
+      "latest_stable": "7.1.0",
+      "source": "https://crates.io/crates/r-efi",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "rand",
+      "resolved": "0.9.5",
+      "latest_stable": "0.10.3",
+      "source": "https://crates.io/crates/rand",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "rand_chacha",
+      "resolved": "0.9.0",
+      "latest_stable": "0.10.0",
+      "source": "https://crates.io/crates/rand_chacha",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "rand_core",
+      "resolved": "0.9.5",
+      "latest_stable": "0.10.1",
+      "source": "https://crates.io/crates/rand_core",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "syn",
+      "resolved": "2.0.119",
+      "latest_stable": "3.0.9",
+      "source": "https://crates.io/crates/syn",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "tower-http",
+      "resolved": "0.6.11",
+      "latest_stable": "0.7.1",
+      "source": "https://crates.io/crates/tower-http",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "wasi",
+      "resolved": "0.11.1+wasi-snapshot-preview1",
+      "latest_stable": "0.14.7+wasi-0.2.4",
+      "source": "https://crates.io/crates/wasi",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "wasip2",
+      "resolved": "1.0.4+wasi-0.2.12",
+      "latest_stable": "2.0.1+wasi-0.2.12",
+      "source": "https://crates.io/crates/wasip2",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "wasm-streams",
+      "resolved": "0.5.0",
+      "latest_stable": "0.7.0",
+      "source": "https://crates.io/crates/wasm-streams",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows-collections",
+      "resolved": "0.3.2",
+      "latest_stable": "0.100.0",
+      "source": "https://crates.io/crates/windows-collections",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows-core",
+      "resolved": "0.62.2",
+      "latest_stable": "0.100.0",
+      "source": "https://crates.io/crates/windows-core",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows-future",
+      "resolved": "0.3.2",
+      "latest_stable": "0.100.0",
+      "source": "https://crates.io/crates/windows-future",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows-implement",
+      "resolved": "0.60.2",
+      "latest_stable": "0.100.0",
+      "source": "https://crates.io/crates/windows-implement",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows-interface",
+      "resolved": "0.59.3",
+      "latest_stable": "0.100.0",
+      "source": "https://crates.io/crates/windows-interface",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows-link",
+      "resolved": "0.2.1",
+      "latest_stable": "0.100.0",
+      "source": "https://crates.io/crates/windows-link",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows-numerics",
+      "resolved": "0.3.1",
+      "latest_stable": "0.100.0",
+      "source": "https://crates.io/crates/windows-numerics",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows-result",
+      "resolved": "0.4.1",
+      "latest_stable": "0.100.0",
+      "source": "https://crates.io/crates/windows-result",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows-strings",
+      "resolved": "0.5.1",
+      "latest_stable": "0.100.0",
+      "source": "https://crates.io/crates/windows-strings",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows-sys",
+      "resolved": "0.52.0",
+      "latest_stable": "0.61.2",
+      "source": "https://crates.io/crates/windows-sys",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows-targets",
+      "resolved": "0.52.6",
+      "latest_stable": "0.53.5",
+      "source": "https://crates.io/crates/windows-targets",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows-threading",
+      "resolved": "0.2.1",
+      "latest_stable": "0.100.0",
+      "source": "https://crates.io/crates/windows-threading",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows_aarch64_gnullvm",
+      "resolved": "0.52.6",
+      "latest_stable": "0.53.1",
+      "source": "https://crates.io/crates/windows_aarch64_gnullvm",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows_aarch64_msvc",
+      "resolved": "0.52.6",
+      "latest_stable": "0.53.1",
+      "source": "https://crates.io/crates/windows_aarch64_msvc",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows_i686_gnu",
+      "resolved": "0.52.6",
+      "latest_stable": "0.53.1",
+      "source": "https://crates.io/crates/windows_i686_gnu",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows_i686_gnullvm",
+      "resolved": "0.52.6",
+      "latest_stable": "0.53.1",
+      "source": "https://crates.io/crates/windows_i686_gnullvm",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows_i686_msvc",
+      "resolved": "0.52.6",
+      "latest_stable": "0.53.1",
+      "source": "https://crates.io/crates/windows_i686_msvc",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows_x86_64_gnu",
+      "resolved": "0.52.6",
+      "latest_stable": "0.53.1",
+      "source": "https://crates.io/crates/windows_x86_64_gnu",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows_x86_64_gnullvm",
+      "resolved": "0.52.6",
+      "latest_stable": "0.53.1",
+      "source": "https://crates.io/crates/windows_x86_64_gnullvm",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "windows_x86_64_msvc",
+      "resolved": "0.52.6",
+      "latest_stable": "0.53.1",
+      "source": "https://crates.io/crates/windows_x86_64_msvc",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "Cargo.lock",
+      "package": "wit-bindgen",
+      "resolved": "0.57.1",
+      "latest_stable": "0.63.0",
+      "source": "https://crates.io/crates/wit-bindgen",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "base64",
+      "resolved": "0.13.1",
+      "latest_stable": "0.23.1",
+      "source": "https://crates.io/crates/base64",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "bit-set",
+      "resolved": "0.8.0",
+      "latest_stable": "0.11.1",
+      "source": "https://crates.io/crates/bit-set",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "bit-vec",
+      "resolved": "0.8.0",
+      "latest_stable": "0.10.1",
+      "source": "https://crates.io/crates/bit-vec",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "compact_str",
+      "resolved": "0.9.1",
+      "latest_stable": "0.10.0",
+      "source": "https://crates.io/crates/compact_str",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "daachorse",
+      "resolved": "3.0.3",
+      "latest_stable": "5.1.0",
+      "source": "https://crates.io/crates/daachorse",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "darling",
+      "resolved": "0.20.11",
+      "latest_stable": "0.24.1",
+      "source": "https://crates.io/crates/darling",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "darling_core",
+      "resolved": "0.20.11",
+      "latest_stable": "0.24.1",
+      "source": "https://crates.io/crates/darling_core",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "darling_macro",
+      "resolved": "0.20.11",
+      "latest_stable": "0.24.1",
+      "source": "https://crates.io/crates/darling_macro",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "fancy-regex",
+      "resolved": "0.17.0",
+      "latest_stable": "0.20.0",
+      "source": "https://crates.io/crates/fancy-regex",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "getrandom",
+      "resolved": "0.3.4",
+      "latest_stable": "0.4.3",
+      "source": "https://crates.io/crates/getrandom",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "itertools",
+      "resolved": "0.14.0",
+      "latest_stable": "0.15.0",
+      "source": "https://crates.io/crates/itertools",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "monostate",
+      "resolved": "0.1.18",
+      "latest_stable": "1.0.3",
+      "source": "https://crates.io/crates/monostate",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "monostate-impl",
+      "resolved": "0.1.18",
+      "latest_stable": "1.0.3",
+      "source": "https://crates.io/crates/monostate-impl",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "nom",
+      "resolved": "7.1.3",
+      "latest_stable": "8.0.0",
+      "source": "https://crates.io/crates/nom",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "r-efi",
+      "resolved": "5.3.0",
+      "latest_stable": "7.1.0",
+      "source": "https://crates.io/crates/r-efi",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "r-efi",
+      "resolved": "6.0.0",
+      "latest_stable": "7.1.0",
+      "source": "https://crates.io/crates/r-efi",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "rand",
+      "resolved": "0.9.5",
+      "latest_stable": "0.10.3",
+      "source": "https://crates.io/crates/rand",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "rand_chacha",
+      "resolved": "0.9.0",
+      "latest_stable": "0.10.0",
+      "source": "https://crates.io/crates/rand_chacha",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "rand_core",
+      "resolved": "0.9.5",
+      "latest_stable": "0.10.1",
+      "source": "https://crates.io/crates/rand_core",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "syn",
+      "resolved": "2.0.119",
+      "latest_stable": "3.0.9",
+      "source": "https://crates.io/crates/syn",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "wasip2",
+      "resolved": "1.0.4+wasi-0.2.12",
+      "latest_stable": "2.0.1+wasi-0.2.12",
+      "source": "https://crates.io/crates/wasip2",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    },
+    {
+      "lockfile": "fuzz/Cargo.lock",
+      "package": "wit-bindgen",
+      "resolved": "0.57.1",
+      "latest_stable": "0.63.0",
+      "source": "https://crates.io/crates/wit-bindgen",
+      "reason": "upstream semver constraint; cargo update selected the newest resolvable graph"
+    }
+  ],
+  "frozen_reference_inputs": [
+    {
+      "id": "qwen2.5-0.5b-instruct-q8_0",
+      "model_sha256": "ca59ca7f13d0e15a8cfa77bd17e65d24f6844b554a7b6c12e07a5f89ff76844e",
+      "reference_trace_sha256": "3e1c27d56afd925498fff76bc2f403378d71c987dc1ebf0638ed9e0d427e73c2",
+      "qualification_evidence_sha256": "5ef2e941e1a78379084e2ad11546d821d22a454a931d7bf9649474e765018636",
+      "greedy_cases": 8,
+      "layer_logit_checks": 50
+    },
+    {
+      "id": "qwen2.5-0.5b-instruct-q4_0",
+      "model_sha256": "7671c0c304e6ce5a7fc577bcb12aba01e2c155cc2efd29b2213c95b18edaf6ed",
+      "reference_trace_sha256": "1ff326979babbc535b60b7ad8f308948aa793a899559940cea386a7f08344438",
+      "qualification_evidence_sha256": "31cecd3ad7d18e694f39c8945c0cd474fcc84f3bc2340f61767997f3dc4e95f4",
+      "greedy_cases": 8,
+      "layer_logit_checks": 50
+    },
+    {
+      "id": "qwen2.5-0.5b-instruct-q4_k_m",
+      "model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+      "reference_trace_sha256": "861e677d33c09c656f195e3ea80fb69401b5c231606a64ca800a566a4c5a28c1",
+      "qualification_evidence_sha256": "e97d2248d204f3507b2d365bf2b9bc627da0c34732cfa97733900b9776d91a82",
+      "greedy_cases": 8,
+      "layer_logit_checks": 50
+    },
+    {
+      "id": "qwen2.5-0.5b-instruct-q6_k",
+      "model_sha256": "2f82233630c349ccf6b8daccf48f9a7865713d9f08a2eadfa456cebe9b97c7f5",
+      "reference_trace_sha256": "cf1df7d6acd9ebcf60eae4c2541c13667575cc2e2e78f33ec9c12732b3009914",
+      "qualification_evidence_sha256": "9710409ce66f7ff0a988e70134b58871a6d01ff18e81eded6adf52d2664be5e4",
+      "greedy_cases": 8,
+      "layer_logit_checks": 50
+    },
+    {
+      "id": "qwen2.5-1.5b-instruct-fp16",
+      "model_sha256": "fc89e330deb3fd8fa560f1c0f35a1e2b8da96d59e13445559ed190307a6f5649",
+      "reference_trace_sha256": "90d262ca72e5bbbc7374b21eb407e0c0af0d97526e0d4111e5ed7cbd7cd8bd07",
+      "qualification_evidence_sha256": "c875c8b5cf5c940d28b3fe4035bb3dea0d06b158fc1690ee2a40d5ee1f35e73b",
+      "greedy_cases": 2,
+      "layer_logit_checks": 58
+    },
+    {
+      "id": "qwen2.5-1.5b-instruct-q4_k_m",
+      "model_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+      "reference_trace_sha256": "3c32d232b49c474436f3d805fa44ebc5b9fd3a9687e1ea2d41767de8a8ac412e",
+      "qualification_evidence_sha256": "d74f3c330e5b1bfd74976531adaef91bb10270df9e100f30f846fd93fe559a4b",
+      "greedy_cases": 2,
+      "layer_logit_checks": 58
+    }
+  ],
+  "validation": {
+    "ordinary_tests_passed": 71,
+    "ordinary_tests_failed": 0,
+    "ordinary_ignored": 2,
+    "format": "passed",
+    "clippy": "passed",
+    "release_build": "passed",
+    "fuzz_compilation": "passed",
+    "pinned_tokenizer_goldens": "passed",
+    "public_https_probe": "passed",
+    "cmake_4_configuration": "passed",
+    "model_qualification": [
+      {
+        "id": "qwen2.5-0.5b-instruct-q8_0",
+        "sha256": "ca59ca7f13d0e15a8cfa77bd17e65d24f6844b554a7b6c12e07a5f89ff76844e",
+        "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q8_0.json",
+        "greedy_cases": 8,
+        "layer_logit_checks": 50
+      },
+      {
+        "id": "qwen2.5-0.5b-instruct-q4_0",
+        "sha256": "7671c0c304e6ce5a7fc577bcb12aba01e2c155cc2efd29b2213c95b18edaf6ed",
+        "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q4_0.json",
+        "greedy_cases": 8,
+        "layer_logit_checks": 50
+      },
+      {
+        "id": "qwen2.5-0.5b-instruct-q4_k_m",
+        "sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+        "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q4_k_m.json",
+        "greedy_cases": 8,
+        "layer_logit_checks": 50
+      },
+      {
+        "id": "qwen2.5-0.5b-instruct-q6_k",
+        "sha256": "2f82233630c349ccf6b8daccf48f9a7865713d9f08a2eadfa456cebe9b97c7f5",
+        "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q6_k.json",
+        "greedy_cases": 8,
+        "layer_logit_checks": 50
+      },
+      {
+        "id": "qwen2.5-1.5b-instruct-fp16",
+        "sha256": "fc89e330deb3fd8fa560f1c0f35a1e2b8da96d59e13445559ed190307a6f5649",
+        "evidence": "fixtures/qualification/g4-qwen2.5-1.5b-instruct-fp16.json",
+        "greedy_cases": 2,
+        "layer_logit_checks": 58
+      },
+      {
+        "id": "qwen2.5-1.5b-instruct-q4_k_m",
+        "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+        "evidence": "fixtures/qualification/g4-qwen2.5-1.5b-instruct-q4_k_m.json",
+        "greedy_cases": 2,
+        "layer_logit_checks": 58
+      }
+    ],
+    "service": "fixtures/qualification/g4-service.json",
+    "planner": "fixtures/qualification/g4-planner.json",
+    "float_regressions": "fixtures/qualification/dependency-upgrade-float.json",
+    "embedding_fixture_integrity": "passed",
+    "test_log_sha256": "43013e9895d3f052ae91b22ecb267adea5ea7b134944d74909ff8d74561f2ebc",
+    "clippy_log_sha256": "03641fb2826d3bb255e5c912463646a6d885696c4ad55325066f05cf5f5c4210",
+    "build_log_sha256": "c32caaf97dea861c20b43a6cd433fc7e1a02d37526e3341219e9ec320216ebe0"
+  },
+  "local_only": true,
+  "limitations": [
+    "Older transitive major versions remain where required by upstream dependencies; every directly managed package is at the verified latest stable version",
+    "Historical model/oracle inputs and numerical tolerances are preserved",
+    "No Linux/Windows execution or native vision/embedding/Metal qualification is claimed"
+  ],
+  "production_dependency_audit": {
+    "external_inference_dependencies_found": [],
+    "cargo_lock_sha256": "44b5332e4a81e1bdd88b56f702456dda8b7a2aea8d3b08bdd240cccd961e040c"
+  }
+}

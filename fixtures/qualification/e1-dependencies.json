@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "checked_utc": "2026-10-26T16:24:29.145233+00:00",
+  "package": "unicode-normalization",
+  "latest_stable": "0.1.26",
+  "yanked": false,
+  "published_utc": "2026-10-16T23:28:29Z",
+  "source": "https://crates.io/api/v1/crates/unicode-normalization",
+  "verification": "Cargo freshly refreshed sparse registry index and resolution; manifest pins the latest non-yanked stable release.",
+  "production_role": "General-purpose Unicode canonical decomposition only; no external inference runtime.",
+  "rust_toolchain": "1.99.1"
+}

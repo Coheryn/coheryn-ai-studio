@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "model_policy": {
+    "dimension": 768,
+    "tokenization": {
+      "add_special": true,
+      "parse_special": false,
+      "padding": "packed; none inserted",
+      "token_types": 0
+    },
+    "pooling": "mean over every real input token, including qualified special tokens",
+    "normalization": "L2 after pooling; full 768-dimensional output",
+    "reduced_dimensions": "not qualified; publisher Matryoshka layer-normalization/slicing is a separate future mode",
+    "instruction_policy": "caller-provided literal search_query:/search_document: prefixes; no implicit prefix added by oracle",
+    "initial_reference_context": 512,
+    "truncation": false,
+    "attention": "non-causal block-diagonal by sequence",
+    "long_context": "GGUF/source limits and YaRN/scaling policies must be qualified separately; no 8192-token execution claim"
+  },
+  "tolerances": {
+    "absolute": 0.003,
+    "relative": 0.001,
+    "normalized_l2": 0.0005,
+    "batch_absolute": 0.0001,
+    "batch_relative": 0.0001,
+    "unit_norm_absolute": 1e-05
+  },
+  "note": "Freeze before native embedding implementation. Executor comparisons use identical quantized weights; quantization quality is evaluated separately."
+}

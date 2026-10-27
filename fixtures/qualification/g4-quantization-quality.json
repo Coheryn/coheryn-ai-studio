@@ -1,0 +1,289 @@
+{
+  "schema_version": 1,
+  "baseline_model_sha256": "8e0ae26000627ed62de0e78e41860af70094558b9d2913385c842a6aa06cf3fc",
+  "reference_revision": "2280f0fd163b03d4331d49e08460f66502e35854",
+  "prompt": "Hello",
+  "prompt_token_ids": [
+    9707
+  ],
+  "baseline_raw_trace_sha256": "2f3497984991302da2e68347aa758a297b47bb944f15a9eb033d6293b9e4541d",
+  "models": [
+    {
+      "id": "qwen2.5-0.5b-instruct-q8_0",
+      "sha256": "ca59ca7f13d0e15a8cfa77bd17e65d24f6844b554a7b6c12e07a5f89ff76844e",
+      "raw_trace_sha256": "3e1c27d56afd925498fff76bc2f403378d71c987dc1ebf0638ed9e0d427e73c2",
+      "logits": {
+        "max_absolute_difference": 1.7736439700000002,
+        "normalized_l2_difference": 0.09623148760576314,
+        "fp16_argmax": 271,
+        "quantized_argmax": 271
+      },
+      "greedy_observations": [
+        {
+          "case": "english",
+          "exact_continuation": false,
+          "common_prefix_tokens": 3,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "bengali",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "unicode",
+          "exact_continuation": true,
+          "common_prefix_tokens": 4,
+          "fp16_generated_tokens": 4,
+          "quantized_generated_tokens": 4
+        },
+        {
+          "case": "whitespace",
+          "exact_continuation": true,
+          "common_prefix_tokens": 4,
+          "fp16_generated_tokens": 4,
+          "quantized_generated_tokens": 4
+        },
+        {
+          "case": "special",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "default-system",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "explicit-system",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "multi-turn",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        }
+      ]
+    },
+    {
+      "id": "qwen2.5-0.5b-instruct-q4_0",
+      "sha256": "7671c0c304e6ce5a7fc577bcb12aba01e2c155cc2efd29b2213c95b18edaf6ed",
+      "raw_trace_sha256": "1ff326979babbc535b60b7ad8f308948aa793a899559940cea386a7f08344438",
+      "logits": {
+        "max_absolute_difference": 9.928250906,
+        "normalized_l2_difference": 0.5561519763710936,
+        "fp16_argmax": 271,
+        "quantized_argmax": 79608
+      },
+      "greedy_observations": [
+        {
+          "case": "english",
+          "exact_continuation": false,
+          "common_prefix_tokens": 0,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "bengali",
+          "exact_continuation": false,
+          "common_prefix_tokens": 2,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "unicode",
+          "exact_continuation": false,
+          "common_prefix_tokens": 2,
+          "fp16_generated_tokens": 4,
+          "quantized_generated_tokens": 4
+        },
+        {
+          "case": "whitespace",
+          "exact_continuation": false,
+          "common_prefix_tokens": 0,
+          "fp16_generated_tokens": 4,
+          "quantized_generated_tokens": 4
+        },
+        {
+          "case": "special",
+          "exact_continuation": false,
+          "common_prefix_tokens": 0,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "default-system",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "explicit-system",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "multi-turn",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        }
+      ]
+    },
+    {
+      "id": "qwen2.5-0.5b-instruct-q4_k_m",
+      "sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+      "raw_trace_sha256": "861e677d33c09c656f195e3ea80fb69401b5c231606a64ca800a566a4c5a28c1",
+      "logits": {
+        "max_absolute_difference": 4.01389933,
+        "normalized_l2_difference": 0.23950289845170278,
+        "fp16_argmax": 271,
+        "quantized_argmax": 271
+      },
+      "greedy_observations": [
+        {
+          "case": "english",
+          "exact_continuation": false,
+          "common_prefix_tokens": 7,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "bengali",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "unicode",
+          "exact_continuation": false,
+          "common_prefix_tokens": 2,
+          "fp16_generated_tokens": 4,
+          "quantized_generated_tokens": 4
+        },
+        {
+          "case": "whitespace",
+          "exact_continuation": false,
+          "common_prefix_tokens": 0,
+          "fp16_generated_tokens": 4,
+          "quantized_generated_tokens": 4
+        },
+        {
+          "case": "special",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "default-system",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "explicit-system",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "multi-turn",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        }
+      ]
+    },
+    {
+      "id": "qwen2.5-0.5b-instruct-q6_k",
+      "sha256": "2f82233630c349ccf6b8daccf48f9a7865713d9f08a2eadfa456cebe9b97c7f5",
+      "raw_trace_sha256": "cf1df7d6acd9ebcf60eae4c2541c13667575cc2e2e78f33ec9c12732b3009914",
+      "logits": {
+        "max_absolute_difference": 2.6174335499999994,
+        "normalized_l2_difference": 0.1359867702752519,
+        "fp16_argmax": 271,
+        "quantized_argmax": 271
+      },
+      "greedy_observations": [
+        {
+          "case": "english",
+          "exact_continuation": false,
+          "common_prefix_tokens": 2,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "bengali",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "unicode",
+          "exact_continuation": true,
+          "common_prefix_tokens": 4,
+          "fp16_generated_tokens": 4,
+          "quantized_generated_tokens": 4
+        },
+        {
+          "case": "whitespace",
+          "exact_continuation": false,
+          "common_prefix_tokens": 1,
+          "fp16_generated_tokens": 4,
+          "quantized_generated_tokens": 4
+        },
+        {
+          "case": "special",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "default-system",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "explicit-system",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        },
+        {
+          "case": "multi-turn",
+          "exact_continuation": true,
+          "common_prefix_tokens": 8,
+          "fp16_generated_tokens": 8,
+          "quantized_generated_tokens": 8
+        }
+      ]
+    }
+  ],
+  "note": "Independent reference against reference: weight quantization differences, not native executor errors. Short greedy corpus and one logit position do not establish general model quality."
+}

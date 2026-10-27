@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+"""Build the separately linked, pinned CPU-only reference oracle (macOS/Linux)."""
+import hashlib
+import json
+from pathlib import Path
+import shutil
+import ssl
+import subprocess
+import sys
+import tarfile
+import urllib.request
+
+ROOT = Path(__file__).resolve().parents[1]
+
+def main():
+    pin = json.loads((ROOT/'fixtures/models.json').read_text())['oracle']
+    source = ROOT/'.cache/reference'
+    archive = ROOT/'.cache/reference.tar.gz'
+    source.mkdir(parents=True, exist_ok=True)
+    if not (source/'include/llama.h').exists():
+        context = ssl.create_default_context(cafile='/etc/ssl/cert.pem') if Path('/etc/ssl/cert.pem').exists() else ssl.create_default_context()
+        url = f"https://codeload.github.com/ggml-org/llama.cpp/tar.gz/{pin['revision']}"
+        with urllib.request.urlopen(url, context=context, timeout=120) as response, archive.open('wb') as output:
+            shutil.copyfileobj(response, output, 1 << 20)
+        if hashlib.sha256(archive.read_bytes()).hexdigest() != pin['source_tar_sha256']:
+            raise SystemExit('Reference source archive checksum mismatch')
+        with tarfile.open(archive) as tar:
+            for member in tar.getmembers():
+                member.name = '/'.join(member.name.split('/')[1:])
+                if member.name:
+                    tar.extract(member, source, filter='data')
+        archive.unlink()
+        (source/'source-revision').write_text(pin['revision'])
+    marker = source/'source-revision'
+    if not marker.exists() or marker.read_text().strip() != pin['revision']:
+        raise SystemExit('Unverified source cache: remove .cache/reference and retry setup')
+    local_cmake = ROOT/'.cache/devtools/cmake/data/bin/cmake'
+    cmake = str(local_cmake) if local_cmake.exists() else shutil.which('cmake')
+    if cmake is None:
+        raise SystemExit('Install tools/requirements-oracle.txt into .cache/devtools first')
+    build = source/'build'
+    flags = ['-DGGML_NATIVE=OFF']
+    if sys.platform == 'darwin' and __import__('platform').machine() == 'arm64':
+        # Native ARM FP16 vector dot products accumulate in FP16; G1 requires F32.
+        flags.append('-DGGML_CPU_ARM_ARCH=armv8-a')
+        flags.extend(['-DCMAKE_C_FLAGS=-U__ARM_NEON -U__ARM_NEON__',
+                      '-DCMAKE_CXX_FLAGS=-U__ARM_NEON -U__ARM_NEON__'])
+    subprocess.run([cmake, '-S', str(source), '-B', str(build), '-DCMAKE_BUILD_TYPE=Release', *flags,
+                    '-DGGML_METAL=OFF', '-DGGML_BLAS=OFF', '-DGGML_ACCELERATE=OFF', '-DGGML_OPENMP=OFF', '-DGGML_LLAMAFILE=OFF',
+                    '-DLLAMA_CURL=OFF', '-DLLAMA_BUILD_TESTS=OFF', '-DLLAMA_BUILD_EXAMPLES=OFF',
+                    '-DLLAMA_BUILD_TOOLS=OFF', '-DBUILD_SHARED_LIBS=ON'], check=True)
+    subprocess.run([cmake, '--build', str(build), '--target', 'llama', '--parallel', '4'], check=True)
+    compiler = shutil.which('c++')
+    if compiler is None:
+        raise SystemExit('A C++17 compiler is required for the development oracle')
+    subprocess.run([compiler, '-std=c++17', '-O2', str(ROOT/'tools/reference_oracle.cpp'),
+                    f'-I{source}/include', f'-I{source}/ggml/include', f'-L{build}/bin',
+                    f'-Wl,-rpath,{build}/bin', '-lllama', '-lggml', '-lggml-base',
+                    '-o', str(ROOT/'.cache/reference-oracle')], check=True)
+    build_info = {
+        'schema_version':1, 'revision':pin['revision'], 'settings':pin['settings'],
+        'source_tar_sha256':pin['source_tar_sha256'], 'extra_cmake_flags':flags,
+        'oracle_source_sha256':hashlib.sha256((ROOT/'tools/reference_oracle.cpp').read_bytes()).hexdigest(),
+        'oracle_executable_sha256':hashlib.sha256((ROOT/'.cache/reference-oracle').read_bytes()).hexdigest(),
+    }
+    (ROOT/'.cache/reference-oracle.build.json').write_text(json.dumps(build_info,indent=2)+'\n')
+    print('Built development oracle; production Cargo workspace remains independent.')
+
+if __name__ == '__main__':
+    main()

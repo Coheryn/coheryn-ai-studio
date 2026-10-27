@@ -1,0 +1,87 @@
+// Development-only executable. This file is never built by Cargo or shipped.
+#include "llama.h"
+#include "ggml-backend.h"
+#include <algorithm>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+
+static void quoted(const std::string & s) {
+    std::cout << '"';
+    for (unsigned char c : s) {
+        if (c == '"' || c == '\\') std::cout << '\\' << c;
+        else if (c < 32) { std::cout << "\\u" << std::hex << std::setw(4) << std::setfill('0') << int(c) << std::dec; }
+        else std::cout << c;
+    }
+    std::cout << '"';
+}
+static void numbers(const float * values, size_t n) {
+    std::cout << '[';
+    for (size_t i=0;i<n;i++) {if(i)std::cout<<',';std::cout<<std::setprecision(9)<<values[i];}
+    std::cout << ']';
+}
+struct Trace {int position=0;bool enabled=false;};
+static bool callback(ggml_tensor * tensor,bool ask,void * user) {
+    auto * trace=static_cast<Trace *>(user);
+    std::string name=tensor->name;
+    bool selected=trace->enabled && name.rfind("l_out-",0)==0;
+    if(ask)return selected;
+    if(!selected)return true;
+    if(tensor->type!=GGML_TYPE_F32)return false;
+    std::vector<float> values(ggml_nelements(tensor));
+    ggml_backend_tensor_get(tensor,values.data(),0,ggml_nbytes(tensor));
+    std::cout<<"{\"position\":"<<trace->position<<",\"name\":\"blk."<<name.substr(6)<<".output\",\"values\":";
+    numbers(values.data(),values.size());std::cout<<"}\n";
+    return true;
+}
+int main(int argc,char ** argv) {
+    if(argc<4){std::cerr<<"usage: oracle MODEL tokenize|trace|generate PROMPT_FILE [COUNT]\n";return 2;}
+    const std::string mode=argv[2];
+    std::ifstream file(argv[3],std::ios::binary);
+    if(!file){std::cerr<<"prompt file missing\n";return 2;}
+    std::string prompt((std::istreambuf_iterator<char>(file)),{});
+    llama_backend_init();
+    auto mp=llama_model_default_params();mp.n_gpu_layers=0;mp.vocab_only=mode=="tokenize";
+    llama_model * model=llama_model_load_from_file(argv[1],mp);if(!model)return 3;
+    const llama_vocab * vocab=llama_model_get_vocab(model);
+    std::vector<llama_token> tokens(prompt.size()+256);
+    int count=llama_tokenize(vocab,prompt.data(),int(prompt.size()),tokens.data(),int(tokens.size()),false,true);
+    if(count<=0){std::cerr<<"tokenization failed\n";return 4;}tokens.resize(count);
+    if(mode=="tokenize"){
+        std::cout<<"{\"token_ids\":[";
+        for(size_t i=0;i<tokens.size();i++){if(i)std::cout<<',';std::cout<<tokens[i];}
+        std::cout<<"],\"template\":";quoted(llama_model_chat_template(model,nullptr));std::cout<<"}\n";
+        llama_model_free(model);llama_backend_free();return 0;
+    }
+    Trace trace;trace.enabled=mode=="trace";
+    auto cp=llama_context_default_params();
+    cp.n_ctx=512;cp.n_batch=1;cp.n_ubatch=1;cp.n_threads=1;cp.n_threads_batch=1;
+    cp.type_k=GGML_TYPE_F32;cp.type_v=GGML_TYPE_F32;cp.offload_kqv=false;cp.op_offload=false;
+    cp.flash_attn_type=LLAMA_FLASH_ATTN_TYPE_DISABLED;cp.cb_eval=callback;cp.cb_eval_user_data=&trace;
+    llama_context * ctx=llama_init_from_model(model,cp);if(!ctx)return 5;
+    const int vocabulary=llama_vocab_n_tokens(vocab);
+    for(size_t i=0;i<tokens.size();i++){
+        trace.position=int(i);auto batch=llama_batch_get_one(&tokens[i],1);
+        if(llama_decode(ctx,batch)!=0)return 6;
+        if(mode=="trace"){
+            std::cout<<"{\"position\":"<<i<<",\"name\":\"logits\",\"values\":";
+            numbers(llama_get_logits_ith(ctx,-1),vocabulary);std::cout<<"}\n";
+        }
+    }
+    if(mode=="generate"){
+        int steps=argc>4?std::stoi(argv[4]):8;
+        std::cout<<"{\"token_ids\":[";
+        for(int i=0;i<steps;i++){
+            float * logits=llama_get_logits_ith(ctx,-1);
+            llama_token next=int(std::max_element(logits,logits+vocabulary)-logits);
+            if(i)std::cout<<',';std::cout<<next;
+            if(llama_vocab_is_eog(vocab,next))break;
+            if(i+1<steps){auto batch=llama_batch_get_one(&next,1);if(llama_decode(ctx,batch)!=0)return 6;}
+        }
+        std::cout<<"]}\n";
+    }
+    llama_free(ctx);llama_model_free(model);llama_backend_free();return 0;
+}

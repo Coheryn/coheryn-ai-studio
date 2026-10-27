@@ -1,0 +1,78 @@
+{
+  "architecture": "aarch64",
+  "backend": "cpu-reference",
+  "cache_condition": "uncontrolled",
+  "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+  "context": 512,
+  "engine_version": "0.1.0-dev",
+  "generation": {
+    "completion_tokens": 4,
+    "decode_ms": 2305.656332,
+    "finish_reason": "length",
+    "first_token_ms": 788.739916,
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 271226368,
+      "reserved": 251552256
+    },
+    "output_delivery_ms": 0.000126,
+    "prefill_ms": 783.837083,
+    "prompt_tokens": 1,
+    "text": "\n\nI am trying",
+    "token_ids": [
+      271,
+      40,
+      1079,
+      4460
+    ],
+    "tokenization_ms": 1.065791
+  },
+  "header_sha256": "1bdb17cd46489fd1bde410073ce0e405974b88831fcc5d24e2dba8c3a9a0a306",
+  "kv_dtype": "F32",
+  "limitations": [
+    "allocation reservations are not allocator measurements",
+    "OS counters unavailable in portable harness",
+    "model hashing warms file cache"
+  ],
+  "load_ms": 190.585084,
+  "measurements": {
+    "gpu_bytes": null,
+    "io_bytes": null,
+    "mapped_bytes": 0,
+    "page_faults": null,
+    "private_bytes": null,
+    "rss": null,
+    "swap": null,
+    "peak_rss_bytes": 96862208,
+    "minor_page_faults": 7470,
+    "major_page_faults": 0,
+    "input_blocks": 0,
+    "output_blocks": 0,
+    "user_cpu_seconds": 6.691483,
+    "system_cpu_seconds": 0.465113
+  },
+  "model_file": ".cache/models/qwen2.5-0.5b-instruct-fp16.gguf",
+  "model_file_bytes": 1266425696,
+  "model_sha256": "8e0ae26000627ed62de0e78e41860af70094558b9d2913385c842a6aa06cf3fc",
+  "os": "macos",
+  "profile": "reference",
+  "schema_version": 1,
+  "threads": 1,
+  "tokenizer_fingerprints": {
+    "tokenizer.chat_template": "71672240b1a3b068067b6a332bc38d3fc05aaade9d41b4b27d7510ff4335504b",
+    "tokenizer.ggml.merges": "24fa2ae2a398e50784a1fff678482094af4f63e6783d35686726abacda8dc371",
+    "tokenizer.ggml.token_type": "17ccfa7767a8721474dc0fd21ca1308fdfd04e0f64036efbfa97f3e16e5f18f1",
+    "tokenizer.ggml.tokens": "e2fadeac783c911f535d21f858f43127672a1d261af510d3f895e34bd2f6fb10"
+  },
+  "host": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "cpu": "arm",
+    "machine": "arm64",
+    "hw.memsize": "8589934592",
+    "hw.ncpu": "8",
+    "hw.model": "MacBookAir10,1",
+    "machdep.cpu.brand_string": "Apple M1"
+  },
+  "wall_ms": 7704.484624999168,
+  "measurement_method": "getrusage of a single benchmark child; block counters are not byte counts"
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "gate": "E1 initial macOS ARM64 CPU implementation",
+  "verified_utc": "2026-10-26T16:32:11.356462+00:00",
+  "ordinary_workspace_tests_passed": 84,
+  "ignored_opt_ins": 2,
+  "strict_clippy": "passed",
+  "format": "passed",
+  "release_workspace_build": "passed",
+  "fuzz_locked_compilation": "passed; not a sustained fuzz campaign",
+  "native_probe_sha256": "d7421fd84f01798359a89e292e39aee5b64eb0909058c287b4b39edaf0bcdd5d",
+  "cli_sha256": "3c2df718a8aab97e25b3964b9de97a38fcb9ebca27717ab734ec2012a070fc5c",
+  "text_regression": {
+    "file": "qwen2.5-0.5b-instruct-fp16.gguf",
+    "case": "english",
+    "greedy_tokens_exact": 8,
+    "layer_logit_comparisons_passed": 25
+  },
+  "evidence": [
+    "fixtures/qualification/e1-embeddings.json",
+    "fixtures/qualification/e1-multilingual.json",
+    "fixtures/qualification/e1-boundaries.json"
+  ],
+  "limits": "Experimental exact-file macOS ARM64 CPU library only; E2 CLI/API, GPU, other platforms, comparative performance and full multilingual semantic quality are not qualified."
+}

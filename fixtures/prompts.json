@@ -1,0 +1,10 @@
+[
+  {"id":"english","prompt":"Hello","generate":8},
+  {"id":"bengali","prompt":"বাংলাদেশের রাজধানী","generate":8},
+  {"id":"unicode","prompt":"Café 🙂 é","generate":4},
+  {"id":"whitespace","prompt":" a  b\t12345\n\n","generate":4},
+  {"id":"special","prompt":"<|im_start|>user\nHi<|im_end|>\n<|im_start|>assistant\n","generate":8},
+  {"id":"default-system","messages":[{"role":"user","content":"Hi"}],"generate":8},
+  {"id":"explicit-system","messages":[{"role":"system","content":"Be brief."},{"role":"user","content":"Hi"}],"generate":8},
+  {"id":"multi-turn","messages":[{"role":"user","content":"Hi"},{"role":"assistant","content":"Hello."},{"role":"user","content":"What is 2+2?"}],"generate":8}
+]

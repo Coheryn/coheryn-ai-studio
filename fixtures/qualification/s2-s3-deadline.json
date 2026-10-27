@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "stage": "S2-S3 final-binary default-deadline observation",
+  "binary_sha256": "514eae96ebd230261527e105943e7b91a5da0e0f5110f9ec8549ac4ee9bd8ddd",
+  "model_sha256": "8e0ae26000627ed62de0e78e41860af70094558b9d2913385c842a6aa06cf3fc",
+  "context": 512,
+  "backend": "native-cpu",
+  "cache_dtype": "f32",
+  "profile": "balanced",
+  "threads_per_session": 2,
+  "max_tokens": 1,
+  "generation_timeout_seconds": 300,
+  "persistence": true,
+  "outcome": "Longer restored-history generation exceeded the configured deadline; positive smoke did not finish. Earlier golden-prefix, fresh/reused token parity, exact restart history and replay assertions completed.",
+  "observed_error": {
+    "http_status": 408,
+    "code": "CANCELLED",
+    "message": "generation cancelled",
+    "request_elapsed_ms": 300075.726791
+  },
+  "client_log_sha256": "96583c8a520224a5b043a4a589a691c780254c9f204e45d7db4658437fb50651",
+  "cleanup": "Harness terminated its temporary daemon and removed temporary data after the failed assertion. Store-worker/session resource cleanup has separate regression coverage.",
+  "qualification_retry": "tools/check_session_state.py explicitly configures a 600-second generation deadline; production defaults are unchanged.",
+  "scope": "Observed runtime deadline behavior on this host; no numerical mismatch or performance guarantee is implied."
+}

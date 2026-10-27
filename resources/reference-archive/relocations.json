@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "note": "Original bytes retained; archived source is inert and excluded from native execution/build/test chains. External caches are not distribution inputs.",
+  "records": [
+    {
+      "original_path": "tools/setup_reference.py",
+      "archive_path": "resources/reference-archive/tools/setup_reference.py.txt",
+      "bytes": 3978,
+      "sha256": "98074cccf9de438ee9b07122063a0a80851adbdb145e4cb3b5d273fa5b0ba85e",
+      "disposition": "inert historical source"
+    },
+    {
+      "original_path": "tools/setup_ollama_reference.py",
+      "archive_path": "resources/reference-archive/tools/setup_ollama_reference.py.txt",
+      "bytes": 2638,
+      "sha256": "07bafebcfe1b224e8c3d99dfe9a51fca5c804b32fa22551091f29ea6f32cfdb0",
+      "disposition": "inert historical source"
+    },
+    {
+      "original_path": "tools/setup_quant_reference.py",
+      "archive_path": "resources/reference-archive/tools/setup_quant_reference.py.txt",
+      "bytes": 2382,
+      "sha256": "4eb24015e859d48cd59c7382f530525b199ff4944a068348609b687e957f40bf",
+      "disposition": "inert historical source"
+    },
+    {
+      "original_path": "tools/check_oracle.py",
+      "archive_path": "resources/reference-archive/tools/check_oracle.py.txt",
+      "bytes": 7462,
+      "sha256": "4420e5c6fcdcd043ccb9b2d6579dff9e9959ec6487b1f6b0e6f3d627384a2aeb",
+      "disposition": "inert historical source"
+    },
+    {
+      "original_path": "tools/check_quantized.py",
+      "archive_path": "resources/reference-archive/tools/check_quantized.py.txt",
+      "bytes": 12514,
+      "sha256": "271640e7a5723ad51c13f67e60beea612fe12d292a5c68dda07b9534cbc68175",
+      "disposition": "inert historical source"
+    },
+    {
+      "original_path": "tools/check_derived_f32.py",
+      "archive_path": "resources/reference-archive/tools/check_derived_f32.py.txt",
+      "bytes": 2363,
+      "sha256": "cf3a73d75d1fc59f1a7efa89bf3e2ff18229e98333b8abf5aac5abe1e7bf8d78",
+      "disposition": "inert historical source"
+    },
+    {
+      "original_path": "tools/prepare_embedding.py",
+      "archive_path": "resources/reference-archive/tools/prepare_embedding.py.txt",
+      "bytes": 9252,
+      "sha256": "3cc7a2d57cdb638aac2b20fa6a987b44871b290c750d07aeab87b6f77372547c",
+      "disposition": "inert historical source"
+    },
+    {
+      "original_path": "tools/reference_oracle.cpp",
+      "archive_path": "resources/reference-archive/tools/reference_oracle.cpp.txt",
+      "bytes": 4143,
+      "sha256": "2202a7d4e14b346dbf8d382afa3df2dcfe1ee7b2c7c8cb71c39ec8d233a15526",
+      "disposition": "inert historical source"
+    },
+    {
+      "original_path": "tools/embedding_oracle.cpp",
+      "archive_path": "resources/reference-archive/tools/embedding_oracle.cpp.txt",
+      "bytes": 4469,
+      "sha256": "05a6c8d8e655c244d360fbf00ccf2dc6dbc084d313f86b0c8056f2ea59b3eea7",
+      "disposition": "inert historical source"
+    },
+    {
+      "original_path": "tools/quant_oracle.cpp",
+      "archive_path": "resources/reference-archive/tools/quant_oracle.cpp.txt",
+      "bytes": 2944,
+      "sha256": "43f50e520271944f1224b5cd8920cb91e00f4fb04e5ef66a74e3d11025942f49",
+      "disposition": "inert historical source"
+    },
+    {
+      "original_path": "tools/rope_oracle.cpp",
+      "archive_path": "resources/reference-archive/tools/rope_oracle.cpp.txt",
+      "bytes": 1566,
+      "sha256": "a58630599b4fab9c0bee27968806f1a542f2e8f1a8a2f2778ec86e3374472c86",
+      "disposition": "inert historical source"
+    },
+    {
+      "original_path": "tools/requirements-oracle.txt",
+      "archive_path": "resources/reference-archive/tools/requirements-oracle.txt.txt",
+      "bytes": 111,
+      "sha256": "c205a0219d4e647cc2dc242835a37f26adf5dc57ca756d545a4d7f82c3f453d2",
+      "disposition": "inert historical source"
+    },
+    {
+      "original_path": "fixtures/models.json",
+      "archive_path": "resources/reference-archive/fixtures/models.json",
+      "bytes": 1724,
+      "sha256": "6e190075bcbf731a158fa2607a5070bfb99e05d3b855da16d302aea30987bd6f",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "fixtures/embedding/models.json",
+      "archive_path": "resources/reference-archive/fixtures/embedding/models.json",
+      "bytes": 4294,
+      "sha256": "551ec92f4a80031878db45aa9b46d79f09de63b75ebf49d08ecd522193b88c11",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "fixtures/vlm/models.json",
+      "archive_path": "resources/reference-archive/fixtures/vlm/models.json",
+      "bytes": 7236,
+      "sha256": "f06a0a3452f058a5c0e88f9d84e533609a01ae67d05c1204acc05e22babaffbb",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "fixtures/vlm/reference-contract.json",
+      "archive_path": "resources/reference-archive/fixtures/vlm/reference-contract.json",
+      "bytes": 2482,
+      "sha256": "fecb37869b80b012a2d66a8d8232de5219fd7d51fdb2e15852ca4efb2020de28",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "fixtures/qualification/e1-production-dependencies.json",
+      "archive_path": "resources/reference-archive/fixtures/qualification/e1-production-dependencies.json",
+      "bytes": 517,
+      "sha256": "5f1f5f689a464a577a1eacda1c0e41674a42926d813216d1072dfbc934a4f7e1",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "fixtures/qualification/e2-verification.json",
+      "archive_path": "resources/reference-archive/fixtures/qualification/e2-verification.json",
+      "bytes": 1581,
+      "sha256": "a6e7aa4611c063a5c30356e60257962e007210dde8eb0c23d27ee3b396f79af8",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "fixtures/embedding/ollama-reference.json",
+      "archive_path": "resources/reference-archive/fixtures/embedding/ollama-reference.json",
+      "bytes": 757,
+      "sha256": "51a0b526f68796fdf31dcb0278213b67bb984230ba11ff9dc20ebae14fe8d2cb",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "fixtures/embedding/source/config_sentence_transformers.json",
+      "archive_path": "resources/reference-archive/fixtures/embedding/source/config_sentence_transformers.json",
+      "bytes": 140,
+      "sha256": "482f42ca954f5a8d55bccbb437b8d6eb721ce19059c78330c815045ddd1a87eb",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "fixtures/embedding/source/tokenizer.json",
+      "archive_path": "resources/reference-archive/fixtures/embedding/source/tokenizer.json",
+      "bytes": 711396,
+      "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "fixtures/embedding/source/vocab.txt",
+      "archive_path": "resources/reference-archive/fixtures/embedding/source/vocab.txt",
+      "bytes": 231508,
+      "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "README.md",
+      "archive_path": "resources/reference-archive/README.md",
+      "bytes": 10255,
+      "sha256": "2d57c6d570851a080f64b579eb0dd1987c244df0fc1471d10b7d8f8e74a7709f",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "docs/EMBEDDINGS.md",
+      "archive_path": "resources/reference-archive/docs/EMBEDDINGS.md",
+      "bytes": 8677,
+      "sha256": "2c7144f73852e56c9df8da8bcb9c0241c9e32d568d296f87de0276b9469c58ff",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "docs/VALIDATION.md",
+      "archive_path": "resources/reference-archive/docs/VALIDATION.md",
+      "bytes": 20156,
+      "sha256": "840b29e2fd4c8634c86016c36630951fb578c81be18f03a3582e8f9d384092a9",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "docs/THREAT_MODEL.md",
+      "archive_path": "resources/reference-archive/docs/THREAT_MODEL.md",
+      "bytes": 8192,
+      "sha256": "d729a1a9752f8721a467a669b3a8dcc06a79fd96f685462407ff8140cd9a00f9",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "docs/IMPLEMENTATION_PLAN.md",
+      "archive_path": "resources/reference-archive/docs/IMPLEMENTATION_PLAN.md",
+      "bytes": 25072,
+      "sha256": "579839f629a496a82e5d6efae142a6b4aba528b75f0bddba8db97cd2423fbbe3",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "fixtures/embedding/README.md",
+      "archive_path": "resources/reference-archive/fixtures/embedding/README.md",
+      "bytes": 3868,
+      "sha256": "9bbd1262eb5edf43889cb12f427b3d478c8d43fd1c1449c4648f3c95a310fa31",
+      "disposition": "intact historical data"
+    },
+    {
+      "original_path": "tools/check_embedding_languages.py",
+      "archive_path": "resources/reference-archive/tools/check_embedding_languages.py.txt",
+      "bytes": 5259,
+      "sha256": "a9f3d659f37034c81fd516191a9f4f3a5d152f6aa4eae2d23b99af822dc48969",
+      "disposition": "inert historical capture source; active check consumes fixtures only"
+    },
+    {
+      "original_path": "tools/check_embedding_boundaries.py",
+      "archive_path": "resources/reference-archive/tools/check_embedding_boundaries.py.txt",
+      "bytes": 4728,
+      "sha256": "d82463743ca441b13678989b2acc6c8a76fbf9ccf21d0bbaac0e7f386bdf187f",
+      "disposition": "inert historical capture source; active check consumes fixtures only"
+    }
+  ]
+}

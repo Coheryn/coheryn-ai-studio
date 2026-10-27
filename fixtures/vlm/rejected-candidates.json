@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "candidates": [
+    {
+      "id": "qwen2.5-vl-3b",
+      "repository": "ggml-org/Qwen2.5-VL-3B-Instruct-GGUF",
+      "revision": "5037fcf163dd95d1e41d1974465f0898ed108ca2",
+      "declared_license": "apache-2.0",
+      "components": [
+        {
+          "role": "language",
+          "file": "Qwen2.5-VL-3B-Instruct-f16.gguf",
+          "bytes": 6178315264,
+          "sha256": "3704f8f2c56c8f6bbb1c079215a239a381542a3afc058cce89d9d63ba6003665",
+          "hash_status": "publisher-declared-not-full-file-verified",
+          "prefix_bytes": 8388608,
+          "prefix_sha256": "6b3916bc3a92234d37829b1cac85f7f03580629387630715886101f32d727942",
+          "header_status": "bounded-prefix-parsed-payload-not-verified"
+        },
+        {
+          "role": "vision-projector",
+          "file": "mmproj-Qwen2.5-VL-3B-Instruct-f16.gguf",
+          "bytes": 1338428128,
+          "sha256": "b9160fe9d814d1fadf68395677468534778b39ac33c2e7561b7b218626e60d5e",
+          "hash_status": "publisher-declared-not-full-file-verified",
+          "prefix_bytes": 8388608,
+          "prefix_sha256": "2dccd1e9c5838e7a16708059ec8d057d4c75b599b2b6a8635833c729f19c05d4",
+          "header_status": "bounded-prefix-parsed-payload-not-verified"
+        }
+      ],
+      "source_repository": "Qwen/Qwen2.5-VL-3B-Instruct",
+      "source_revision": "66285546d2b821cf421d4f5eb2576359d3770cd3",
+      "source_declared_license": null,
+      "source_asset_names": [
+        "config.json",
+        "preprocessor_config.json",
+        "tokenizer_config.json",
+        "chat_template.json",
+        "tokenizer.json",
+        "merges.txt",
+        "vocab.json",
+        "LICENSE"
+      ],
+      "qualification": "not-selected-license-metadata-mismatch",
+      "source_assets": [
+        {
+          "file": "config.json",
+          "bytes": 1373,
+          "sha256": "7ed3eed5be6924cc800e8a5e53fc405c1aab1aaf36bad65c33403b36c56827f5"
+        },
+        {
+          "file": "preprocessor_config.json",
+          "bytes": 350,
+          "sha256": "f2058c716eef96ccaed1cc1e2d0c08306b62586d535b28d9d08e691b2fab7ca0"
+        },
+        {
+          "file": "tokenizer_config.json",
+          "bytes": 5702,
+          "sha256": "4abd3520120e266da84c0864fee064d1fb10806f02225911a47253dd38dc5f56"
+        },
+        {
+          "file": "chat_template.json",
+          "bytes": 1050,
+          "sha256": "ad60d90252ed0b0705ba14e2d0ad0fec0beac1ea955642b54059b36052d8bc96"
+        },
+        {
+          "file": "tokenizer.json",
+          "bytes": 7031645,
+          "sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+        },
+        {
+          "file": "merges.txt",
+          "bytes": 1671839,
+          "sha256": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3"
+        },
+        {
+          "file": "vocab.json",
+          "bytes": 2776833,
+          "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+        },
+        {
+          "file": "LICENSE",
+          "bytes": 7387,
+          "sha256": "b5c0e5cf74cf51af1ecbc4af597cfcd13fd9925611838884a681070838a14a50"
+        }
+      ],
+      "selection_note": "Conversion repository card declares apache-2.0; the pinned upstream LICENSE begins Qwen RESEARCH LICENSE AGREEMENT. No production compatibility or licensing conclusion is asserted; this candidate was not selected.",
+      "license_evidence_url": "https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/blob/66285546d2b821cf421d4f5eb2576359d3770cd3/LICENSE"
+    }
+  ]
+}

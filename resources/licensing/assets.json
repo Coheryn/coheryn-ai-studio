@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "scope": "Included mirrored source assets and original image fixtures. Weights/external executables are not included. Original archived records remain unchanged.",
+  "groups": [
+    {
+      "id": "nomic-source",
+      "source": {
+        "repository": "https://huggingface.co/nomic-ai/nomic-embed-text-v1.5",
+        "revision": "e9b6763023c676ca8431644204f50c2b100d9aab"
+      },
+      "license": "Apache-2.0",
+      "license_files": [
+        "LICENSE",
+        "resources/licensing/upstream/bert-LICENSE.txt"
+      ],
+      "notes": "Publisher model card and asset hashes are retained. Tokenizer follows the upstream BERT vocabulary; no upstream copyright notice has been removed.",
+      "files": [
+        {
+          "path": "fixtures/embedding/source/1_Pooling/config.json",
+          "sha256": "3d6180f7233df2f529d65ea60c8db4af614fb78cbe99fd81103dcfeb9f8166a5"
+        },
+        {
+          "path": "fixtures/embedding/source/README.md",
+          "sha256": "4430178908fbd574fdb6457e302d23e643d733ed036b5777180b0806946767b2"
+        },
+        {
+          "path": "fixtures/embedding/source/config.json",
+          "sha256": "9ab00bd92cee80a569f708140b7b6c1661a65891ff3765b1519e181ba2f2c92b"
+        },
+        {
+          "path": "fixtures/embedding/source/modules.json",
+          "sha256": "f93c503b32fa7bc2e186843f0add961caa14eb68f7be516e327df3cadbcd541a"
+        },
+        {
+          "path": "fixtures/embedding/source/sentence_bert_config.json",
+          "sha256": "9ee3935137f87c9ce6662ae17fe7afb7c9c64744a41247359fd228dc37e627b3"
+        },
+        {
+          "path": "fixtures/embedding/source/special_tokens_map.json",
+          "sha256": "5d5b662e421ea9fac075174bb0688ee0d9431699900b90662acd44b2a350503a"
+        },
+        {
+          "path": "fixtures/embedding/source/tokenizer_config.json",
+          "sha256": "d7e0000bcc80134debd2222220427e6bf5fa20a669f40a0d0d1409cc18e0a9bc"
+        },
+        {
+          "path": "resources/reference-archive/fixtures/embedding/source/config_sentence_transformers.json",
+          "sha256": "482f42ca954f5a8d55bccbb437b8d6eb721ce19059c78330c815045ddd1a87eb"
+        },
+        {
+          "path": "resources/reference-archive/fixtures/embedding/source/tokenizer.json",
+          "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66"
+        },
+        {
+          "path": "resources/reference-archive/fixtures/embedding/source/vocab.txt",
+          "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+        }
+      ]
+    },
+    {
+      "id": "llava-1.5-7b",
+      "source": {
+        "repository": "https://huggingface.co/llava-hf/llava-1.5-7b-hf",
+        "revision": "b234b804b114d9e37bb655e11cbbb5f5e971b7a9"
+      },
+      "license": "LicenseRef-Llama-2-Community",
+      "license_files": [
+        "resources/licensing/upstream/llama2-LICENSE.txt",
+        "resources/licensing/upstream/llama2-USE_POLICY-md.txt",
+        "resources/licensing/Notice"
+      ],
+      "notes": "Publisher-declared source terms retained. Configuration/template records copied unchanged; tensor inventories are generated observations. No model weights or full tokenizer/projector payloads shipped. Distribution Notice authored by this project.",
+      "files": [
+        {
+          "path": "fixtures/vlm/llava-1.5-7b/Notice",
+          "sha256": "3c2c94da5f4e334e0310b229c36c7bf67424ac7add7031f550de71c9b996e2a5"
+        },
+        {
+          "path": "fixtures/vlm/llava-1.5-7b/chat_template.json",
+          "sha256": "854445c0a45532ecbee1ae9aa31d4be19644060a156f2c88456f50f584261543"
+        },
+        {
+          "path": "fixtures/vlm/llava-1.5-7b/config.json",
+          "sha256": "0bde54495c54bcc346064a0d314b010d1c4d3ca7f7e583b6f711949a35352c0f"
+        },
+        {
+          "path": "fixtures/vlm/llava-1.5-7b/language.inventory.json",
+          "sha256": "0f19790928d4d957ba3334f673b4884bc63af705f366a09088396df4a7183abc"
+        },
+        {
+          "path": "fixtures/vlm/llava-1.5-7b/preprocessor_config.json",
+          "sha256": "a8d5e64ee5c07ff6d70142856d178ac39d0563da3612e32110fa824f5337b7a1"
+        },
+        {
+          "path": "fixtures/vlm/llava-1.5-7b/processor_config.json",
+          "sha256": "fef918d6ba333f72a066877965bc4a162308568ba62aa90c806caedf7b45d64e"
+        },
+        {
+          "path": "fixtures/vlm/llava-1.5-7b/special_tokens_map.json",
+          "sha256": "358c249e2fb29060c6b73157d428853b0c48710deffc8ee670ab1013880946c9"
+        },
+        {
+          "path": "fixtures/vlm/llava-1.5-7b/tokenizer_config.json",
+          "sha256": "79b7f1ebceddf7235f3791c387d781818b0c7e7cf868d0e4f71896a55b949833"
+        },
+        {
+          "path": "fixtures/vlm/llava-1.5-7b/vision-projector.inventory.json",
+          "sha256": "cffa4c4a40607a19d008316b654451633fe53e9d79d7080e24119535ce881272"
+        }
+      ]
+    },
+    {
+      "id": "qwen2-vl-2b",
+      "source": {
+        "repository": "https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct",
+        "revision": "895c3a49bc3fa70a340399125c650a463535e71c"
+      },
+      "license": "Apache-2.0",
+      "license_files": [
+        "resources/licensing/upstream/qwen-vl-LICENSE.txt"
+      ],
+      "notes": "Original source assets and copyright-bearing license retained; inventories are generated observations. Full model assets not shipped.",
+      "files": [
+        {
+          "path": "fixtures/vlm/qwen2-vl-2b/LICENSE",
+          "sha256": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e"
+        },
+        {
+          "path": "fixtures/vlm/qwen2-vl-2b/chat_template.json",
+          "sha256": "ad60d90252ed0b0705ba14e2d0ad0fec0beac1ea955642b54059b36052d8bc96"
+        },
+        {
+          "path": "fixtures/vlm/qwen2-vl-2b/config.json",
+          "sha256": "422adefa19e62dd175961cec85bc0400344fe5bf9b22bd1182e05aaae78556e0"
+        },
+        {
+          "path": "fixtures/vlm/qwen2-vl-2b/language.inventory.json",
+          "sha256": "25dda31e2eda31bf955da6372c3f68c166e9eca3f8d66633b752ea35b2cb5280"
+        },
+        {
+          "path": "fixtures/vlm/qwen2-vl-2b/preprocessor_config.json",
+          "sha256": "b5eaad0c2815f07631535dcc58f3c462b0d73693638ad21d19f3c50820eae1cc"
+        },
+        {
+          "path": "fixtures/vlm/qwen2-vl-2b/tokenizer_config.json",
+          "sha256": "ff5c4fd898fe8c39591eb70e5d39d2782802d4204d6ae9ba1223252f354842a0"
+        },
+        {
+          "path": "fixtures/vlm/qwen2-vl-2b/vision-projector.inventory.json",
+          "sha256": "74ff1dee9ab7117d841187a660b21b08bbb94a8f110fd1b7b716df31fc25502e"
+        }
+      ]
+    },
+    {
+      "id": "qwen-text-and-tool-templates",
+      "source": {
+        "repository": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+        "revision": "9217f5db79a29953eb74d5343926648285ec7e67"
+      },
+      "license": "Apache-2.0",
+      "license_files": [
+        "resources/licensing/upstream/qwen2.5-GGUF-LICENSE.txt"
+      ],
+      "notes": "Original template extracted from the pinned GGUF. Companion has an in-file modification notice; template body, exact changes, frozen output parity and digests are recorded in fixtures/tools/manifest.json.",
+      "files": [
+        {
+          "path": "fixtures/text/qwen-chat-template.json",
+          "sha256": "71672240b1a3b068067b6a332bc38d3fc05aaade9d41b4b27d7510ff4335504b"
+        },
+        {
+          "path": "fixtures/tools/qwen2.5-tools-v1.jinja",
+          "sha256": "51a066e3621b302051ec39c2ce66e90a31614c4d0ebda09b20dc4fe14d6eee0d"
+        },
+        {
+          "path": "fixtures/tools/qwen2.5.jinja",
+          "sha256": "d5495a1e5db0611132a97e46a65dbb64a642a499421228b9c8b93229097fa9a4"
+        }
+      ]
+    },
+    {
+      "id": "project-image-fixtures",
+      "source": {
+        "repository": "https://github.com/Coheryn/coheryn-ai-studio",
+        "provenance": "tools/generate_image_fixtures.py and fixtures/vlm/images/manifest.json"
+      },
+      "license": "Apache-2.0",
+      "license_files": [
+        "LICENSE"
+      ],
+      "notes": "Original procedural inputs; JPEG conversion provenance recorded separately. No external artwork.",
+      "files": [
+        {
+          "path": "fixtures/vlm/images/alpha.png",
+          "sha256": "e746e8fd46926a3e7afdf7cf26fb8718831de7234ec4c55bcf2d9f58f11100c8"
+        },
+        {
+          "path": "fixtures/vlm/images/landscape.jpg",
+          "sha256": "f1654ff4122bd781829ac8c8f6de53dfa828c328ae2f1c2dcb7e201f7e015c9a"
+        },
+        {
+          "path": "fixtures/vlm/images/landscape.png",
+          "sha256": "6bb5bcf703a7d2a114f69e916468b01c4bdf0ff1aa9780fc53aadae84f8b3991"
+        },
+        {
+          "path": "fixtures/vlm/images/manifest.json",
+          "sha256": "e5169a40087bf4cf75224bfaa000f5ab694b9555516696d8269378aeb8515db5"
+        },
+        {
+          "path": "fixtures/vlm/images/minimum.png",
+          "sha256": "2e9b06dc65a4dec84a3eb3124553ec93ca27c78221e64ab2177d0f1412cfcb20"
+        },
+        {
+          "path": "fixtures/vlm/images/portrait.png",
+          "sha256": "00dd6a4a6cb01cab453e7288eec54093abfae1cb06eaeb3297d3b5990ac6ddf3"
+        },
+        {
+          "path": "fixtures/vlm/images/swapped.png",
+          "sha256": "cf6d4c7111bfda8ef3f3ee16b82cbde745ca9cf9e357ecde83a915db2cd9e11b"
+        }
+      ]
+    }
+  ]
+}

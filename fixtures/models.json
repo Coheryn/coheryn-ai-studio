@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "models": [
+    {
+      "id": "qwen2.5-0.5b-instruct-fp16",
+      "repository": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+      "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+      "file": "qwen2.5-0.5b-instruct-fp16.gguf",
+      "sha256": "8e0ae26000627ed62de0e78e41860af70094558b9d2913385c842a6aa06cf3fc",
+      "license": "Apache-2.0",
+      "bytes": 1266425696,
+      "maximum_download_bytes": 1500000000,
+      "qualification": "reference-parity-tested-macos-arm64"
+    }
+  ],
+  "derived_artifacts": [
+    {
+      "file": "qwen2.5-0.5b-instruct-derived-f32.gguf",
+      "bytes": 2526617440,
+      "sha256": "baf69083ecc7af676ebc0197de462a857123bf60985c8ece44bd55f19ed5703f",
+      "generator": "tools/derive_f32.py",
+      "qualification": "reference-parity-tested-macos-arm64"
+    }
+  ],
+  "oracle": {
+    "revision": "2280f0fd163b03d4331d49e08460f66502e35854",
+    "source_tar_sha256": "3e64cac314dbb3fa31f91cebf897d32bad2b78cb75460495ff8cf556503f5fdd",
+    "runtime_dependency": false,
+    "settings": {
+      "threads": 1,
+      "gpu_layers": 0,
+      "flash_attention": false,
+      "kv_type": "f32",
+      "context": 512,
+      "seed": 0,
+      "temperature": 0,
+      "cpu_native": false,
+      "arm_arch": "armv8-a",
+      "arm_neon": false,
+      "f16_activation_operand": "rounded-to-f16",
+      "products": "f32",
+      "scalar_reduction": "f64",
+      "activations_and_outputs": "f32"
+    },
+    "tolerances": {
+      "logits_absolute": 0.003,
+      "logits_relative": 0.001,
+      "normalized_l2": 0.0005,
+      "greedy_tokens_exact": true
+    },
+    "qualification": "scalar-reference-build-tested-macos-arm64",
+    "source_record": "resources/reference-archive/fixtures/models.json"
+  }
+}

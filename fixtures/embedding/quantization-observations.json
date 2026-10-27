@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "reference_revision": "2280f0fd163b03d4331d49e08460f66502e35854",
+  "model_sha256": [
+    "f7af6f66802f4df86eda10fe9bbcfc75c39562bed48ef6ace719a251cf1c2fdb",
+    "3e24342164b3d94991ba9692fdc0dd08e3fd7362e0aacc396a9a5c54a544c3b7"
+  ],
+  "cases": [
+    {
+      "case": "query",
+      "cosine_similarity": 0.9983448303059758,
+      "l2_distance": 0.05753554891147396
+    },
+    {
+      "case": "document",
+      "cosine_similarity": 0.9986861543649226,
+      "l2_distance": 0.05126101119374148
+    },
+    {
+      "case": "bengali",
+      "cosine_similarity": 0.9982947718392883,
+      "l2_distance": 0.05839911229474469
+    },
+    {
+      "case": "unicode",
+      "cosine_similarity": 0.9988547259046985,
+      "l2_distance": 0.047859671861996946
+    },
+    {
+      "case": "whitespace",
+      "cosine_similarity": 0.9987234499177811,
+      "l2_distance": 0.05052821160786763
+    },
+    {
+      "case": "special-literal",
+      "cosine_similarity": 0.9980502692945773,
+      "l2_distance": 0.06244566782484657
+    }
+  ],
+  "note": "F16 versus Q8_0 independent-reference quality observations only; no native executor or retrieval-quality acceptance claim."
+}

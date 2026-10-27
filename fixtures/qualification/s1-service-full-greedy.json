@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "stage": "S1-native-CPU-managed-session-preview",
+  "model_sha256": "8e0ae26000627ed62de0e78e41860af70094558b9d2913385c842a6aa06cf3fc",
+  "binary_sha256": "b075409f289719de24cb20fa4909378535dd43d202d405e7f06cc2e8ffc1c736",
+  "hardware": "arm64",
+  "os": "macOS-27.0.1-arm64-arm-64bit",
+  "backend": "native-cpu",
+  "context": 512,
+  "cache_dtype": "f32",
+  "profile": "balanced",
+  "cache_conditions": "uncontrolled",
+  "persistence": false,
+  "cross_turn_kv_reuse": false,
+  "checks": [
+    {
+      "case": "retained-independent-english-golden",
+      "token_ids": [
+        271,
+        40,
+        1079,
+        4460,
+        311,
+        1855,
+        264,
+        2025
+      ]
+    },
+    {
+      "case": "exact-history-native-stateless-token-parity",
+      "prompt_tokens": 42,
+      "token_ids": [
+        19,
+        151645
+      ],
+      "text": "4",
+      "idempotent_replay": true
+    },
+    {
+      "case": "separate-cli-process-resume-and-native-sse",
+      "revision": 6,
+      "message_count": 7
+    },
+    {
+      "case": "delete-unload-reservation-cleanup",
+      "reserved_bytes": 0
+    }
+  ],
+  "graceful_shutdown": true
+}

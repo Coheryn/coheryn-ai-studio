@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "profile": "qwen-tools-v1",
+  "profile_identity": "qwen-tools-v1:51a066e3621b302051ec39c2ce66e90a31614c4d0ebda09b20dc4fe14d6eee0d",
+  "license": "Apache-2.0; publisher template from the pinned GGUF; companion modifications documented here",
+  "model": {
+    "id": "qwen2.5-0.5b-instruct-q4_k_m",
+    "repository": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+    "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+    "file": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+    "bytes": 491400032,
+    "sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+    "maximum_download_bytes": 491400032,
+    "license": "Apache-2.0",
+    "qualification": "native-reference-parity-tested-macos-arm64",
+    "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q4_k_m.json",
+    "qualification_contract": "primary",
+    "bytes_verified": true
+  },
+  "original_template": {
+    "path": "fixtures/tools/qwen2.5.jinja",
+    "sha256": "d5495a1e5db0611132a97e46a65dbb64a642a499421228b9c8b93229097fa9a4",
+    "metadata_fingerprint": "71672240b1a3b068067b6a332bc38d3fc05aaade9d41b4b27d7510ff4335504b"
+  },
+  "companion_template": {
+    "path": "fixtures/tools/qwen2.5-tools-v1.jinja",
+    "sha256": "51a066e3621b302051ec39c2ce66e90a31614c4d0ebda09b20dc4fe14d6eee0d",
+    "modifications": [
+      "Correct double-braced schematic JSON example to one object.",
+      "Render validated raw argument strings directly without numeric/whitespace reserialization."
+    ],
+    "ordinary_text_behavior": "original GGUF template and special-token policy retained",
+    "reference_body_sha256": "3fb38d82ef3d0bf6ace1100b836411ea866c707b434cbec7188206c677a1058d",
+    "license_notice": "{#-\nDerived from the Qwen2.5 publisher template, licensed under Apache-2.0.\nModified by Coheryn AI Studio contributors: correct schematic JSON braces and\npreserve validated raw argument bytes instead of reserializing them.\nUpstream provenance and terms: resources/licensing/assets.json and README.md.\n-#}\n",
+    "notice_change": "Only a non-rendering Jinja comment was prepended. Frozen independent prompt/token/output records are unchanged."
+  },
+  "reference": "fixtures/tools/qwen2.5-reference.json",
+  "reference_sha256": "65224131ecf0922fa07bc42fdf496c49b93b52de215b56fa351d6d6890057f3c",
+  "negative_original": "fixtures/tools/qwen2.5-original-negative.json",
+  "negative_sha256": "e378f894afb0ca00a2bf64334a1814c9b4c9d125e5218f697a2a78fd46430e62",
+  "acceptance": {
+    "rendered_bytes": "exact",
+    "prompt_token_ids": "exact",
+    "greedy_token_ids": "exact",
+    "call_ids": "native unique IDs checked separately; not part of model text"
+  },
+  "argument_guarantees": "JSON object syntax, limits, original value bytes, identifiers and declaration/choice membership; no strict schema guarantee",
+  "choices": [
+    "none",
+    "auto",
+    "required",
+    "named"
+  ],
+  "multiple_calls": "qualified protocol up to eight; independent two-call case",
+  "tool_results": "all outstanding results in original call order",
+  "qualified_context": 512,
+  "backend": "native-cpu",
+  "platform": "macos-arm64",
+  "evidence": "fixtures/qualification/s4-service.json",
+  "strict_schema": false,
+  "automatic_execution": false
+}

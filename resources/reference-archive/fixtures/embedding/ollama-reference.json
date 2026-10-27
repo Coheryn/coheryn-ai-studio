@@ -1,0 +1,12 @@
+{
+  "version": "v0.40.11",
+  "asset": "ollama-darwin.tgz",
+  "bytes": 181324349,
+  "sha256": "aea7d3f2e32371b7644a6e2ec8d4f26820a0e3965918cce8a46cef3e947f6291",
+  "url": "https://github.com/ollama/ollama/releases/download/v0.40.11/ollama-darwin.tgz",
+  "production_dependency": false,
+  "executable_sha256": "653dac8da3e2bc1a8e981ee9bd95d21456ae41a16f27f8c8140baec23045bc27",
+  "executable_cache_path": ".cache/reference-ollama/dist/ollama",
+  "execution_status": "pinned-binary-verified-not-run-as-daemon",
+  "isolation_note": "Pinned serve entrypoint unconditionally initializes keys in the real user home. No user-home override or external key creation was performed; run comparison only with an explicitly authorized comparator identity/environment."
+}

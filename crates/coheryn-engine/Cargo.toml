@@ -1,0 +1,24 @@
+[package]
+name = "coheryn-engine"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+half = "2.7.1"
+rayon = "1.12.0"
+tokenizers = { version = "0.23.2", default-features = false, features = ["fancy-regex"] }
+minijinja = { version = "3.0.4", features = ["json", "fuel", "serde"] }
+unicode-normalization = "0.1.26"
+
+[dev-dependencies]
+tempfile = "3.27.0"
+
+[lints]
+workspace = true

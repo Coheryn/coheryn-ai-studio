@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+  "native_executable_sha256": "b7359ee945ab3ba64d9fe47130a3743a496e98bc32e47131f0900edb5fc059cd",
+  "transport": "actual loopback HTTP/TCP",
+  "checks": [
+    {
+      "case": "native-cli-openai-completion-stream-parity",
+      "token_ids": [
+        271,
+        40,
+        1079,
+        4460,
+        311,
+        1855,
+        264,
+        4285
+      ],
+      "text": "\n\nI am trying to create a simple"
+    },
+    {
+      "case": "chat-sse-golden-parity",
+      "text": "Hello! How can I assist you today",
+      "usage": {
+        "completion_tokens": 8,
+        "prompt_tokens": 17,
+        "total_tokens": 25
+      }
+    },
+    {
+      "case": "pinning-disconnect-auth-memory-admission",
+      "scheduler": {
+        "active": 0,
+        "cancelled": 1,
+        "completed": 4,
+        "failed": 0,
+        "queued": 0,
+        "rejected": 0
+      },
+      "unload_while_active": 409,
+      "inference_cannot_admin": 403,
+      "client_memory_limit_exit": 5
+    },
+    {
+      "case": "graceful-shutdown-and-no-standalone-fallback",
+      "server_exit": 0,
+      "client_exit_without_daemon": 8
+    }
+  ]
+}

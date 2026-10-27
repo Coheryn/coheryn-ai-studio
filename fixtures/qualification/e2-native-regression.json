@@ -1,0 +1,1909 @@
+{
+  "schema_version": 1,
+  "gate": "E1-native-CPU",
+  "captured_utc": "2026-10-27T01:26:51.069148+00:00",
+  "hardware": {
+    "machine": "arm64",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "processor": "Apple M1"
+  },
+  "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+  "rust_toolchain_pin": "[toolchain]\nchannel = \"1.99.1\"\nprofile = \"minimal\"\ncomponents = [\"rustfmt\", \"clippy\"]",
+  "executable_sha256": "96d48dc529befc27420aa1a9cef109fb92562a486f68373c77d84ebd413feeb6",
+  "reference_contract": "fixtures/embedding/reference-contract.json",
+  "reference_contract_sha256": "5f98e54cd47a5db8821f6ea6222850c3e5c684a93c7f46ac4b9e8d6243d7ea62",
+  "cache_conditions": "uncontrolled; no cold-cache claim",
+  "production_dependencies": "Coheryn Rust encoder and kernels; no external inference runtime",
+  "models": [
+    {
+      "id": "nomic-embed-text-v1.5.f16",
+      "file": "nomic-embed-text-v1.5.f16.gguf",
+      "sha256": "f7af6f66802f4df86eda10fe9bbcfc75c39562bed48ef6ace719a251cf1c2fdb",
+      "dimension": 768,
+      "qualified_context": 512,
+      "tokenizer_cases": 6,
+      "individual": [
+        {
+          "case": "query",
+          "embedding": {
+            "max_absolute": 4.1625594637828556e-10,
+            "l2_distance": 9.139665286883315e-10,
+            "normalized_l2": 9.139665283146761e-10,
+            "outside_tolerance": 0
+          },
+          "pooled": {
+            "max_absolute": 4.9966430992753885e-09,
+            "l2_distance": 3.73987272696368e-08,
+            "normalized_l2": 1.6236051749020675e-09,
+            "outside_tolerance": 0
+          },
+          "checkpoints": [
+            {
+              "name": "ffn_out-0",
+              "first": {
+                "max_absolute": 4.941406217540134e-08,
+                "l2_distance": 5.781863974281701e-08,
+                "normalized_l2": 2.206465308182642e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 2.3046876407306627e-08,
+                "l2_distance": 3.213817430698989e-08,
+                "normalized_l2": 1.2795325842568924e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "ffn_out-11",
+              "first": {
+                "max_absolute": 4.901657135736315e-10,
+                "l2_distance": 1.1203106766395167e-09,
+                "normalized_l2": 1.080023939892057e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 2.7642821365247983e-10,
+                "l2_distance": 7.241657468373751e-10,
+                "normalized_l2": 8.864575811056876e-10,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "result_embd",
+              "first": {
+                "max_absolute": 4.96734609001237e-09,
+                "l2_distance": 4.251020821799534e-08,
+                "normalized_l2": 1.7416721419280667e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.8797605955996914e-09,
+                "l2_distance": 3.5742231837319055e-08,
+                "normalized_l2": 1.4602051289616115e-09,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "encoding_ms": 1259.2177920000001,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 53965158,
+            "peak_session_buffer_capacity_bytes": 1527856,
+            "reserved": 27732992,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "case": "document",
+          "embedding": {
+            "max_absolute": 3.875350873538963e-10,
+            "l2_distance": 9.51895496106459e-10,
+            "normalized_l2": 9.518954957541617e-10,
+            "outside_tolerance": 0
+          },
+          "pooled": {
+            "max_absolute": 4.981689505356712e-09,
+            "l2_distance": 3.5631693175803345e-08,
+            "normalized_l2": 1.6559166722595996e-09,
+            "outside_tolerance": 0
+          },
+          "checkpoints": [
+            {
+              "name": "ffn_out-0",
+              "first": {
+                "max_absolute": 2.3583982766695044e-08,
+                "l2_distance": 2.6689450745886496e-08,
+                "normalized_l2": 1.0225481169878942e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 7.788084843696197e-09,
+                "l2_distance": 1.3118081838604266e-08,
+                "normalized_l2": 4.249518214544075e-10,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "ffn_out-11",
+              "first": {
+                "max_absolute": 4.760437044559751e-10,
+                "l2_distance": 2.84431382828177e-09,
+                "normalized_l2": 1.5706398573806952e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.996948133051404e-10,
+                "l2_distance": 1.1971704628325016e-09,
+                "normalized_l2": 1.1183925680950928e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "result_embd",
+              "first": {
+                "max_absolute": 4.940490683225107e-09,
+                "l2_distance": 3.8984361277974514e-08,
+                "normalized_l2": 1.5793676335409903e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.968566891250248e-09,
+                "l2_distance": 3.931566818570275e-08,
+                "normalized_l2": 1.5947486455207207e-09,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "encoding_ms": 2008.445417,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 53970189,
+            "peak_session_buffer_capacity_bytes": 1742896,
+            "reserved": 27732992,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "case": "bengali",
+          "embedding": {
+            "max_absolute": 4.4736099547026953e-10,
+            "l2_distance": 8.956718126226968e-10,
+            "normalized_l2": 8.956718142676981e-10,
+            "outside_tolerance": 0
+          },
+          "pooled": {
+            "max_absolute": 4.940795994556879e-09,
+            "l2_distance": 3.4592731041324694e-08,
+            "normalized_l2": 1.6708161317950363e-09,
+            "outside_tolerance": 0
+          },
+          "checkpoints": [
+            {
+              "name": "ffn_out-0",
+              "first": {
+                "max_absolute": 4.8266603158708676e-08,
+                "l2_distance": 5.800346694772199e-08,
+                "normalized_l2": 2.1489050090514845e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 3.1420897883549515e-08,
+                "l2_distance": 3.403749378370314e-08,
+                "normalized_l2": 1.4103327292935613e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "ffn_out-11",
+              "first": {
+                "max_absolute": 4.998779307152645e-10,
+                "l2_distance": 1.2601566322473585e-09,
+                "normalized_l2": 1.0377375834361736e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 2.7856826567695947e-10,
+                "l2_distance": 7.460189350531061e-10,
+                "normalized_l2": 7.648944647380954e-10,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "result_embd",
+              "first": {
+                "max_absolute": 4.991760338413087e-09,
+                "l2_distance": 4.0297671489330185e-08,
+                "normalized_l2": 1.6220289236100813e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.975585943256533e-09,
+                "l2_distance": 3.419392386986489e-08,
+                "normalized_l2": 1.391942429901027e-09,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "encoding_ms": 2358.7075,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 53971737,
+            "peak_session_buffer_capacity_bytes": 1914928,
+            "reserved": 27732992,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "case": "unicode",
+          "embedding": {
+            "max_absolute": 4.857749896780561e-10,
+            "l2_distance": 9.93504120051373e-10,
+            "normalized_l2": 9.935041206652082e-10,
+            "outside_tolerance": 0
+          },
+          "pooled": {
+            "max_absolute": 4.998779390419372e-09,
+            "l2_distance": 3.8238655620194865e-08,
+            "normalized_l2": 1.6842643167605375e-09,
+            "outside_tolerance": 0
+          },
+          "checkpoints": [
+            {
+              "name": "ffn_out-0",
+              "first": {
+                "max_absolute": 4.882812376649781e-08,
+                "l2_distance": 6.266724679543885e-08,
+                "normalized_l2": 2.2810837504922764e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 3.911132750999968e-08,
+                "l2_distance": 4.380155108570351e-08,
+                "normalized_l2": 1.4097177745816742e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "ffn_out-11",
+              "first": {
+                "max_absolute": 4.996948133051404e-10,
+                "l2_distance": 3.747870912152998e-09,
+                "normalized_l2": 1.6579336172420182e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.937057429543756e-10,
+                "l2_distance": 1.5719235125587232e-09,
+                "normalized_l2": 1.1793300577142052e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "result_embd",
+              "first": {
+                "max_absolute": 4.9969481885625555e-09,
+                "l2_distance": 3.9912000779184166e-08,
+                "normalized_l2": 1.614738338227699e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.999694880325478e-09,
+                "l2_distance": 3.720746130370492e-08,
+                "normalized_l2": 1.5034374649342914e-09,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "encoding_ms": 1364.175959,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 53965674,
+            "peak_session_buffer_capacity_bytes": 1570864,
+            "reserved": 27732992,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "case": "whitespace",
+          "embedding": {
+            "max_absolute": 4.673385567421917e-10,
+            "l2_distance": 9.45288264777381e-10,
+            "normalized_l2": 9.452882634188686e-10,
+            "outside_tolerance": 0
+          },
+          "pooled": {
+            "max_absolute": 4.9877930674568915e-09,
+            "l2_distance": 3.572644094797117e-08,
+            "normalized_l2": 1.6631437503117082e-09,
+            "outside_tolerance": 0
+          },
+          "checkpoints": [
+            {
+              "name": "ffn_out-0",
+              "first": {
+                "max_absolute": 3.364257850080321e-08,
+                "l2_distance": 4.098582320909464e-08,
+                "normalized_l2": 1.618927319365843e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 3.271484416700332e-08,
+                "l2_distance": 4.13586621269079e-08,
+                "normalized_l2": 1.4793756425677859e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "ffn_out-11",
+              "first": {
+                "max_absolute": 4.963302546734383e-10,
+                "l2_distance": 2.576757946379404e-09,
+                "normalized_l2": 1.683852651402342e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 3.7123107365921726e-10,
+                "l2_distance": 8.611625206121289e-10,
+                "normalized_l2": 8.333367449751032e-10,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "result_embd",
+              "first": {
+                "max_absolute": 4.99145524912592e-09,
+                "l2_distance": 3.974662171749909e-08,
+                "normalized_l2": 1.6033020874753867e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.953918386618739e-09,
+                "l2_distance": 3.821426442890457e-08,
+                "normalized_l2": 1.5558242300060113e-09,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "encoding_ms": 1172.245,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 53966190,
+            "peak_session_buffer_capacity_bytes": 1484848,
+            "reserved": 27732992,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "case": "special-literal",
+          "embedding": {
+            "max_absolute": 4.918747076310126e-10,
+            "l2_distance": 9.580444841035618e-10,
+            "normalized_l2": 9.58044480150161e-10,
+            "outside_tolerance": 0
+          },
+          "pooled": {
+            "max_absolute": 4.982299905975651e-09,
+            "l2_distance": 3.679113981209924e-08,
+            "normalized_l2": 1.6849630262998069e-09,
+            "outside_tolerance": 0
+          },
+          "checkpoints": [
+            {
+              "name": "ffn_out-0",
+              "first": {
+                "max_absolute": 4.0527343259100235e-08,
+                "l2_distance": 5.324491090768805e-08,
+                "normalized_l2": 1.8805134740548837e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 3.695068429010462e-08,
+                "l2_distance": 3.84044864854795e-08,
+                "normalized_l2": 1.6030460538763714e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "ffn_out-11",
+              "first": {
+                "max_absolute": 3.2167053742870877e-10,
+                "l2_distance": 8.993640022996877e-10,
+                "normalized_l2": 8.437017302506014e-10,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 2.7166366378672535e-10,
+                "l2_distance": 7.825041740384737e-10,
+                "normalized_l2": 8.421233703687268e-10,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "result_embd",
+              "first": {
+                "max_absolute": 4.998779390419372e-09,
+                "l2_distance": 4.234617383710312e-08,
+                "normalized_l2": 1.7207160143706266e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.983520707213529e-09,
+                "l2_distance": 3.6185139268040854e-08,
+                "normalized_l2": 1.4720437098503928e-09,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "encoding_ms": 2344.436291,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 53966319,
+            "peak_session_buffer_capacity_bytes": 1871920,
+            "reserved": 27732992,
+            "session_buffer_capacity_bytes": 0
+          }
+        }
+      ],
+      "batches": [
+        {
+          "profile": "reference",
+          "threads": 1,
+          "batch_size": 4,
+          "comparisons": [
+            {
+              "reference": {
+                "max_absolute": 4.1625594637828556e-10,
+                "l2_distance": 9.139665286883315e-10,
+                "normalized_l2": 9.139665283146761e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 3.875350873538963e-10,
+                "l2_distance": 9.51895496106459e-10,
+                "normalized_l2": 9.518954957541617e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.1625594637828556e-10,
+                "l2_distance": 9.139665286883315e-10,
+                "normalized_l2": 9.139665283146761e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.673385567421917e-10,
+                "l2_distance": 9.45288264777381e-10,
+                "normalized_l2": 9.452882634188686e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "plan": {
+            "additional_reserved_bytes": 92313927,
+            "admissible": true,
+            "backend": "cpu-reference",
+            "batch_size": 4,
+            "input_count": 4,
+            "io_bytes": 262144,
+            "limitations": [
+              "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+              "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+              "The encoder stores no generation KV cache or quadratic attention matrix",
+              "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+            ],
+            "max_input_tokens": 512,
+            "output_bytes": 13312,
+            "profile": "reference",
+            "reasons": [
+              "admitted up to 2048 packed tokens per microbatch; input limits and dimensions are preserved"
+            ],
+            "request_reserved_bytes": 1080391,
+            "required_reserved_bytes": 120046919,
+            "safety_headroom_bytes": 0,
+            "schema_version": 1,
+            "shared_weight_bytes": 273533952,
+            "task": "embedding",
+            "tensor_tile_tokens": 16,
+            "threads": 1,
+            "token_capacity": 2048,
+            "tokenization_bytes": 18304,
+            "workspace_bytes": 91233536
+          },
+          "encoding_ms": 5614.944209,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 120046919,
+            "peak_session_buffer_capacity_bytes": 3128512,
+            "reserved": 27732992,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "profile": "balanced",
+          "threads": 2,
+          "batch_size": 4,
+          "comparisons": [
+            {
+              "reference": {
+                "max_absolute": 4.1625594637828556e-10,
+                "l2_distance": 9.139665286883315e-10,
+                "normalized_l2": 9.139665283146761e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 3.875350873538963e-10,
+                "l2_distance": 9.51895496106459e-10,
+                "normalized_l2": 9.518954957541617e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.1625594637828556e-10,
+                "l2_distance": 9.139665286883315e-10,
+                "normalized_l2": 9.139665283146761e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.673385567421917e-10,
+                "l2_distance": 9.45288264777381e-10,
+                "normalized_l2": 9.452882634188686e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "plan": {
+            "additional_reserved_bytes": 102845749,
+            "admissible": true,
+            "backend": "cpu-reference",
+            "batch_size": 4,
+            "input_count": 4,
+            "io_bytes": 262144,
+            "limitations": [
+              "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+              "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+              "The encoder stores no generation KV cache or quadratic attention matrix",
+              "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+            ],
+            "max_input_tokens": 512,
+            "output_bytes": 13312,
+            "profile": "balanced",
+            "reasons": [
+              "admitted up to 2048 packed tokens per microbatch; input limits and dimensions are preserved"
+            ],
+            "request_reserved_bytes": 1080391,
+            "required_reserved_bytes": 130578741,
+            "safety_headroom_bytes": 9349614,
+            "schema_version": 1,
+            "shared_weight_bytes": 273533952,
+            "task": "embedding",
+            "tensor_tile_tokens": 16,
+            "threads": 2,
+            "token_capacity": 2048,
+            "tokenization_bytes": 18304,
+            "workspace_bytes": 92415744
+          },
+          "encoding_ms": 3611.850208,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 130578741,
+            "peak_session_buffer_capacity_bytes": 3131120,
+            "reserved": 27732992,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "profile": "performance",
+          "threads": 4,
+          "batch_size": 4,
+          "comparisons": [
+            {
+              "reference": {
+                "max_absolute": 4.1625594637828556e-10,
+                "l2_distance": 9.139665286883315e-10,
+                "normalized_l2": 9.139665283146761e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 3.875350873538963e-10,
+                "l2_distance": 9.51895496106459e-10,
+                "normalized_l2": 9.518954957541617e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.1625594637828556e-10,
+                "l2_distance": 9.139665286883315e-10,
+                "normalized_l2": 9.139665283146761e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.673385567421917e-10,
+                "l2_distance": 9.45288264777381e-10,
+                "normalized_l2": 9.452882634188686e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "plan": {
+            "additional_reserved_bytes": 99682405,
+            "admissible": true,
+            "backend": "cpu-reference",
+            "batch_size": 4,
+            "input_count": 4,
+            "io_bytes": 262144,
+            "limitations": [
+              "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+              "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+              "The encoder stores no generation KV cache or quadratic attention matrix",
+              "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+            ],
+            "max_input_tokens": 512,
+            "output_bytes": 13312,
+            "profile": "performance",
+            "reasons": [
+              "admitted up to 2048 packed tokens per microbatch; input limits and dimensions are preserved"
+            ],
+            "request_reserved_bytes": 1080391,
+            "required_reserved_bytes": 127415397,
+            "safety_headroom_bytes": 4746782,
+            "schema_version": 1,
+            "shared_weight_bytes": 273533952,
+            "task": "embedding",
+            "tensor_tile_tokens": 32,
+            "threads": 4,
+            "token_capacity": 2048,
+            "tokenization_bytes": 18304,
+            "workspace_bytes": 93855232
+          },
+          "encoding_ms": 2117.73675,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 127415397,
+            "peak_session_buffer_capacity_bytes": 3389776,
+            "reserved": 27732992,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "profile": "low-memory",
+          "threads": 1,
+          "batch_size": 4,
+          "comparisons": [
+            {
+              "reference": {
+                "max_absolute": 4.1625594637828556e-10,
+                "l2_distance": 9.139665286883315e-10,
+                "normalized_l2": 9.139665283146761e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 3.875350873538963e-10,
+                "l2_distance": 9.51895496106459e-10,
+                "normalized_l2": 9.518954957541617e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.1625594637828556e-10,
+                "l2_distance": 9.139665286883315e-10,
+                "normalized_l2": 9.139665283146761e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.673385567421917e-10,
+                "l2_distance": 9.45288264777381e-10,
+                "normalized_l2": 9.452882634188686e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "plan": {
+            "additional_reserved_bytes": 26591585,
+            "admissible": true,
+            "backend": "cpu-reference",
+            "batch_size": 4,
+            "input_count": 4,
+            "io_bytes": 16384,
+            "limitations": [
+              "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+              "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+              "The encoder stores no generation KV cache or quadratic attention matrix",
+              "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+            ],
+            "max_input_tokens": 512,
+            "output_bytes": 13312,
+            "profile": "low-memory",
+            "reasons": [
+              "admitted up to 512 packed tokens per microbatch; input limits and dimensions are preserved"
+            ],
+            "request_reserved_bytes": 1080391,
+            "required_reserved_bytes": 54324577,
+            "safety_headroom_bytes": 1266266,
+            "schema_version": 1,
+            "shared_weight_bytes": 273533952,
+            "task": "embedding",
+            "tensor_tile_tokens": 4,
+            "threads": 1,
+            "token_capacity": 512,
+            "tokenization_bytes": 18304,
+            "workspace_bytes": 24244928
+          },
+          "encoding_ms": 6173.691959,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 54324577,
+            "peak_session_buffer_capacity_bytes": 2201152,
+            "reserved": 27732992,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "profile": "balanced",
+          "threads": 2,
+          "batch_size": 1,
+          "comparisons": [
+            {
+              "reference": {
+                "max_absolute": 4.1625594637828556e-10,
+                "l2_distance": 9.139665286883315e-10,
+                "normalized_l2": 9.139665283146761e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 3.875350873538963e-10,
+                "l2_distance": 9.51895496106459e-10,
+                "normalized_l2": 9.518954957541617e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.1625594637828556e-10,
+                "l2_distance": 9.139665286883315e-10,
+                "normalized_l2": 9.139665283146761e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.673385567421917e-10,
+                "l2_distance": 9.45288264777381e-10,
+                "normalized_l2": 9.452882634188686e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "plan": {
+            "additional_reserved_bytes": 30179432,
+            "admissible": true,
+            "backend": "cpu-reference",
+            "batch_size": 1,
+            "input_count": 4,
+            "io_bytes": 262144,
+            "limitations": [
+              "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+              "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+              "The encoder stores no generation KV cache or quadratic attention matrix",
+              "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+            ],
+            "max_input_tokens": 512,
+            "output_bytes": 13312,
+            "profile": "balanced",
+            "reasons": [
+              "admitted up to 512 packed tokens per microbatch; input limits and dimensions are preserved"
+            ],
+            "request_reserved_bytes": 1080391,
+            "required_reserved_bytes": 57912424,
+            "safety_headroom_bytes": 2743585,
+            "schema_version": 1,
+            "shared_weight_bytes": 273533952,
+            "task": "embedding",
+            "tensor_tile_tokens": 16,
+            "threads": 2,
+            "token_capacity": 512,
+            "tokenization_bytes": 18304,
+            "workspace_bytes": 26355456
+          },
+          "encoding_ms": 3069.7311249999993,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 57912424,
+            "peak_session_buffer_capacity_bytes": 1754864,
+            "reserved": 27732992,
+            "session_buffer_capacity_bytes": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "nomic-embed-text-v1.5.Q8_0",
+      "file": "nomic-embed-text-v1.5.Q8_0.gguf",
+      "sha256": "3e24342164b3d94991ba9692fdc0dd08e3fd7362e0aacc396a9a5c54a544c3b7",
+      "dimension": 768,
+      "qualified_context": 512,
+      "tokenizer_cases": 6,
+      "individual": [
+        {
+          "case": "query",
+          "embedding": {
+            "max_absolute": 4.767952005435561e-10,
+            "l2_distance": 9.024459006365675e-10,
+            "normalized_l2": 9.02445900870274e-10,
+            "outside_tolerance": 0
+          },
+          "pooled": {
+            "max_absolute": 4.985961865600075e-09,
+            "l2_distance": 3.926771976337284e-08,
+            "normalized_l2": 1.7041525368183692e-09,
+            "outside_tolerance": 0
+          },
+          "checkpoints": [
+            {
+              "name": "ffn_out-0",
+              "first": {
+                "max_absolute": 3.564453265880729e-08,
+                "l2_distance": 5.0580229767273854e-08,
+                "normalized_l2": 2.068410591954322e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 1.1779786035504003e-08,
+                "l2_distance": 1.5341485236143482e-08,
+                "normalized_l2": 6.153799071115843e-10,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "ffn_out-11",
+              "first": {
+                "max_absolute": 3.970603984493337e-10,
+                "l2_distance": 9.113405408337572e-10,
+                "normalized_l2": 8.848582286856299e-10,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 1.3833617584779745e-10,
+                "l2_distance": 7.040397002140066e-10,
+                "normalized_l2": 8.492345981267749e-10,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "result_embd",
+              "first": {
+                "max_absolute": 4.986572266219014e-09,
+                "l2_distance": 4.181369447391932e-08,
+                "normalized_l2": 1.7133576770656512e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.982910084549985e-09,
+                "l2_distance": 3.903309747108449e-08,
+                "normalized_l2": 1.5930431141027713e-09,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "encoding_ms": 103.777958,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 53965670,
+            "peak_session_buffer_capacity_bytes": 1527856,
+            "reserved": 27733504,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "case": "document",
+          "embedding": {
+            "max_absolute": 2.0343399187439104e-10,
+            "l2_distance": 7.344684561412031e-10,
+            "normalized_l2": 7.344684568462127e-10,
+            "outside_tolerance": 0
+          },
+          "pooled": {
+            "max_absolute": 4.995422298037511e-09,
+            "l2_distance": 3.644823294072493e-08,
+            "normalized_l2": 1.6947061484252775e-09,
+            "outside_tolerance": 0
+          },
+          "checkpoints": [
+            {
+              "name": "ffn_out-0",
+              "first": {
+                "max_absolute": 4.758300775620228e-08,
+                "l2_distance": 5.923385480573051e-08,
+                "normalized_l2": 2.4293257088115334e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.770507899820586e-08,
+                "l2_distance": 5.7460330088098546e-08,
+                "normalized_l2": 1.8967962288739816e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "ffn_out-11",
+              "first": {
+                "max_absolute": 4.999923669535278e-10,
+                "l2_distance": 2.828742358204465e-09,
+                "normalized_l2": 1.5804830039558927e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.3946457584098653e-10,
+                "l2_distance": 1.0850036012846719e-09,
+                "normalized_l2": 1.0138608674383858e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "result_embd",
+              "first": {
+                "max_absolute": 4.986877355506181e-09,
+                "l2_distance": 4.074655463994569e-08,
+                "normalized_l2": 1.6507038831183586e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.95178231751936e-09,
+                "l2_distance": 3.99975443540616e-08,
+                "normalized_l2": 1.6217617581947924e-09,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "encoding_ms": 147.71479200000002,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 53970701,
+            "peak_session_buffer_capacity_bytes": 1742896,
+            "reserved": 27733504,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "case": "bengali",
+          "embedding": {
+            "max_absolute": 4.6532440400870456e-10,
+            "l2_distance": 1.1211707218877602e-09,
+            "normalized_l2": 1.1211707213438522e-09,
+            "outside_tolerance": 0
+          },
+          "pooled": {
+            "max_absolute": 4.941711484462985e-09,
+            "l2_distance": 3.474393298359469e-08,
+            "normalized_l2": 1.6733436822260239e-09,
+            "outside_tolerance": 0
+          },
+          "checkpoints": [
+            {
+              "name": "ffn_out-0",
+              "first": {
+                "max_absolute": 4.5996092268296707e-08,
+                "l2_distance": 4.800806150293687e-08,
+                "normalized_l2": 1.8223324512528066e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.27001953795525e-08,
+                "l2_distance": 5.820083137212667e-08,
+                "normalized_l2": 2.4327714387574733e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "ffn_out-11",
+              "first": {
+                "max_absolute": 4.62944030332757e-10,
+                "l2_distance": 1.148278312497118e-09,
+                "normalized_l2": 9.428170489556782e-10,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 2.1223450774598973e-10,
+                "l2_distance": 7.623672054478745e-10,
+                "normalized_l2": 7.713483749978158e-10,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "result_embd",
+              "first": {
+                "max_absolute": 4.959716859431751e-09,
+                "l2_distance": 4.125624110642194e-08,
+                "normalized_l2": 1.6589838008518837e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 8.801269046898597e-09,
+                "l2_distance": 3.587973350208591e-08,
+                "normalized_l2": 1.4596753565256082e-09,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "encoding_ms": 191.928125,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 53972249,
+            "peak_session_buffer_capacity_bytes": 1914928,
+            "reserved": 27733504,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "case": "unicode",
+          "embedding": {
+            "max_absolute": 4.910964968019016e-10,
+            "l2_distance": 1.1148982778817269e-09,
+            "normalized_l2": 1.1148982771272041e-09,
+            "outside_tolerance": 0
+          },
+          "pooled": {
+            "max_absolute": 4.9963380099882215e-09,
+            "l2_distance": 3.7902935446025555e-08,
+            "normalized_l2": 1.6704416780568586e-09,
+            "outside_tolerance": 0
+          },
+          "checkpoints": [
+            {
+              "name": "ffn_out-0",
+              "first": {
+                "max_absolute": 4.5166014928099685e-08,
+                "l2_distance": 4.7085964985056335e-08,
+                "normalized_l2": 1.759666457675586e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 3.239746249050768e-08,
+                "l2_distance": 3.432327815270053e-08,
+                "normalized_l2": 1.122390015401239e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "ffn_out-11",
+              "first": {
+                "max_absolute": 4.985427903836381e-10,
+                "l2_distance": 3.94540247806521e-09,
+                "normalized_l2": 1.7410868197484477e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.771614076082287e-10,
+                "l2_distance": 1.7426505609522387e-09,
+                "normalized_l2": 1.3142046208777019e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "result_embd",
+              "first": {
+                "max_absolute": 4.968871980537415e-09,
+                "l2_distance": 4.023659067554491e-08,
+                "normalized_l2": 1.6272118510344423e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.9880981567440585e-09,
+                "l2_distance": 3.842819738817225e-08,
+                "normalized_l2": 1.5522357907264313e-09,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "encoding_ms": 113.417417,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 53966186,
+            "peak_session_buffer_capacity_bytes": 1570864,
+            "reserved": 27733504,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "case": "whitespace",
+          "embedding": {
+            "max_absolute": 4.987106283493858e-10,
+            "l2_distance": 9.590236397356868e-10,
+            "normalized_l2": 9.590236396672235e-10,
+            "outside_tolerance": 0
+          },
+          "pooled": {
+            "max_absolute": 4.978637724306623e-09,
+            "l2_distance": 3.508824543358672e-08,
+            "normalized_l2": 1.6312123675596952e-09,
+            "outside_tolerance": 0
+          },
+          "checkpoints": [
+            {
+              "name": "ffn_out-0",
+              "first": {
+                "max_absolute": 4.06250002527031e-08,
+                "l2_distance": 4.613560403464375e-08,
+                "normalized_l2": 1.941423767228664e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 3.603515708050509e-08,
+                "l2_distance": 4.642998155442461e-08,
+                "normalized_l2": 1.6840237478876033e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "ffn_out-11",
+              "first": {
+                "max_absolute": 4.98756397293576e-10,
+                "l2_distance": 2.429373362824217e-09,
+                "normalized_l2": 1.5737370882034973e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 2.7917862466253496e-10,
+                "l2_distance": 8.497121273550075e-10,
+                "normalized_l2": 8.1175442933509e-10,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "result_embd",
+              "first": {
+                "max_absolute": 4.994812119463177e-09,
+                "l2_distance": 3.897378694074887e-08,
+                "normalized_l2": 1.5712119680575701e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.9877930674568915e-09,
+                "l2_distance": 3.6917025973170345e-08,
+                "normalized_l2": 1.5016570327317747e-09,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "encoding_ms": 99.004125,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 53966702,
+            "peak_session_buffer_capacity_bytes": 1484848,
+            "reserved": 27733504,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "case": "special-literal",
+          "embedding": {
+            "max_absolute": 3.892593331000782e-10,
+            "l2_distance": 9.873543940065566e-10,
+            "normalized_l2": 9.873543932079109e-10,
+            "outside_tolerance": 0
+          },
+          "pooled": {
+            "max_absolute": 4.965515110200158e-09,
+            "l2_distance": 3.6950125672638214e-08,
+            "normalized_l2": 1.690018251390287e-09,
+            "outside_tolerance": 0
+          },
+          "checkpoints": [
+            {
+              "name": "ffn_out-0",
+              "first": {
+                "max_absolute": 3.186035257840558e-08,
+                "l2_distance": 3.7337719668273036e-08,
+                "normalized_l2": 1.3618470611467684e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 3.4887694511098744e-08,
+                "l2_distance": 4.214469638054659e-08,
+                "normalized_l2": 1.7451728131152224e-09,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "ffn_out-11",
+              "first": {
+                "max_absolute": 3.909721435491065e-10,
+                "l2_distance": 8.972753694108027e-10,
+                "normalized_l2": 8.488160683306123e-10,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.1567611852588726e-10,
+                "l2_distance": 8.799295522460314e-10,
+                "normalized_l2": 9.424037316738296e-10,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "name": "result_embd",
+              "first": {
+                "max_absolute": 4.9801636148316675e-09,
+                "l2_distance": 4.190892817727999e-08,
+                "normalized_l2": 1.7024997168229476e-09,
+                "outside_tolerance": 0
+              },
+              "last": {
+                "max_absolute": 4.994201718844238e-09,
+                "l2_distance": 4.0247085348440245e-08,
+                "normalized_l2": 1.6360489011234066e-09,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "encoding_ms": 175.952,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 53966831,
+            "peak_session_buffer_capacity_bytes": 1871920,
+            "reserved": 27733504,
+            "session_buffer_capacity_bytes": 0
+          }
+        }
+      ],
+      "batches": [
+        {
+          "profile": "reference",
+          "threads": 1,
+          "batch_size": 4,
+          "comparisons": [
+            {
+              "reference": {
+                "max_absolute": 4.767952005435561e-10,
+                "l2_distance": 9.024459006365675e-10,
+                "normalized_l2": 9.02445900870274e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 2.0343399187439104e-10,
+                "l2_distance": 7.344684561412031e-10,
+                "normalized_l2": 7.344684568462127e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.767952005435561e-10,
+                "l2_distance": 9.024459006365675e-10,
+                "normalized_l2": 9.02445900870274e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.987106283493858e-10,
+                "l2_distance": 9.590236397356868e-10,
+                "normalized_l2": 9.590236396672235e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "plan": {
+            "additional_reserved_bytes": 92313927,
+            "admissible": true,
+            "backend": "cpu-reference",
+            "batch_size": 4,
+            "input_count": 4,
+            "io_bytes": 262144,
+            "limitations": [
+              "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+              "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+              "The encoder stores no generation KV cache or quadratic attention matrix",
+              "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+            ],
+            "max_input_tokens": 512,
+            "output_bytes": 13312,
+            "profile": "reference",
+            "reasons": [
+              "admitted up to 2048 packed tokens per microbatch; input limits and dimensions are preserved"
+            ],
+            "request_reserved_bytes": 1080391,
+            "required_reserved_bytes": 120047431,
+            "safety_headroom_bytes": 0,
+            "schema_version": 1,
+            "shared_weight_bytes": 145389792,
+            "task": "embedding",
+            "tensor_tile_tokens": 16,
+            "threads": 1,
+            "token_capacity": 2048,
+            "tokenization_bytes": 18304,
+            "workspace_bytes": 91233536
+          },
+          "encoding_ms": 412.773,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 120047431,
+            "peak_session_buffer_capacity_bytes": 3128512,
+            "reserved": 27733504,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "profile": "balanced",
+          "threads": 2,
+          "batch_size": 4,
+          "comparisons": [
+            {
+              "reference": {
+                "max_absolute": 4.767952005435561e-10,
+                "l2_distance": 9.024459006365675e-10,
+                "normalized_l2": 9.02445900870274e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 2.0343399187439104e-10,
+                "l2_distance": 7.344684561412031e-10,
+                "normalized_l2": 7.344684568462127e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.767952005435561e-10,
+                "l2_distance": 9.024459006365675e-10,
+                "normalized_l2": 9.02445900870274e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.987106283493858e-10,
+                "l2_distance": 9.590236397356868e-10,
+                "normalized_l2": 9.590236396672235e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "plan": {
+            "additional_reserved_bytes": 102845749,
+            "admissible": true,
+            "backend": "cpu-reference",
+            "batch_size": 4,
+            "input_count": 4,
+            "io_bytes": 262144,
+            "limitations": [
+              "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+              "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+              "The encoder stores no generation KV cache or quadratic attention matrix",
+              "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+            ],
+            "max_input_tokens": 512,
+            "output_bytes": 13312,
+            "profile": "balanced",
+            "reasons": [
+              "admitted up to 2048 packed tokens per microbatch; input limits and dimensions are preserved"
+            ],
+            "request_reserved_bytes": 1080391,
+            "required_reserved_bytes": 130579253,
+            "safety_headroom_bytes": 9349614,
+            "schema_version": 1,
+            "shared_weight_bytes": 145389792,
+            "task": "embedding",
+            "tensor_tile_tokens": 16,
+            "threads": 2,
+            "token_capacity": 2048,
+            "tokenization_bytes": 18304,
+            "workspace_bytes": 92415744
+          },
+          "encoding_ms": 277.362375,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 130579253,
+            "peak_session_buffer_capacity_bytes": 3131120,
+            "reserved": 27733504,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "profile": "performance",
+          "threads": 4,
+          "batch_size": 4,
+          "comparisons": [
+            {
+              "reference": {
+                "max_absolute": 4.767952005435561e-10,
+                "l2_distance": 9.024459006365675e-10,
+                "normalized_l2": 9.02445900870274e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 2.0343399187439104e-10,
+                "l2_distance": 7.344684561412031e-10,
+                "normalized_l2": 7.344684568462127e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.767952005435561e-10,
+                "l2_distance": 9.024459006365675e-10,
+                "normalized_l2": 9.02445900870274e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.987106283493858e-10,
+                "l2_distance": 9.590236397356868e-10,
+                "normalized_l2": 9.590236396672235e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "plan": {
+            "additional_reserved_bytes": 99682405,
+            "admissible": true,
+            "backend": "cpu-reference",
+            "batch_size": 4,
+            "input_count": 4,
+            "io_bytes": 262144,
+            "limitations": [
+              "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+              "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+              "The encoder stores no generation KV cache or quadratic attention matrix",
+              "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+            ],
+            "max_input_tokens": 512,
+            "output_bytes": 13312,
+            "profile": "performance",
+            "reasons": [
+              "admitted up to 2048 packed tokens per microbatch; input limits and dimensions are preserved"
+            ],
+            "request_reserved_bytes": 1080391,
+            "required_reserved_bytes": 127415909,
+            "safety_headroom_bytes": 4746782,
+            "schema_version": 1,
+            "shared_weight_bytes": 145389792,
+            "task": "embedding",
+            "tensor_tile_tokens": 32,
+            "threads": 4,
+            "token_capacity": 2048,
+            "tokenization_bytes": 18304,
+            "workspace_bytes": 93855232
+          },
+          "encoding_ms": 225.733958,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 127415909,
+            "peak_session_buffer_capacity_bytes": 3389776,
+            "reserved": 27733504,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "profile": "low-memory",
+          "threads": 1,
+          "batch_size": 4,
+          "comparisons": [
+            {
+              "reference": {
+                "max_absolute": 4.767952005435561e-10,
+                "l2_distance": 9.024459006365675e-10,
+                "normalized_l2": 9.02445900870274e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 2.0343399187439104e-10,
+                "l2_distance": 7.344684561412031e-10,
+                "normalized_l2": 7.344684568462127e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.767952005435561e-10,
+                "l2_distance": 9.024459006365675e-10,
+                "normalized_l2": 9.02445900870274e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.987106283493858e-10,
+                "l2_distance": 9.590236397356868e-10,
+                "normalized_l2": 9.590236396672235e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "plan": {
+            "additional_reserved_bytes": 26591585,
+            "admissible": true,
+            "backend": "cpu-reference",
+            "batch_size": 4,
+            "input_count": 4,
+            "io_bytes": 16384,
+            "limitations": [
+              "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+              "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+              "The encoder stores no generation KV cache or quadratic attention matrix",
+              "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+            ],
+            "max_input_tokens": 512,
+            "output_bytes": 13312,
+            "profile": "low-memory",
+            "reasons": [
+              "admitted up to 512 packed tokens per microbatch; input limits and dimensions are preserved"
+            ],
+            "request_reserved_bytes": 1080391,
+            "required_reserved_bytes": 54325089,
+            "safety_headroom_bytes": 1266266,
+            "schema_version": 1,
+            "shared_weight_bytes": 145389792,
+            "task": "embedding",
+            "tensor_tile_tokens": 4,
+            "threads": 1,
+            "token_capacity": 512,
+            "tokenization_bytes": 18304,
+            "workspace_bytes": 24244928
+          },
+          "encoding_ms": 597.519375,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 54325089,
+            "peak_session_buffer_capacity_bytes": 2201152,
+            "reserved": 27733504,
+            "session_buffer_capacity_bytes": 0
+          }
+        },
+        {
+          "profile": "balanced",
+          "threads": 2,
+          "batch_size": 1,
+          "comparisons": [
+            {
+              "reference": {
+                "max_absolute": 4.767952005435561e-10,
+                "l2_distance": 9.024459006365675e-10,
+                "normalized_l2": 9.02445900870274e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 2.0343399187439104e-10,
+                "l2_distance": 7.344684561412031e-10,
+                "normalized_l2": 7.344684568462127e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.767952005435561e-10,
+                "l2_distance": 9.024459006365675e-10,
+                "normalized_l2": 9.02445900870274e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            },
+            {
+              "reference": {
+                "max_absolute": 4.987106283493858e-10,
+                "l2_distance": 9.590236397356868e-10,
+                "normalized_l2": 9.590236396672235e-10,
+                "outside_tolerance": 0
+              },
+              "individual": {
+                "max_absolute": 0.0,
+                "l2_distance": 0.0,
+                "normalized_l2": 0.0,
+                "outside_tolerance": 0
+              }
+            }
+          ],
+          "plan": {
+            "additional_reserved_bytes": 30179432,
+            "admissible": true,
+            "backend": "cpu-reference",
+            "batch_size": 1,
+            "input_count": 4,
+            "io_bytes": 262144,
+            "limitations": [
+              "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+              "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+              "The encoder stores no generation KV cache or quadratic attention matrix",
+              "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+            ],
+            "max_input_tokens": 512,
+            "output_bytes": 13312,
+            "profile": "balanced",
+            "reasons": [
+              "admitted up to 512 packed tokens per microbatch; input limits and dimensions are preserved"
+            ],
+            "request_reserved_bytes": 1080391,
+            "required_reserved_bytes": 57912936,
+            "safety_headroom_bytes": 2743585,
+            "schema_version": 1,
+            "shared_weight_bytes": 145389792,
+            "task": "embedding",
+            "tensor_tile_tokens": 16,
+            "threads": 2,
+            "token_capacity": 512,
+            "tokenization_bytes": 18304,
+            "workspace_bytes": 26355456
+          },
+          "encoding_ms": 311.652166,
+          "cleanup": {
+            "limit": 268435456,
+            "peak_reserved": 57912936,
+            "peak_session_buffer_capacity_bytes": 1754864,
+            "reserved": 27733504,
+            "session_buffer_capacity_bytes": 0
+          }
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "macOS ARM64 CPU evidence only",
+    "Embedding CLI/API and GPU qualification remain separate gates",
+    "RSS, faults and I/O are not captured by this numerical probe",
+    "Times include checkpoint serialization when tracing is enabled"
+  ]
+}

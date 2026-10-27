@@ -1,0 +1,184 @@
+#!/usr/bin/env python3
+"""Qualify pinned native packed CPU files against the independent scalar reference.
+All tensor payloads are hash-verified. Correctness uses identical files/settings;
+quantization quality is reported separately. Timings have uncontrolled cache conditions.
+"""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import platform
+import shutil
+import subprocess
+import sys
+
+ROOT=Path(__file__).resolve().parents[1]
+sys.path[:0]=[str(ROOT/'tools'),str(ROOT/'.cache/devtools')]
+from check_oracle import compare_traces,run_json
+from fetch_model import digest
+
+
+def capture_reference(command, target, identity, reuse, log):
+    """Keep completed independent cases across interruptions; verify before reuse."""
+    if reuse and target.exists():
+        record=json.loads(target.read_text(encoding='utf-8'))
+        encoded=json.dumps(record['output'],sort_keys=True,separators=(',',':')).encode()
+        if record['identity']==identity and hashlib.sha256(encoded).hexdigest()==record['output_sha256']:
+            return record['output']
+    result=run_json(command,log)
+    encoded=json.dumps(result,sort_keys=True,separators=(',',':')).encode()
+    record={'identity':identity,'output':result,'output_sha256':hashlib.sha256(encoded).hexdigest()}
+    temporary=target.with_suffix('.tmp')
+    temporary.write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8')
+    temporary.replace(target)
+    return result
+
+
+def main():
+    from jinja2 import Environment,StrictUndefined
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--id',action='append')
+    parser.add_argument('--case',action='append')
+    parser.add_argument('--reuse-reference-cache',action='store_true',
+                        help='Reuse complete independent captures only when input/build/output hashes match')
+    args=parser.parse_args()
+    manifest_path=ROOT/'fixtures/quantized/models.json'
+    manifest=json.loads(manifest_path.read_text())
+    prompt_cases=json.loads((ROOT/'fixtures/prompts.json').read_text(encoding='utf-8'))
+    if args.id and set(args.id)-{m['id'] for m in manifest['models']}:
+        parser.error('Unknown model ID')
+    if args.case and set(args.case)-{c['id'] for c in prompt_cases}:
+        parser.error('Unknown prompt case')
+    base=json.loads((ROOT/'fixtures/models.json').read_text())
+    build=json.loads((ROOT/'.cache/reference-oracle.build.json').read_text())
+    oracle=ROOT/'.cache/reference-oracle';native=ROOT/'target/release/coheryn'
+    # Keep a long qualification independent of concurrent rebuilds of the CLI path.
+    executable_hash = digest(native)
+    snapshot = ROOT/'.cache'/('qualification-native-'+executable_hash)
+    if not snapshot.exists():
+        shutil.copy2(native,snapshot)
+    if digest(snapshot)!=executable_hash:
+        raise SystemExit('Native qualification snapshot integrity mismatch')
+    native=snapshot
+    if build['revision']!=base['oracle']['revision'] or build['oracle_executable_sha256']!=digest(oracle):
+        raise SystemExit('Unverified reference executable')
+    oracle_hash=digest(oracle)
+    build_hash=digest(ROOT/'.cache/reference-oracle.build.json')
+    reports=[]
+    for model in manifest['models']:
+        if args.id and model['id'] not in args.id:continue
+        path=ROOT/'.cache/models'/model['file']
+        if path.stat().st_size!=model['bytes'] or digest(path)!=model['sha256']:
+            raise SystemExit('Pinned byte verification failed: '+model['id'])
+        if not args.case:
+            model['bytes_verified']=True
+            if not model.get('evidence'):
+                model['qualification']='byte-verified-native-qualification-incomplete'
+            manifest_path.write_text(json.dumps(manifest,indent=2)+'\n')
+        cache=ROOT/'.cache/quantized'/model['id'];cache.mkdir(parents=True,exist_ok=True)
+        inventory=run_json([native,'models','inspect',path,'--json'])
+        contract=manifest['qualification_contracts'][model['qualification_contract']]
+        if 'required_metadata_fingerprints' in contract:
+            assert inventory['metadata_fingerprints']==contract['required_metadata_fingerprints'], 'Second-size tokenizer/template reuse requires exact fingerprints'
+        report=run_json([native,'models','validate',path,'--deep','--json'])
+        if not report['executable']:raise RuntimeError('Unsupported published inventory: '+model['id'])
+        inventory_file=ROOT/'fixtures/quantized'/(model['id']+'.inventory.json')
+        inventory_file.write_text(json.dumps(inventory,indent=2)+'\n')
+        print(f'PASS {model["id"]}: byte hash, deep scan, actual types {inventory["encodings"]}',flush=True)
+        prompt=cache/'prompt.txt';prompt.write_text('Hello')
+        vocabulary=run_json([oracle,path,'tokenize',prompt],cache/'tokenizer.log')
+        template=Environment(undefined=StrictUndefined).from_string(vocabulary['template'])
+        results=[];tokenizer_checks=[]
+        for case in prompt_cases:
+            if args.case and case['id'] not in args.case:continue
+            if case['id'] not in contract['tokenizer_template_cases']:continue
+            text=case.get('prompt')
+            if text is None:
+                text=template.render(messages=[dict(m,tool_calls=[]) for m in case['messages']],tools=False,
+                    add_generation_prompt=True,bos_token='',eos_token='<|im_end|>')
+            prompt.write_text(text)
+            expected_tokens=run_json([oracle,path,'tokenize',prompt])['token_ids']
+            if 'messages' in case:
+                messages=cache/'messages.json'
+                messages.write_text(json.dumps(case['messages'],ensure_ascii=False),encoding='utf-8')
+                tokenized=run_json([native,'tokenize',path,'--messages',messages])
+            else:
+                tokenized=run_json([native,'tokenize',path,'--prompt',text])
+            actual_tokens=tokenized['token_ids']
+            assert tokenized['prompt']==text,(model['id'],case['id'],'rendered prompt bytes')
+            assert expected_tokens==actual_tokens,(model['id'],case['id'],'tokenization')
+            tokenizer_checks.append({'id':case['id'],'prompt_sha256':hashlib.sha256(text.encode('utf-8')).hexdigest(),'token_ids':actual_tokens})
+            if case['id'] not in contract['greedy_cases'] and not args.case:continue
+            identity={'model_sha256':model['sha256'],'oracle_sha256':oracle_hash,'build_sha256':build_hash,
+                      'prompt_sha256':hashlib.sha256(text.encode('utf-8')).hexdigest(),'mode':'generate','count':case['generate']}
+            expected=capture_reference([oracle,path,'generate',prompt,case['generate']],
+                cache/(case['id']+'.reference.json'),identity,args.reuse_reference_cache,
+                cache/(case['id']+'.reference.log'))
+            actual=run_json([native,'--json','run',path,'--standalone','--profile','reference','--threads','1',
+                             '--prompt',text,'--context','512','--max-tokens',case['generate']])
+            if expected['token_ids']!=actual['token_ids']:
+                raise AssertionError((model['id'],case['id'],expected['token_ids'],actual['token_ids']))
+            entry={'id':case['id'],'prompt':text,'prompt_token_ids':expected_tokens,'generated_token_ids':actual['token_ids'],
+                   'text':actual['text'],'completion_tokens':actual['completion_tokens'],'memory':actual['memory']}
+            if case['id'] in contract['profile_cases']:
+                for profile in ['low-memory','performance']:
+                    variant=run_json([native,'--json','run',path,'--standalone','--profile',profile,
+                                      '--prompt',text,'--context','512','--max-tokens',case['generate']])
+                    assert variant['token_ids']==expected['token_ids'],(model['id'],profile,'parallel/tile parity')
+                    assert variant['memory']['session_buffer_capacity_bytes']==0
+                entry['profiles_exact']=['reference','low-memory','performance']
+            results.append(entry)
+            (cache/'progress.json').write_text(json.dumps({'model_sha256':model['sha256'],
+                'native_executable_sha256':executable_hash,'completed_cases':results,
+                'qualification_complete':False},indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+            print(f'PASS {model["id"]} {case["id"]}: {len(expected_tokens)} input / {len(actual["token_ids"])} exact greedy tokens',flush=True)
+        prompt.write_text(contract['trace_prompt'],encoding='utf-8')
+        expected_trace,actual_trace=cache/'reference.jsonl',cache/'native.jsonl'
+        trace_identity={'model_sha256':model['sha256'],'oracle_sha256':oracle_hash,'build_sha256':build_hash,
+                        'prompt_sha256':hashlib.sha256(prompt.read_bytes()).hexdigest(),'mode':'trace'}
+        trace_receipt=cache/'reference-trace-receipt.json'
+        reusable=False
+        if args.reuse_reference_cache and trace_receipt.exists() and expected_trace.exists():
+            receipt=json.loads(trace_receipt.read_text())
+            reusable=receipt['identity']==trace_identity and receipt['sha256']==digest(expected_trace)
+        if not reusable:
+            temporary=expected_trace.with_suffix('.tmp')
+            with temporary.open('w') as output,(cache/'trace-reference.log').open('w') as log:
+                subprocess.run([oracle,path,'trace',prompt],stdout=output,stderr=log,check=True)
+            temporary.replace(expected_trace)
+            trace_receipt.write_text(json.dumps({'identity':trace_identity,'sha256':digest(expected_trace)},indent=2)+'\n')
+        with actual_trace.open('w') as output:
+            subprocess.run([native,'trace',path,'--prompt',contract['trace_prompt'],'--context','512'],stdout=output,check=True)
+        comparisons=compare_traces(expected_trace,actual_trace,manifest['tolerances'])
+        assert len(comparisons)==(report['config']['layers']+1)*contract['trace_positions']
+        if not args.case:
+            assert {c['id'] for c in results}==set(contract['greedy_cases'])
+            assert {c['id'] for c in tokenizer_checks}==set(contract['tokenizer_template_cases'])
+        print(f'PASS {model["id"]}: {len(comparisons)} teacher-forced layer/logit checks',flush=True)
+        qualified_model=dict(model,qualification='partial-case-checks-not-qualification' if args.case else 'native-reference-parity-tested-macos-arm64')
+        evidence={'schema_version':1,'model':qualified_model,'inventory':str(inventory_file.relative_to(ROOT)),
+                  'validated_model_config':report['config'],
+                  'oracle_revision':base['oracle']['revision'],'oracle_executable_sha256':digest(oracle),
+                  'native_executable_sha256':digest(native),'platform':platform.platform(),
+                  'settings':base['oracle']['settings'],'packed_precision_contract':{
+                      'activation':'canonical Q8_0 for Q4_0/Q5_0/Q8_0 rows; Q8_K for Q4_K/Q6_K rows',
+                      'reduction':'packed integer products with scalar f32 fused accumulation; float-row reduction retains the base contract'},
+                  'tolerances':manifest['tolerances'],
+                  'qualification_contract':contract,'tokenizer_template_checks':tokenizer_checks,
+                  'cases':results,'trace_prompt':contract['trace_prompt'],'trace_comparisons':comparisons,
+                  'cache_condition':'uncontrolled','note':'Executor parity compares identical weights; this is not quantization quality or long-context qualification'}
+        evidence_file=cache/'partial-check.json' if args.case else ROOT/'fixtures/qualification'/('g4-'+model['id']+'.json')
+        evidence_file.write_text(json.dumps(evidence,indent=2,ensure_ascii=False)+'\n')
+        if not args.case:
+            model['qualification']='native-reference-parity-tested-macos-arm64'
+            model['evidence']=str(evidence_file.relative_to(ROOT))
+            manifest_path.write_text(json.dumps(manifest,indent=2)+'\n')
+            progress=cache/'progress.json'
+            completed=json.loads(progress.read_text(encoding='utf-8'))
+            completed.update(qualification_complete=True,evidence=str(evidence_file.relative_to(ROOT)))
+            progress.write_text(json.dumps(completed,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+        reports.append(evidence_file.name)
+    print(('Partial checks: ' if args.case else 'Qualified: ')+', '.join(reports),flush=True)
+
+
+if __name__=='__main__':main()

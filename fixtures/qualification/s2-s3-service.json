@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "stage": "S2-S3-native-CPU-preview",
+  "model_sha256": "8e0ae26000627ed62de0e78e41860af70094558b9d2913385c842a6aa06cf3fc",
+  "model_bytes": 1266425696,
+  "binary_sha256": "514eae96ebd230261527e105943e7b91a5da0e0f5110f9ec8549ac4ee9bd8ddd",
+  "os": "macOS-27.0.1-arm64-arm-64bit",
+  "hardware": "arm64",
+  "compiler": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "context": 512,
+  "backend": "native-cpu",
+  "cache_dtype": "f32",
+  "profile": "balanced",
+  "seed": 0,
+  "temperature": 0,
+  "max_tokens": 1,
+  "generation_timeout_seconds": 600,
+  "cache_conditions": "uncontrolled OS/file cache; fresh means no session KV, not a cold OS cache",
+  "scope": "Pinned FP16 CPU smoke, not a performance superiority, platform matrix or full-release claim.",
+  "checks": [
+    {
+      "case": "pinned-greedy-and-matched-fresh-reused-continuation",
+      "first_token_ids": [
+        9707
+      ],
+      "token_ids": [
+        19
+      ],
+      "prompt_tokens": 35,
+      "reused_prompt_tokens": 17,
+      "cache_reserved_bytes": 1580160,
+      "reused_prefill_ms": 30242.74,
+      "fresh_prefill_ms": 153943.042542,
+      "reused_memory": {
+        "limit": 1073741824,
+        "peak_reserved": 556444588,
+        "peak_session_buffer_capacity_bytes": 3062828,
+        "reserved": 293179237,
+        "session_buffer_capacity_bytes": 1576064
+      },
+      "fresh_memory": {
+        "limit": 1073741824,
+        "peak_reserved": 556444588,
+        "peak_session_buffer_capacity_bytes": 4638892,
+        "reserved": 280547181,
+        "session_buffer_capacity_bytes": 1576064
+      }
+    },
+    {
+      "case": "restart-exact-history-replay-without-weights",
+      "revision": 4,
+      "message_count": 5,
+      "cached_tokens": 0
+    },
+    {
+      "case": "explicit-model-reload-cold-rebuild-reset-delete-unload",
+      "reused_prompt_tokens": 0,
+      "remaining_reserved_bytes": 16777216,
+      "remaining_reservation": "bounded embedded-store baseline, no session/model buffers"
+    }
+  ],
+  "threads_per_session": 2,
+  "graceful_restarts": true
+}

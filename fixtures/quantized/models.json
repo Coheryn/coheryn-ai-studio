@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "models": [
+    {
+      "id": "qwen2.5-0.5b-instruct-q8_0",
+      "repository": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+      "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+      "file": "qwen2.5-0.5b-instruct-q8_0.gguf",
+      "bytes": 675710816,
+      "sha256": "ca59ca7f13d0e15a8cfa77bd17e65d24f6844b554a7b6c12e07a5f89ff76844e",
+      "maximum_download_bytes": 675710816,
+      "license": "Apache-2.0",
+      "qualification": "native-reference-parity-tested-macos-arm64",
+      "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q8_0.json",
+      "qualification_contract": "primary",
+      "bytes_verified": true
+    },
+    {
+      "id": "qwen2.5-0.5b-instruct-q4_0",
+      "repository": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+      "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+      "file": "qwen2.5-0.5b-instruct-q4_0.gguf",
+      "bytes": 428730208,
+      "sha256": "7671c0c304e6ce5a7fc577bcb12aba01e2c155cc2efd29b2213c95b18edaf6ed",
+      "maximum_download_bytes": 428730208,
+      "license": "Apache-2.0",
+      "qualification": "native-reference-parity-tested-macos-arm64",
+      "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q4_0.json",
+      "qualification_contract": "primary",
+      "bytes_verified": true
+    },
+    {
+      "id": "qwen2.5-0.5b-instruct-q4_k_m",
+      "repository": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+      "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+      "file": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      "bytes": 491400032,
+      "sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+      "maximum_download_bytes": 491400032,
+      "license": "Apache-2.0",
+      "qualification": "native-reference-parity-tested-macos-arm64",
+      "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q4_k_m.json",
+      "qualification_contract": "primary",
+      "bytes_verified": true
+    },
+    {
+      "id": "qwen2.5-0.5b-instruct-q6_k",
+      "repository": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+      "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+      "file": "qwen2.5-0.5b-instruct-q6_k.gguf",
+      "bytes": 650379104,
+      "sha256": "2f82233630c349ccf6b8daccf48f9a7865713d9f08a2eadfa456cebe9b97c7f5",
+      "maximum_download_bytes": 650379104,
+      "license": "Apache-2.0",
+      "qualification": "native-reference-parity-tested-macos-arm64",
+      "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q6_k.json",
+      "qualification_contract": "primary",
+      "bytes_verified": true
+    },
+    {
+      "id": "qwen2.5-1.5b-instruct-fp16",
+      "repository": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+      "revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
+      "file": "qwen2.5-1.5b-instruct-fp16.gguf",
+      "bytes": 3560416288,
+      "sha256": "fc89e330deb3fd8fa560f1c0f35a1e2b8da96d59e13445559ed190307a6f5649",
+      "maximum_download_bytes": 3560416288,
+      "license": "Apache-2.0",
+      "qualification": "native-reference-parity-tested-macos-arm64",
+      "qualification_contract": "second-size",
+      "bytes_verified": true,
+      "evidence": "fixtures/qualification/g4-qwen2.5-1.5b-instruct-fp16.json"
+    },
+    {
+      "id": "qwen2.5-1.5b-instruct-q4_k_m",
+      "repository": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+      "revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
+      "file": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+      "bytes": 1117320736,
+      "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+      "maximum_download_bytes": 1117320736,
+      "license": "Apache-2.0",
+      "qualification": "native-reference-parity-tested-macos-arm64",
+      "qualification_contract": "second-size",
+      "bytes_verified": true,
+      "evidence": "fixtures/qualification/g4-qwen2.5-1.5b-instruct-q4_k_m.json"
+    }
+  ],
+  "oracle": "fixtures/models.json#oracle",
+  "tolerances": {
+    "logits_absolute": 0.003,
+    "logits_relative": 0.001,
+    "normalized_l2": 0.0005,
+    "greedy_tokens_exact": true
+  },
+  "kernel_fixtures": "fixtures/quantized/kernels.json",
+  "qualification_contracts": {
+    "primary": {
+      "tokenizer_template_cases": [
+        "english",
+        "bengali",
+        "unicode",
+        "whitespace",
+        "special",
+        "default-system",
+        "explicit-system",
+        "multi-turn"
+      ],
+      "greedy_cases": [
+        "english",
+        "bengali",
+        "unicode",
+        "whitespace",
+        "special",
+        "default-system",
+        "explicit-system",
+        "multi-turn"
+      ],
+      "profile_cases": [
+        "english",
+        "multi-turn"
+      ],
+      "trace_prompt": "Hello world",
+      "trace_positions": 2,
+      "note": "Full primary corpus for every required publisher quantized variant."
+    },
+    "second-size": {
+      "tokenizer_template_cases": [
+        "english",
+        "bengali",
+        "unicode",
+        "whitespace",
+        "special",
+        "default-system",
+        "explicit-system",
+        "multi-turn"
+      ],
+      "greedy_cases": [
+        "english",
+        "unicode"
+      ],
+      "profile_cases": [
+        "english"
+      ],
+      "required_metadata_fingerprints": {
+        "tokenizer.chat_template": "71672240b1a3b068067b6a332bc38d3fc05aaade9d41b4b27d7510ff4335504b",
+        "tokenizer.ggml.merges": "24fa2ae2a398e50784a1fff678482094af4f63e6783d35686726abacda8dc371",
+        "tokenizer.ggml.token_type": "17ccfa7767a8721474dc0fd21ca1308fdfd04e0f64036efbfa97f3e16e5f18f1",
+        "tokenizer.ggml.tokens": "e2fadeac783c911f535d21f858f43127672a1d261af510d3f895e34bd2f6fb10"
+      },
+      "trace_prompt": "Hello world",
+      "trace_positions": 2,
+      "note": "Dimension qualification: require exact primary tokenizer/template fingerprints, all tokenizer/render cases, two greedy cases, profile parity and every layer/logit at two teacher-forced positions. Numeric tolerances are unchanged; the primary configuration retains its full eight-case greedy corpus."
+    }
+  }
+}

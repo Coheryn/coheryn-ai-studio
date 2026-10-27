@@ -1,0 +1,24 @@
+// Independent development fixture for the exact Qwen/NeoX positional operation.
+#include "ggml.h"
+#include "ggml-cpu.h"
+#include <cmath>
+#include <iomanip>
+#include <iostream>
+#include <vector>
+static void array(const std::vector<float>&a){std::cout<<'[';for(size_t i=0;i<a.size();++i){if(i)std::cout<<',';std::cout<<std::setprecision(9)<<a[i];}std::cout<<']';}
+int main(){
+    ggml_cpu_init();std::cout<<"{\"cases\":[";bool comma=false;
+    for(int dim:{4,64,128})for(int position:{0,1,7,511}){
+        ggml_init_params params{16<<20,nullptr,false};auto *ctx=ggml_init(params);
+        auto *x=ggml_new_tensor_3d(ctx,GGML_TYPE_F32,dim,2,1);auto *p=ggml_new_tensor_1d(ctx,GGML_TYPE_I32,1);
+        std::vector<float> input(dim*2);for(size_t i=0;i<input.size();++i)input[i]=float(int(i*17%97)-48)/16.f;
+        std::copy(input.begin(),input.end(),static_cast<float*>(x->data));*static_cast<int32_t*>(p->data)=position;
+        auto *result=ggml_rope_ext(ctx,x,p,nullptr,dim,GGML_ROPE_TYPE_NEOX,8192,1000000.f,1.f,0.f,1.f,32.f,1.f);
+        auto *graph=ggml_new_graph(ctx);ggml_build_forward_expand(graph,result);
+        if(ggml_graph_compute_with_ctx(ctx,graph,1)!=GGML_STATUS_SUCCESS)return 2;
+        std::vector<float> output(static_cast<float*>(result->data),static_cast<float*>(result->data)+dim*2);
+        if(comma)std::cout<<',';comma=true;std::cout<<"{\"head_dim\":"<<dim<<",\"position\":"<<position<<",\"base\":1000000,\"input\":";
+        array(input);std::cout<<",\"output\":";array(output);std::cout<<'}';ggml_free(ctx);
+    }
+    std::cout<<"]}\n";
+}

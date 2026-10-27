@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "stage": "E1-independent-reference-extension",
+  "assets": [
+    {
+      "path": "fixtures/embedding/multilingual-inputs.json",
+      "bytes": 4957,
+      "sha256": "5ef56907a27e93f8d3a4b6b7d7666ce28c4c5886096a47d392fde029c1b9ee9f"
+    },
+    {
+      "path": "fixtures/embedding/nomic-embed-text-v1.5.Q8_0.multilingual.json",
+      "bytes": 1708695,
+      "sha256": "90456f95611d19fa5045068f187cb9bb9216447d4e254623d4cdbec79b42fcaf"
+    },
+    {
+      "path": "fixtures/embedding/nomic-embed-text-v1.5.f16.multilingual.json",
+      "bytes": 1708722,
+      "sha256": "58b097a4366cd66c185cb5f492c3dbd52fe4d51d175ebee0d12d04b9be486dc7"
+    },
+    {
+      "path": "fixtures/embedding/nomic-embed-text-v1.5.Q8_0.boundary.json",
+      "bytes": 40230,
+      "sha256": "20b5562d32cc0cd8320436efcd1edf02d9edd4888c53f31f4aee9cecdcdde1e5"
+    },
+    {
+      "path": "fixtures/embedding/nomic-embed-text-v1.5.f16.boundary.json",
+      "bytes": 40204,
+      "sha256": "011e2421e080bab1d98ebf54f21e3b24aee89e6cee651ed63bfd9705818871ea"
+    }
+  ],
+  "note": "Independent oracle expected outputs; never replace with native output to hide a regression."
+}

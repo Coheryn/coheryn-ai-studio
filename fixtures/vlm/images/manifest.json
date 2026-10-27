@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "source": "Original procedural color blocks; no external artwork",
+  "fixtures": [
+    {
+      "file": "landscape.png",
+      "bytes": 169,
+      "sha256": "6bb5bcf703a7d2a114f69e916468b01c4bdf0ff1aa9780fc53aadae84f8b3991",
+      "width": 112,
+      "height": 56,
+      "channels": 3,
+      "format": "png"
+    },
+    {
+      "file": "swapped.png",
+      "bytes": 169,
+      "sha256": "cf6d4c7111bfda8ef3f3ee16b82cbde745ca9cf9e357ecde83a915db2cd9e11b",
+      "width": 112,
+      "height": 56,
+      "channels": 3,
+      "format": "png"
+    },
+    {
+      "file": "portrait.png",
+      "bytes": 160,
+      "sha256": "00dd6a4a6cb01cab453e7288eec54093abfae1cb06eaeb3297d3b5990ac6ddf3",
+      "width": 56,
+      "height": 112,
+      "channels": 3,
+      "format": "png"
+    },
+    {
+      "file": "minimum.png",
+      "bytes": 69,
+      "sha256": "2e9b06dc65a4dec84a3eb3124553ec93ca27c78221e64ab2177d0f1412cfcb20",
+      "width": 1,
+      "height": 1,
+      "channels": 3,
+      "format": "png"
+    },
+    {
+      "file": "alpha.png",
+      "bytes": 97,
+      "sha256": "e746e8fd46926a3e7afdf7cf26fb8718831de7234ec4c55bcf2d9f58f11100c8",
+      "width": 28,
+      "height": 28,
+      "channels": 4,
+      "format": "png"
+    },
+    {
+      "file": "landscape.jpg",
+      "bytes": 1069,
+      "sha256": "f1654ff4122bd781829ac8c8f6de53dfa828c328ae2f1c2dcb7e201f7e015c9a",
+      "width": 112,
+      "height": 56,
+      "channels": 3,
+      "format": "jpeg",
+      "provenance": "Committed sips JPEG conversion of landscape.png on macOS; exact encoded bytes are the fixture input"
+    }
+  ],
+  "oracle_outputs_captured": false,
+  "cases": [
+    {
+      "id": "image-sensitive-pair",
+      "images": [
+        "landscape.png"
+      ],
+      "paired_images": [
+        "swapped.png"
+      ],
+      "text": "Which color is on the left?",
+      "expected_semantic_answers": [
+        "red",
+        "blue"
+      ]
+    },
+    {
+      "id": "ordered-images",
+      "images": [
+        "landscape.png",
+        "swapped.png"
+      ],
+      "text": "Compare the color on the left in the first and second images."
+    },
+    {
+      "id": "portrait",
+      "images": [
+        "portrait.png"
+      ],
+      "text": "Which color is above the white area?"
+    },
+    {
+      "id": "jpeg",
+      "images": [
+        "landscape.jpg"
+      ],
+      "text": "Which color is on the left?"
+    },
+    {
+      "id": "minimum-resolution",
+      "images": [
+        "minimum.png"
+      ],
+      "expectation": "qualified processor resize or explicit bounded rejection"
+    },
+    {
+      "id": "alpha-policy",
+      "images": [
+        "alpha.png"
+      ],
+      "expectation": "qualified alpha conversion or explicit rejection"
+    }
+  ],
+  "pending_cases": [
+    "EXIF orientation",
+    "malformed/truncated bytes",
+    "oversized headers/decompression bombs",
+    "per-variant maximum resolutions",
+    "interleaved multi-turn content and image markers"
+  ]
+}

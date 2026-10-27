@@ -1,0 +1,26 @@
+{
+  "model_sha256": "3e24342164b3d94991ba9692fdc0dd08e3fd7362e0aacc396a9a5c54a544c3b7",
+  "header_sha256": "c03786678fd2f62eb1d39fef4e43dcdb9fc20fa83e98b19650cd74555577b5e1",
+  "architecture_and_tokenizer_metadata": {
+    "general.architecture": "nomic-bert",
+    "general.file_type": 7,
+    "general.name": "nomic-embed-text-v1.5",
+    "general.quantization_version": 2,
+    "nomic-bert.attention.causal": false,
+    "nomic-bert.attention.head_count": 12,
+    "nomic-bert.attention.layer_norm_epsilon": 9.999999960041972e-13,
+    "nomic-bert.block_count": 12,
+    "nomic-bert.context_length": 2048,
+    "nomic-bert.embedding_length": 768,
+    "nomic-bert.feed_forward_length": 3072,
+    "nomic-bert.pooling_type": 1,
+    "nomic-bert.rope.freq_base": 1000.0,
+    "tokenizer.ggml.bos_token_id": 101,
+    "tokenizer.ggml.eos_token_id": 102,
+    "tokenizer.ggml.model": "bert",
+    "tokenizer.ggml.padding_token_id": 0,
+    "tokenizer.ggml.seperator_token_id": 102,
+    "tokenizer.ggml.unknown_token_id": 100
+  },
+  "note": "Bounded header inspection; full-file byte verification is recorded separately in models.json"
+}

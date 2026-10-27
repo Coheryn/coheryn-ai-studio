@@ -1,0 +1,4 @@
+# Development-only; never imported by the production Rust engine.
+cmake==4.4.4
+Jinja2==3.1.6
+MarkupSafe==3.0.4

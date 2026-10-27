@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "observed_at_utc": "2026-10-27T07:00:00.008323+00:00",
+  "scope": "Native metadata-only planner hardware probe during restored-history qualification, not an idle baseline or OS memory limit.",
+  "hardware": {
+    "architecture": "aarch64",
+    "cpu_features": [
+      "neon",
+      "fp16"
+    ],
+    "gpu_available_bytes": null,
+    "gpu_backend_qualified": false,
+    "logical_cpus": 8,
+    "observed_unix_ms": 1793084399983,
+    "os": "macos",
+    "ram_available_bytes": 3061334016,
+    "ram_total_bytes": 8589934592,
+    "swap_total_bytes": 4294967296,
+    "swap_used_bytes": 2844262400
+  },
+  "context": 512,
+  "backend": "cpu-reference",
+  "cache_dtype": "f32",
+  "threads_per_session": 2
+}

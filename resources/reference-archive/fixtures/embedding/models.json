@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "stage": "E0-reference-preparation",
+  "models": [
+    {
+      "id": "nomic-embed-text-v1.5.f16",
+      "repository": "nomic-ai/nomic-embed-text-v1.5-GGUF",
+      "revision": "0188c9bf409793f810680a5a431e7b899c46104c",
+      "file": "nomic-embed-text-v1.5.f16.gguf",
+      "bytes": 274290560,
+      "sha256": "f7af6f66802f4df86eda10fe9bbcfc75c39562bed48ef6ace719a251cf1c2fdb",
+      "maximum_download_bytes": 274290560,
+      "license": "apache-2.0",
+      "qualification": "byte-verified-independent-embedding-reference-captured-native-unsupported",
+      "inventory": "fixtures/embedding/nomic-embed-text-v1.5.f16.inventory.json",
+      "evidence": "fixtures/embedding/nomic-embed-text-v1.5.f16.reference.json",
+      "metadata": "fixtures/embedding/nomic-embed-text-v1.5.f16.metadata.json"
+    },
+    {
+      "id": "nomic-embed-text-v1.5.Q8_0",
+      "repository": "nomic-ai/nomic-embed-text-v1.5-GGUF",
+      "revision": "0188c9bf409793f810680a5a431e7b899c46104c",
+      "file": "nomic-embed-text-v1.5.Q8_0.gguf",
+      "bytes": 146146432,
+      "sha256": "3e24342164b3d94991ba9692fdc0dd08e3fd7362e0aacc396a9a5c54a544c3b7",
+      "maximum_download_bytes": 146146432,
+      "license": "apache-2.0",
+      "qualification": "byte-verified-independent-embedding-reference-captured-native-unsupported",
+      "inventory": "fixtures/embedding/nomic-embed-text-v1.5.Q8_0.inventory.json",
+      "evidence": "fixtures/embedding/nomic-embed-text-v1.5.Q8_0.reference.json",
+      "metadata": "fixtures/embedding/nomic-embed-text-v1.5.Q8_0.metadata.json"
+    }
+  ],
+  "source_repository": "nomic-ai/nomic-embed-text-v1.5",
+  "source_revision": "e9b6763023c676ca8431644204f50c2b100d9aab",
+  "source_declared_license": "apache-2.0",
+  "source_assets": [
+    {
+      "file": "README.md",
+      "bytes": 71843,
+      "sha256": "4430178908fbd574fdb6457e302d23e643d733ed036b5777180b0806946767b2"
+    },
+    {
+      "file": "config.json",
+      "bytes": 2538,
+      "sha256": "9ab00bd92cee80a569f708140b7b6c1661a65891ff3765b1519e181ba2f2c92b"
+    },
+    {
+      "file": "tokenizer_config.json",
+      "bytes": 1191,
+      "sha256": "d7e0000bcc80134debd2222220427e6bf5fa20a669f40a0d0d1409cc18e0a9bc"
+    },
+    {
+      "file": "special_tokens_map.json",
+      "bytes": 695,
+      "sha256": "5d5b662e421ea9fac075174bb0688ee0d9431699900b90662acd44b2a350503a"
+    },
+    {
+      "file": "tokenizer.json",
+      "bytes": 711396,
+      "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66"
+    },
+    {
+      "file": "vocab.txt",
+      "bytes": 231508,
+      "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+    },
+    {
+      "file": "modules.json",
+      "bytes": 255,
+      "sha256": "f93c503b32fa7bc2e186843f0add961caa14eb68f7be516e327df3cadbcd541a"
+    },
+    {
+      "file": "1_Pooling/config.json",
+      "bytes": 286,
+      "sha256": "3d6180f7233df2f529d65ea60c8db4af614fb78cbe99fd81103dcfeb9f8166a5"
+    },
+    {
+      "file": "sentence_bert_config.json",
+      "bytes": 58,
+      "sha256": "9ee3935137f87c9ce6662ae17fe7afb7c9c64744a41247359fd228dc37e627b3"
+    },
+    {
+      "file": "config_sentence_transformers.json",
+      "bytes": 140,
+      "sha256": "482f42ca954f5a8d55bccbb437b8d6eb721ce19059c78330c815045ddd1a87eb"
+    }
+  ],
+  "native_embedding_execution": false,
+  "reference_tools_production_dependencies": false,
+  "oracle": {
+    "repository": "https://github.com/ggml-org/llama.cpp",
+    "revision": "2280f0fd163b03d4331d49e08460f66502e35854",
+    "source_tar_sha256": "3e64cac314dbb3fa31f91cebf897d32bad2b78cb75460495ff8cf556503f5fdd",
+    "runtime_dependency": false,
+    "settings": {
+      "threads": 1,
+      "gpu_layers": 0,
+      "flash_attention": false,
+      "kv_type": "f32",
+      "context": 512,
+      "seed": 0,
+      "temperature": 0,
+      "cpu_native": false,
+      "arm_arch": "armv8-a",
+      "arm_neon": false,
+      "f16_activation_operand": "rounded-to-f16",
+      "products": "f32",
+      "scalar_reduction": "f64",
+      "activations_and_outputs": "f32"
+    },
+    "tolerances": {
+      "logits_absolute": 0.003,
+      "logits_relative": 0.001,
+      "normalized_l2": 0.0005,
+      "greedy_tokens_exact": true
+    },
+    "qualification": "scalar-reference-build-tested-macos-arm64"
+  }
+}

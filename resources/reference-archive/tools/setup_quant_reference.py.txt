@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+"""Capture independently executed packed-kernel fixtures from the pinned scalar oracle."""
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+
+ROOT=Path(__file__).resolve().parents[1]
+
+def main():
+    pin=json.loads((ROOT/'fixtures/models.json').read_text())['oracle']
+    source=ROOT/'.cache/reference'
+    if (source/'source-revision').read_text().strip()!=pin['revision']:
+        raise SystemExit('Run tools/setup_reference.py first')
+    binary=ROOT/'.cache/quant-oracle'
+    build=source/'build/bin'
+    command=['c++','-std=c++17','-O2',str(ROOT/'tools/quant_oracle.cpp'),f'-I{source}/ggml/include',
+             f'-L{build}',f'-Wl,-rpath,{build}','-lggml-base','-lggml-cpu','-o',str(binary)]
+    subprocess.run(command,check=True)
+    result=json.loads(subprocess.check_output([binary]))
+    result['oracle_revision']=pin['revision']
+    result['oracle_source_sha256']=hashlib.sha256((ROOT/'tools/quant_oracle.cpp').read_bytes()).hexdigest()
+    result['oracle_executable_sha256']=hashlib.sha256(binary.read_bytes()).hexdigest()
+    result['source_files']={f:hashlib.sha256((source/f).read_bytes()).hexdigest() for f in
+                            ['ggml/src/ggml-quants.c','ggml/src/ggml-cpu/quants.c','ggml/src/ggml-common.h']}
+    result['production_dependency']=False
+    path=ROOT/'fixtures/quantized/kernels.json'
+    path.parent.mkdir(parents=True,exist_ok=True)
+    path.write_text(json.dumps(result,separators=(',',':'))+'\n')
+    rope_source=ROOT/'tools/rope_oracle.cpp';rope_binary=ROOT/'.cache/rope-oracle'
+    subprocess.run(['c++','-std=c++17','-O2',str(rope_source),f'-I{source}/ggml/include',
+                    f'-L{build}',f'-Wl,-rpath,{build}','-lggml-base','-lggml-cpu','-o',str(rope_binary)],check=True)
+    rope=json.loads(subprocess.check_output([rope_binary]))
+    rope.update({'oracle_revision':pin['revision'],'oracle_source_sha256':hashlib.sha256(rope_source.read_bytes()).hexdigest(),
+                 'tolerances':{'absolute':1e-6,'relative':1e-6},'note':'Per-platform f32 trig-library rounding is bounded separately; model executor tolerances remain unchanged'})
+    (ROOT/'fixtures/quantized/rope.json').write_text(json.dumps(rope,separators=(',',':'))+'\n')
+    print(f'Captured {len(result["cases"])} packed and {len(rope["cases"])} positional operation fixtures.')
+
+if __name__=='__main__':main()

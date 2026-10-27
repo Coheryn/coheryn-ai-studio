@@ -1,0 +1,32 @@
+[package]
+name = "coheryn-api"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[dependencies]
+coheryn-engine.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+tokio.workspace = true
+reqwest.workspace = true
+axum = "0.8.9"
+tokio-util = { version = "0.7.20", features = ["rt", "io"] }
+futures-util = "0.3.34"
+uuid = { version = "1.29.0", features = ["v4"] }
+subtle = "2.6.1"
+fs2 = "0.4.3"
+rusqlite = { version = "0.41.0", features = ["bundled", "limits"] }
+base64 = "0.23.1"
+sysinfo = { version = "0.39.6", default-features = false, features = ["system"] }
+
+[dev-dependencies]
+tower = { version = "0.5.3", features = ["util"] }
+tempfile = "3.27.0"
+
+[lints]
+workspace = true

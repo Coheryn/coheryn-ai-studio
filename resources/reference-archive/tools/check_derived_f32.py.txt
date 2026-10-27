@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""Qualify reproducibly promoted F32 weights against the identical-file CPU oracle."""
+import json
+from pathlib import Path
+import subprocess
+from check_oracle import compare_traces, run_json
+from fetch_model import digest
+
+ROOT = Path(__file__).resolve().parents[1]
+
+def main():
+    model = ROOT/'.cache/models/qwen2.5-0.5b-instruct-derived-f32.gguf'
+    provenance = json.loads(model.with_suffix('.json').read_text())
+    manifest = json.loads((ROOT/'fixtures/models.json').read_text())
+    expected = manifest['derived_artifacts'][0]
+    if digest(model) != expected['sha256'] or provenance['source_sha256'] != manifest['models'][0]['sha256']:
+        raise SystemExit('Derived artifact identity mismatch')
+    binary, oracle = ROOT/'target/release/coheryn', ROOT/'.cache/reference-oracle'
+    cache = ROOT/'.cache/f32-oracle'
+    cache.mkdir(parents=True,exist_ok=True)
+    prompt = cache/'prompt.txt'
+    prompt.write_text('Hello')
+    ref_trace, got_trace = cache/'reference.jsonl', cache/'coheryn.jsonl'
+    with ref_trace.open('w') as output, (cache/'reference.log').open('w') as log:
+        subprocess.run([str(oracle),str(model),'trace',str(prompt)],stdout=output,stderr=log,check=True)
+    with got_trace.open('w') as output:
+        subprocess.run([str(binary),'trace',str(model),'--prompt','Hello','--context','512'],stdout=output,check=True)
+    comparisons = compare_traces(ref_trace,got_trace,manifest['oracle']['tolerances'])
+    ref = run_json([oracle,model,'generate',prompt,'4'])
+    got = run_json([binary,'--json','run',model,'--standalone','--prompt','Hello','--max-tokens','4','--context','512'])
+    if ref['token_ids'] != got['token_ids']:
+        raise AssertionError('Derived F32 greedy mismatch')
+    report = {'schema_version':1,'model':provenance,'oracle_revision':manifest['oracle']['revision'],
+              'prompt':'Hello','generated_token_ids':ref['token_ids'],'trace_comparisons':comparisons,
+              'settings':manifest['oracle']['settings'],'tolerances':manifest['oracle']['tolerances']}
+    target = ROOT/'fixtures/qualification/derived-f32.json'
+    target.parent.mkdir(parents=True,exist_ok=True)
+    target.write_text(json.dumps(report,indent=2)+'\n')
+    print(f'PASS derived F32: {len(comparisons)} layer/logit comparisons and four greedy tokens')
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "status": "comparison-contract-frozen-before-native-vision-implementation; outputs not yet captured",
+  "reference": {
+    "revision": "2280f0fd163b03d4331d49e08460f66502e35854",
+    "source_files": [
+      {
+        "path": "tools/mtmd/clip.cpp",
+        "sha256": "9d6d50ed87c3f54e9555955c7da72256035f8e10cfd0b52ee3234545a95b8512"
+      },
+      {
+        "path": "tools/mtmd/mtmd.cpp",
+        "sha256": "d2e35a71973a4580c672d41f24d8cabf4dbd897d66792394def9700cf23f0cdc"
+      },
+      {
+        "path": "tools/mtmd/mtmd-helper.cpp",
+        "sha256": "fd24441c391d1d8669bc865c27fc64ee76ffdec0f0df9737ed3a1097a9ee2f08"
+      }
+    ],
+    "runtime_dependency": false
+  },
+  "inputs": "fixtures/vlm/images/manifest.json",
+  "comparisons": {
+    "png_decode": "Exact RGBA/RGB samples under the pinned color/orientation/alpha policy",
+    "jpeg_decode": {
+      "max_absolute_u8_channel_difference": 2,
+      "note": "Compare codec reconstruction separately; downstream processor tests use identical canonical decoded pixels"
+    },
+    "discrete_processor_outputs": "Exact resized integer pixels, dimensions, crop/tile order, patch layout, image markers and effective positions",
+    "normalized_pixels": {
+      "absolute": 1e-05,
+      "relative": 1e-05
+    },
+    "vision_features_projected_embeddings_and_logits": {
+      "absolute": 0.003,
+      "relative": 0.001,
+      "normalized_l2": 0.0005
+    },
+    "greedy_tokens": "Exact token IDs for pinned fixtures and identical cache/generation settings"
+  },
+  "capture_settings": {
+    "seed": 0,
+    "temperature": 0,
+    "threads": 1,
+    "gpu_layers": 0,
+    "cache_dtype": "f32",
+    "max_tokens": 8,
+    "text_output_only": true
+  },
+  "acceptance_rule": "Capture source images, processor stages, vision checkpoints, embeddings/positions and teacher-forced logits before accepting native vision. Compare identical weights and preprocessed pixels; evaluate quantization quality separately. Threshold changes require explicit reviewed rationale, not replacement goldens to hide failures.",
+  "open_items": [
+    "Full GGUF hashes remain publisher-declared until complete downloads are verified",
+    "Component/processor alignment and license review remain open",
+    "Independent vision outputs and multi-image support are not yet qualified",
+    "Selected LLaVA language Q4_K/Q6_K execution requires G4 before its M2 qualification"
+  ],
+  "source_record": "resources/reference-archive/fixtures/vlm/reference-contract.json"
+}

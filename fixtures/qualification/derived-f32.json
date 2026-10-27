@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "model": {
+    "source_sha256": "8e0ae26000627ed62de0e78e41860af70094558b9d2913385c842a6aa06cf3fc",
+    "conversion": "F16-to-F32 exact promotion; existing F32 preserved; general.file_type=0",
+    "file": "qwen2.5-0.5b-instruct-derived-f32.gguf",
+    "bytes": 2526617440,
+    "sha256": "baf69083ecc7af676ebc0197de462a857123bf60985c8ece44bd55f19ed5703f"
+  },
+  "oracle_revision": "2280f0fd163b03d4331d49e08460f66502e35854",
+  "prompt": "Hello",
+  "generated_token_ids": [
+    271,
+    40,
+    1079,
+    4460
+  ],
+  "trace_comparisons": [
+    {
+      "position": 0,
+      "name": "blk.0.output",
+      "values": 896,
+      "max_abs": 2.96112068198795e-09,
+      "normalized_l2": 1.0954988449483828e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.1.output",
+      "values": 896,
+      "max_abs": 3.2019040752118144e-09,
+      "normalized_l2": 9.47828251124956e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.2.output",
+      "values": 896,
+      "max_abs": 4.648437652576831e-07,
+      "normalized_l2": 6.336610808726915e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.3.output",
+      "values": 896,
+      "max_abs": 3.35937488671334e-06,
+      "normalized_l2": 2.071709522930212e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.4.output",
+      "values": 896,
+      "max_abs": 3.867187388095772e-06,
+      "normalized_l2": 2.3892645957329908e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.5.output",
+      "values": 896,
+      "max_abs": 3.12499992105586e-06,
+      "normalized_l2": 1.9143065130947446e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.6.output",
+      "values": 896,
+      "max_abs": 2.954101603336312e-07,
+      "normalized_l2": 2.903662217379307e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.7.output",
+      "values": 896,
+      "max_abs": 3.515624939609552e-06,
+      "normalized_l2": 2.1436803846257526e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.8.output",
+      "values": 896,
+      "max_abs": 5.468750714499038e-07,
+      "normalized_l2": 4.5770373883847437e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.9.output",
+      "values": 896,
+      "max_abs": 1.4062500213185558e-06,
+      "normalized_l2": 8.822784316178258e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.10.output",
+      "values": 896,
+      "max_abs": 4.663085917400167e-07,
+      "normalized_l2": 3.4074237980243624e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.11.output",
+      "values": 896,
+      "max_abs": 1.3281251085572876e-06,
+      "normalized_l2": 8.646582723129486e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.12.output",
+      "values": 896,
+      "max_abs": 7.812500371073838e-07,
+      "normalized_l2": 5.561746733568567e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.13.output",
+      "values": 896,
+      "max_abs": 4.882812390860636e-06,
+      "normalized_l2": 2.961088379877723e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.14.output",
+      "values": 896,
+      "max_abs": 4.882812390860636e-06,
+      "normalized_l2": 2.960868440703048e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.15.output",
+      "values": 896,
+      "max_abs": 3.749999905267032e-06,
+      "normalized_l2": 2.288213837451561e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.16.output",
+      "values": 896,
+      "max_abs": 4.5703125124418875e-06,
+      "normalized_l2": 2.755674802775895e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.17.output",
+      "values": 896,
+      "max_abs": 1.367187451251084e-06,
+      "normalized_l2": 8.529604356056841e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.18.output",
+      "values": 896,
+      "max_abs": 3.5937500797444955e-06,
+      "normalized_l2": 2.1821315931078e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.19.output",
+      "values": 896,
+      "max_abs": 2.0214844198562787e-07,
+      "normalized_l2": 1.7477706877808721e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.20.output",
+      "values": 896,
+      "max_abs": 4.0625000110594556e-06,
+      "normalized_l2": 2.4613319685695786e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.21.output",
+      "values": 896,
+      "max_abs": 4.628906324910531e-08,
+      "normalized_l2": 1.1534650238479601e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.22.output",
+      "values": 896,
+      "max_abs": 4.875488457400934e-08,
+      "normalized_l2": 1.2297934571295229e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.23.output",
+      "values": 896,
+      "max_abs": 2.6794433338750423e-08,
+      "normalized_l2": 9.54822879986112e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "logits",
+      "values": 151936,
+      "max_abs": 5.000000058430487e-08,
+      "normalized_l2": 8.70526801693148e-10,
+      "outside_tolerance": 0
+    }
+  ],
+  "settings": {
+    "threads": 1,
+    "gpu_layers": 0,
+    "flash_attention": false,
+    "kv_type": "f32",
+    "context": 512,
+    "seed": 0,
+    "temperature": 0,
+    "cpu_native": false,
+    "arm_arch": "armv8-a",
+    "arm_neon": false,
+    "f16_activation_operand": "rounded-to-f16",
+    "products": "f32",
+    "scalar_reduction": "f64",
+    "activations_and_outputs": "f32"
+  },
+  "tolerances": {
+    "logits_absolute": 0.003,
+    "logits_relative": 0.001,
+    "normalized_l2": 0.0005,
+    "greedy_tokens_exact": true
+  }
+}

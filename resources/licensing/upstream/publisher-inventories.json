@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-10-27",
+  "scope": "Legal filenames in pinned publisher repository inventories; no weights downloaded.",
+  "repositories": [
+    {
+      "repository": "nomic-ai/nomic-embed-text-v1.5",
+      "revision": "e9b6763023c676ca8431644204f50c2b100d9aab",
+      "metadata_sha256": "29d150363bba08375fa38a1165fcfe0b236c55d394b94b68d174a47db89f60d5",
+      "declared_license": "apache-2.0",
+      "legal_files": []
+    },
+    {
+      "repository": "nomic-ai/nomic-embed-text-v1.5-GGUF",
+      "revision": "0188c9bf409793f810680a5a431e7b899c46104c",
+      "metadata_sha256": "b30a1e76a209f906b544ffda281015a4f68d6cf237d9b600cb9bf646294f5792",
+      "declared_license": "apache-2.0",
+      "legal_files": []
+    },
+    {
+      "repository": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+      "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+      "metadata_sha256": "4e408e83ec20ac59e130390821bbca58489aecff6230aa62c50c8f6c3199f707",
+      "declared_license": "apache-2.0",
+      "legal_files": [
+        "LICENSE"
+      ]
+    },
+    {
+      "repository": "Qwen/Qwen2-VL-2B-Instruct",
+      "revision": "895c3a49bc3fa70a340399125c650a463535e71c",
+      "metadata_sha256": "8aaa0f50b74317f9cb7b0367106ef2569eacb656dd982687c96cf94cdbed9f6a",
+      "declared_license": "apache-2.0",
+      "legal_files": [
+        "LICENSE"
+      ]
+    },
+    {
+      "repository": "llava-hf/llava-1.5-7b-hf",
+      "revision": "b234b804b114d9e37bb655e11cbbb5f5e971b7a9",
+      "metadata_sha256": "3d74104cbe3b62bbf0b886ac4019c863935618d4831f2e2d1f39cc0685ae5c12",
+      "declared_license": "llama2",
+      "legal_files": []
+    }
+  ]
+}

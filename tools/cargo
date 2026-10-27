@@ -1,0 +1,10 @@
+#!/bin/sh
+# Optional workspace-local Rust installation. A normal installed cargo also works.
+set -eu
+COHERYN_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+if [ -x "$COHERYN_ROOT/.cache/cargo/bin/cargo" ]; then
+  export CARGO_HOME="$COHERYN_ROOT/.cache/cargo"
+  export RUSTUP_HOME="$COHERYN_ROOT/.cache/rustup"
+  export PATH="$CARGO_HOME/bin:$PATH"
+fi
+exec cargo "$@"

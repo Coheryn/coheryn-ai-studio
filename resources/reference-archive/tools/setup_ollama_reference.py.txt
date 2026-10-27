@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+"""Install one checksum-pinned Ollama comparator in the ignored development cache (macOS only)."""
+import hashlib
+import json
+from pathlib import Path
+import platform
+import shutil
+import ssl
+import tarfile
+import tempfile
+import urllib.request
+from fetch_model import digest
+
+ROOT=Path(__file__).resolve().parents[1]
+PIN={'version':'v0.40.11','asset':'ollama-darwin.tgz','bytes':181324349,
+     'sha256':'aea7d3f2e32371b7644a6e2ec8d4f26820a0e3965918cce8a46cef3e947f6291',
+     'url':'https://github.com/ollama/ollama/releases/download/v0.40.11/ollama-darwin.tgz',
+     'production_dependency':False}
+
+def main():
+    if platform.system()!='Darwin':raise SystemExit('This pinned comparator artifact is macOS-only; other platforms need their own explicit artifact pin')
+    root=ROOT/'.cache/reference-ollama';root.mkdir(parents=True,exist_ok=True)
+    archive=root/PIN['asset']
+    if not archive.exists():
+        if shutil.disk_usage(root).free<PIN['bytes']+(1<<30):raise SystemExit('Insufficient bounded comparator storage')
+        context=ssl.create_default_context(cafile='/etc/ssl/cert.pem')
+        temporary=None
+        try:
+            with tempfile.NamedTemporaryFile(dir=root,suffix='.part',delete=False) as out:
+                temporary=Path(out.name);h=hashlib.sha256();size=0
+                with urllib.request.urlopen(PIN['url'],timeout=60,context=context) as response:
+                    while data:=response.read(1<<20):
+                        size+=len(data)
+                        if size>PIN['bytes']:raise ValueError('Comparator exceeds pinned length')
+                        out.write(data);h.update(data)
+                if size!=PIN['bytes'] or h.hexdigest()!=PIN['sha256']:raise ValueError('Comparator archive hash/size mismatch')
+            temporary.replace(archive)
+        finally:
+            if temporary:temporary.unlink(missing_ok=True)
+    if archive.stat().st_size!=PIN['bytes'] or digest(archive)!=PIN['sha256']:
+        raise SystemExit('Comparator archive mismatch')
+    with tarfile.open(archive) as tar:
+        for member in tar:
+            if member.isfile() or member.isdir():tar.extract(member,root/'dist',filter='data')
+    executables=[p for p in (root/'dist').rglob('ollama') if p.is_file()]
+    if len(executables)!=1:raise SystemExit('Unexpected comparator archive layout')
+    binary=executables[0]
+    record=dict(PIN,executable_sha256=digest(binary),executable_cache_path=str(binary.relative_to(ROOT)))
+    (ROOT/'fixtures/embedding/ollama-reference.json').write_text(json.dumps(record,indent=2)+'\n')
+    print(binary)
+
+
+if __name__=='__main__':main()

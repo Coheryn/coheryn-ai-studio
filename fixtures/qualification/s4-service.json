@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "stage": "S4 native CPU tool-protocol preview",
+  "model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+  "model_bytes": 491400032,
+  "binary_sha256": "cd74d60e2258ace66e1aed54647ee39021454ae2f4ce3b1e6788f3caf620a3df",
+  "reference_sha256": "65224131ecf0922fa07bc42fdf496c49b93b52de215b56fa351d6d6890057f3c",
+  "tool_profile": "qwen-tools-v1:3fb38d82ef3d0bf6ace1100b836411ea866c707b434cbec7188206c677a1058d",
+  "os": "macOS-27.0.1-arm64-arm-64bit",
+  "architecture": "arm64",
+  "backend": "native-cpu",
+  "context": 512,
+  "cache_dtype": "f32",
+  "profile": "balanced",
+  "temperature": 0,
+  "seed": 0,
+  "generation_timeout_seconds": 1200,
+  "sdk_version": "3.39.0",
+  "cache_conditions": "uncontrolled OS/file cache; session KV reuse reported independently",
+  "rss_bytes": null,
+  "process_private_bytes": null,
+  "page_faults": null,
+  "io_bytes": null,
+  "unavailable_measurements": "This correctness/lifecycle smoke does not sample process RSS/private/page-fault/I/O counters.",
+  "scope": "Pinned macOS ARM64 CPU correctness and protocol evidence, not a performance comparison or full-release qualification.",
+  "checks": [
+    {
+      "case": "all-independent-tool-prompt-token-ids",
+      "cases": 5
+    },
+    {
+      "case": "standard-sdk-streaming-required-single-call",
+      "id": "call_3937bc384d374746afc376342072db05-0",
+      "name": "add",
+      "arguments": "{\"a\": 2, \"b\": 2}",
+      "content": null,
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 25,
+        "prompt_tokens": 186,
+        "total_tokens": 211,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": null
+      }
+    },
+    {
+      "case": "managed-cli-parallel-reference-greedy-and-delta-parity",
+      "token_ids": [
+        151657,
+        198,
+        4913,
+        606,
+        788,
+        330,
+        718,
+        497,
+        330,
+        16370,
+        788,
+        5212,
+        64,
+        788,
+        220,
+        17,
+        11,
+        330,
+        65,
+        788,
+        220,
+        17,
+        11248,
+        151658,
+        198,
+        151657,
+        198,
+        4913,
+        606,
+        788,
+        330,
+        718,
+        497,
+        330,
+        16370,
+        788,
+        5212,
+        64,
+        788,
+        220,
+        18,
+        11,
+        330,
+        65,
+        788,
+        220,
+        19,
+        11248,
+        151658,
+        151645
+      ],
+      "prompt_tokens": 194,
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"a\": 2, \"b\": 2}",
+            "name": "add"
+          },
+          "id": "call_477861c0044b43a88599e5df2b868556-0",
+          "type": "function"
+        },
+        {
+          "function": {
+            "arguments": "{\"a\": 3, \"b\": 4}",
+            "name": "add"
+          },
+          "id": "call_477861c0044b43a88599e5df2b868556-1",
+          "type": "function"
+        }
+      ],
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 556444588,
+        "peak_session_buffer_capacity_bytes": 7781420,
+        "reserved": 304253069,
+        "session_buffer_capacity_bytes": 6294656
+      },
+      "history_format_version": 2
+    },
+    {
+      "case": "ordered-tool-results-independent-continuation",
+      "token_ids": [
+        785
+      ],
+      "prompt_tokens": 273,
+      "reused_prompt_tokens": 193
+    },
+    {
+      "case": "pending-restart-replay-no-auto-execution-and-cleanup",
+      "pending_call_ids": [
+        "call_477861c0044b43a88599e5df2b868556-0",
+        "call_477861c0044b43a88599e5df2b868556-1"
+      ],
+      "loaded_models_after_replay": [],
+      "remaining_reserved_bytes": 16777216
+    }
+  ],
+  "hardware": {
+    "architecture": "aarch64",
+    "cpu_features": [
+      "neon",
+      "fp16"
+    ],
+    "gpu_available_bytes": null,
+    "gpu_backend_qualified": false,
+    "logical_cpus": 8,
+    "observed_unix_ms": 1793104294521,
+    "os": "macos",
+    "ram_available_bytes": 2586066944,
+    "ram_total_bytes": 8589934592,
+    "swap_total_bytes": 5368709120,
+    "swap_used_bytes": 3924230144
+  },
+  "threads_per_session": 2
+}

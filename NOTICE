@@ -1,0 +1,11 @@
+Coheryn AI Studio
+Copyright 2026 Coheryn AI Studio contributors
+
+Repository: https://github.com/Coheryn/coheryn-ai-studio
+Website: https://coheryntech.com/projects/coheryn-ai-studio
+
+Coheryn-authored code is licensed under the Apache License, Version 2.0.
+Third-party assets retain their respective licenses and copyright notices.
+See THIRD_PARTY_NOTICES.md and resources/licensing/ for the asset mappings,
+original legal texts and dependency notices that accompany this distribution.
+Model weights and external comparator programs are not included.

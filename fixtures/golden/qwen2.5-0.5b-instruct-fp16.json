@@ -1,0 +1,498 @@
+{
+  "schema_version": 1,
+  "model_sha256": "8e0ae26000627ed62de0e78e41860af70094558b9d2913385c842a6aa06cf3fc",
+  "oracle_revision": "2280f0fd163b03d4331d49e08460f66502e35854",
+  "host": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "machine": "arm64"
+  },
+  "settings": {
+    "threads": 1,
+    "gpu_layers": 0,
+    "flash_attention": false,
+    "kv_type": "f32",
+    "context": 512,
+    "seed": 0,
+    "temperature": 0,
+    "cpu_native": false,
+    "arm_arch": "armv8-a",
+    "arm_neon": false,
+    "f16_activation_operand": "rounded-to-f16",
+    "products": "f32",
+    "scalar_reduction": "f64",
+    "activations_and_outputs": "f32"
+  },
+  "cases": [
+    {
+      "id": "english",
+      "prompt": "Hello",
+      "prompt_token_ids": [
+        9707
+      ],
+      "generated_token_ids": [
+        271,
+        40,
+        1079,
+        4460,
+        311,
+        1855,
+        264,
+        2025
+      ],
+      "text": "\n\nI am trying to create a program"
+    },
+    {
+      "id": "bengali",
+      "prompt": "বাংলাদেশের রাজধানী",
+      "prompt_token_ids": [
+        146026,
+        49128,
+        224,
+        146227,
+        49128,
+        99,
+        58908,
+        148125,
+        58908,
+        72258,
+        35178,
+        108,
+        49128,
+        250,
+        147997,
+        49128,
+        101,
+        26927,
+        222
+      ],
+      "generated_token_ids": [
+        35178,
+        116,
+        146415,
+        146834,
+        11125,
+        120,
+        35178,
+        116
+      ],
+      "text": " সময় স"
+    },
+    {
+      "id": "unicode",
+      "prompt": "Café 🙂 é",
+      "prompt_token_ids": [
+        34,
+        2577,
+        963,
+        27484,
+        384,
+        53839
+      ],
+      "generated_token_ids": [
+        82,
+        264,
+        274,
+        6654
+      ],
+      "text": "s a sú"
+    },
+    {
+      "id": "whitespace",
+      "prompt": " a  b\t12345\n\n",
+      "prompt_token_ids": [
+        264,
+        220,
+        293,
+        197,
+        16,
+        17,
+        18,
+        19,
+        20,
+        271
+      ],
+      "generated_token_ids": [
+        2,
+        220,
+        16,
+        17
+      ],
+      "text": "# 12"
+    },
+    {
+      "id": "special",
+      "prompt": "<|im_start|>user\nHi<|im_end|>\n<|im_start|>assistant\n",
+      "prompt_token_ids": [
+        151644,
+        872,
+        198,
+        13048,
+        151645,
+        198,
+        151644,
+        77091,
+        198
+      ],
+      "generated_token_ids": [
+        9707,
+        0,
+        2585,
+        646,
+        358,
+        7789,
+        498,
+        3351
+      ],
+      "text": "Hello! How can I assist you today"
+    },
+    {
+      "id": "default-system",
+      "prompt": "<|im_start|>system\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\n<|im_start|>user\nHi<|im_end|>\n<|im_start|>assistant\n",
+      "prompt_token_ids": [
+        151644,
+        8948,
+        198,
+        2610,
+        525,
+        1207,
+        16948,
+        11,
+        3465,
+        553,
+        54364,
+        14817,
+        13,
+        1446,
+        525,
+        264,
+        10950,
+        17847,
+        13,
+        151645,
+        198,
+        151644,
+        872,
+        198,
+        13048,
+        151645,
+        198,
+        151644,
+        77091,
+        198
+      ],
+      "generated_token_ids": [
+        9707,
+        0,
+        2585,
+        646,
+        358,
+        7789,
+        498,
+        3351
+      ],
+      "text": "Hello! How can I assist you today"
+    },
+    {
+      "id": "explicit-system",
+      "prompt": "<|im_start|>system\nBe brief.<|im_end|>\n<|im_start|>user\nHi<|im_end|>\n<|im_start|>assistant\n",
+      "prompt_token_ids": [
+        151644,
+        8948,
+        198,
+        3430,
+        9814,
+        13,
+        151645,
+        198,
+        151644,
+        872,
+        198,
+        13048,
+        151645,
+        198,
+        151644,
+        77091,
+        198
+      ],
+      "generated_token_ids": [
+        9707,
+        0,
+        2585,
+        646,
+        358,
+        7789,
+        498,
+        3351
+      ],
+      "text": "Hello! How can I assist you today"
+    },
+    {
+      "id": "multi-turn",
+      "prompt": "<|im_start|>system\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\n<|im_start|>user\nHi<|im_end|>\n<|im_start|>assistant\nHello.<|im_end|>\n<|im_start|>user\nWhat is 2+2?<|im_end|>\n<|im_start|>assistant\n",
+      "prompt_token_ids": [
+        151644,
+        8948,
+        198,
+        2610,
+        525,
+        1207,
+        16948,
+        11,
+        3465,
+        553,
+        54364,
+        14817,
+        13,
+        1446,
+        525,
+        264,
+        10950,
+        17847,
+        13,
+        151645,
+        198,
+        151644,
+        872,
+        198,
+        13048,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        9707,
+        13,
+        151645,
+        198,
+        151644,
+        872,
+        198,
+        3838,
+        374,
+        220,
+        17,
+        10,
+        17,
+        30,
+        151645,
+        198,
+        151644,
+        77091,
+        198
+      ],
+      "generated_token_ids": [
+        17,
+        10,
+        17,
+        16819,
+        220,
+        19,
+        13,
+        151645
+      ],
+      "text": "2+2 equals 4."
+    }
+  ],
+  "trace_comparisons": [
+    {
+      "position": 0,
+      "name": "blk.0.output",
+      "values": 896,
+      "max_abs": 4.589843838331831e-09,
+      "normalized_l2": 1.1391490565323001e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.1.output",
+      "values": 896,
+      "max_abs": 3.6749265852620283e-09,
+      "normalized_l2": 9.888906042913397e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.2.output",
+      "values": 896,
+      "max_abs": 1.9531250927684596e-07,
+      "normalized_l2": 3.2966385783943103e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.3.output",
+      "values": 896,
+      "max_abs": 7.031248969724402e-07,
+      "normalized_l2": 4.82497148281972e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.4.output",
+      "values": 896,
+      "max_abs": 1.874999952633516e-06,
+      "normalized_l2": 1.1628619719161558e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.5.output",
+      "values": 896,
+      "max_abs": 3.632812422438292e-06,
+      "normalized_l2": 2.221609858769763e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.6.output",
+      "values": 896,
+      "max_abs": 4.726562565338099e-06,
+      "normalized_l2": 2.8647424635414265e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.7.output",
+      "values": 896,
+      "max_abs": 1.7968750398722477e-06,
+      "normalized_l2": 1.112984550319394e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.8.output",
+      "values": 896,
+      "max_abs": 1.718749899737304e-06,
+      "normalized_l2": 1.0898012887793923e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.9.output",
+      "values": 896,
+      "max_abs": 2.9296875254658516e-06,
+      "normalized_l2": 1.789388431959977e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.10.output",
+      "values": 896,
+      "max_abs": 5.468750714499038e-07,
+      "normalized_l2": 4.056736882100073e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.11.output",
+      "values": 896,
+      "max_abs": 2.8515626127045834e-06,
+      "normalized_l2": 1.751767150199003e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.12.output",
+      "values": 896,
+      "max_abs": 3.5546875096770236e-06,
+      "normalized_l2": 2.160300507111016e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.13.output",
+      "values": 896,
+      "max_abs": 5.468750714499038e-07,
+      "normalized_l2": 4.473106191733849e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.14.output",
+      "values": 896,
+      "max_abs": 5.468750714499038e-07,
+      "normalized_l2": 4.662219488808111e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.15.output",
+      "values": 896,
+      "max_abs": 1.9140625227009878e-06,
+      "normalized_l2": 1.1862739364318765e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.16.output",
+      "values": 896,
+      "max_abs": 3.906249958163244e-06,
+      "normalized_l2": 2.367368001274321e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.17.output",
+      "values": 896,
+      "max_abs": 1.874999952633516e-06,
+      "normalized_l2": 1.1407257970690114e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.18.output",
+      "values": 896,
+      "max_abs": 2.4218750240834197e-06,
+      "normalized_l2": 1.492012559774246e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.19.output",
+      "values": 896,
+      "max_abs": 8.59374949868652e-07,
+      "normalized_l2": 5.420198209984673e-10,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.20.output",
+      "values": 896,
+      "max_abs": 1.874999952633516e-06,
+      "normalized_l2": 1.1705539867092617e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.21.output",
+      "values": 896,
+      "max_abs": 4.0624996699989424e-08,
+      "normalized_l2": 1.148340732558075e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.22.output",
+      "values": 896,
+      "max_abs": 4.084472493559588e-08,
+      "normalized_l2": 1.2074943558990593e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "blk.23.output",
+      "values": 896,
+      "max_abs": 3.026122996629965e-08,
+      "normalized_l2": 1.0651366464345245e-09,
+      "outside_tolerance": 0
+    },
+    {
+      "position": 0,
+      "name": "logits",
+      "values": 151936,
+      "max_abs": 4.991455071490236e-08,
+      "normalized_l2": 8.734549338408374e-10,
+      "outside_tolerance": 0
+    }
+  ]
+}

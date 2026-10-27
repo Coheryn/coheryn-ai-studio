@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "ordinary_tests_passed": 70,
+  "ordinary_tests_failed": 0,
+  "opt_in_tests_excluded_from_ordinary_count": 2,
+  "commands": [
+    "./tools/cargo test --workspace --locked --offline",
+    "./tools/cargo clippy --workspace --all-targets --locked --offline -- -D warnings",
+    "./tools/cargo build --release --workspace --locked --offline"
+  ],
+  "test_log_sha256": "a27eee4c43fa1676822ea0c8d7b5f070e9639412974bea461c3e0e1b8b3597fd",
+  "cargo_lock_sha256": "85ab6f638a849a6a00c5434b78baed195380f28537ae9eb280e8a822ed501125",
+  "native_executable_sha256": "523ce59f8425fb45e0e64bda1a2f463552ce07c198ec3effeb07d3a87dc9baab",
+  "production_dependency_audit": {
+    "command": "cargo tree --workspace --edges normal --locked",
+    "package_count": 187,
+    "external_inference_dependencies_found": []
+  },
+  "service_evidence": "fixtures/qualification/g4-service.json",
+  "planner_evidence": "fixtures/qualification/g4-planner.json",
+  "benchmark_evidence": "fixtures/qualification/g4-benchmarks.json",
+  "embedding_reference_manifest": "fixtures/embedding/models.json",
+  "limitations": [
+    "macOS ARM64 execution only",
+    "No native vision/embedding or Metal qualification",
+    "No completed sustained fuzz campaign or general performance superiority claim"
+  ],
+  "float_regression_evidence": "fixtures/qualification/g4-float-regression.json",
+  "qualified_text_model_count": 6,
+  "model_manifest": "fixtures/quantized/models.json"
+}

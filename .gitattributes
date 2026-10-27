@@ -1,0 +1,8 @@
+# Keep source and lockfiles consistent across supported platforms.
+* text=auto eol=lf
+# Preserve exact bytes used by fixture, provenance and license digests.
+/fixtures/** -text
+/resources/** -text
+/LICENSE -text
+/NOTICE -text
+/THIRD_PARTY_NOTICES.md -text

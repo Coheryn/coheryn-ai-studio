@@ -1,0 +1,126 @@
+#!/usr/bin/env python3
+"""Reproduce pinned E0 inputs/inventories and independent encoder vectors, not native embedding support.
+Downloads use existing bounded SHA-256 acquisition; reference programs remain outside Cargo.
+"""
+import hashlib
+import json
+import math
+from pathlib import Path
+import subprocess
+
+ROOT=Path(__file__).resolve().parents[1]
+DIRECTORY=ROOT/'fixtures/embedding'
+CACHE=ROOT/'.cache/embedding'
+
+
+def digest(path):
+    h=hashlib.sha256()
+    with path.open('rb') as source:
+        for data in iter(lambda:source.read(1<<20),b''):h.update(data)
+    return h.hexdigest()
+
+
+def compare(expected,actual,absolute,relative):
+    if len(expected)!=len(actual):raise AssertionError('embedding dimension mismatch')
+    errors=[abs(a-b) for a,b in zip(expected,actual)]
+    failures=sum(e>absolute+relative*abs(a) for e,a in zip(errors,expected))
+    normalized=math.sqrt(sum(e*e for e in errors)/max(sum(v*v for v in expected),1e-30))
+    if failures:raise AssertionError(f'embedding parity mismatch: {max(errors)}, {failures}')
+    return {'max_absolute':max(errors),'normalized_l2':normalized,'outside_tolerance':failures}
+
+
+def main():
+    manifest_path=DIRECTORY/'models.json'
+    manifest=json.loads(manifest_path.read_text())
+    pin=manifest['oracle'];reference=ROOT/'.cache/reference'
+    if (reference/'source-revision').read_text().strip()!=pin['revision']:raise SystemExit('Unverified reference source')
+    for asset in manifest['source_assets']:
+        path=DIRECTORY/'source'/asset['file']
+        if path.stat().st_size!=asset['bytes'] or digest(path)!=asset['sha256']:raise SystemExit('Source identity mismatch')
+    source=ROOT/'tools/embedding_oracle.cpp';binary=ROOT/'.cache/embedding-oracle';build=reference/'build/bin'
+    subprocess.run(['c++','-std=c++17','-O2',str(source),f'-I{reference}/include',f'-I{reference}/ggml/include',
+                    f'-L{build}',f'-Wl,-rpath,{build}','-lllama','-lggml','-lggml-base','-o',str(binary)],check=True)
+    CACHE.mkdir(parents=True,exist_ok=True)
+    subprocess.run([ROOT/'tools/cargo','build','-p','coheryn-engine','--example','inspect_header','--locked','--offline'],check=True)
+    inspector=ROOT/'target/debug/examples/inspect_header'
+    cases=[
+        {'id':'query','input':'search_query: What is local inference?'},
+        {'id':'document','input':'search_document: Local inference processes model inputs on your own computer.'},
+        {'id':'bengali','input':'search_query: বাংলা ভাষায় তথ্য অনুসন্ধান'},
+        {'id':'unicode','input':'search_document: café — 東京 — 🙂'},
+        {'id':'whitespace','input':'search_document:  leading\tspaces\nsecond line  '},
+        {'id':'special-literal','input':'search_query: [CLS] [SEP] [MASK] literal tokens'},
+    ]
+    for i,case in enumerate(cases):
+        path=CACHE/f'input-{i}.txt';path.write_text(case['input']);case['input_file']=str(path)
+    policy={'dimension':768,'tokenization':{'add_special':True,'parse_special':False,'padding':'packed; none inserted','token_types':0},
+            'pooling':'mean over every real input token, including qualified special tokens',
+            'normalization':'L2 after pooling; full 768-dimensional output',
+            'reduced_dimensions':'not qualified; publisher Matryoshka layer-normalization/slicing is a separate future mode',
+            'instruction_policy':'caller-provided literal search_query:/search_document: prefixes; no implicit prefix added by oracle',
+            'initial_reference_context':512,'truncation':False,'attention':'non-causal block-diagonal by sequence',
+            'long_context':'GGUF/source limits and YaRN/scaling policies must be qualified separately; no 8192-token execution claim'}
+    contract={'schema_version':1,'model_policy':policy,
+              'tolerances':{'absolute':0.003,'relative':0.001,'normalized_l2':0.0005,'batch_absolute':0.0001,'batch_relative':0.0001,'unit_norm_absolute':0.00001},
+              'note':'Freeze before native embedding implementation. Executor comparisons use identical quantized weights; quantization quality is evaluated separately.'}
+    contract_path=DIRECTORY/'reference-contract.json'
+    if contract_path.exists() and json.loads(contract_path.read_text())!=contract:raise SystemExit('Existing E0 contract differs; explicit reviewed change required')
+    contract_path.write_text(json.dumps(contract,indent=2)+'\n')
+    for model in manifest['models']:
+        path=ROOT/'.cache/models'/model['file']
+        if not path.exists():subprocess.run(['python3',str(ROOT/'tools/fetch_model.py'),'--manifest',str(manifest_path),'--id',model['id']],check=True)
+        if path.stat().st_size!=model['bytes'] or digest(path)!=model['sha256']:raise SystemExit('Embedding GGUF checksum mismatch')
+        inventory=json.loads(subprocess.check_output([ROOT/'target/release/coheryn','models','inspect',path,'--json']))
+        inventory_path=DIRECTORY/(model['id']+'.inventory.json');inventory_path.write_text(json.dumps(inventory,indent=2)+'\n')
+        model['inventory']=str(inventory_path.relative_to(ROOT))
+        prefix=CACHE/(model['id']+'.header')
+        with path.open('rb') as file:
+            prefix.write_bytes(file.read(min(inventory['data_offset'],16<<20)))
+        header=json.loads(subprocess.check_output([inspector,prefix,str(model['bytes'])]))
+        metadata_path=DIRECTORY/(model['id']+'.metadata.json')
+        metadata_path.write_text(json.dumps({'model_sha256':model['sha256'],'header_sha256':inventory['header_sha256'],
+            'architecture_and_tokenizer_metadata':header['architecture_and_processor_metadata'],
+            'note':'Bounded header inspection; full-file byte verification is recorded separately in models.json'},indent=2)+'\n')
+        model['metadata']=str(metadata_path.relative_to(ROOT))
+        outputs=[]
+        for case in cases:
+            log=CACHE/(model['id']+'-'+case['id']+'.log')
+            with log.open('w') as stderr:
+                result=json.loads(subprocess.check_output([binary,path,case['input_file']],stderr=stderr))
+            assert result['dimension']==768
+            item=result['items'][0]
+            tokens_frame=next(frame for frame in result['checkpoints'] if frame['name']=='result_embd')
+            assert tokens_frame['rows']==len(item['token_ids'])
+            pooled=[sum(tokens_frame['values'][row*768+column] for row in range(tokens_frame['rows']))/tokens_frame['rows'] for column in range(768)]
+            pooling_check=compare(item['raw_pooled'],pooled,1e-4,1e-4)
+            assert all(math.isfinite(v) for v in item['normalized'])
+            assert abs(math.sqrt(sum(v*v for v in item['normalized']))-1)<1e-5
+            # Retain full arrays in ignored cache, selected complete rows in committed fixtures.
+            cache_file=CACHE/(model['id']+'-'+case['id']+'-full.json')
+            cache_file.write_text(json.dumps(result,separators=(',',':'))+'\n')
+            checkpoints=[{'name':f['name'],'width':f['width'],'rows':f['rows'],
+                         'first_row':f['values'][:f['width']],'last_row':f['values'][-f['width']:]} for f in result['checkpoints']]
+            outputs.append({'id':case['id'],'input':case['input'],'token_ids':item['token_ids'],
+                            'attention_mask':[1]*len(item['token_ids']),'position_ids':list(range(len(item['token_ids']))),
+                            'raw_pooled':item['raw_pooled'],'normalized':item['normalized'],'mask_pooling_reconstruction':pooling_check,'checkpoints':checkpoints})
+        # Batch references include duplicate sequences and very different lengths, with exact indices.
+        batch_indices=[0,1,0,4]
+        with (CACHE/(model['id']+'-batch.log')).open('w') as stderr:
+            batch=json.loads(subprocess.check_output([binary,path,*[cases[i]['input_file'] for i in batch_indices]],stderr=stderr))
+        comparisons=[]
+        for i,index in enumerate(batch_indices):
+            assert batch['items'][i]['token_ids']==outputs[index]['token_ids']
+            comparisons.append(compare(outputs[index]['normalized'],batch['items'][i]['normalized'],1e-4,1e-4))
+        evidence={'schema_version':1,'model_id':model['id'],'sha256':model['sha256'],'reference_revision':pin['revision'],
+                  'reference_source_sha256':digest(source),'reference_executable_sha256':digest(binary),
+                  'settings':{'threads':1,'gpu_layers':0,'flash_attention':False,'context':512,'pooling':'mean'},
+                  'policy':policy,'cases':outputs,'batch_indices':batch_indices,
+                  'batch_items':batch['items'],'batch_comparisons':comparisons,'native_execution_qualified':False}
+        target=DIRECTORY/(model['id']+'.reference.json');target.write_text(json.dumps(evidence,indent=2,ensure_ascii=False)+'\n')
+        model['qualification']='byte-verified-independent-embedding-reference-captured-native-unsupported'
+        model['evidence']=str(target.relative_to(ROOT))
+        print('PASS E0 '+model['id']+': exact asset hashes, 768-D finite/unit vectors, token/encoder/pooling checkpoints and single/batch parity',flush=True)
+    manifest_path.write_text(json.dumps(manifest,indent=2)+'\n')
+
+
+if __name__=='__main__':main()

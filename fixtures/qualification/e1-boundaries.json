@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "executable_sha256": "d7421fd84f01798359a89e292e39aee5b64eb0909058c287b4b39edaf0bcdd5d",
+  "context": 512,
+  "cache_conditions": "uncontrolled",
+  "models": [
+    {
+      "id": "nomic-embed-text-v1.5.f16",
+      "sha256": "f7af6f66802f4df86eda10fe9bbcfc75c39562bed48ef6ace719a251cf1c2fdb",
+      "comparisons": [
+        {
+          "max_absolute": 3.9280700914190447e-10,
+          "l2_distance": 9.788413338541422e-10,
+          "normalized_l2": 9.788413361713038e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.9280700914190447e-10,
+          "l2_distance": 9.788413338541422e-10,
+          "normalized_l2": 9.788413361713038e-10,
+          "outside_tolerance": 0
+        }
+      ],
+      "cleanup": {
+        "limit": 268435456,
+        "peak_reserved": 82549081,
+        "peak_session_buffer_capacity_bytes": 45100688,
+        "reserved": 27732992,
+        "session_buffer_capacity_bytes": 0
+      },
+      "plan": {
+        "additional_reserved_bytes": 54816089,
+        "admissible": true,
+        "backend": "cpu-reference",
+        "batch_size": 2,
+        "input_count": 2,
+        "io_bytes": 262144,
+        "limitations": [
+          "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+          "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+          "The encoder stores no generation KV cache or quadratic attention matrix",
+          "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+        ],
+        "max_input_tokens": 512,
+        "output_bytes": 6656,
+        "profile": "balanced",
+        "reasons": [
+          "admitted up to 1024 packed tokens per microbatch; input limits and dimensions are preserved"
+        ],
+        "request_reserved_bytes": 1457256,
+        "required_reserved_bytes": 82549081,
+        "safety_headroom_bytes": 4983281,
+        "schema_version": 1,
+        "shared_weight_bytes": 273533952,
+        "task": "embedding",
+        "tensor_tile_tokens": 16,
+        "threads": 2,
+        "token_capacity": 1024,
+        "tokenization_bytes": 395904,
+        "workspace_bytes": 48375552
+      },
+      "encoding_ms": 81678.054917,
+      "rejected": [
+        {
+          "case": "tokens",
+          "error": {
+            "code": "INVALID_REQUEST",
+            "message": "embedding input exceeds the token limit; enable truncation explicitly"
+          }
+        },
+        {
+          "case": "bytes",
+          "error": {
+            "code": "INVALID_REQUEST",
+            "message": "embedding request exceeds bounded input/concurrency limits"
+          }
+        },
+        {
+          "case": "batch",
+          "error": {
+            "code": "INVALID_REQUEST",
+            "message": "embedding request requires 1..=256 inputs"
+          }
+        },
+        {
+          "case": "memory",
+          "error": {
+            "code": "RESOURCE_EXHAUSTED",
+            "message": "metadata allocation limit exceeded"
+          }
+        }
+      ]
+    },
+    {
+      "id": "nomic-embed-text-v1.5.Q8_0",
+      "sha256": "3e24342164b3d94991ba9692fdc0dd08e3fd7362e0aacc396a9a5c54a544c3b7",
+      "comparisons": [
+        {
+          "max_absolute": 4.974823053505162e-10,
+          "l2_distance": 1.0002259528546122e-09,
+          "normalized_l2": 1.0002259514645412e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.974823053505162e-10,
+          "l2_distance": 1.0002259528546122e-09,
+          "normalized_l2": 1.0002259514645412e-09,
+          "outside_tolerance": 0
+        }
+      ],
+      "cleanup": {
+        "limit": 268435456,
+        "peak_reserved": 82549593,
+        "peak_session_buffer_capacity_bytes": 45100688,
+        "reserved": 27733504,
+        "session_buffer_capacity_bytes": 0
+      },
+      "plan": {
+        "additional_reserved_bytes": 54816089,
+        "admissible": true,
+        "backend": "cpu-reference",
+        "batch_size": 2,
+        "input_count": 2,
+        "io_bytes": 262144,
+        "limitations": [
+          "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+          "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+          "The encoder stores no generation KV cache or quadratic attention matrix",
+          "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+        ],
+        "max_input_tokens": 512,
+        "output_bytes": 6656,
+        "profile": "balanced",
+        "reasons": [
+          "admitted up to 1024 packed tokens per microbatch; input limits and dimensions are preserved"
+        ],
+        "request_reserved_bytes": 1457256,
+        "required_reserved_bytes": 82549593,
+        "safety_headroom_bytes": 4983281,
+        "schema_version": 1,
+        "shared_weight_bytes": 145389792,
+        "task": "embedding",
+        "tensor_tile_tokens": 16,
+        "threads": 2,
+        "token_capacity": 1024,
+        "tokenization_bytes": 395904,
+        "workspace_bytes": 48375552
+      },
+      "encoding_ms": 35104.636167000004,
+      "rejected": [
+        {
+          "case": "tokens",
+          "error": {
+            "code": "INVALID_REQUEST",
+            "message": "embedding input exceeds the token limit; enable truncation explicitly"
+          }
+        },
+        {
+          "case": "bytes",
+          "error": {
+            "code": "INVALID_REQUEST",
+            "message": "embedding request exceeds bounded input/concurrency limits"
+          }
+        },
+        {
+          "case": "batch",
+          "error": {
+            "code": "INVALID_REQUEST",
+            "message": "embedding request requires 1..=256 inputs"
+          }
+        },
+        {
+          "case": "memory",
+          "error": {
+            "code": "RESOURCE_EXHAUSTED",
+            "message": "metadata allocation limit exceeded"
+          }
+        }
+      ]
+    }
+  ]
+}

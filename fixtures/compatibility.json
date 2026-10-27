@@ -1,0 +1,443 @@
+{
+  "schema_version": 1,
+  "release": "experimental-G4-E2-S4-CPU",
+  "entries": [
+    {
+      "file": "qwen2.5-0.5b-instruct-fp16.gguf",
+      "sha256": "8e0ae26000627ed62de0e78e41860af70094558b9d2913385c842a6aa06cf3fc",
+      "architecture": "qwen2",
+      "gguf_version": 3,
+      "byte_order": "little",
+      "tensor_encodings": [
+        "F32",
+        "F16"
+      ],
+      "tokenizer": "gpt2/qwen2",
+      "metadata_fingerprints": {
+        "tokenizer.chat_template": "71672240b1a3b068067b6a332bc38d3fc05aaade9d41b4b27d7510ff4335504b",
+        "tokenizer.ggml.merges": "24fa2ae2a398e50784a1fff678482094af4f63e6783d35686726abacda8dc371",
+        "tokenizer.ggml.token_type": "17ccfa7767a8721474dc0fd21ca1308fdfd04e0f64036efbfa97f3e16e5f18f1",
+        "tokenizer.ggml.tokens": "e2fadeac783c911f535d21f858f43127672a1d261af510d3f895e34bd2f6fb10"
+      },
+      "backend": "cpu-reference",
+      "platform": "macos-arm64",
+      "status": "experimental-reference-parity-tested",
+      "model_declared_context": 8192,
+      "inference_reservation_context": 512,
+      "evidence": "fixtures/golden/qwen2.5-0.5b-instruct-fp16.json",
+      "task": "text-generation",
+      "measured_reservation_contexts": [
+        128,
+        512,
+        4096
+      ]
+    },
+    {
+      "file": "qwen2.5-0.5b-instruct-derived-f32.gguf",
+      "sha256": "baf69083ecc7af676ebc0197de462a857123bf60985c8ece44bd55f19ed5703f",
+      "architecture": "qwen2",
+      "gguf_version": 3,
+      "byte_order": "little",
+      "tensor_encodings": [
+        "F32"
+      ],
+      "tokenizer": "gpt2/qwen2",
+      "metadata_fingerprints": {
+        "tokenizer.chat_template": "71672240b1a3b068067b6a332bc38d3fc05aaade9d41b4b27d7510ff4335504b",
+        "tokenizer.ggml.merges": "24fa2ae2a398e50784a1fff678482094af4f63e6783d35686726abacda8dc371",
+        "tokenizer.ggml.token_type": "17ccfa7767a8721474dc0fd21ca1308fdfd04e0f64036efbfa97f3e16e5f18f1",
+        "tokenizer.ggml.tokens": "e2fadeac783c911f535d21f858f43127672a1d261af510d3f895e34bd2f6fb10"
+      },
+      "backend": "cpu-reference",
+      "platform": "macos-arm64",
+      "status": "experimental-reference-parity-tested",
+      "model_declared_context": 8192,
+      "inference_reservation_context": 512,
+      "evidence": "fixtures/qualification/derived-f32.json",
+      "task": "text-generation"
+    },
+    {
+      "file": "qwen2.5-0.5b-instruct-q8_0.gguf",
+      "sha256": "ca59ca7f13d0e15a8cfa77bd17e65d24f6844b554a7b6c12e07a5f89ff76844e",
+      "architecture": "qwen2",
+      "gguf_version": 3,
+      "byte_order": "little",
+      "tensor_encodings": [
+        "F32",
+        "Q8_0"
+      ],
+      "tensor_inventory": "fixtures/quantized/qwen2.5-0.5b-instruct-q8_0.inventory.json",
+      "tokenizer": "gpt2/qwen2",
+      "metadata_fingerprints": {
+        "tokenizer.chat_template": "71672240b1a3b068067b6a332bc38d3fc05aaade9d41b4b27d7510ff4335504b",
+        "tokenizer.ggml.merges": "24fa2ae2a398e50784a1fff678482094af4f63e6783d35686726abacda8dc371",
+        "tokenizer.ggml.token_type": "17ccfa7767a8721474dc0fd21ca1308fdfd04e0f64036efbfa97f3e16e5f18f1",
+        "tokenizer.ggml.tokens": "e2fadeac783c911f535d21f858f43127672a1d261af510d3f895e34bd2f6fb10"
+      },
+      "backend": "cpu-reference",
+      "platform": "macos-arm64",
+      "status": "experimental-reference-parity-tested",
+      "inference_reservation_context": 512,
+      "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q8_0.json",
+      "model_declared_context": 32768,
+      "qualification_contract": "primary",
+      "task": "text-generation"
+    },
+    {
+      "file": "qwen2.5-0.5b-instruct-q4_0.gguf",
+      "sha256": "7671c0c304e6ce5a7fc577bcb12aba01e2c155cc2efd29b2213c95b18edaf6ed",
+      "architecture": "qwen2",
+      "gguf_version": 3,
+      "byte_order": "little",
+      "tensor_encodings": [
+        "F32",
+        "Q4_0",
+        "Q8_0"
+      ],
+      "tensor_inventory": "fixtures/quantized/qwen2.5-0.5b-instruct-q4_0.inventory.json",
+      "tokenizer": "gpt2/qwen2",
+      "metadata_fingerprints": {
+        "tokenizer.chat_template": "71672240b1a3b068067b6a332bc38d3fc05aaade9d41b4b27d7510ff4335504b",
+        "tokenizer.ggml.merges": "24fa2ae2a398e50784a1fff678482094af4f63e6783d35686726abacda8dc371",
+        "tokenizer.ggml.token_type": "17ccfa7767a8721474dc0fd21ca1308fdfd04e0f64036efbfa97f3e16e5f18f1",
+        "tokenizer.ggml.tokens": "e2fadeac783c911f535d21f858f43127672a1d261af510d3f895e34bd2f6fb10"
+      },
+      "backend": "cpu-reference",
+      "platform": "macos-arm64",
+      "status": "experimental-reference-parity-tested",
+      "inference_reservation_context": 512,
+      "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q4_0.json",
+      "model_declared_context": 32768,
+      "qualification_contract": "primary",
+      "task": "text-generation"
+    },
+    {
+      "file": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      "sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+      "architecture": "qwen2",
+      "gguf_version": 3,
+      "byte_order": "little",
+      "tensor_encodings": [
+        "F32",
+        "Q4_K",
+        "Q5_0",
+        "Q6_K",
+        "Q8_0"
+      ],
+      "tensor_inventory": "fixtures/quantized/qwen2.5-0.5b-instruct-q4_k_m.inventory.json",
+      "tokenizer": "gpt2/qwen2",
+      "metadata_fingerprints": {
+        "tokenizer.chat_template": "71672240b1a3b068067b6a332bc38d3fc05aaade9d41b4b27d7510ff4335504b",
+        "tokenizer.ggml.merges": "24fa2ae2a398e50784a1fff678482094af4f63e6783d35686726abacda8dc371",
+        "tokenizer.ggml.token_type": "17ccfa7767a8721474dc0fd21ca1308fdfd04e0f64036efbfa97f3e16e5f18f1",
+        "tokenizer.ggml.tokens": "e2fadeac783c911f535d21f858f43127672a1d261af510d3f895e34bd2f6fb10"
+      },
+      "backend": "cpu-reference",
+      "platform": "macos-arm64",
+      "status": "experimental-reference-parity-tested",
+      "inference_reservation_context": 512,
+      "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q4_k_m.json",
+      "model_declared_context": 32768,
+      "qualification_contract": "primary",
+      "task": "text-generation",
+      "measured_reservation_contexts": [
+        128,
+        512,
+        4096
+      ]
+    },
+    {
+      "file": "qwen2.5-0.5b-instruct-q6_k.gguf",
+      "sha256": "2f82233630c349ccf6b8daccf48f9a7865713d9f08a2eadfa456cebe9b97c7f5",
+      "architecture": "qwen2",
+      "gguf_version": 3,
+      "byte_order": "little",
+      "tensor_encodings": [
+        "F32",
+        "Q6_K",
+        "Q8_0"
+      ],
+      "tensor_inventory": "fixtures/quantized/qwen2.5-0.5b-instruct-q6_k.inventory.json",
+      "tokenizer": "gpt2/qwen2",
+      "metadata_fingerprints": {
+        "tokenizer.chat_template": "71672240b1a3b068067b6a332bc38d3fc05aaade9d41b4b27d7510ff4335504b",
+        "tokenizer.ggml.merges": "24fa2ae2a398e50784a1fff678482094af4f63e6783d35686726abacda8dc371",
+        "tokenizer.ggml.token_type": "17ccfa7767a8721474dc0fd21ca1308fdfd04e0f64036efbfa97f3e16e5f18f1",
+        "tokenizer.ggml.tokens": "e2fadeac783c911f535d21f858f43127672a1d261af510d3f895e34bd2f6fb10"
+      },
+      "backend": "cpu-reference",
+      "platform": "macos-arm64",
+      "status": "experimental-reference-parity-tested",
+      "inference_reservation_context": 512,
+      "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q6_k.json",
+      "model_declared_context": 32768,
+      "qualification_contract": "primary",
+      "task": "text-generation"
+    },
+    {
+      "file": "qwen2.5-1.5b-instruct-fp16.gguf",
+      "sha256": "fc89e330deb3fd8fa560f1c0f35a1e2b8da96d59e13445559ed190307a6f5649",
+      "architecture": "qwen2",
+      "gguf_version": 3,
+      "byte_order": "little",
+      "tensor_encodings": [
+        "F16",
+        "F32"
+      ],
+      "tensor_inventory": "fixtures/quantized/qwen2.5-1.5b-instruct-fp16.inventory.json",
+      "tokenizer": "gpt2/qwen2",
+      "metadata_fingerprints": {
+        "tokenizer.chat_template": "71672240b1a3b068067b6a332bc38d3fc05aaade9d41b4b27d7510ff4335504b",
+        "tokenizer.ggml.merges": "24fa2ae2a398e50784a1fff678482094af4f63e6783d35686726abacda8dc371",
+        "tokenizer.ggml.token_type": "17ccfa7767a8721474dc0fd21ca1308fdfd04e0f64036efbfa97f3e16e5f18f1",
+        "tokenizer.ggml.tokens": "e2fadeac783c911f535d21f858f43127672a1d261af510d3f895e34bd2f6fb10"
+      },
+      "backend": "cpu-reference",
+      "platform": "macos-arm64",
+      "status": "experimental-reference-parity-tested",
+      "model_declared_context": 8192,
+      "inference_reservation_context": 512,
+      "evidence": "fixtures/qualification/g4-qwen2.5-1.5b-instruct-fp16.json",
+      "qualification_contract": "second-size",
+      "task": "text-generation"
+    },
+    {
+      "file": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+      "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+      "architecture": "qwen2",
+      "gguf_version": 3,
+      "byte_order": "little",
+      "tensor_encodings": [
+        "F32",
+        "Q4_K",
+        "Q6_K"
+      ],
+      "tensor_inventory": "fixtures/quantized/qwen2.5-1.5b-instruct-q4_k_m.inventory.json",
+      "tokenizer": "gpt2/qwen2",
+      "metadata_fingerprints": {
+        "tokenizer.chat_template": "71672240b1a3b068067b6a332bc38d3fc05aaade9d41b4b27d7510ff4335504b",
+        "tokenizer.ggml.merges": "24fa2ae2a398e50784a1fff678482094af4f63e6783d35686726abacda8dc371",
+        "tokenizer.ggml.token_type": "17ccfa7767a8721474dc0fd21ca1308fdfd04e0f64036efbfa97f3e16e5f18f1",
+        "tokenizer.ggml.tokens": "e2fadeac783c911f535d21f858f43127672a1d261af510d3f895e34bd2f6fb10"
+      },
+      "backend": "cpu-reference",
+      "platform": "macos-arm64",
+      "status": "experimental-reference-parity-tested",
+      "model_declared_context": 32768,
+      "inference_reservation_context": 512,
+      "evidence": "fixtures/qualification/g4-qwen2.5-1.5b-instruct-q4_k_m.json",
+      "qualification_contract": "second-size",
+      "task": "text-generation"
+    },
+    {
+      "file": "nomic-embed-text-v1.5.f16.gguf",
+      "sha256": "f7af6f66802f4df86eda10fe9bbcfc75c39562bed48ef6ace719a251cf1c2fdb",
+      "task": "embedding",
+      "architecture": "nomic-bert",
+      "gguf_version": 3,
+      "byte_order": "little",
+      "tensor_encodings": [
+        "F16",
+        "F32"
+      ],
+      "tensor_inventory": "fixtures/embedding/nomic-embed-text-v1.5.f16.inventory.json",
+      "metadata_fingerprints": {
+        "tokenizer.ggml.token_type": "98d247c5404b6b18f05f133b92dd56edf6efefefac326794b00d7b351f6c5aa1",
+        "tokenizer.ggml.tokens": "84cfecd05e8b6a3cb50d93fb451860ef8146da13ef7a9baafc7d81b8e230df23"
+      },
+      "tokenizer": "bert/gguf-wordpiece-first-nfd-mark-strip-v1",
+      "pooling": "mean-real-tokens-including-CLS-SEP",
+      "normalization": "L2-full-dimension",
+      "dimension": 768,
+      "backend": "cpu-reference",
+      "platform": "macos-arm64",
+      "status": "experimental-reference-parity-tested",
+      "model_declared_context": 2048,
+      "qualified_input_tokens": 512,
+      "native_interface": "Rust library, standalone/client CLI and POST /v1/embeddings",
+      "evidence": "fixtures/qualification/e1-embeddings.json",
+      "multilingual_evidence": "fixtures/qualification/e1-multilingual.json",
+      "boundary_evidence": "fixtures/qualification/e1-boundaries.json",
+      "embedding_space": "coheryn-embedding-v1-e5e92338862943dd5d1a61ddba1f9a7159a0dd1d8524f0d5307bf6da08aa2f58",
+      "transport_evidence": "fixtures/qualification/e2-service.json"
+    },
+    {
+      "file": "nomic-embed-text-v1.5.Q8_0.gguf",
+      "sha256": "3e24342164b3d94991ba9692fdc0dd08e3fd7362e0aacc396a9a5c54a544c3b7",
+      "task": "embedding",
+      "architecture": "nomic-bert",
+      "gguf_version": 3,
+      "byte_order": "little",
+      "tensor_encodings": [
+        "F32",
+        "Q8_0"
+      ],
+      "tensor_inventory": "fixtures/embedding/nomic-embed-text-v1.5.Q8_0.inventory.json",
+      "metadata_fingerprints": {
+        "tokenizer.ggml.token_type": "98d247c5404b6b18f05f133b92dd56edf6efefefac326794b00d7b351f6c5aa1",
+        "tokenizer.ggml.tokens": "84cfecd05e8b6a3cb50d93fb451860ef8146da13ef7a9baafc7d81b8e230df23"
+      },
+      "tokenizer": "bert/gguf-wordpiece-first-nfd-mark-strip-v1",
+      "pooling": "mean-real-tokens-including-CLS-SEP",
+      "normalization": "L2-full-dimension",
+      "dimension": 768,
+      "backend": "cpu-reference",
+      "platform": "macos-arm64",
+      "status": "experimental-reference-parity-tested",
+      "model_declared_context": 2048,
+      "qualified_input_tokens": 512,
+      "native_interface": "Rust library, standalone/client CLI and POST /v1/embeddings",
+      "evidence": "fixtures/qualification/e1-embeddings.json",
+      "multilingual_evidence": "fixtures/qualification/e1-multilingual.json",
+      "boundary_evidence": "fixtures/qualification/e1-boundaries.json",
+      "embedding_space": "coheryn-embedding-v1-ded754d6ed3ba62ad7739577a0cc9772f01551df9f4b3c11eb1eca0eb0bb31e3",
+      "transport_evidence": "fixtures/qualification/e2-service.json"
+    }
+  ],
+  "reservation_contexts_measured": [
+    128,
+    512,
+    4096
+  ],
+  "context_note": "Each entry records its tested context. Reservation capacities 128/512/4096 are measured only where linked evidence lists them; these short prompts do not qualify populated long-context inference. The primary greedy corpus reaches 49 prompt tokens plus eight generated tokens.",
+  "unsupported_execution": {
+    "tensor_encodings": [
+      "all encodings except F32, F16, Q4_0, Q5_0, Q8_0, Q4_K, Q6_K"
+    ],
+    "backends": [
+      "Metal",
+      "CUDA",
+      "Vulkan"
+    ],
+    "container_versions": [
+      1,
+      2
+    ],
+    "variants": [
+      "shards",
+      "RoPE scaling",
+      "sliding-window attention",
+      "unapproved templates",
+      "graphs other than validated Qwen2 generation and nomic-bert embedding adapters"
+    ]
+  },
+  "qualification_note": "Descriptor validation identifies implemented capabilities; exact-file parity evidence is limited to these hashes and settings. Other platforms remain unqualified.",
+  "service_evidence": "fixtures/qualification/g4-service.json",
+  "planner_evidence": "fixtures/qualification/g4-planner.json",
+  "multimodal": {
+    "status": "not-implemented-not-qualified",
+    "selection_manifest": "fixtures/vlm/models.json",
+    "reference_contract": "fixtures/vlm/reference-contract.json",
+    "input_fixtures": "fixtures/vlm/images/manifest.json",
+    "full_tensor_payloads_verified": false,
+    "image_execution_supported": false,
+    "note": "Selected model sets have bounded header/provenance inventories only. No VLM, image format or image backend is executable yet."
+  },
+  "embeddings": {
+    "status": "experimental-native-CPU-CLI-API-parity-tested",
+    "selection_manifest": "fixtures/embedding/models.json",
+    "reference_contract": "fixtures/embedding/reference-contract.json",
+    "full_tensor_payloads_verified": true,
+    "native_embedding_execution": true,
+    "cli_api_supported": true,
+    "note": "Exact Nomic F16/Q8_0 native CPU library/CLI/API and optional SDK/LangChain/Qdrant qualification on macOS ARM64. E0 capture flags are historical. Other architectures, GPU, other platforms, long context and reduced dimensions remain unsupported/unqualified. Unicode/numeric parity does not establish proficiency in every language.",
+    "native_evidence": "fixtures/qualification/e1-embeddings.json",
+    "multilingual_evidence": "fixtures/qualification/e1-multilingual.json",
+    "boundary_evidence": "fixtures/qualification/e1-boundaries.json",
+    "transport_evidence": "fixtures/qualification/e2-service.json",
+    "native_regression_evidence": "fixtures/qualification/e2-native-regression.json",
+    "api_supported_fields": [
+      "model",
+      "input",
+      "encoding_format",
+      "dimensions",
+      "user",
+      "batch_size",
+      "max_input_tokens",
+      "max_batch_tokens",
+      "truncate",
+      "profile",
+      "threads",
+      "max_memory"
+    ],
+    "api_input_types": [
+      "string",
+      "array-of-strings"
+    ],
+    "api_encodings": [
+      "float",
+      "base64-little-endian-float32"
+    ],
+    "embedding_space_schema": "coheryn-embedding-v1"
+  },
+  "quantized_kernel_evidence": "fixtures/quantized/kernels.json",
+  "quantization_quality_evidence": "fixtures/qualification/g4-quantization-quality.json",
+  "historical_service_evidence": "fixtures/qualification/g2-service.json",
+  "historical_planner_evidence": "fixtures/qualification/g3-planner.json",
+  "benchmark_evidence": "fixtures/qualification/g4-benchmarks.json",
+  "qualification_contracts": "fixtures/quantized/models.json#/qualification_contracts",
+  "supported_tensor_encodings": [
+    "F32",
+    "F16",
+    "Q4_0",
+    "Q5_0",
+    "Q8_0",
+    "Q4_K",
+    "Q6_K"
+  ],
+  "managed_sessions": {
+    "status": "initial-macos-arm64-cpu-preview",
+    "roles": [
+      "system",
+      "user",
+      "assistant"
+    ],
+    "kv_reuse": true,
+    "persistence": "runtime-opt-in; ephemeral default; no persisted KV",
+    "qualified_model_sha256": "8e0ae26000627ed62de0e78e41860af70094558b9d2913385c842a6aa06cf3fc",
+    "qualified_context": 512,
+    "evidence": [
+      "fixtures/qualification/s2-s3-service.json",
+      "fixtures/qualification/s2-s3-verification.json"
+    ],
+    "not_qualified": [
+      "constraints",
+      "vision",
+      "metal",
+      "other-platform-model-execution",
+      "full-release-crash-security-campaigns"
+    ],
+    "history_format_versions": [
+      1,
+      2
+    ],
+    "store_schema_version": 2,
+    "tool_qualification": "exact file/profile in tool_calling section; broader combinations unqualified"
+  },
+  "tool_calling": {
+    "status": "initial-macos-arm64-native-cpu-preview",
+    "model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+    "profile": "qwen-tools-v1:51a066e3621b302051ec39c2ce66e90a31614c4d0ebda09b20dc4fe14d6eee0d",
+    "context": 512,
+    "choices": [
+      "none",
+      "auto",
+      "required",
+      "named"
+    ],
+    "multiple_calls": true,
+    "tool_result_order": "all pending calls, in original order",
+    "strict_schema": false,
+    "automatic_execution": false,
+    "manifest": "fixtures/tools/manifest.json",
+    "evidence": [
+      "fixtures/qualification/s4-service.json",
+      "fixtures/qualification/s4-verification.json"
+    ],
+    "license_notice_equivalence": {
+      "reference_body_sha256": "3fb38d82ef3d0bf6ace1100b836411ea866c707b434cbec7188206c677a1058d",
+      "change": "Only a non-rendering modification/license comment was prepended. Native exact-prompt tests cover all five frozen reference cases. Existing service/binary records identify the prior file profile and are not rewritten.",
+      "manifest": "fixtures/tools/manifest.json"
+    }
+  }
+}

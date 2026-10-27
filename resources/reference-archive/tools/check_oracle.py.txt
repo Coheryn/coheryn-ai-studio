@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+"""Capture independent golden cases and compare Coheryn; full arrays stay in cache."""
+import argparse
+import hashlib
+import json
+import math
+import platform
+from pathlib import Path
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT/'.cache/devtools'))
+
+def run_json(command, log=None):
+    result = subprocess.run([str(x) for x in command], check=True, text=True, capture_output=True)
+    if log:
+        log.write_text(result.stderr)
+    return json.loads(result.stdout)
+
+def compare_traces(expected_file, actual_file, tolerance):
+    expected = {(v['position'],v['name']):v['values'] for v in map(json.loads, expected_file.read_text().splitlines())}
+    actual = {(v['position'],v['name']):v['values'] for v in map(json.loads, actual_file.read_text().splitlines())}
+    if expected.keys() != actual.keys():
+        raise AssertionError(f'Trace tensor mismatch: {expected.keys()} != {actual.keys()}')
+    comparisons = []
+    for key, ref in expected.items():
+        got = actual[key]
+        if len(got) != len(ref) or any(not math.isfinite(x) for x in got+ref):
+            raise AssertionError(f'Invalid trace dimensions or numbers: {key}')
+        errors = [abs(a-b) for a,b in zip(got,ref)]
+        normalized = math.sqrt(sum(e*e for e in errors)/max(sum(x*x for x in ref),1e-30))
+        failures = sum(e > tolerance['logits_absolute'] + tolerance['logits_relative']*abs(r) for e,r in zip(errors,ref))
+        entry = {'position':key[0], 'name':key[1], 'values':len(ref), 'max_abs':max(errors), 'normalized_l2':normalized, 'outside_tolerance':failures}
+        comparisons.append(entry)
+        if failures or normalized > tolerance['normalized_l2']:
+            raise AssertionError(f'Numeric mismatch {key}: {entry}')
+    return comparisons
+
+def main():
+    from jinja2 import Environment, StrictUndefined
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--model', type=Path, default=ROOT/'.cache/models/qwen2.5-0.5b-instruct-fp16.gguf')
+    parser.add_argument('--coheryn', type=Path, default=ROOT/'target/release/coheryn')
+    parser.add_argument('--oracle', type=Path, default=ROOT/'.cache/reference-oracle')
+    parser.add_argument('--capture', action='store_true', help='Write independent small golden fixtures')
+    parser.add_argument('--trace', action='store_true', help='Compare every layer and full logits for Hello')
+    parser.add_argument('--case', action='append', help='Check selected case IDs without replacing the full golden artifact')
+    args = parser.parse_args()
+    if args.case and args.capture:
+        parser.error('--capture requires the complete case corpus')
+    manifest = json.loads((ROOT/'fixtures/models.json').read_text())
+    pin = manifest['models'][0]
+    build_path = args.oracle.with_suffix('.build.json')
+    if not build_path.exists():
+        raise SystemExit('Run tools/setup_reference.py to record the pinned oracle build before checking')
+    build = json.loads(build_path.read_text())
+    if (build['revision'] != manifest['oracle']['revision'] or build['settings'] != manifest['oracle']['settings']
+        or build['oracle_executable_sha256'] != hashlib.sha256(args.oracle.read_bytes()).hexdigest()
+        or build['oracle_source_sha256'] != hashlib.sha256((ROOT/'tools/reference_oracle.cpp').read_bytes()).hexdigest()):
+        raise SystemExit('Oracle build provenance mismatch; rebuild the pinned reference executable')
+    h = hashlib.sha256()
+    with args.model.open('rb') as f:
+        for chunk in iter(lambda: f.read(1 << 20), b''):
+            h.update(chunk)
+    if h.hexdigest() != pin['sha256']:
+        raise SystemExit('Oracle tests require the pinned, byte-identical model')
+    cache = ROOT/'.cache/oracle'
+    cache.mkdir(parents=True, exist_ok=True)
+    prompt_file = cache/'prompt.txt'
+    prompt_file.write_text('Hello')
+    initial = run_json([args.oracle, args.model, 'tokenize', prompt_file], cache/'reference.log')
+    template = Environment(undefined=StrictUndefined).from_string(initial['template'])
+    cases = []
+    for case in json.loads((ROOT/'fixtures/prompts.json').read_text()):
+        if args.case and case['id'] not in args.case:
+            continue
+        prompt = case.get('prompt')
+        if prompt is None:
+            prompt = template.render(messages=[dict(m,tool_calls=[]) for m in case['messages']], tools=False, add_generation_prompt=True,
+                                     bos_token='', eos_token='<|im_end|>')
+            message_file = cache/'messages.json'
+            message_file.write_text(json.dumps(case['messages'], ensure_ascii=False))
+            actual = run_json([args.coheryn, '--json', 'tokenize', args.model, '--messages', message_file])
+        else:
+            actual = run_json([args.coheryn, '--json', 'tokenize', args.model, '--prompt', prompt])
+        prompt_file.write_text(prompt)
+        expected = run_json([args.oracle, args.model, 'tokenize', prompt_file])
+        if actual['prompt'] != prompt or actual['token_ids'] != expected['token_ids']:
+            raise AssertionError(f"Tokenizer/template mismatch for {case['id']}: {actual['token_ids']} != {expected['token_ids']}")
+        reference = run_json([args.oracle, args.model, 'generate', prompt_file, case['generate']])
+        result = run_json([args.coheryn, '--json', 'run', args.model, '--standalone', '--prompt', prompt,
+                           '--max-tokens', case['generate'], '--context', '512'])
+        if result['token_ids'] != reference['token_ids']:
+            raise AssertionError(f"Greedy mismatch for {case['id']}: {result['token_ids']} != {reference['token_ids']}")
+        cases.append({'id': case['id'], 'prompt': prompt, 'prompt_token_ids': expected['token_ids'],
+                      'generated_token_ids': reference['token_ids'], 'text': result['text']})
+        print(f"PASS {case['id']}: template, {len(expected['token_ids'])} prompt tokens, {len(reference['token_ids'])} greedy tokens", flush=True)
+    summary = {'schema_version': 1, 'model_sha256': pin['sha256'], 'oracle_revision': manifest['oracle']['revision'],
+               'host': {'platform':platform.platform(),'machine':platform.machine()},
+               'settings': manifest['oracle']['settings'], 'cases': cases}
+    if args.trace:
+        prompt_file.write_text('Hello')
+        expected_file, actual_file = cache/'reference-trace.jsonl', cache/'coheryn-trace.jsonl'
+        with expected_file.open('w') as output, (cache/'trace.log').open('w') as log:
+            subprocess.run([str(args.oracle), str(args.model), 'trace', str(prompt_file)], stdout=output, stderr=log, check=True)
+        with actual_file.open('w') as output:
+            subprocess.run([str(args.coheryn), 'trace', str(args.model), '--prompt', 'Hello', '--context', '512'], stdout=output, check=True)
+        comparisons = compare_traces(expected_file,actual_file,manifest['oracle']['tolerances'])
+        summary['trace_comparisons'] = comparisons
+        print(f'PASS {len(comparisons)} layer/logit comparisons',flush=True)
+    (cache/'last-check.json').write_text(json.dumps(summary,indent=2,ensure_ascii=False)+'\n')
+    if args.capture:
+        target = ROOT/'fixtures/golden/qwen2.5-0.5b-instruct-fp16.json'
+        target.parent.mkdir(parents=True,exist_ok=True)
+        target.write_text(json.dumps(summary,indent=2,ensure_ascii=False)+'\n')
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "policy_sha256": "f911a30794aaf6d8f0aff16320b0c26271e8456b436b81df7cb45bc2976f9471",
+  "source": {
+    "files_checked": 239,
+    "issues": [],
+    "excluded": [
+      {
+        "path": "target",
+        "reason": "Build staging; release artifacts require the separate artifact scan"
+      },
+      {
+        "path": ".git",
+        "reason": "Version-control object database; not a distribution input"
+      },
+      {
+        "path": ".cache",
+        "reason": "External tool/model/download cache; never packaged or used by native CI"
+      },
+      {
+        "path": ".DS_Store",
+        "reason": "OS folder metadata"
+      },
+      {
+        "path": "tools/__pycache__",
+        "reason": "Interpreter bytecode cache"
+      },
+      {
+        "path": "tools/.DS_Store",
+        "reason": "OS folder metadata"
+      },
+      {
+        "path": "examples/__pycache__",
+        "reason": "Interpreter bytecode cache"
+      },
+      {
+        "path": "fixtures/.DS_Store",
+        "reason": "OS folder metadata"
+      },
+      {
+        "path": "fuzz/target",
+        "reason": "Fuzzer build staging"
+      },
+      {
+        "path": "fuzz/.DS_Store",
+        "reason": "OS folder metadata"
+      }
+    ],
+    "binary_assets": [
+      {
+        "path": "fixtures/vlm/images/landscape.jpg",
+        "bytes": 1069
+      },
+      {
+        "path": "fixtures/vlm/images/landscape.png",
+        "bytes": 169
+      },
+      {
+        "path": "fixtures/vlm/images/portrait.png",
+        "bytes": 160
+      },
+      {
+        "path": "fixtures/vlm/images/alpha.png",
+        "bytes": 97
+      },
+      {
+        "path": "fixtures/vlm/images/swapped.png",
+        "bytes": 169
+      },
+      {
+        "path": "fixtures/vlm/images/minimum.png",
+        "bytes": 69
+      }
+    ]
+  },
+  "artifacts": []
+}

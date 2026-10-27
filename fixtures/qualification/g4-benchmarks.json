@@ -1,0 +1,998 @@
+{
+  "schema_version": 1,
+  "model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+  "native_executable_sha256": "523ce59f8425fb45e0e64bda1a2f463552ce07c198ec3effeb07d3a87dc9baab",
+  "cargo": "cargo 1.90.0 (840b83a10 2025-07-30)",
+  "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "hardware": {
+    "hw.model": "MacBookAir10,1",
+    "hw.memsize": "8589934592",
+    "hw.ncpu": "8",
+    "machdep.cpu.brand_string": "Apple M1"
+  },
+  "cache_condition": "uncontrolled",
+  "backend": "cpu-reference",
+  "kv_dtype": "F32",
+  "concurrency": 1,
+  "runs": [
+    {
+      "context": 128,
+      "profile": "reference",
+      "threads": 1,
+      "result": {
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 196.84733300000002,
+        "mode": "standalone",
+        "profile": "reference",
+        "requested_threads": 1,
+        "runs": [
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1615.978584,
+            "finish_reason": "length",
+            "first_token_ms": 231.8145,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 270171052,
+              "peak_session_buffer_capacity_bytes": 3059244,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.00037400000000000004,
+            "prefill_ms": 226.9605,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 1.0375
+          },
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1615.420125,
+            "finish_reason": "length",
+            "first_token_ms": 233.572416,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 270171052,
+              "peak_session_buffer_capacity_bytes": 3059244,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000167,
+            "prefill_ms": 229.641084,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.0265
+          }
+        ]
+      },
+      "wall_ms": 3927.021708994289,
+      "peak_rss_bytes": 101072896,
+      "minor_page_faults": 6458,
+      "major_page_faults": 0,
+      "input_blocks": 0,
+      "output_blocks": 0,
+      "private_memory_bytes": null,
+      "gpu_memory_bytes": null,
+      "mapped_weight_bytes": 0,
+      "measurement": "wait4 of this benchmark child; block counters are not byte counts"
+    },
+    {
+      "context": 128,
+      "profile": "balanced",
+      "threads": 2,
+      "result": {
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 197.016458,
+        "mode": "standalone",
+        "profile": "balanced",
+        "requested_threads": 2,
+        "runs": [
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1077.133209,
+            "finish_reason": "length",
+            "first_token_ms": 155.995292,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 273411134,
+              "peak_session_buffer_capacity_bytes": 3059244,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000166,
+            "prefill_ms": 151.169792,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.919334
+          },
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1066.681917,
+            "finish_reason": "length",
+            "first_token_ms": 150.6345,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 273411134,
+              "peak_session_buffer_capacity_bytes": 3059244,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000208,
+            "prefill_ms": 146.878834,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.026333
+          }
+        ]
+      },
+      "wall_ms": 2664.5723340043332,
+      "peak_rss_bytes": 101220352,
+      "minor_page_faults": 6442,
+      "major_page_faults": 22,
+      "input_blocks": 0,
+      "output_blocks": 0,
+      "private_memory_bytes": null,
+      "gpu_memory_bytes": null,
+      "mapped_weight_bytes": 0,
+      "measurement": "wait4 of this benchmark child; block counters are not byte counts"
+    },
+    {
+      "context": 128,
+      "profile": "performance",
+      "threads": 4,
+      "result": {
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 184.212833,
+        "mode": "standalone",
+        "profile": "performance",
+        "requested_threads": 4,
+        "runs": [
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1238.597459,
+            "finish_reason": "length",
+            "first_token_ms": 184.075084,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 273619547,
+              "peak_session_buffer_capacity_bytes": 3059244,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000291,
+            "prefill_ms": 179.248583,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.9546669999999999
+          },
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1277.5072920000002,
+            "finish_reason": "length",
+            "first_token_ms": 171.17825,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 273619547,
+              "peak_session_buffer_capacity_bytes": 3059244,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000249,
+            "prefill_ms": 167.25937499999998,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.03125
+          }
+        ]
+      },
+      "wall_ms": 3065.406500012614,
+      "peak_rss_bytes": 101548032,
+      "minor_page_faults": 6471,
+      "major_page_faults": 10,
+      "input_blocks": 0,
+      "output_blocks": 0,
+      "private_memory_bytes": null,
+      "gpu_memory_bytes": null,
+      "mapped_weight_bytes": 0,
+      "measurement": "wait4 of this benchmark child; block counters are not byte counts"
+    },
+    {
+      "context": 128,
+      "profile": "low-memory",
+      "threads": 1,
+      "result": {
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 182.760208,
+        "mode": "standalone",
+        "profile": "low-memory",
+        "requested_threads": 1,
+        "runs": [
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1751.266208,
+            "finish_reason": "length",
+            "first_token_ms": 250.556291,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 270368143,
+              "peak_session_buffer_capacity_bytes": 2321964,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.00020899999999999998,
+            "prefill_ms": 245.90683299999998,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.887791
+          },
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1758.612626,
+            "finish_reason": "length",
+            "first_token_ms": 259.895708,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 270368143,
+              "peak_session_buffer_capacity_bytes": 2321964,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000332,
+            "prefill_ms": 256.080625,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.024583
+          }
+        ]
+      },
+      "wall_ms": 4211.864083001274,
+      "peak_rss_bytes": 100433920,
+      "minor_page_faults": 6400,
+      "major_page_faults": 0,
+      "input_blocks": 0,
+      "output_blocks": 0,
+      "private_memory_bytes": null,
+      "gpu_memory_bytes": null,
+      "mapped_weight_bytes": 0,
+      "measurement": "wait4 of this benchmark child; block counters are not byte counts"
+    },
+    {
+      "context": 512,
+      "profile": "reference",
+      "threads": 1,
+      "result": {
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 189.873375,
+        "mode": "standalone",
+        "profile": "reference",
+        "requested_threads": 1,
+        "runs": [
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1613.295668,
+            "finish_reason": "length",
+            "first_token_ms": 228.44925,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 279620524,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.00029099999999999997,
+            "prefill_ms": 223.702917,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.964125
+          },
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1610.366,
+            "finish_reason": "length",
+            "first_token_ms": 230.646083,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 279620524,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000208,
+            "prefill_ms": 226.897042,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.032208
+          }
+        ]
+      },
+      "wall_ms": 3881.4564579952275,
+      "peak_rss_bytes": 101203968,
+      "minor_page_faults": 6429,
+      "major_page_faults": 24,
+      "input_blocks": 0,
+      "output_blocks": 0,
+      "private_memory_bytes": null,
+      "gpu_memory_bytes": null,
+      "mapped_weight_bytes": 0,
+      "measurement": "wait4 of this benchmark child; block counters are not byte counts"
+    },
+    {
+      "context": 512,
+      "profile": "balanced",
+      "threads": 2,
+      "result": {
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 187.4845,
+        "mode": "standalone",
+        "profile": "balanced",
+        "requested_threads": 2,
+        "runs": [
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1059.469376,
+            "finish_reason": "length",
+            "first_token_ms": 148.066459,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 283805553,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000333,
+            "prefill_ms": 143.237417,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.943584
+          },
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1062.001043,
+            "finish_reason": "length",
+            "first_token_ms": 147.502375,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 283805553,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000248,
+            "prefill_ms": 143.755583,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.021124999999999998
+          }
+        ]
+      },
+      "wall_ms": 2614.513333988725,
+      "peak_rss_bytes": 103710720,
+      "minor_page_faults": 6604,
+      "major_page_faults": 0,
+      "input_blocks": 0,
+      "output_blocks": 0,
+      "private_memory_bytes": null,
+      "gpu_memory_bytes": null,
+      "mapped_weight_bytes": 0,
+      "measurement": "wait4 of this benchmark child; block counters are not byte counts"
+    },
+    {
+      "context": 512,
+      "profile": "performance",
+      "threads": 4,
+      "result": {
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 183.07995899999997,
+        "mode": "standalone",
+        "profile": "performance",
+        "requested_threads": 4,
+        "runs": [
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1294.8742109999998,
+            "finish_reason": "length",
+            "first_token_ms": 185.370917,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 283541493,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.00028900000000000003,
+            "prefill_ms": 180.52041699999998,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.9749169999999999
+          },
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1308.5524580000001,
+            "finish_reason": "length",
+            "first_token_ms": 182.507334,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 283541493,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000208,
+            "prefill_ms": 178.547917,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.029709
+          }
+        ]
+      },
+      "wall_ms": 3163.38766599074,
+      "peak_rss_bytes": 101335040,
+      "minor_page_faults": 6467,
+      "major_page_faults": 0,
+      "input_blocks": 0,
+      "output_blocks": 0,
+      "private_memory_bytes": null,
+      "gpu_memory_bytes": null,
+      "mapped_weight_bytes": 0,
+      "measurement": "wait4 of this benchmark child; block counters are not byte counts"
+    },
+    {
+      "context": 512,
+      "profile": "low-memory",
+      "threads": 1,
+      "result": {
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 232.363709,
+        "mode": "standalone",
+        "profile": "low-memory",
+        "requested_threads": 1,
+        "runs": [
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1761.632416,
+            "finish_reason": "length",
+            "first_token_ms": 258.643083,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 280290088,
+              "peak_session_buffer_capacity_bytes": 2323500,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000459,
+            "prefill_ms": 253.852083,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.968167
+          },
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1756.897792,
+            "finish_reason": "length",
+            "first_token_ms": 249.796917,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 280290088,
+              "peak_session_buffer_capacity_bytes": 2323500,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000333,
+            "prefill_ms": 245.874666,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.027416999999999997
+          }
+        ]
+      },
+      "wall_ms": 4271.035375000793,
+      "peak_rss_bytes": 100597760,
+      "minor_page_faults": 6381,
+      "major_page_faults": 34,
+      "input_blocks": 0,
+      "output_blocks": 0,
+      "private_memory_bytes": null,
+      "gpu_memory_bytes": null,
+      "mapped_weight_bytes": 0,
+      "measurement": "wait4 of this benchmark child; block counters are not byte counts"
+    },
+    {
+      "context": 4096,
+      "profile": "reference",
+      "threads": 1,
+      "result": {
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 183.171791,
+        "mode": "standalone",
+        "profile": "reference",
+        "requested_threads": 1,
+        "runs": [
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1634.981872,
+            "finish_reason": "length",
+            "first_token_ms": 229.790583,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 367815596,
+              "peak_session_buffer_capacity_bytes": 3075116,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000419,
+            "prefill_ms": 225.013542,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.950666
+          },
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1617.9375009999999,
+            "finish_reason": "length",
+            "first_token_ms": 228.391084,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 367815596,
+              "peak_session_buffer_capacity_bytes": 3075116,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000416,
+            "prefill_ms": 224.59562499999998,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.050875000000000004
+          }
+        ]
+      },
+      "wall_ms": 3905.8075420034584,
+      "peak_rss_bytes": 101351424,
+      "minor_page_faults": 6451,
+      "major_page_faults": 2,
+      "input_blocks": 0,
+      "output_blocks": 0,
+      "private_memory_bytes": null,
+      "gpu_memory_bytes": null,
+      "mapped_weight_bytes": 0,
+      "measurement": "wait4 of this benchmark child; block counters are not byte counts"
+    },
+    {
+      "context": 4096,
+      "profile": "balanced",
+      "threads": 2,
+      "result": {
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 184.075084,
+        "mode": "standalone",
+        "profile": "balanced",
+        "requested_threads": 2,
+        "runs": [
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1108.051249,
+            "finish_reason": "length",
+            "first_token_ms": 150.232708,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 380820132,
+              "peak_session_buffer_capacity_bytes": 3075116,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000251,
+            "prefill_ms": 145.342667,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.9992079999999999
+          },
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1067.36229,
+            "finish_reason": "length",
+            "first_token_ms": 150.794333,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 380820132,
+              "peak_session_buffer_capacity_bytes": 3075116,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.00029299999999999997,
+            "prefill_ms": 147.021958,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.029667
+          }
+        ]
+      },
+      "wall_ms": 2674.09349999798,
+      "peak_rss_bytes": 101367808,
+      "minor_page_faults": 6429,
+      "major_page_faults": 38,
+      "input_blocks": 0,
+      "output_blocks": 0,
+      "private_memory_bytes": null,
+      "gpu_memory_bytes": null,
+      "mapped_weight_bytes": 0,
+      "measurement": "wait4 of this benchmark child; block counters are not byte counts"
+    },
+    {
+      "context": 4096,
+      "profile": "performance",
+      "threads": 4,
+      "result": {
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 184.715542,
+        "mode": "standalone",
+        "profile": "performance",
+        "requested_threads": 4,
+        "runs": [
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1313.96846,
+            "finish_reason": "length",
+            "first_token_ms": 182.869834,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 376146319,
+              "peak_session_buffer_capacity_bytes": 3075116,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000332,
+            "prefill_ms": 178.059875,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.933875
+          },
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1273.395957,
+            "finish_reason": "length",
+            "first_token_ms": 185.276416,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 376146319,
+              "peak_session_buffer_capacity_bytes": 3075116,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000334,
+            "prefill_ms": 181.454542,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.042957999999999996
+          }
+        ]
+      },
+      "wall_ms": 3152.018084001611,
+      "peak_rss_bytes": 101384192,
+      "minor_page_faults": 6470,
+      "major_page_faults": 0,
+      "input_blocks": 0,
+      "output_blocks": 0,
+      "private_memory_bytes": null,
+      "gpu_memory_bytes": null,
+      "mapped_weight_bytes": 0,
+      "measurement": "wait4 of this benchmark child; block counters are not byte counts"
+    },
+    {
+      "context": 4096,
+      "profile": "low-memory",
+      "threads": 1,
+      "result": {
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 183.422458,
+        "mode": "standalone",
+        "profile": "low-memory",
+        "requested_threads": 1,
+        "runs": [
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1774.251918,
+            "finish_reason": "length",
+            "first_token_ms": 258.99504099999996,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 372894914,
+              "peak_session_buffer_capacity_bytes": 2337836,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000374,
+            "prefill_ms": 254.24266699999998,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.9829579999999999
+          },
+          {
+            "completion_tokens": 8,
+            "decode_ms": 1788.1442509999997,
+            "finish_reason": "length",
+            "first_token_ms": 250.66737500000002,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 372894914,
+              "peak_session_buffer_capacity_bytes": 2337836,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.000457,
+            "prefill_ms": 246.92700000000002,
+            "prompt_tokens": 1,
+            "text": "\n\nI am trying to create a simple",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              4285
+            ],
+            "tokenization_ms": 0.038708
+          }
+        ]
+      },
+      "wall_ms": 4267.040332997567,
+      "peak_rss_bytes": 100450304,
+      "minor_page_faults": 6412,
+      "major_page_faults": 2,
+      "input_blocks": 0,
+      "output_blocks": 0,
+      "private_memory_bytes": null,
+      "gpu_memory_bytes": null,
+      "mapped_weight_bytes": 0,
+      "measurement": "wait4 of this benchmark child; block counters are not byte counts"
+    }
+  ],
+  "measurement_limits": [
+    "Engine buffer capacities exclude worker stacks, libraries and allocator overhead",
+    "Output delivery measures a no-op engine sink; final JSON transport is excluded",
+    "CPU affinity, OS cache residency and background workload are uncontrolled"
+  ],
+  "note": "Short prompt; context is reservation capacity. Ordered local samples are not controlled performance superiority evidence."
+}

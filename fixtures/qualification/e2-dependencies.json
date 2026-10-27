@@ -1,0 +1,153 @@
+{
+  "checked_utc": "2026-10-27T00:32:40.078763+00:00",
+  "rust_stable": "1.99.1 (58cf8f9c3 2026-10-13)",
+  "rust_packages": [
+    {
+      "name": "axum",
+      "latest_stable": "0.8.9",
+      "yanked": false
+    },
+    {
+      "name": "base64",
+      "latest_stable": "0.23.1",
+      "yanked": false
+    },
+    {
+      "name": "clap",
+      "latest_stable": "4.6.7",
+      "yanked": false
+    },
+    {
+      "name": "ctrlc",
+      "latest_stable": "3.5.2",
+      "yanked": false
+    },
+    {
+      "name": "fs2",
+      "latest_stable": "0.4.3",
+      "yanked": false
+    },
+    {
+      "name": "futures-util",
+      "latest_stable": "0.3.34",
+      "yanked": false
+    },
+    {
+      "name": "half",
+      "latest_stable": "2.7.1",
+      "yanked": false
+    },
+    {
+      "name": "minijinja",
+      "latest_stable": "3.0.4",
+      "yanked": false
+    },
+    {
+      "name": "rayon",
+      "latest_stable": "1.12.0",
+      "yanked": false
+    },
+    {
+      "name": "reqwest",
+      "latest_stable": "0.13.5",
+      "yanked": false
+    },
+    {
+      "name": "serde",
+      "latest_stable": "1.0.229",
+      "yanked": false
+    },
+    {
+      "name": "serde_json",
+      "latest_stable": "1.0.154",
+      "yanked": false
+    },
+    {
+      "name": "sha2",
+      "latest_stable": "0.11.1",
+      "yanked": false
+    },
+    {
+      "name": "subtle",
+      "latest_stable": "2.6.1",
+      "yanked": false
+    },
+    {
+      "name": "sysinfo",
+      "latest_stable": "0.39.6",
+      "yanked": false
+    },
+    {
+      "name": "tempfile",
+      "latest_stable": "3.27.0",
+      "yanked": false
+    },
+    {
+      "name": "tokenizers",
+      "latest_stable": "0.23.2",
+      "yanked": false
+    },
+    {
+      "name": "tokio",
+      "latest_stable": "1.54.1",
+      "yanked": false
+    },
+    {
+      "name": "tokio-util",
+      "latest_stable": "0.7.20",
+      "yanked": false
+    },
+    {
+      "name": "tower",
+      "latest_stable": "0.5.3",
+      "yanked": false
+    },
+    {
+      "name": "unicode-normalization",
+      "latest_stable": "0.1.26",
+      "yanked": false
+    },
+    {
+      "name": "uuid",
+      "latest_stable": "1.29.0",
+      "yanked": false
+    }
+  ],
+  "optional_integration_packages": [
+    {
+      "name": "openai",
+      "version": "3.39.0",
+      "yanked": false
+    },
+    {
+      "name": "langchain-openai",
+      "version": "1.7.3",
+      "yanked": false
+    },
+    {
+      "name": "qdrant-client",
+      "version": "1.20.0",
+      "yanked": false
+    }
+  ],
+  "other_development_tools": {
+    "cmake": "4.4.4",
+    "Jinja2": "3.1.6",
+    "MarkupSafe": "3.0.4",
+    "actions/checkout": "v7.0.1",
+    "actions/setup-python": "v7.1.0"
+  },
+  "changes": [
+    "MiniJinja 3.0.3 -> 3.0.4; workspace and fuzz lockfiles refreshed",
+    "Base64 0.23.1 now a direct API dependency",
+    "Tempfile 3.27.0 now a CLI production dependency",
+    "Optional external SDK/RAG/vector-store clients isolated from Cargo"
+  ],
+  "fuzz_packages": [
+    {
+      "name": "libfuzzer-sys",
+      "latest_stable": "0.4.13",
+      "yanked": false
+    }
+  ]
+}

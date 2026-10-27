@@ -1,0 +1,800 @@
+{
+  "schema_version": 1,
+  "inputs_sha256": "5ef56907a27e93f8d3a4b6b7d7666ce28c4c5886096a47d392fde029c1b9ee9f",
+  "executable_sha256": "d7421fd84f01798359a89e292e39aee5b64eb0909058c287b4b39edaf0bcdd5d",
+  "scope": "Representative multilingual Unicode and encoder parity; model vocabulary/training still determine semantic coverage.",
+  "models": [
+    {
+      "id": "nomic-embed-text-v1.5.f16",
+      "sha256": "f7af6f66802f4df86eda10fe9bbcfc75c39562bed48ef6ace719a251cf1c2fdb",
+      "reference": "fixtures/embedding/nomic-embed-text-v1.5.f16.multilingual.json",
+      "cases": [
+        {
+          "case": "english",
+          "max_absolute": 4.3685149941907753e-10,
+          "l2_distance": 1.0250360731913198e-09,
+          "normalized_l2": 1.0250360714301385e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "bengali",
+          "max_absolute": 4.892997673699995e-10,
+          "l2_distance": 1.177152231609857e-09,
+          "normalized_l2": 1.1771522298335721e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "arabic",
+          "max_absolute": 3.144760146733816e-10,
+          "l2_distance": 8.347337446931057e-10,
+          "normalized_l2": 8.347337461566709e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "hebrew",
+          "max_absolute": 4.619178789466716e-10,
+          "l2_distance": 8.539945768444467e-10,
+          "normalized_l2": 8.539945762810986e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "persian",
+          "max_absolute": 4.068946846125243e-10,
+          "l2_distance": 1.0442829744575568e-09,
+          "normalized_l2": 1.0442829769502335e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "urdu",
+          "max_absolute": 4.96833796326257e-10,
+          "l2_distance": 1.1288825475580486e-09,
+          "normalized_l2": 1.1288825521857327e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "hindi",
+          "max_absolute": 4.375801110345634e-10,
+          "l2_distance": 8.722007686472613e-10,
+          "normalized_l2": 8.722007694905977e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "marathi",
+          "max_absolute": 3.78883369123173e-10,
+          "l2_distance": 8.769145143295184e-10,
+          "normalized_l2": 8.769145121875757e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "nepali",
+          "max_absolute": 4.879150417025357e-10,
+          "l2_distance": 9.513827456098455e-10,
+          "normalized_l2": 9.513827456579823e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "tamil",
+          "max_absolute": 4.1955185159370245e-10,
+          "l2_distance": 1.0502697984513074e-09,
+          "normalized_l2": 1.050269799395455e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "telugu",
+          "max_absolute": 3.699798523104647e-10,
+          "l2_distance": 9.434689107141387e-10,
+          "normalized_l2": 9.434689097400977e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "kannada",
+          "max_absolute": 3.699798523104647e-10,
+          "l2_distance": 9.434689107141387e-10,
+          "normalized_l2": 9.434689097400977e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "malayalam",
+          "max_absolute": 3.699798523104647e-10,
+          "l2_distance": 9.434689107141387e-10,
+          "normalized_l2": 9.434689097400977e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "gujarati",
+          "max_absolute": 3.699798523104647e-10,
+          "l2_distance": 9.434689107141387e-10,
+          "normalized_l2": 9.434689097400977e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "punjabi",
+          "max_absolute": 3.988227803564115e-10,
+          "l2_distance": 1.0157896100228968e-09,
+          "normalized_l2": 1.0157896106555468e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "odia",
+          "max_absolute": 3.699798523104647e-10,
+          "l2_distance": 9.434689107141387e-10,
+          "normalized_l2": 9.434689097400977e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "sinhala",
+          "max_absolute": 3.699798523104647e-10,
+          "l2_distance": 9.434689107141387e-10,
+          "normalized_l2": 9.434689097400977e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "thai",
+          "max_absolute": 1.0021208862731612e-10,
+          "l2_distance": 7.026513760403008e-10,
+          "normalized_l2": 7.026513735874647e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "lao",
+          "max_absolute": 1.0021208862731612e-10,
+          "l2_distance": 7.026513760403008e-10,
+          "normalized_l2": 7.026513735874647e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "khmer",
+          "max_absolute": 1.0021208862731612e-10,
+          "l2_distance": 7.026513760403008e-10,
+          "normalized_l2": 7.026513735874647e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "myanmar",
+          "max_absolute": 4.986381585414534e-10,
+          "l2_distance": 1.0357641798147748e-09,
+          "normalized_l2": 1.0357641790799365e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "tibetan",
+          "max_absolute": 4.9238585431155e-10,
+          "l2_distance": 8.734106287393445e-10,
+          "normalized_l2": 8.734106275695388e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "chinese-simplified",
+          "max_absolute": 2.1697235674800197e-10,
+          "l2_distance": 7.678235931161251e-10,
+          "normalized_l2": 7.678235908555213e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "chinese-traditional",
+          "max_absolute": 2.475433469317778e-10,
+          "l2_distance": 7.610375179849336e-10,
+          "normalized_l2": 7.610375177886505e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "japanese",
+          "max_absolute": 4.6542740494981416e-10,
+          "l2_distance": 1.022930667602804e-09,
+          "normalized_l2": 1.0229306689286454e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "korean",
+          "max_absolute": 3.744506926750546e-10,
+          "l2_distance": 8.562557269582842e-10,
+          "normalized_l2": 8.562557291178038e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "vietnamese",
+          "max_absolute": 4.968032790708676e-10,
+          "l2_distance": 1.0864036098421508e-09,
+          "normalized_l2": 1.0864036055989533e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "turkish",
+          "max_absolute": 4.0110015309124947e-10,
+          "l2_distance": 8.500915573669925e-10,
+          "normalized_l2": 8.500915558117896e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "greek",
+          "max_absolute": 1.9327545119907086e-10,
+          "l2_distance": 7.382102901406951e-10,
+          "normalized_l2": 7.382102908403789e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "russian",
+          "max_absolute": 3.5813903231929345e-10,
+          "l2_distance": 8.716193095706206e-10,
+          "normalized_l2": 8.716193110861697e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "ukrainian",
+          "max_absolute": 3.203964177300733e-10,
+          "l2_distance": 8.677178356499214e-10,
+          "normalized_l2": 8.677178365292185e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "serbian",
+          "max_absolute": 2.3226928713704353e-10,
+          "l2_distance": 7.623563365584137e-10,
+          "normalized_l2": 7.6235633872619e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "armenian",
+          "max_absolute": 3.0531310812875745e-10,
+          "l2_distance": 8.685589944559055e-10,
+          "normalized_l2": 8.685589931625135e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "georgian",
+          "max_absolute": 3.699798523104647e-10,
+          "l2_distance": 9.434689107141387e-10,
+          "normalized_l2": 9.434689097400977e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "amharic",
+          "max_absolute": 3.699798523104647e-10,
+          "l2_distance": 9.434689107141387e-10,
+          "normalized_l2": 9.434689097400977e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "french",
+          "max_absolute": 4.4835662960096556e-10,
+          "l2_distance": 9.887497227298465e-10,
+          "normalized_l2": 9.887497216043767e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "german",
+          "max_absolute": 3.9090729264668056e-10,
+          "l2_distance": 8.810729303799375e-10,
+          "normalized_l2": 8.810729316278434e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "spanish",
+          "max_absolute": 4.379234336271409e-10,
+          "l2_distance": 8.725376931438863e-10,
+          "normalized_l2": 8.725376915280496e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "portuguese",
+          "max_absolute": 4.717636142848036e-10,
+          "l2_distance": 1.1846517283892528e-09,
+          "normalized_l2": 1.1846517277866803e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "polish",
+          "max_absolute": 3.8409042613096744e-10,
+          "l2_distance": 8.577115241522709e-10,
+          "normalized_l2": 8.577115247315132e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "swahili",
+          "max_absolute": 4.4920731023800897e-10,
+          "l2_distance": 1.0253600896747942e-09,
+          "normalized_l2": 1.0253600892360409e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "indonesian",
+          "max_absolute": 4.828109717580631e-10,
+          "l2_distance": 1.1524330512320577e-09,
+          "normalized_l2": 1.1524330509931443e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "cherokee",
+          "max_absolute": 3.699798523104647e-10,
+          "l2_distance": 9.434689107141387e-10,
+          "normalized_l2": 9.434689097400977e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "mixed-script",
+          "max_absolute": 4.3446349295983566e-10,
+          "l2_distance": 8.440207730420326e-10,
+          "normalized_l2": 8.440207718642449e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "canonical-composed",
+          "max_absolute": 4.681243864768092e-10,
+          "l2_distance": 9.991331254772708e-10,
+          "normalized_l2": 9.991331246023784e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "canonical-decomposed",
+          "max_absolute": 3.2303618113793675e-10,
+          "l2_distance": 9.061833740633576e-10,
+          "normalized_l2": 9.061833749646527e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "combining-categories",
+          "max_absolute": 4.181327784014144e-10,
+          "l2_distance": 1.1100600560862177e-09,
+          "normalized_l2": 1.110060057421599e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "controls-whitespace",
+          "max_absolute": 4.0675353363273103e-10,
+          "l2_distance": 9.727059980566901e-10,
+          "normalized_l2": 9.727059964144126e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "symbols-punctuation",
+          "max_absolute": 3.8660048773397904e-10,
+          "l2_distance": 8.562705474084097e-10,
+          "normalized_l2": 8.56270548487216e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "unknown-rare-codepoints",
+          "max_absolute": 3.69281771828156e-10,
+          "l2_distance": 8.420964086800797e-10,
+          "normalized_l2": 8.420964074610828e-10,
+          "outside_tolerance": 0
+        }
+      ],
+      "cleanup": {
+        "limit": 268435456,
+        "peak_reserved": 130858888,
+        "peak_session_buffer_capacity_bytes": 7188368,
+        "reserved": 27732992,
+        "session_buffer_capacity_bytes": 0
+      },
+      "plan": {
+        "additional_reserved_bytes": 103125896,
+        "admissible": true,
+        "backend": "cpu-reference",
+        "batch_size": 4,
+        "input_count": 50,
+        "io_bytes": 262144,
+        "limitations": [
+          "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+          "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+          "The encoder stores no generation KV cache or quadratic attention matrix",
+          "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+        ],
+        "max_input_tokens": 512,
+        "output_bytes": 166400,
+        "profile": "balanced",
+        "reasons": [
+          "admitted up to 2048 packed tokens per microbatch; input limits and dimensions are preserved"
+        ],
+        "request_reserved_bytes": 1335070,
+        "required_reserved_bytes": 130858888,
+        "safety_headroom_bytes": 9375082,
+        "schema_version": 1,
+        "shared_weight_bytes": 273533952,
+        "task": "embedding",
+        "tensor_tile_tokens": 16,
+        "threads": 2,
+        "token_capacity": 2048,
+        "tokenization_bytes": 117120,
+        "workspace_bytes": 92415744
+      },
+      "encoding_ms": 63715.299125000005
+    },
+    {
+      "id": "nomic-embed-text-v1.5.Q8_0",
+      "sha256": "3e24342164b3d94991ba9692fdc0dd08e3fd7362e0aacc396a9a5c54a544c3b7",
+      "reference": "fixtures/embedding/nomic-embed-text-v1.5.Q8_0.multilingual.json",
+      "cases": [
+        {
+          "case": "english",
+          "max_absolute": 4.977989132015637e-10,
+          "l2_distance": 1.1656805310002652e-09,
+          "normalized_l2": 1.1656805318393512e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "bengali",
+          "max_absolute": 4.325904912061418e-10,
+          "l2_distance": 1.1102132165082633e-09,
+          "normalized_l2": 1.1102132152057297e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "arabic",
+          "max_absolute": 2.4691010347410725e-10,
+          "l2_distance": 7.765001333907964e-10,
+          "normalized_l2": 7.765001330971196e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "hebrew",
+          "max_absolute": 4.2448425330299244e-10,
+          "l2_distance": 9.480251369052989e-10,
+          "normalized_l2": 9.480251353397274e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "persian",
+          "max_absolute": 4.736862152521226e-10,
+          "l2_distance": 9.595935936167106e-10,
+          "normalized_l2": 9.595935948301486e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "urdu",
+          "max_absolute": 3.8869095442262136e-10,
+          "l2_distance": 1.1149354055658455e-09,
+          "normalized_l2": 1.1149354044291906e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "hindi",
+          "max_absolute": 4.235763545468174e-10,
+          "l2_distance": 9.915889065361568e-10,
+          "normalized_l2": 9.915889064964294e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "marathi",
+          "max_absolute": 2.9183197525206594e-10,
+          "l2_distance": 8.707859757476549e-10,
+          "normalized_l2": 8.707859734839161e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "nepali",
+          "max_absolute": 4.4969176993259197e-10,
+          "l2_distance": 8.984618480195396e-10,
+          "normalized_l2": 8.984618485195464e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "tamil",
+          "max_absolute": 4.856910706951822e-10,
+          "l2_distance": 1.3122639124225626e-09,
+          "normalized_l2": 1.3122639074842948e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "telugu",
+          "max_absolute": 3.351860039524368e-10,
+          "l2_distance": 7.880503022511425e-10,
+          "normalized_l2": 7.880503006140755e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "kannada",
+          "max_absolute": 3.351860039524368e-10,
+          "l2_distance": 7.880503022511425e-10,
+          "normalized_l2": 7.880503006140755e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "malayalam",
+          "max_absolute": 3.351860039524368e-10,
+          "l2_distance": 7.880503022511425e-10,
+          "normalized_l2": 7.880503006140755e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "gujarati",
+          "max_absolute": 3.351860039524368e-10,
+          "l2_distance": 7.880503022511425e-10,
+          "normalized_l2": 7.880503006140755e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "punjabi",
+          "max_absolute": 4.3277739725233744e-10,
+          "l2_distance": 9.06386945577881e-10,
+          "normalized_l2": 9.063869461140189e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "odia",
+          "max_absolute": 3.351860039524368e-10,
+          "l2_distance": 7.880503022511425e-10,
+          "normalized_l2": 7.880503006140755e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "sinhala",
+          "max_absolute": 3.351860039524368e-10,
+          "l2_distance": 7.880503022511425e-10,
+          "normalized_l2": 7.880503006140755e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "thai",
+          "max_absolute": 4.657440266786494e-10,
+          "l2_distance": 8.810701790408772e-10,
+          "normalized_l2": 8.810701809158325e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "lao",
+          "max_absolute": 4.657440266786494e-10,
+          "l2_distance": 8.810701790408772e-10,
+          "normalized_l2": 8.810701809158325e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "khmer",
+          "max_absolute": 4.657440266786494e-10,
+          "l2_distance": 8.810701790408772e-10,
+          "normalized_l2": 8.810701809158325e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "myanmar",
+          "max_absolute": 4.1965485253481205e-10,
+          "l2_distance": 9.42874369900827e-10,
+          "normalized_l2": 9.428743692245276e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "tibetan",
+          "max_absolute": 3.5731888281542723e-10,
+          "l2_distance": 8.318536375037521e-10,
+          "normalized_l2": 8.318536381377154e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "chinese-simplified",
+          "max_absolute": 4.742393561185665e-10,
+          "l2_distance": 9.936582746763661e-10,
+          "normalized_l2": 9.93658275389215e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "chinese-traditional",
+          "max_absolute": 3.52844239936978e-10,
+          "l2_distance": 8.172282931949723e-10,
+          "normalized_l2": 8.172282949006675e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "japanese",
+          "max_absolute": 4.1959000163238613e-10,
+          "l2_distance": 9.964163335417108e-10,
+          "normalized_l2": 9.964163336439086e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "korean",
+          "max_absolute": 4.748268167542591e-10,
+          "l2_distance": 1.1635177145036347e-09,
+          "normalized_l2": 1.1635177126378273e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "vietnamese",
+          "max_absolute": 4.5681762539384607e-10,
+          "l2_distance": 9.03291495963659e-10,
+          "normalized_l2": 9.032914976710413e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "turkish",
+          "max_absolute": 3.2512664782657907e-10,
+          "l2_distance": 7.995497860531851e-10,
+          "normalized_l2": 7.995497875928606e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "greek",
+          "max_absolute": 4.1491317326336485e-10,
+          "l2_distance": 8.503834117409026e-10,
+          "normalized_l2": 8.503834119526221e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "russian",
+          "max_absolute": 3.222999506169444e-10,
+          "l2_distance": 8.763199614157669e-10,
+          "normalized_l2": 8.763199615710683e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "ukrainian",
+          "max_absolute": 3.4051894637343594e-10,
+          "l2_distance": 8.93195319946068e-10,
+          "normalized_l2": 8.931953182826545e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "serbian",
+          "max_absolute": 4.532203640161825e-10,
+          "l2_distance": 9.320690858738955e-10,
+          "normalized_l2": 9.32069086961095e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "armenian",
+          "max_absolute": 4.978523288068359e-10,
+          "l2_distance": 1.113360904671908e-09,
+          "normalized_l2": 1.1133609049044023e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "georgian",
+          "max_absolute": 3.351860039524368e-10,
+          "l2_distance": 7.880503022511425e-10,
+          "normalized_l2": 7.880503006140755e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "amharic",
+          "max_absolute": 3.351860039524368e-10,
+          "l2_distance": 7.880503022511425e-10,
+          "normalized_l2": 7.880503006140755e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "french",
+          "max_absolute": 4.199752767775067e-10,
+          "l2_distance": 9.150566247406665e-10,
+          "normalized_l2": 9.150566232081036e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "german",
+          "max_absolute": 3.3765029661125823e-10,
+          "l2_distance": 8.440800207782567e-10,
+          "normalized_l2": 8.440800209057789e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "spanish",
+          "max_absolute": 3.395080605539391e-10,
+          "l2_distance": 8.799570063520415e-10,
+          "normalized_l2": 8.799570061498346e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "portuguese",
+          "max_absolute": 4.3591689979916026e-10,
+          "l2_distance": 1.0744809962589383e-09,
+          "normalized_l2": 1.0744809976740257e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "polish",
+          "max_absolute": 3.8802337731791425e-10,
+          "l2_distance": 8.957344013182829e-10,
+          "normalized_l2": 8.957344043734523e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "swahili",
+          "max_absolute": 4.3639374058823677e-10,
+          "l2_distance": 9.449015273704475e-10,
+          "normalized_l2": 9.449015256872185e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "indonesian",
+          "max_absolute": 4.742431725102136e-10,
+          "l2_distance": 1.0735248768943713e-09,
+          "normalized_l2": 1.073524878231197e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "cherokee",
+          "max_absolute": 3.351860039524368e-10,
+          "l2_distance": 7.880503022511425e-10,
+          "normalized_l2": 7.880503006140755e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "mixed-script",
+          "max_absolute": 4.602355996308205e-10,
+          "l2_distance": 8.925278301335026e-10,
+          "normalized_l2": 8.925278285147073e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "canonical-composed",
+          "max_absolute": 3.8916778133391006e-10,
+          "l2_distance": 8.872825245653218e-10,
+          "normalized_l2": 8.872825264469238e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "canonical-decomposed",
+          "max_absolute": 4.802284264693313e-10,
+          "l2_distance": 1.0950252466962967e-09,
+          "normalized_l2": 1.095025243958675e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "combining-categories",
+          "max_absolute": 3.8940430047151864e-10,
+          "l2_distance": 1.0393551277466385e-09,
+          "normalized_l2": 1.0393551273160159e-09,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "controls-whitespace",
+          "max_absolute": 4.0634917652937474e-10,
+          "l2_distance": 9.41245212964969e-10,
+          "normalized_l2": 9.412452102697905e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "symbols-punctuation",
+          "max_absolute": 4.402732900476991e-10,
+          "l2_distance": 8.434410256020971e-10,
+          "normalized_l2": 8.434410267199533e-10,
+          "outside_tolerance": 0
+        },
+        {
+          "case": "unknown-rare-codepoints",
+          "max_absolute": 1.950416633755836e-10,
+          "l2_distance": 7.466549954561871e-10,
+          "normalized_l2": 7.466549939725564e-10,
+          "outside_tolerance": 0
+        }
+      ],
+      "cleanup": {
+        "limit": 268435456,
+        "peak_reserved": 130859400,
+        "peak_session_buffer_capacity_bytes": 7188368,
+        "reserved": 27733504,
+        "session_buffer_capacity_bytes": 0
+      },
+      "plan": {
+        "additional_reserved_bytes": 103125896,
+        "admissible": true,
+        "backend": "cpu-reference",
+        "batch_size": 4,
+        "input_count": 50,
+        "io_bytes": 262144,
+        "limitations": [
+          "Estimates reserve engine capacity; they are not allocator instrumentation or an OS-wide RAM cap",
+          "Tokenizer library allocations are bounded by a 64 KiB input cap and a conservative allowance",
+          "The encoder stores no generation KV cache or quadratic attention matrix",
+          "CPU only; hardware RAM may be unavailable in the convenience library entrypoint"
+        ],
+        "max_input_tokens": 512,
+        "output_bytes": 166400,
+        "profile": "balanced",
+        "reasons": [
+          "admitted up to 2048 packed tokens per microbatch; input limits and dimensions are preserved"
+        ],
+        "request_reserved_bytes": 1335070,
+        "required_reserved_bytes": 130859400,
+        "safety_headroom_bytes": 9375082,
+        "schema_version": 1,
+        "shared_weight_bytes": 145389792,
+        "task": "embedding",
+        "tensor_tile_tokens": 16,
+        "threads": 2,
+        "token_capacity": 2048,
+        "tokenization_bytes": 117120,
+        "workspace_bytes": 92415744
+      },
+      "encoding_ms": 9671.759208
+    }
+  ]
+}

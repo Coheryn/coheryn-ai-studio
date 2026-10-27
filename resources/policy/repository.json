@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "exception_root": "resources",
+  "patterns": [
+    "(?i)(?<![a-z0-9])ollama(?![a-z0-9])",
+    "(?i)(?<![a-z0-9])llama[._\\s-]*(?:cpp|server|file)(?![a-z0-9])",
+    "(?i)(?<![a-z0-9])candle(?![a-z0-9])",
+    "(?i)(?<![a-z0-9])mistral[._\\s-]*rs(?![a-z0-9])",
+    "(?i)(?<![a-z0-9])vllm(?![a-z0-9])",
+    "(?i)(?<![a-z0-9])mlx(?![a-z0-9])",
+    "(?i)(?<![a-z0-9])pytorch(?![a-z0-9])",
+    "(?i)(?<![a-z0-9])onnx[._\\s-]*runtime(?![a-z0-9])"
+  ],
+  "test_terms": ["Ollama", "llama.cpp", "Candle", "mistral.rs", "vLLM", "MLX", "PyTorch", "ONNX Runtime"],
+  "prohibited_package_patterns": [
+    "(?i)^(?:candle(?:-.*)?|llama(?:[-_].*)?|ollama(?:[-_].*)?|mistralrs(?:-.*)?|vllm(?:-.*)?|mlx(?:-.*)?|pytorch(?:-.*)?|torch-sys|tch|ort|ort-sys|onnxruntime(?:-.*)?|ggml(?:-.*)?)$"
+  ],
+  "excluded_root_directories": {
+    ".git": "Version-control object database; not a distribution input",
+    ".cache": "External tool/model/download cache; never packaged or used by native CI",
+    "target": "Build staging; release artifacts require the separate artifact scan",
+    ".agents": "Environment-owned agent configuration; not a distribution input",
+    ".codex": "Environment-owned agent configuration; not a distribution input"
+  },
+  "excluded_nested_directories": {"__pycache__": "Interpreter bytecode cache"},
+  "excluded_relative_directories": {"fuzz/target": "Fuzzer build staging", "fuzz/artifacts": "Generated hostile inputs", "fuzz/corpus": "Generated hostile inputs"},
+  "excluded_files": {".DS_Store": "OS folder metadata"},
+  "binary_asset_extensions": [".png", ".jpg", ".jpeg", ".gguf"],
+  "maximum_text_bytes": 33554432,
+  "notes": [
+    "Only root resources descendants are a textual policy exception. Ignored authored docs are scanned.",
+    "Exclusions classify external caches and build staging, never shipped text or optional execution integrations.",
+    "Source legal notices remain under the resources boundary. Artifact scans accept only exact-path, byte-identical files from the source-controlled legal payload; additional/modified files receive ordinary checks. Original legal notices must never be stripped. Relocated immutable vocabularies retain their original digests.",
+    "Release packages and controlled binary strings must be supplied with --artifact; ordinary source success does not certify a release bundle."
+  ]
+}

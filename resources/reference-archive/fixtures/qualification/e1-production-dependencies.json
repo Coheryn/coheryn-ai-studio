@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "scope": "E1 production normal dependency graph",
+  "forbidden_runtime_names_checked": [
+    "candle",
+    "candle-core",
+    "candle-nn",
+    "candle-transformers",
+    "llama-cpp",
+    "llama-cpp-2",
+    "llama-cpp-sys",
+    "llama-cpp-sys-2",
+    "ollama-rs",
+    "pytorch",
+    "tch",
+    "torch-sys"
+  ],
+  "forbidden_runtimes_found": [],
+  "direct_unicode_dependency": "unicode-normalization 0.1.26",
+  "note": "Reference C++ executables remain development-only and outside Cargo."
+}

@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "gate": "E2 initial macOS ARM64 CPU CLI/API and external RAG interfaces",
+  "verified_utc": "2026-10-27T01:39:13.158239+00:00",
+  "cli_sha256": "34af5b6e1b9524bddb814cabb53a639509fd182992c310ad55dbf8cb2e02b593",
+  "native_probe_sha256": "96d48dc529befc27420aa1a9cef109fb92562a486f68373c77d84ebd413feeb6",
+  "ordinary_workspace_tests_passed": 100,
+  "configured_opt_ins_ignored_in_ordinary_run": 2,
+  "pinned_tokenizer_template_opt_in": "passed separately",
+  "text_regression": {
+    "case": "english",
+    "greedy_tokens_exact": 8,
+    "layer_logit_comparisons_passed": 25
+  },
+  "format": "passed",
+  "strict_clippy": "passed",
+  "release_build": "passed",
+  "fuzz_locked_compilation": "passed; not a sustained fuzz campaign",
+  "prohibited_normal_dependency_names_checked": [
+    "candle",
+    "candle-core",
+    "candle-nn",
+    "candle-transformers",
+    "llama-cpp",
+    "llama-cpp-2",
+    "llama-cpp-sys",
+    "llama-cpp-sys-2",
+    "ollama-rs",
+    "onnxruntime",
+    "ort",
+    "pytorch",
+    "tch",
+    "torch-sys"
+  ],
+  "prohibited_inference_runtimes_found": [],
+  "latest_dependency_evidence": "fixtures/qualification/e2-dependencies.json",
+  "evidence": [
+    "fixtures/qualification/e2-service.json",
+    "fixtures/qualification/e2-native-regression.json"
+  ],
+  "limitations": [
+    "macOS ARM64 CPU evidence only",
+    "Vision, Metal and actual Linux/Windows execution remain open",
+    "No comparative speed or physical-memory advantage claim",
+    "Unicode/numerical parity does not prove semantic proficiency in every language"
+  ]
+}

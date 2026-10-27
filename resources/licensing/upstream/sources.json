@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "MIT-standard-terms",
+      "url": "https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt",
+      "path": "resources/licensing/upstream/MIT-standard-terms.txt",
+      "sha256": "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5",
+      "bytes": 1078
+    },
+    {
+      "id": "bert-LICENSE",
+      "url": "https://raw.githubusercontent.com/google-research/bert/eedf5716ce1268e56f0a50264a88cafad334ac61/LICENSE",
+      "path": "resources/licensing/upstream/bert-LICENSE.txt",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "bytes": 11358
+    },
+    {
+      "id": "block2@0.6.2",
+      "url": "https://raw.githubusercontent.com/madsmtm/objc2/b4167b582b2f75f9a1be75495c41b765344fd03c/LICENSE.md",
+      "path": "resources/licensing/upstream/block2@0.6.2.txt",
+      "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+      "bytes": 1339
+    },
+    {
+      "id": "comparator-MIT",
+      "url": "https://raw.githubusercontent.com/ollama/ollama/v0.40.11/LICENSE",
+      "path": "resources/licensing/upstream/comparator-MIT.txt",
+      "sha256": "5934ed2ce0d15154bcdb9c85203210abac0da4314af34081e36df4599f90b226",
+      "bytes": 1058
+    },
+    {
+      "id": "dispatch2@0.3.1",
+      "url": "https://raw.githubusercontent.com/madsmtm/objc2/8852b424193ca41602281b3d7540d7c8ed51e49a/LICENSE.md",
+      "path": "resources/licensing/upstream/dispatch2@0.3.1.txt",
+      "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+      "bytes": 1339
+    },
+    {
+      "id": "jni-macros@0.22.4",
+      "url": "https://raw.githubusercontent.com/jni-rs/jni-rs/33045a124105c939d1e2cbdcb5a39e5d868ffa03/LICENSE-MIT",
+      "path": "resources/licensing/upstream/jni-macros@0.22.4.txt",
+      "sha256": "fea1d5bf3dd71605ce5d7d2ff695c1837e914c77195e523a86b5391716477960",
+      "bytes": 1104
+    },
+    {
+      "id": "jni-sys-macros@0.4.1",
+      "url": "https://raw.githubusercontent.com/jni-rs/jni-sys/64d77b7a5f119d7b55b4e2c169a4668067ff59e6/LICENSE-MIT",
+      "path": "resources/licensing/upstream/jni-sys-macros@0.4.1.txt",
+      "sha256": "1d85bd754b04ceec93e98e890edd1fa3c6a22e81bcb32135806beeccefa51cd1",
+      "bytes": 1071
+    },
+    {
+      "id": "jni@0.22.4",
+      "url": "https://raw.githubusercontent.com/jni-rs/jni-rs/5ae9458a4ec44c5318f37ddc7569c1d4ae8a69e7/LICENSE-MIT",
+      "path": "resources/licensing/upstream/jni@0.22.4.txt",
+      "sha256": "fea1d5bf3dd71605ce5d7d2ff695c1837e914c77195e523a86b5391716477960",
+      "bytes": 1104
+    },
+    {
+      "id": "llama2-LICENSE",
+      "url": "https://raw.githubusercontent.com/meta-llama/llama/7565eb6fee2175b2d4fe2cfb45067a61b35d7f5e/LICENSE",
+      "path": "resources/licensing/upstream/llama2-LICENSE.txt",
+      "sha256": "f28d05612fee8ef09283d4e755c468080b13d1cd92c9ae1aa52c84b075799e23",
+      "bytes": 7023
+    },
+    {
+      "id": "llama2-USE_POLICY-md",
+      "url": "https://raw.githubusercontent.com/meta-llama/llama/7565eb6fee2175b2d4fe2cfb45067a61b35d7f5e/USE_POLICY.md",
+      "path": "resources/licensing/upstream/llama2-USE_POLICY-md.txt",
+      "sha256": "7c23fb36d80141c4ab8cdbb61ee4790102ebd2bf7aeff414453177d4f2110e5d",
+      "bytes": 4766
+    },
+    {
+      "id": "llava-asset-Notice",
+      "path": "resources/licensing/upstream/llava-asset-Notice.txt",
+      "sha256": "3c2c94da5f4e334e0310b229c36c7bf67424ac7add7031f550de71c9b996e2a5",
+      "bytes": 867,
+      "source": "fixtures/vlm/llava-1.5-7b/Notice; project-authored redistribution attribution"
+    },
+    {
+      "id": "llava-model-card",
+      "url": "https://huggingface.co/llava-hf/llava-1.5-7b-hf/raw/b234b804b114d9e37bb655e11cbbb5f5e971b7a9/README.md",
+      "path": "resources/licensing/upstream/llava-model-card.txt",
+      "sha256": "36693f49ccf7bae2d1f328154cb30b075bc12f08f57917c8ea344bfa54edf423",
+      "bytes": 5639
+    },
+    {
+      "id": "objc2-core-foundation@0.3.2",
+      "url": "https://raw.githubusercontent.com/madsmtm/objc2/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b/LICENSE.md",
+      "path": "resources/licensing/upstream/objc2-core-foundation@0.3.2.txt",
+      "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+      "bytes": 1339
+    },
+    {
+      "id": "objc2-encode@4.1.0",
+      "url": "https://raw.githubusercontent.com/madsmtm/objc2/8d214f5477365ffcbcbb7de058c86ed9a518efb7/LICENSE.md",
+      "path": "resources/licensing/upstream/objc2-encode@4.1.0.txt",
+      "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+      "bytes": 1339
+    },
+    {
+      "id": "objc2-io-kit@0.3.2",
+      "url": "https://raw.githubusercontent.com/madsmtm/objc2/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b/LICENSE.md",
+      "path": "resources/licensing/upstream/objc2-io-kit@0.3.2.txt",
+      "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+      "bytes": 1339
+    },
+    {
+      "id": "objc2@0.6.5",
+      "url": "https://raw.githubusercontent.com/madsmtm/objc2/d7d2fa23ceaa5e6096c923b081040e5d81b3b9df/LICENSE.md",
+      "path": "resources/licensing/upstream/objc2@0.6.5.txt",
+      "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+      "bytes": 1339
+    },
+    {
+      "id": "publisher-inventories",
+      "path": "resources/licensing/upstream/publisher-inventories.json",
+      "sha256": "258ae8d44e1b9c8dd76d38f73b02490cae904c9c845fb6a22327b9ec63a3b449",
+      "bytes": 1649,
+      "source": "Pinned publisher metadata API inventories; URLs derived from repository and revision fields in this record."
+    },
+    {
+      "id": "qwen-vl-LICENSE",
+      "path": "resources/licensing/upstream/qwen-vl-LICENSE.txt",
+      "sha256": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e",
+      "bytes": 11343,
+      "url": "https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct/raw/895c3a49bc3fa70a340399125c650a463535e71c/LICENSE"
+    },
+    {
+      "id": "qwen2.5-GGUF-LICENSE",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/raw/9217f5db79a29953eb74d5343926648285ec7e67/LICENSE",
+      "path": "resources/licensing/upstream/qwen2.5-GGUF-LICENSE.txt",
+      "sha256": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e",
+      "bytes": 11343
+    },
+    {
+      "id": "qwen2.5-LICENSE",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/raw/7ae557604adf67be50417f59c2c2f167def9a775/LICENSE",
+      "path": "resources/licensing/upstream/qwen2.5-LICENSE.txt",
+      "sha256": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e",
+      "bytes": 11343
+    },
+    {
+      "id": "reference-engine-MIT",
+      "url": "https://raw.githubusercontent.com/ggml-org/llama.cpp/2280f0fd163b03d4331d49e08460f66502e35854/LICENSE",
+      "path": "resources/licensing/upstream/reference-engine-MIT.txt",
+      "sha256": "94f29bbed6a22c35b992c5c6ebf0e7c92f13b836b90f36f461c9cf2f0f1d010d",
+      "bytes": 1078
+    },
+    {
+      "id": "rsqlite-vfs@0.2.0",
+      "url": "https://raw.githubusercontent.com/Spxg/sqlite-wasm-rs/3d8318430bacd7d6a1aafdf5b5e54fb0fee8d451/LICENSE",
+      "path": "resources/licensing/upstream/rsqlite-vfs@0.2.0.txt",
+      "sha256": "e1c1975c3474cce31722836f101a40ffaf1cc784e4d2f38ce3e77b9712934e78",
+      "bytes": 1061
+    },
+    {
+      "id": "rustls-platform-verifier-android@0.2.0",
+      "url": "https://raw.githubusercontent.com/rustls/rustls-platform-verifier/252e25161a91af476cbea620e29d277592d27ec7/LICENSE-MIT",
+      "path": "resources/licensing/upstream/rustls-platform-verifier-android@0.2.0.txt",
+      "sha256": "1c7cf76689c837a68ed8d704994e52a0f2940c087958f860d17f3186afbdcc0c",
+      "bytes": 1066
+    },
+    {
+      "id": "winapi-project-MIT",
+      "url": "https://raw.githubusercontent.com/retep998/winapi-rs/796a8e6c2971dc2ff1bcff166e6671284f9b5b6b/LICENSE-MIT",
+      "path": "resources/licensing/upstream/winapi-project-MIT.txt",
+      "sha256": "ce7bc3499fee93d5022ef430d5e4201e79a6d9154f3974e42f41349f0569e09b",
+      "bytes": 1073
+    }
+  ],
+  "dependency_supplements": {
+    "block2@0.6.2": [
+      {
+        "path": "resources/licensing/upstream/block2@0.6.2.txt",
+        "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+        "url": "https://raw.githubusercontent.com/madsmtm/objc2/b4167b582b2f75f9a1be75495c41b765344fd03c/LICENSE.md",
+        "original_path": "upstream supplemental license record"
+      },
+      {
+        "path": "resources/licensing/upstream/MIT-standard-terms.txt",
+        "sha256": "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5",
+        "url": "https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt",
+        "original_path": "upstream supplemental license record",
+        "note": "Standard MIT terms linked by the upstream LICENSE.md; upstream author metadata is retained in the dependency inventory. No copyright holder or year has been invented."
+      }
+    ],
+    "dispatch2@0.3.1": [
+      {
+        "path": "resources/licensing/upstream/dispatch2@0.3.1.txt",
+        "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+        "url": "https://raw.githubusercontent.com/madsmtm/objc2/8852b424193ca41602281b3d7540d7c8ed51e49a/LICENSE.md",
+        "original_path": "upstream supplemental license record"
+      },
+      {
+        "path": "resources/licensing/upstream/MIT-standard-terms.txt",
+        "sha256": "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5",
+        "url": "https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt",
+        "original_path": "upstream supplemental license record",
+        "note": "Standard MIT terms linked by the upstream LICENSE.md; upstream author metadata is retained in the dependency inventory. No copyright holder or year has been invented."
+      }
+    ],
+    "jni-macros@0.22.4": [
+      {
+        "path": "resources/licensing/upstream/jni-macros@0.22.4.txt",
+        "sha256": "fea1d5bf3dd71605ce5d7d2ff695c1837e914c77195e523a86b5391716477960",
+        "url": "https://raw.githubusercontent.com/jni-rs/jni-rs/33045a124105c939d1e2cbdcb5a39e5d868ffa03/LICENSE-MIT",
+        "original_path": "upstream supplemental license record"
+      }
+    ],
+    "jni-sys-macros@0.4.1": [
+      {
+        "path": "resources/licensing/upstream/jni-sys-macros@0.4.1.txt",
+        "sha256": "1d85bd754b04ceec93e98e890edd1fa3c6a22e81bcb32135806beeccefa51cd1",
+        "url": "https://raw.githubusercontent.com/jni-rs/jni-sys/64d77b7a5f119d7b55b4e2c169a4668067ff59e6/LICENSE-MIT",
+        "original_path": "upstream supplemental license record"
+      }
+    ],
+    "jni@0.22.4": [
+      {
+        "path": "resources/licensing/upstream/jni@0.22.4.txt",
+        "sha256": "fea1d5bf3dd71605ce5d7d2ff695c1837e914c77195e523a86b5391716477960",
+        "url": "https://raw.githubusercontent.com/jni-rs/jni-rs/5ae9458a4ec44c5318f37ddc7569c1d4ae8a69e7/LICENSE-MIT",
+        "original_path": "upstream supplemental license record"
+      }
+    ],
+    "objc2-core-foundation@0.3.2": [
+      {
+        "path": "resources/licensing/upstream/objc2-core-foundation@0.3.2.txt",
+        "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+        "url": "https://raw.githubusercontent.com/madsmtm/objc2/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b/LICENSE.md",
+        "original_path": "upstream supplemental license record"
+      },
+      {
+        "path": "resources/licensing/upstream/MIT-standard-terms.txt",
+        "sha256": "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5",
+        "url": "https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt",
+        "original_path": "upstream supplemental license record",
+        "note": "Standard MIT terms linked by the upstream LICENSE.md; upstream author metadata is retained in the dependency inventory. No copyright holder or year has been invented."
+      }
+    ],
+    "objc2-encode@4.1.0": [
+      {
+        "path": "resources/licensing/upstream/objc2-encode@4.1.0.txt",
+        "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+        "url": "https://raw.githubusercontent.com/madsmtm/objc2/8d214f5477365ffcbcbb7de058c86ed9a518efb7/LICENSE.md",
+        "original_path": "upstream supplemental license record"
+      },
+      {
+        "path": "resources/licensing/upstream/MIT-standard-terms.txt",
+        "sha256": "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5",
+        "url": "https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt",
+        "original_path": "upstream supplemental license record",
+        "note": "Standard MIT terms linked by the upstream LICENSE.md; upstream author metadata is retained in the dependency inventory. No copyright holder or year has been invented."
+      }
+    ],
+    "objc2-io-kit@0.3.2": [
+      {
+        "path": "resources/licensing/upstream/objc2-io-kit@0.3.2.txt",
+        "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+        "url": "https://raw.githubusercontent.com/madsmtm/objc2/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b/LICENSE.md",
+        "original_path": "upstream supplemental license record"
+      },
+      {
+        "path": "resources/licensing/upstream/MIT-standard-terms.txt",
+        "sha256": "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5",
+        "url": "https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt",
+        "original_path": "upstream supplemental license record",
+        "note": "Standard MIT terms linked by the upstream LICENSE.md; upstream author metadata is retained in the dependency inventory. No copyright holder or year has been invented."
+      }
+    ],
+    "objc2@0.6.5": [
+      {
+        "path": "resources/licensing/upstream/objc2@0.6.5.txt",
+        "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+        "url": "https://raw.githubusercontent.com/madsmtm/objc2/d7d2fa23ceaa5e6096c923b081040e5d81b3b9df/LICENSE.md",
+        "original_path": "upstream supplemental license record"
+      },
+      {
+        "path": "resources/licensing/upstream/MIT-standard-terms.txt",
+        "sha256": "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5",
+        "url": "https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt",
+        "original_path": "upstream supplemental license record",
+        "note": "Standard MIT terms linked by the upstream LICENSE.md; upstream author metadata is retained in the dependency inventory. No copyright holder or year has been invented."
+      }
+    ],
+    "rsqlite-vfs@0.2.0": [
+      {
+        "path": "resources/licensing/upstream/rsqlite-vfs@0.2.0.txt",
+        "sha256": "e1c1975c3474cce31722836f101a40ffaf1cc784e4d2f38ce3e77b9712934e78",
+        "url": "https://raw.githubusercontent.com/Spxg/sqlite-wasm-rs/3d8318430bacd7d6a1aafdf5b5e54fb0fee8d451/LICENSE",
+        "original_path": "upstream supplemental license record"
+      }
+    ],
+    "rustls-platform-verifier-android@0.2.0": [
+      {
+        "path": "resources/licensing/upstream/rustls-platform-verifier-android@0.2.0.txt",
+        "sha256": "1c7cf76689c837a68ed8d704994e52a0f2940c087958f860d17f3186afbdcc0c",
+        "url": "https://raw.githubusercontent.com/rustls/rustls-platform-verifier/252e25161a91af476cbea620e29d277592d27ec7/LICENSE-MIT",
+        "original_path": "upstream supplemental license record"
+      }
+    ],
+    "winapi-i686-pc-windows-gnu@0.4.0": [
+      {
+        "path": "resources/licensing/upstream/winapi-project-MIT.txt",
+        "sha256": "ce7bc3499fee93d5022ef430d5e4201e79a6d9154f3974e42f41349f0569e09b",
+        "url": "https://raw.githubusercontent.com/retep998/winapi-rs/796a8e6c2971dc2ff1bcff166e6671284f9b5b6b/LICENSE-MIT",
+        "original_path": "upstream supplemental license record",
+        "note": "Parent winapi project license; these import-library archives omit their own license file and declare the same project license and author."
+      }
+    ],
+    "winapi-x86_64-pc-windows-gnu@0.4.0": [
+      {
+        "path": "resources/licensing/upstream/winapi-project-MIT.txt",
+        "sha256": "ce7bc3499fee93d5022ef430d5e4201e79a6d9154f3974e42f41349f0569e09b",
+        "url": "https://raw.githubusercontent.com/retep998/winapi-rs/796a8e6c2971dc2ff1bcff166e6671284f9b5b6b/LICENSE-MIT",
+        "original_path": "upstream supplemental license record",
+        "note": "Parent winapi project license; these import-library archives omit their own license file and declare the same project license and author."
+      }
+    ]
+  }
+}

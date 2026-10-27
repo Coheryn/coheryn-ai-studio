@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "revision": "2280f0fd163b03d4331d49e08460f66502e35854",
+  "settings": {
+    "threads": 1,
+    "gpu_layers": 0,
+    "flash_attention": false,
+    "kv_type": "f32",
+    "context": 512,
+    "seed": 0,
+    "temperature": 0,
+    "cpu_native": false,
+    "arm_arch": "armv8-a",
+    "arm_neon": false,
+    "f16_activation_operand": "rounded-to-f16",
+    "products": "f32",
+    "scalar_reduction": "f64",
+    "activations_and_outputs": "f32"
+  },
+  "source_tar_sha256": "3e64cac314dbb3fa31f91cebf897d32bad2b78cb75460495ff8cf556503f5fdd",
+  "extra_cmake_flags": [
+    "-DGGML_NATIVE=OFF",
+    "-DGGML_CPU_ARM_ARCH=armv8-a",
+    "-DCMAKE_C_FLAGS=-U__ARM_NEON -U__ARM_NEON__",
+    "-DCMAKE_CXX_FLAGS=-U__ARM_NEON -U__ARM_NEON__"
+  ],
+  "oracle_source_sha256": "2202a7d4e14b346dbf8d382afa3df2dcfe1ee7b2c7c8cb71c39ec8d233a15526",
+  "oracle_executable_sha256": "7b11367ea3dad9ef4a9b85c0fbfc96d303a903df8d185176a7493de219c71d12"
+}

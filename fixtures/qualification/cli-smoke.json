@@ -1,0 +1,31 @@
+[
+  {
+    "arguments": [
+      "--max-memory",
+      "1"
+    ],
+    "exit_status": 5,
+    "error": {
+      "code": "RESOURCE_EXHAUSTED",
+      "message": "metadata allocation limit exceeded"
+    }
+  },
+  {
+    "arguments": [
+      "--context",
+      "9000"
+    ],
+    "exit_status": 2,
+    "error": {
+      "code": "INVALID_REQUEST",
+      "message": "requested context exceeds model context 8192"
+    }
+  },
+  {
+    "case": "SIGINT-streaming",
+    "exit_status": 130,
+    "cancel_to_exit_ms": 13.742917006311473,
+    "stdout_bytes": 3,
+    "error": "Cancelled: generation cancelled"
+  }
+]

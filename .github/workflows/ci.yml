@@ -1,0 +1,30 @@
+name: CPU engine and service
+on: [push, pull_request]
+jobs:
+  cpu:
+    strategy:
+      matrix:
+        os: [macos-14, ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.x'
+          check-latest: true
+      - run: python tools/check_embedding_fixtures.py
+      - run: python tools/check_tool_fixtures.py
+      - run: python tools/test_repository_policy.py
+      - run: python tools/check_repository_policy.py
+      - uses: dtolnay/rust-toolchain@1.99.1
+        with:
+          components: rustfmt, clippy
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - run: cargo test --workspace --locked
+      - run: cargo build --release --workspace --locked
+      - run: cargo fetch --locked --manifest-path fuzz/Cargo.toml
+      - run: python tools/license_notices.py
+      - run: python tools/test_license_notices.py
+      - run: python tools/check_independence.py
+      - run: python tools/check_release_strings.py

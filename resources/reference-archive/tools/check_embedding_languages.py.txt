@@ -1,0 +1,89 @@
+#!/usr/bin/env python3
+"""Capture independent multilingual references, or compare the native E1 encoder.
+
+--capture invokes only the pinned, development-only embedding oracle. Normal
+execution uses the native Rust probe and committed references, never the oracle.
+"""
+import argparse
+import json
+import subprocess
+from pathlib import Path
+
+from check_native_embeddings import ROOT, compare, result, run
+from fetch_model import digest
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--capture', action='store_true')
+    args = parser.parse_args()
+    directory = ROOT / 'fixtures/embedding'
+    source = directory / 'multilingual-inputs.json'
+    cases = json.loads(source.read_text())['cases']
+    manifest = json.loads((directory / 'models.json').read_text())
+    oracle = ROOT / '.cache/embedding-oracle'
+    executable = ROOT / 'target/release/examples/embedding_probe'
+    cache = ROOT / '.cache/embedding/native'
+    cache.mkdir(parents=True, exist_ok=True)
+    contract = json.loads((directory / 'reference-contract.json').read_text())
+    tolerance = contract['tolerances']
+    observations = {'schema_version': 1, 'inputs_sha256': digest(source),
+                    'executable_sha256': digest(executable) if not args.capture else None,
+                    'scope': 'Representative multilingual Unicode and encoder parity; model vocabulary/training still determine semantic coverage.',
+                    'models': []}
+    if args.capture:
+        assert (ROOT / '.cache/reference/source-revision').read_text().strip() == manifest['oracle']['revision']
+        frozen = json.loads((ROOT / manifest['models'][0]['evidence']).read_text())
+        assert digest(oracle) == frozen['reference_executable_sha256']
+    for model in manifest['models']:
+        path = ROOT / '.cache/models' / model['file']
+        assert digest(path) == model['sha256']
+        fixture = directory / f"{model['id']}.multilingual.json"
+        if args.capture:
+            reference = {'schema_version': 1, 'model_sha256': model['sha256'],
+                         'reference_revision': manifest['oracle']['revision'],
+                         'oracle_executable_sha256': digest(oracle),
+                         'inputs_sha256': digest(source), 'cases': []}
+            for start in range(0, len(cases), 4):
+                group = cases[start:start+4]
+                files = []
+                for case in group:
+                    text_file = cache / f"{case['id']}.txt"
+                    text_file.write_text(case['text'], encoding='utf-8')
+                    files.append(text_file)
+                output = cache / f"{model['id']}-multilingual-oracle-{start}.json"
+                log = cache / f"{model['id']}-multilingual-oracle-{start}.log"
+                with output.open('w') as out, log.open('w') as err:
+                    subprocess.run([str(oracle), str(path), *map(str, files)], stdout=out, stderr=err,
+                                   check=True, timeout=300)
+                captured = json.loads(output.read_text())
+                for case, item in zip(group, captured['items'], strict=True):
+                    assert item['text'] == case['text']
+                    reference['cases'].append({'id': case['id'], **item})
+            fixture.write_text(json.dumps(reference, ensure_ascii=False, indent=2)+'\n')
+            print(f"CAPTURE {model['id']}: {len(cases)} independent multilingual vectors", flush=True)
+            continue
+        reference = json.loads(fixture.read_text())
+        assert reference['model_sha256'] == model['sha256'] and reference['inputs_sha256'] == digest(source)
+        settings = {'profile': 'balanced', 'threads': 2, 'batch_size': 4}
+        inputs = [case['text'] for case in cases]
+        tokens = run(executable, path, model['id']+'-multilingual-tokens', inputs, settings, tokenize=True)[0]['tokens']
+        for case, actual, expected in zip(cases, tokens, reference['cases'], strict=True):
+            assert case['id'] == expected['id'] and case['text'] == expected['text']
+            assert actual == [expected['token_ids'], False], f"{case['id']}: {actual[0]} != {expected['token_ids']}"
+        output, cleanup = result(run(executable, path, model['id']+'-multilingual', inputs, settings))
+        comparisons = []
+        for case, actual, expected in zip(cases, output['data'], reference['cases'], strict=True):
+            comparisons.append({'case': case['id'], **compare(actual['embedding'], expected['normalized'],
+                tolerance['absolute'], tolerance['relative'], tolerance['normalized_l2'])})
+        observations['models'].append({'id': model['id'], 'sha256': model['sha256'],
+                                      'reference': str(fixture.relative_to(ROOT)),
+                                      'cases': comparisons, 'cleanup': cleanup,
+                                      'plan': output['plan'], 'encoding_ms': output['encoding_ms']})
+        print(f"PASS {model['id']}: {len(cases)} multilingual tokenizer and embedding cases", flush=True)
+    if not args.capture:
+        (ROOT / 'fixtures/qualification/e1-multilingual.json').write_text(json.dumps(observations, indent=2)+'\n')
+
+
+if __name__ == '__main__':
+    main()

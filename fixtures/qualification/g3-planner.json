@@ -1,0 +1,1821 @@
+{
+  "schema_version": 1,
+  "model_sha256": "8e0ae26000627ed62de0e78e41860af70094558b9d2913385c842a6aa06cf3fc",
+  "transport": "actual loopback HTTP/TCP",
+  "cache_condition": "uncontrolled",
+  "context_note": "Reservation capacity checks and short-prompt inference; no long-context quality claim",
+  "plans": [
+    {
+      "additional_reserved_bytes": 270165504,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1530643456,
+      "context": 128,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923049,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "reference",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 270165504,
+      "safety_headroom_bytes": 0,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 3145728,
+        "total_bytes": 11030528,
+        "workspace_bytes": 7884800
+      },
+      "session_reserved_bytes": 11030528,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 289584640,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 2,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1550062592,
+      "context": 128,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923117,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "reference",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 289584640,
+      "safety_headroom_bytes": 0,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 3145728,
+        "total_bytes": 11030528,
+        "workspace_bytes": 7884800
+      },
+      "session_reserved_bytes": 11030528,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 271136461,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1531614413,
+      "context": 128,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923181,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "performance",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 271136461,
+      "safety_headroom_bytes": 970957,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 3145728,
+        "total_bytes": 11030528,
+        "workspace_bytes": 7884800
+      },
+      "session_reserved_bytes": 11030528,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 291526554,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 2,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1552004506,
+      "context": 128,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923245,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "performance",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 291526554,
+      "safety_headroom_bytes": 1941914,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 3145728,
+        "total_bytes": 11030528,
+        "workspace_bytes": 7884800
+      },
+      "session_reserved_bytes": 11030528,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 272107418,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1532585370,
+      "context": 128,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923310,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "balanced",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 272107418,
+      "safety_headroom_bytes": 1941914,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 3145728,
+        "total_bytes": 11030528,
+        "workspace_bytes": 7884800
+      },
+      "session_reserved_bytes": 11030528,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 293468468,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 2,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1553946420,
+      "context": 128,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923374,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "balanced",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 293468468,
+      "safety_headroom_bytes": 3883828,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 3145728,
+        "total_bytes": 11030528,
+        "workspace_bytes": 7884800
+      },
+      "session_reserved_bytes": 11030528,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 270362317,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 1,
+      "conservative_host_working_set_additional_bytes": 1530840269,
+      "context": 128,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923439,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 16384,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "low-memory",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 270362317,
+      "safety_headroom_bytes": 934093,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 3145728,
+        "total_bytes": 10293248,
+        "workspace_bytes": 7147520
+      },
+      "session_reserved_bytes": 10293248,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 289978266,
+      "admissible": false,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 2,
+      "concurrency_limit": 1,
+      "conservative_host_working_set_additional_bytes": 1550456218,
+      "context": 128,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923503,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 16384,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "low-memory",
+      "reasons": [
+        "requested concurrency 2 exceeds profile/configured limit 1; request fewer sessions explicitly"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 289978266,
+      "safety_headroom_bytes": 1868186,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 3145728,
+        "total_bytes": 10293248,
+        "workspace_bytes": 7147520
+      },
+      "session_reserved_bytes": 10293248,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 279614976,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1540092928,
+      "context": 512,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923567,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "reference",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 279614976,
+      "safety_headroom_bytes": 0,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 12582912,
+        "total_bytes": 20480000,
+        "workspace_bytes": 7897088
+      },
+      "session_reserved_bytes": 20480000,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 308483584,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 2,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1568961536,
+      "context": 512,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923634,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "reference",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 308483584,
+      "safety_headroom_bytes": 0,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 12582912,
+        "total_bytes": 20480000,
+        "workspace_bytes": 7897088
+      },
+      "session_reserved_bytes": 20480000,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 281058407,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1541536359,
+      "context": 512,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923703,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "performance",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 281058407,
+      "safety_headroom_bytes": 1443431,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 12582912,
+        "total_bytes": 20480000,
+        "workspace_bytes": 7897088
+      },
+      "session_reserved_bytes": 20480000,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 311370446,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 2,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1571848398,
+      "context": 512,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923772,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "performance",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 311370446,
+      "safety_headroom_bytes": 2886862,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 12582912,
+        "total_bytes": 20480000,
+        "workspace_bytes": 7897088
+      },
+      "session_reserved_bytes": 20480000,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 282501837,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1542979789,
+      "context": 512,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923837,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "balanced",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 282501837,
+      "safety_headroom_bytes": 2886861,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 12582912,
+        "total_bytes": 20480000,
+        "workspace_bytes": 7897088
+      },
+      "session_reserved_bytes": 20480000,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 314257306,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 2,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1574735258,
+      "context": 512,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923902,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "balanced",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 314257306,
+      "safety_headroom_bytes": 5773722,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 12582912,
+        "total_bytes": 20480000,
+        "workspace_bytes": 7897088
+      },
+      "session_reserved_bytes": 20480000,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 280284263,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 1,
+      "conservative_host_working_set_additional_bytes": 1540762215,
+      "context": 512,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999923967,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 16384,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "low-memory",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 280284263,
+      "safety_headroom_bytes": 1406567,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 12582912,
+        "total_bytes": 19742720,
+        "workspace_bytes": 7159808
+      },
+      "session_reserved_bytes": 19742720,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 309822158,
+      "admissible": false,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 2,
+      "concurrency_limit": 1,
+      "conservative_host_working_set_additional_bytes": 1570300110,
+      "context": 512,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999924032,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 16384,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "low-memory",
+      "reasons": [
+        "requested concurrency 2 exceeds profile/configured limit 1; request fewer sessions explicitly"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 309822158,
+      "safety_headroom_bytes": 2813134,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 12582912,
+        "total_bytes": 19742720,
+        "workspace_bytes": 7159808
+      },
+      "session_reserved_bytes": 19742720,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 367810048,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1628288000,
+      "context": 4096,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999924096,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "reference",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 367810048,
+      "safety_headroom_bytes": 0,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 100663296,
+        "total_bytes": 108675072,
+        "workspace_bytes": 8011776
+      },
+      "session_reserved_bytes": 108675072,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 484873728,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 2,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1745351680,
+      "context": 4096,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999924170,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "reference",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 484873728,
+      "safety_headroom_bytes": 0,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 100663296,
+        "total_bytes": 108675072,
+        "workspace_bytes": 8011776
+      },
+      "session_reserved_bytes": 108675072,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 373663232,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1634141184,
+      "context": 4096,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999924236,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "performance",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 373663232,
+      "safety_headroom_bytes": 5853184,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 100663296,
+        "total_bytes": 108675072,
+        "workspace_bytes": 8011776
+      },
+      "session_reserved_bytes": 108675072,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 496580096,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 2,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1757058048,
+      "context": 4096,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999924310,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "performance",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 496580096,
+      "safety_headroom_bytes": 11706368,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 100663296,
+        "total_bytes": 108675072,
+        "workspace_bytes": 8011776
+      },
+      "session_reserved_bytes": 108675072,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 379516416,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1639994368,
+      "context": 4096,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999924375,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "balanced",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 379516416,
+      "safety_headroom_bytes": 11706368,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 100663296,
+        "total_bytes": 108675072,
+        "workspace_bytes": 8011776
+      },
+      "session_reserved_bytes": 108675072,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 508286464,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 2,
+      "concurrency_limit": 2,
+      "conservative_host_working_set_additional_bytes": 1768764416,
+      "context": 4096,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999924445,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "balanced",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 508286464,
+      "safety_headroom_bytes": 23412736,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 100663296,
+        "total_bytes": 108675072,
+        "workspace_bytes": 8011776
+      },
+      "session_reserved_bytes": 108675072,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 372889088,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 1,
+      "conservative_host_working_set_additional_bytes": 1633367040,
+      "context": 4096,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999924513,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 16384,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "low-memory",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 372889088,
+      "safety_headroom_bytes": 5816320,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 100663296,
+        "total_bytes": 107937792,
+        "workspace_bytes": 7274496
+      },
+      "session_reserved_bytes": 107937792,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 495031808,
+      "admissible": false,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 2,
+      "concurrency_limit": 1,
+      "conservative_host_working_set_additional_bytes": 1755509760,
+      "context": 4096,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1792999924578,
+        "os": "macos",
+        "ram_available_bytes": null,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 5368709120,
+        "swap_used_bytes": 4607442944
+      },
+      "host_memory_feasible": null,
+      "image_stages": null,
+      "io_buffer_bytes": 16384,
+      "limitations": [
+        "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+        "Buffered weight page-cache residency is reported separately and counted once; host estimate may overcount already resident pages",
+        "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+        "All profiles retain qualified scalar CPU kernels, one thread per session, F32 KV and single-token prefill; low-memory reduces I/O tiling and serializes execution; optimized kernels and Metal remain pending",
+        "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 268435456,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "qwen-g3",
+      "model_metadata_additional": 250746368,
+      "prefill_chunk_tokens": 1,
+      "profile": "low-memory",
+      "reasons": [
+        "requested concurrency 2 exceeds profile/configured limit 1; request fewer sessions explicitly"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 495031808,
+      "safety_headroom_bytes": 11632640,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 100663296,
+        "total_bytes": 107937792,
+        "workspace_bytes": 7274496
+      },
+      "session_reserved_bytes": 107937792,
+      "shared_weight_bytes": 1260477952,
+      "temporary_inspection_reserved_bytes": 268435456,
+      "threads_per_session": 1,
+      "weight_storage": "read-only-buffered"
+    }
+  ],
+  "runs": [
+    {
+      "profile": "reference",
+      "result": {
+        "text": "\n\nI am trying to create a program",
+        "token_ids": [
+          271,
+          40,
+          1079,
+          4460,
+          311,
+          1855,
+          264,
+          2025
+        ],
+        "prompt_tokens": 1,
+        "completion_tokens": 8,
+        "finish_reason": "length",
+        "prefill_ms": 920.981541,
+        "tokenization_ms": 1.862583,
+        "decode_ms": 6121.0112070000005,
+        "output_delivery_ms": 0.059251,
+        "first_token_ms": 926.960708,
+        "memory": {
+          "reserved": 259134976,
+          "peak_reserved": 627856896,
+          "limit": 1073741824,
+          "session_buffer_capacity_bytes": 0,
+          "peak_session_buffer_capacity_bytes": 3052672
+        }
+      },
+      "memory_after": {
+        "limit": 1073741824,
+        "peak_reserved": 627856896,
+        "peak_session_buffer_capacity_bytes": 3052672,
+        "reserved": 250746368,
+        "session_buffer_capacity_bytes": 0
+      }
+    },
+    {
+      "profile": "performance",
+      "result": {
+        "text": "\n\nI am trying to create a program",
+        "token_ids": [
+          271,
+          40,
+          1079,
+          4460,
+          311,
+          1855,
+          264,
+          2025
+        ],
+        "prompt_tokens": 1,
+        "completion_tokens": 8,
+        "finish_reason": "length",
+        "prefill_ms": 997.103417,
+        "tokenization_ms": 1.422667,
+        "decode_ms": 5407.893836,
+        "output_delivery_ms": 0.068373,
+        "first_token_ms": 1002.322292,
+        "memory": {
+          "reserved": 260578407,
+          "peak_reserved": 627856896,
+          "limit": 1073741824,
+          "session_buffer_capacity_bytes": 0,
+          "peak_session_buffer_capacity_bytes": 3052672
+        }
+      },
+      "memory_after": {
+        "limit": 1073741824,
+        "peak_reserved": 627856896,
+        "peak_session_buffer_capacity_bytes": 3052672,
+        "reserved": 250746368,
+        "session_buffer_capacity_bytes": 0
+      }
+    },
+    {
+      "profile": "balanced",
+      "result": {
+        "text": "\n\nI am trying to create a program",
+        "token_ids": [
+          271,
+          40,
+          1079,
+          4460,
+          311,
+          1855,
+          264,
+          2025
+        ],
+        "prompt_tokens": 1,
+        "completion_tokens": 8,
+        "finish_reason": "length",
+        "prefill_ms": 795.681333,
+        "tokenization_ms": 0.14275,
+        "decode_ms": 5738.273292,
+        "output_delivery_ms": 0.057124,
+        "first_token_ms": 799.567458,
+        "memory": {
+          "reserved": 262021837,
+          "peak_reserved": 627856896,
+          "limit": 1073741824,
+          "session_buffer_capacity_bytes": 0,
+          "peak_session_buffer_capacity_bytes": 3052672
+        }
+      },
+      "memory_after": {
+        "limit": 1073741824,
+        "peak_reserved": 627856896,
+        "peak_session_buffer_capacity_bytes": 3052672,
+        "reserved": 250746368,
+        "session_buffer_capacity_bytes": 0
+      }
+    },
+    {
+      "profile": "low-memory",
+      "result": {
+        "text": "\n\nI am trying to create a program",
+        "token_ids": [
+          271,
+          40,
+          1079,
+          4460,
+          311,
+          1855,
+          264,
+          2025
+        ],
+        "prompt_tokens": 1,
+        "completion_tokens": 8,
+        "finish_reason": "length",
+        "prefill_ms": 942.934416,
+        "tokenization_ms": 0.174959,
+        "decode_ms": 6386.533958999999,
+        "output_delivery_ms": 0.056457999999999994,
+        "first_token_ms": 946.841042,
+        "memory": {
+          "reserved": 260541543,
+          "peak_reserved": 627856896,
+          "limit": 1073741824,
+          "session_buffer_capacity_bytes": 0,
+          "peak_session_buffer_capacity_bytes": 3052672
+        }
+      },
+      "memory_after": {
+        "limit": 1073741824,
+        "peak_reserved": 627856896,
+        "peak_session_buffer_capacity_bytes": 3052672,
+        "reserved": 250746368,
+        "session_buffer_capacity_bytes": 0
+      }
+    }
+  ],
+  "checks": [
+    "two-live-pinned-model-sessions-disconnect-within-budget",
+    "unload-remove-returns-reservations-to-zero"
+  ],
+  "concurrent_observation": {
+    "active_limit": 2,
+    "backend": "cpu-reference",
+    "configured_active_limit": 2,
+    "loaded_models": [
+      {
+        "context": 4096,
+        "id": "qwen-g3",
+        "pinned": true
+      }
+    ],
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 627856896,
+      "peak_session_buffer_capacity_bytes": 3352832,
+      "reserved": 311370446,
+      "session_buffer_capacity_bytes": 3352832
+    },
+    "queue_capacity": 8,
+    "scheduler": {
+      "active": 2,
+      "cancelled": 0,
+      "completed": 4,
+      "failed": 0,
+      "queued": 0,
+      "rejected": 0
+    },
+    "shutting_down": false,
+    "stage": "experimental-G3"
+  },
+  "hardware": {
+    "architecture": "aarch64",
+    "cpu_features": [
+      "neon",
+      "fp16"
+    ],
+    "gpu_available_bytes": null,
+    "gpu_backend_qualified": false,
+    "logical_cpus": 8,
+    "observed_unix_ms": 1792999956398,
+    "os": "macos",
+    "ram_available_bytes": null,
+    "ram_total_bytes": 8589934592,
+    "swap_total_bytes": 5368709120,
+    "swap_used_bytes": 4681564160
+  }
+}
