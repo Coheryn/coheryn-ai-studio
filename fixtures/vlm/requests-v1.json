@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "scope": "independent image-conditioned reference cases before native VLM execution",
+  "settings": {
+    "threads": 1,
+    "gpu_layers": 0,
+    "cache_dtype": "f32",
+    "temperature": 0,
+    "seed": 0,
+    "max_tokens": 8,
+    "batch_tokens": 32,
+    "context": {
+      "llava-1.5-7b": 768,
+      "qwen2-vl-2b": 256
+    }
+  },
+  "models": [
+    {
+      "model": "llava-1.5-7b",
+      "cases": [
+        {
+          "id": "left-red",
+          "messages": [
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "image",
+                  "fixture": "landscape-png.png"
+                },
+                {
+                  "type": "text",
+                  "text": "Which color is on the left? Answer with one color word."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "left-blue",
+          "messages": [
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "image",
+                  "fixture": "swapped-png.png"
+                },
+                {
+                  "type": "text",
+                  "text": "Which color is on the left? Answer with one color word."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "model": "qwen2-vl-2b",
+      "cases": [
+        {
+          "id": "left-red",
+          "messages": [
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "image",
+                  "fixture": "landscape-png.png"
+                },
+                {
+                  "type": "text",
+                  "text": "Which color is on the left? Answer with one color word."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "left-blue",
+          "messages": [
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "image",
+                  "fixture": "swapped-png.png"
+                },
+                {
+                  "type": "text",
+                  "text": "Which color is on the left? Answer with one color word."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ordered-images",
+          "messages": [
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "image",
+                  "fixture": "landscape-png.png"
+                },
+                {
+                  "type": "image",
+                  "fixture": "swapped-png.png"
+                },
+                {
+                  "type": "text",
+                  "text": "Compare the color on the left in the first and second images."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "reversed-images",
+          "messages": [
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "image",
+                  "fixture": "swapped-png.png"
+                },
+                {
+                  "type": "image",
+                  "fixture": "landscape-png.png"
+                },
+                {
+                  "type": "text",
+                  "text": "Compare the color on the left in the first and second images."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "unicode-multiturn",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Answer image questions briefly."
+            },
+            {
+              "role": "user",
+              "content": "Hello"
+            },
+            {
+              "role": "assistant",
+              "content": "Hello."
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "image",
+                  "fixture": "landscape-png.png"
+                },
+                {
+                  "type": "text",
+                  "text": "বাম পাশে কোন রং? 左侧是什么颜色？ ما اللون على اليسار؟"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "explicit-system-eos",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Follow the user instruction exactly."
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "image",
+                  "fixture": "landscape-png.png"
+                },
+                {
+                  "type": "text",
+                  "text": "Reply with only the word OK."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

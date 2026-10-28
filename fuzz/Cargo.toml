@@ -38,3 +38,10 @@ path = "fuzz_targets/constraints.rs"
 test = false
 doc = false
 bench = false
+
+[[bin]]
+name = "images"
+path = "fuzz_targets/images.rs"
+test = false
+doc = false
+bench = false

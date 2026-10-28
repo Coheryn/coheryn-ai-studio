@@ -48,38 +48,48 @@ fn positive(d: &Descriptor, key: &str, max: usize) -> Result<usize> {
 }
 
 pub fn configuration(d: &Descriptor) -> Result<ModelConfig> {
-    if d.architecture.as_deref() != Some("qwen2") {
+    configuration_for(d, "qwen2")
+}
+
+pub(crate) fn configuration_for(d: &Descriptor, architecture: &str) -> Result<ModelConfig> {
+    if d.architecture.as_deref() != Some(architecture) {
         return Err(Error::new(
             ErrorCode::UnsupportedModelArchitecture,
             "only the Qwen2 decoder graph is implemented",
         ));
     }
+    if !matches!(architecture, "qwen2" | "qwen2vl") {
+        return Err(Error::invalid("unknown decoder configuration profile"));
+    }
+    let prefix = format!("{architecture}.");
+    let key = |suffix: &str| format!("{architecture}.{suffix}");
     const IMPLEMENTED_KEYS: &[&str] = &[
-        "qwen2.block_count",
-        "qwen2.context_length",
-        "qwen2.embedding_length",
-        "qwen2.feed_forward_length",
-        "qwen2.attention.head_count",
-        "qwen2.attention.head_count_kv",
-        "qwen2.attention.layer_norm_rms_epsilon",
-        "qwen2.rope.freq_base",
-        "qwen2.rope.dimension_count",
-        "qwen2.attention.key_length",
-        "qwen2.attention.value_length",
+        "block_count",
+        "context_length",
+        "embedding_length",
+        "feed_forward_length",
+        "attention.head_count",
+        "attention.head_count_kv",
+        "attention.layer_norm_rms_epsilon",
+        "rope.freq_base",
+        "rope.dimension_count",
+        "attention.key_length",
+        "attention.value_length",
     ];
-    if let Some(key) = d
-        .metadata
-        .keys()
-        .find(|k| k.starts_with("qwen2.") && !IMPLEMENTED_KEYS.contains(&k.as_str()))
-    {
+    if let Some(key) = d.metadata.keys().find(|k| {
+        k.strip_prefix(&prefix).is_some_and(|suffix| {
+            !IMPLEMENTED_KEYS.contains(&suffix)
+                && !(architecture == "qwen2vl" && suffix == "rope.dimension_sections")
+        })
+    }) {
         return Err(Error::new(
             ErrorCode::UnsupportedFeature,
             format!("unimplemented architecture metadata {key}"),
         ));
     }
-    let hidden = positive(d, "qwen2.embedding_length", 32768)?;
-    let heads = positive(d, "qwen2.attention.head_count", 512)?;
-    let kv_heads = positive(d, "qwen2.attention.head_count_kv", 512)?;
+    let hidden = positive(d, &key("embedding_length"), 32768)?;
+    let heads = positive(d, &key("attention.head_count"), 512)?;
+    let kv_heads = positive(d, &key("attention.head_count_kv"), 512)?;
     if hidden % heads != 0 || heads % kv_heads != 0 || (hidden / heads) % 2 != 0 {
         return Err(Error::invalid("invalid Qwen2 GQA or RoPE dimensions"));
     }
@@ -90,11 +100,11 @@ pub fn configuration(d: &Descriptor) -> Result<ModelConfig> {
         .filter(|n| *n > 0 && *n <= 1_000_000)
         .ok_or_else(|| Error::invalid("missing or invalid tokenizer vocabulary"))?;
     let rope_base = d
-        .get("qwen2.rope.freq_base")
+        .get(&key("rope.freq_base"))
         .and_then(|v| v.float())
         .unwrap_or(10000.0) as f32;
     let norm_epsilon = d
-        .get("qwen2.attention.layer_norm_rms_epsilon")
+        .get(&key("attention.layer_norm_rms_epsilon"))
         .and_then(|v| v.float())
         .ok_or_else(|| Error::invalid("missing RMSNorm epsilon"))? as f32;
     if !rope_base.is_finite()
@@ -106,11 +116,13 @@ pub fn configuration(d: &Descriptor) -> Result<ModelConfig> {
     }
     let head_dim = hidden / heads;
     for key in [
-        "qwen2.attention.key_length",
-        "qwen2.attention.value_length",
-        "qwen2.rope.dimension_count",
+        "attention.key_length",
+        "attention.value_length",
+        "rope.dimension_count",
     ] {
-        if d.uint(key).is_some_and(|n| n != head_dim as u64) {
+        if d.uint(&format!("{architecture}.{key}"))
+            .is_some_and(|n| n != head_dim as u64)
+        {
             return Err(Error::new(
                 ErrorCode::UnsupportedFeature,
                 format!("nonstandard {key}"),
@@ -124,7 +136,8 @@ pub fn configuration(d: &Descriptor) -> Result<ModelConfig> {
         ));
     }
     if d.metadata.keys().any(|key| {
-        key.starts_with("qwen2.rope.scaling.") || key == "qwen2.attention.sliding_window"
+        key.starts_with(&format!("{architecture}.rope.scaling."))
+            || key == &format!("{architecture}.attention.sliding_window")
     }) {
         return Err(Error::new(
             ErrorCode::UnsupportedFeature,
@@ -132,20 +145,20 @@ pub fn configuration(d: &Descriptor) -> Result<ModelConfig> {
         ));
     }
     Ok(ModelConfig {
-        layers: positive(d, "qwen2.block_count", 256)?,
+        layers: positive(d, &key("block_count"), 256)?,
         hidden,
-        intermediate: positive(d, "qwen2.feed_forward_length", 131072)?,
+        intermediate: positive(d, &key("feed_forward_length"), 131072)?,
         heads,
         kv_heads,
         head_dim,
         vocabulary,
-        context: positive(d, "qwen2.context_length", 1_048_576)?,
+        context: positive(d, &key("context_length"), 1_048_576)?,
         rope_base,
         norm_epsilon,
     })
 }
 
-fn graph(d: &Descriptor, c: &ModelConfig) -> Result<()> {
+pub(crate) fn graph(d: &Descriptor, c: &ModelConfig) -> Result<()> {
     let expect = |name: &str, dims: &[usize]| -> Result<()> {
         let t = d
             .tensor(name)

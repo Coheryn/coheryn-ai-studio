@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "status": "review-required-before-native-vision-model-acceptance",
+  "vision_reference": "fixtures/vlm/vision-reference.json",
+  "vision_reference_sha256": "df35e9709346ae74ff2b79803f15fadc1e1710776c1378f5368d9bf2c70d8128",
+  "issues": [
+    {
+      "model": "llava-1.5-7b",
+      "source_config_sha256": "0bde54495c54bcc346064a0d314b010d1c4d3ca7f7e583b6f711949a35352c0f",
+      "inventory_sha256": "cffa4c4a40607a19d008316b654451633fe53e9d79d7080e24119535ce881272",
+      "source_vision_config": {
+        "hidden_size": 1024,
+        "image_size": 336,
+        "intermediate_size": 4096,
+        "model_type": "clip_vision_model",
+        "num_attention_heads": 16,
+        "num_hidden_layers": 24,
+        "patch_size": 14,
+        "projection_dim": 768,
+        "vocab_size": 32000
+      },
+      "stored_vision_blocks": 23,
+      "observed_executed_layer_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "projected_output_shape": [
+        4096,
+        576,
+        1,
+        1
+      ],
+      "image_sensitive_projector_outputs": true,
+      "issues": [
+        "Source 24 blocks, feature layer -2; selected legacy GGUF stores 23 blocks but pinned reference executes layers 0-21 by default. Resolve reference/model/profile before native acceptance.",
+        "Source processor center-crops; selected pinned GGUF reference pads 336 with RGB [122,116,104].",
+        "CLIP projection_dim metadata is 768, but model projector tensors and observed projected LM embeddings are 4096. Validate shapes, not that field alone."
+      ]
+    },
+    {
+      "model": "qwen2-vl-2b",
+      "source_config_sha256": "422adefa19e62dd175961cec85bc0400344fe5bf9b22bd1182e05aaae78556e0",
+      "inventory_sha256": "74ff1dee9ab7117d841187a660b21b08bbb94a8f110fd1b7b716df31fc25502e",
+      "source_vision_config": {
+        "depth": 32,
+        "embed_dim": 1280,
+        "mlp_ratio": 4,
+        "num_heads": 16,
+        "in_chans": 3,
+        "hidden_size": 1536,
+        "patch_size": 14,
+        "spatial_merge_size": 2,
+        "spatial_patch_size": 14,
+        "temporal_patch_size": 2
+      },
+      "stored_vision_blocks": 32,
+      "observed_executed_layer_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "projected_output_shape": [
+        1536,
+        8,
+        1,
+        1
+      ],
+      "image_sensitive_projector_outputs": true,
+      "issues": [
+        "Explicit reference min/max image tokens 4/16384 are required for source pixel limits; defaults differ.",
+        "GGUF vision feed_forward_length metadata is 1536; actual vision FFN tensors use 5120. Derive and validate all graph dimensions from tensor inventory.",
+        "Source alignment still needs integrated language logits/greedy and multi-image checks."
+      ]
+    }
+  ]
+}

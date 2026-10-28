@@ -17,6 +17,29 @@ use std::{
 
 #[derive(Args)]
 pub struct ServeArgs {
+    #[arg(long, default_value_t = 536870912)]
+    pub image_store_bytes: u64,
+    #[arg(long, default_value_t = 134217728)]
+    pub owner_image_bytes: u64,
+    #[arg(long, default_value_t = 67108864)]
+    pub session_image_bytes: u64,
+    #[arg(long, default_value_t = 16)]
+    pub session_max_images: usize,
+    /// Permit public HTTPS image URLs (DNS pinned on every redirect). Disabled by default.
+    #[arg(long)]
+    pub allow_image_urls: bool,
+    #[arg(long, default_value_t = 50331648)]
+    pub image_max_body_bytes: usize,
+    #[arg(long, default_value_t = 16777216)]
+    pub image_max_bytes: u64,
+    #[arg(long, default_value_t = 33554432)]
+    pub image_max_total_bytes: u64,
+    #[arg(long, default_value_t = 4)]
+    pub image_max_count: usize,
+    #[arg(long, default_value_t = 30)]
+    pub image_acquisition_timeout: u64,
+    #[arg(long, default_value_t = 3)]
+    pub image_redirects: usize,
     #[arg(long)]
     pub session_persistence: bool,
     #[arg(long, default_value_t = 1073741824)]
@@ -101,6 +124,18 @@ pub async fn serve(cli: &Cli, args: &ServeArgs) -> Result<()> {
     }
     credentials.validate()?;
     let config = ServerConfig {
+        vision: coheryn_api::vision::VisionLimits {
+            allow_urls: args.allow_image_urls,
+            body_bytes: args.image_max_body_bytes,
+            acquisition_timeout_seconds: args.image_acquisition_timeout,
+            redirects: args.image_redirects,
+            images: coheryn_engine::multimodal::image::ImageLimits {
+                max_encoded_bytes: args.image_max_bytes,
+                max_total_encoded_bytes: args.image_max_total_bytes,
+                max_images: args.image_max_count,
+                ..Default::default()
+            },
+        },
         persistence: coheryn_api::session_store::PersistenceLimits {
             enabled: args.session_persistence,
             total_bytes: args.session_store_bytes,
@@ -113,6 +148,12 @@ pub async fn serve(cli: &Cli, args: &ServeArgs) -> Result<()> {
             idle_seconds: args.cache_idle_timeout,
         },
         sessions: coheryn_api::sessions::SessionLimits {
+            images: coheryn_api::sessions::AssetLimits {
+                total_bytes: args.image_store_bytes,
+                owner_bytes: args.owner_image_bytes,
+                session_bytes: args.session_image_bytes,
+                session_items: args.session_max_images,
+            },
             total: args.max_sessions,
             per_owner: args.sessions_per_owner,
             history_bytes: args.session_history_bytes,
@@ -296,11 +337,20 @@ pub async fn run(cli: &Cli, args: &Run, cancel: &Cancellation) -> Result<()> {
 
 #[derive(Args)]
 pub struct ChatArgs {
+    /// Attach a local PNG/JPEG. Repeat for multiple images; model support is required.
+    #[arg(long = "image", conflicts_with_all = ["request"])]
+    pub images: Vec<PathBuf>,
+    /// One image-chat prompt; if omitted, read a bounded prompt from stdin.
+    #[arg(long, requires = "images")]
+    pub prompt: Option<String>,
+    /// Local vision component for explicit standalone image chat.
+    #[arg(long, requires_all = ["images", "standalone"])]
+    pub vision_model: Option<PathBuf>,
     /// One headless chat request, including tools and prior tool results, as bounded JSON.
     #[arg(long,conflicts_with_all=["session","resume","persist","system","overflow","context","profile","threads","max_tokens","temperature","top_p","top_k","seed","stop","stop_tokens","repetition_penalty","frequency_penalty","presence_penalty","response_format","schema","timeout_seconds"])]
     pub request: Option<PathBuf>,
-    /// Emit native text/tool events as JSON Lines for a request file.
-    #[arg(long, requires = "request")]
+    /// Stream image text or request-file text/tool events; --json emits JSON Lines.
+    #[arg(long)]
     pub stream: bool,
     pub model: PathBuf,
     #[arg(long)]
@@ -327,6 +377,12 @@ pub struct ChatArgs {
     pub controls: crate::Controls,
 }
 pub async fn chat(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<()> {
+    if !args.images.is_empty() {
+        return crate::image_chat::run(cli, args, cancel).await;
+    }
+    if args.stream && args.request.is_none() {
+        return Err(Error::request("--stream requires --image or --request"));
+    }
     if args.request.is_some() {
         return crate::tool_chat::run(cli, args, cancel).await;
     }
@@ -413,6 +469,7 @@ pub async fn chat(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<(
         let result = if let Some(session) = &managed {
             let remote = remote.as_ref().expect("managed daemon client");
             let request = coheryn_api::sessions::SubmitTurn {
+                images: vec![],
                 expected_revision: crate::sessions::revision(remote, session, cancel).await?,
                 idempotency_key: crate::sessions::fresh_key(),
                 content,
@@ -475,6 +532,9 @@ pub async fn chat(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<(
 }
 #[derive(Args)]
 pub struct PlanArgs {
+    /// Inspect local attachment headers for task=image-to-text; bytes are not uploaded by plan.
+    #[arg(long = "image")]
+    pub images: Vec<PathBuf>,
     #[arg(long)]
     pub constraints: bool,
     pub model: String,
@@ -501,7 +561,47 @@ pub async fn plan(cli: &Cli, args: &PlanArgs, cancel: &Cancellation) -> Result<(
     let context = args
         .context
         .unwrap_or(if args.task == "embedding" { 512 } else { 4096 });
-    crate::print_json(&client(cli)?.json("POST","/api/v1/plans/estimate",Some(json!({"model":args.model,"constraints":args.constraints,"task":args.task,"context":context,"profile":args.profile,"concurrency":args.concurrency,"threads":args.threads,"input_bytes":args.input_bytes,"batch_size":args.batch_size,"max_input_tokens":args.max_input_tokens,"max_batch_tokens":args.max_batch_tokens})),true,cancel).await?)
+    let images = if args.images.is_empty() {
+        None
+    } else {
+        if args.task != "image-to-text" || args.images.len() > 4 {
+            return Err(Error::request(
+                "--image planning requires task=image-to-text and at most four images",
+            ));
+        }
+        let limits = coheryn_engine::multimodal::image::ImageLimits::default();
+        let mut images = Vec::new();
+        let mut total = 0;
+        for path in &args.images {
+            let meta = std::fs::symlink_metadata(path)?;
+            if !meta.is_file()
+                || meta.file_type().is_symlink()
+                || meta.len() > limits.max_encoded_bytes
+            {
+                return Err(Error::request(
+                    "planning images must be regular bounded files",
+                ));
+            }
+            let mut bytes = Vec::new();
+            std::fs::File::open(path)?
+                .take(limits.max_encoded_bytes + 1)
+                .read_to_end(&mut bytes)?;
+            total += bytes.len() as u64;
+            if total > limits.max_total_encoded_bytes {
+                return Err(Error::resource(
+                    "planning attachments exceed total byte limit",
+                ));
+            }
+            let info = coheryn_engine::multimodal::image::inspect(&bytes, limits, cancel)?;
+            let (width, height) = info.oriented_dimensions();
+            images.push(coheryn_engine::planner::ImageDescriptor { width, height });
+        }
+        Some(coheryn_engine::planner::ImageWorkload {
+            images,
+            processor_profile: "qwen2vl-still-v1".into(),
+        })
+    };
+    crate::print_json(&client(cli)?.json("POST","/api/v1/plans/estimate",Some(json!({"model":args.model,"constraints":args.constraints,"task":args.task,"context":context,"profile":args.profile,"concurrency":args.concurrency,"threads":args.threads,"images":images,"input_bytes":args.input_bytes,"batch_size":args.batch_size,"max_input_tokens":args.max_input_tokens,"max_batch_tokens":args.max_batch_tokens})),true,cancel).await?)
 }
 #[derive(Args)]
 pub struct BenchResources {

@@ -1,4 +1,5 @@
 //! Bounded, owner-scoped authoritative histories. Request-local KV remains disposable.
+mod images;
 use crate::{
     error::{ApiError, Result},
     scheduler::GenerationEvent,
@@ -12,6 +13,7 @@ use coheryn_engine::{
     sampling::Sampling,
     tokenizer::Message,
 };
+pub use images::{AssetLimits, Attachment, ExportImage, ImageAsset};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::{
@@ -50,6 +52,7 @@ impl CacheLimits {
 
 #[derive(Clone, Serialize)]
 pub struct SessionLimits {
+    pub images: AssetLimits,
     pub total: usize,
     pub per_owner: usize,
     pub history_bytes: usize,
@@ -60,6 +63,7 @@ pub struct SessionLimits {
 impl Default for SessionLimits {
     fn default() -> Self {
         Self {
+            images: AssetLimits::default(),
             total: 128,
             per_owner: 64,
             history_bytes: 1 << 20,
@@ -71,6 +75,7 @@ impl Default for SessionLimits {
 }
 impl SessionLimits {
     pub fn validate(&self) -> coheryn_engine::Result<()> {
+        self.images.validate()?;
         if self.total == 0
             || self.total > 128
             || self.per_owner == 0
@@ -243,6 +248,12 @@ impl TurnSettings {
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SubmitTurn {
+    #[serde(
+        default,
+        skip_serializing_if = "Vec::is_empty",
+        deserialize_with = "crate::bounded::sequence::<_,_,4>"
+    )]
+    pub images: Vec<String>,
     pub expected_revision: u64,
     pub idempotency_key: String,
     #[serde(default)]
@@ -279,6 +290,12 @@ pub struct ResetRequest {
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct HistoryMessage {
+    #[serde(
+        default,
+        skip_serializing_if = "Vec::is_empty",
+        deserialize_with = "crate::bounded::sequence::<_,_,4>"
+    )]
+    pub images: Vec<String>,
     pub id: String,
     pub turn_id: Option<String>,
     pub role: String,
@@ -338,9 +355,29 @@ impl TurnWatch {
         Ok(self.0.lock().map_err(|_| internal())?.receipt.clone())
     }
 }
+#[derive(Clone, Copy, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum SessionTask {
+    #[default]
+    TextGeneration,
+    ImageToText,
+}
+impl SessionTask {
+    fn is_text(&self) -> bool {
+        *self == Self::TextGeneration
+    }
+}
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SessionView {
+    #[serde(default, skip_serializing_if = "SessionTask::is_text")]
+    pub task: SessionTask,
+    #[serde(
+        default,
+        skip_serializing_if = "Vec::is_empty",
+        deserialize_with = "crate::bounded::sequence::<_,_,16>"
+    )]
+    pub image_assets: Vec<ImageAsset>,
     #[serde(default)]
     pub message_offset: usize,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -409,6 +446,7 @@ impl Session {
     }
 }
 struct Inner {
+    assets: Option<images::Assets>,
     state: Mutex<BTreeMap<String, Session>>,
     limits: SessionLimits,
     cache_limits: CacheLimits,
@@ -424,6 +462,7 @@ pub enum BeginTurn {
 }
 /// The scheduler owns this lease through worker acknowledgement, including disconnects.
 pub struct TurnLease {
+    task: SessionTask,
     pub(crate) cache: Option<PrefixCache>,
     sessions: Sessions,
     id: String,
@@ -463,6 +502,7 @@ fn history_message(
     status: TurnStatus,
 ) -> HistoryMessage {
     HistoryMessage {
+        images: vec![],
         id: opaque("msg-"),
         role: role.into(),
         content,
@@ -497,6 +537,7 @@ impl Sessions {
     }
     pub fn with_cache(limits: SessionLimits, cache_limits: CacheLimits, budget: Budget) -> Self {
         Self(Arc::new(Inner {
+            assets: None,
             cache_limits,
             persistence: PersistenceLimits::default(),
             store: None,
@@ -513,7 +554,11 @@ impl Sessions {
         root: &std::path::Path,
     ) -> Result<Self> {
         if !persistence.enabled {
-            return Ok(Self::with_cache(limits, cache_limits, budget));
+            let mut sessions = Self::with_cache(limits, cache_limits, budget);
+            let assets = images::Assets::new(root);
+            assets.recover(&Default::default())?;
+            Arc::get_mut(&mut sessions.0).expect("new sessions").assets = Some(assets);
+            return Ok(sessions);
         }
         let store = Store::open(root, persistence.clone(), &budget)?;
         let index = store.index()?;
@@ -547,6 +592,16 @@ impl Sessions {
             {
                 return Err(ApiError::bad("stored session exceeds configured limits"));
             }
+            if view.image_assets.len() > limits.images.session_items {
+                return Err(ApiError::bad("stored image count exceeds quota"));
+            }
+            for asset in &view.image_assets {
+                asset.validate()?;
+            }
+            if view.image_assets.iter().map(|a| a.bytes).sum::<u64>() > limits.images.session_bytes
+            {
+                return Err(ApiError::bad("stored image bytes exceed quota"));
+            }
             view.messages = None;
             view.cached_tokens = 0;
             view.cache_reserved_bytes = 0;
@@ -568,7 +623,23 @@ impl Sessions {
                 },
             );
         }
+        let assets = images::Assets::new(root);
+        let live = state
+            .iter()
+            .map(|(id, s)| {
+                (
+                    id.clone(),
+                    s.view
+                        .image_assets
+                        .iter()
+                        .map(|a| format!("{}.bin", a.id))
+                        .collect(),
+                )
+            })
+            .collect();
+        assets.recover(&live)?;
         Ok(Self(Arc::new(Inner {
+            assets: Some(assets),
             state: Mutex::new(state),
             limits,
             cache_limits,
@@ -608,7 +679,10 @@ impl Sessions {
         view.cached_tokens = 0;
         view.cache_reserved_bytes = 0;
         Ok(ExportDocument {
-            version: if session.view.tool_profile.is_some()
+            assets: vec![],
+            version: if session.view.task == SessionTask::ImageToText {
+                3
+            } else if session.view.tool_profile.is_some()
                 || session
                     .history
                     .iter()
@@ -617,7 +691,8 @@ impl Sessions {
                     !r.settings.tools.is_empty()
                         || r.settings.tool_choice.is_some()
                         || r.settings.parallel_tool_calls.is_some()
-                }) {
+                })
+            {
                 2
             } else {
                 1
@@ -751,6 +826,9 @@ impl Sessions {
         }
         for id in expired {
             state.remove(&id);
+            if let Some(assets) = &self.0.assets {
+                assets.remove_session(&id)?;
+            }
         }
 
         self.trim_caches(&mut state);
@@ -838,6 +916,15 @@ impl Sessions {
         request: CreateSession,
         hash: String,
     ) -> Result<SessionView> {
+        self.create_task(owner, request, hash, SessionTask::TextGeneration)
+    }
+    pub fn create_task(
+        &self,
+        owner: String,
+        request: CreateSession,
+        hash: String,
+        task: SessionTask,
+    ) -> Result<SessionView> {
         if request.persist && self.0.store.is_none() {
             return Err(ApiError::bad(
                 "persistent histories require serve --session-persistence",
@@ -877,6 +964,8 @@ impl Sessions {
             .map(|text| history_message("system", text, None, TurnStatus::Completed))
             .collect();
         let view = SessionView {
+            task,
+            image_assets: vec![],
             message_offset: 0,
             next_offset: None,
             id: opaque("ses-"),
@@ -1001,6 +1090,7 @@ impl Sessions {
         Self::mutable(session, revision)?;
         let old_view = session.view.clone();
         let old_history = session.history.clone();
+        session.view.image_assets.clear();
         let old_keys = std::mem::take(&mut session.keys);
         session
             .history
@@ -1033,6 +1123,9 @@ impl Sessions {
             return Err(error);
         }
         session._history_reservation = Some(preserved);
+        if let Some(assets) = &self.0.assets {
+            assets.remove_session(&id)?;
+        }
         Ok(session.view(true))
     }
     pub fn delete(&self, owner: &str, id: &str, revision: u64) -> Result<()> {
@@ -1050,6 +1143,9 @@ impl Sessions {
                 .delete(&id, owner)?;
         }
         state.remove(&id);
+        if let Some(assets) = &self.0.assets {
+            assets.remove_session(&id)?;
+        }
         Ok(())
     }
     fn mutable(session: &Session, revision: u64) -> Result<()> {
@@ -1088,7 +1184,10 @@ impl Sessions {
         if session.view.active_turn.is_some() {
             return Err(ApiError::conflict("cannot export an active turn"));
         }
-        Self::document(session, None)
+        let mut doc = Self::document(session, None)?;
+        let bytes = serde_json::to_vec(&doc).map_err(|_| internal())?.len();
+        doc.assets = self.exported_assets(&session.view, bytes)?;
+        Ok(doc)
     }
     pub fn import(
         &self,
@@ -1126,7 +1225,11 @@ impl Sessions {
         if bytes > crate::session_store::DOCUMENT_BYTES {
             return Err(Error::resource("imported history exceeds byte quota").into());
         }
-        let history_reservation = self.0.budget.reserve(bytes as u64 * 8 + 65536)?;
+        // Portable Base64 is an ingress buffer. Only metadata/history/replay live in RAM.
+        let retained = serde_json::to_vec(&(&doc.session, &doc.messages, &doc.turns))
+            .map_err(|_| internal())?
+            .len();
+        let history_reservation = self.0.budget.reserve(retained as u64 * 8 + 65536)?;
         let metadata = self.0.budget.reserve(16384)?;
         let id = opaque("ses-");
         doc.session.id = id.clone();
@@ -1142,6 +1245,7 @@ impl Sessions {
         for turn in &mut doc.turns {
             turn.receipt.session_id = id.clone();
         }
+        self.import_assets(&state, &owner, &doc)?;
         let keys = doc
             .turns
             .into_iter()
@@ -1170,14 +1274,21 @@ impl Sessions {
             loaded: true,
             _history_reservation: Some(history_reservation),
         };
-        self.persist(&session, None)?;
+        if let Err(error) = self.persist(&session, None) {
+            if let Some(assets) = &self.0.assets {
+                let _ = assets.remove_session(&session.view.id);
+            }
+            return Err(error);
+        }
         let view = session.view(true);
         state.insert(id, session);
         Ok(view)
     }
     pub fn begin(&self, owner: &str, id: &str, mut request: SubmitTurn) -> Result<BeginTurn> {
         identifier(&request.idempotency_key)?;
-        if request.content.is_empty() == request.tool_results.is_empty()
+        if (request.content.is_empty() && request.images.is_empty())
+            == request.tool_results.is_empty()
+            || (!request.images.is_empty() && !request.tool_results.is_empty())
             || request.content.len() > self.0.limits.history_bytes
         {
             return Err(ApiError::bad(
@@ -1222,6 +1333,19 @@ impl Sessions {
                 "persistent session needs recovery/reset before another turn",
             )
             .into());
+        }
+        if !request.images.is_empty() && session.view.task != SessionTask::ImageToText {
+            return Err(ApiError::bad(
+                "image attachments require an image conversation",
+            ));
+        }
+        let mut unique = std::collections::BTreeSet::new();
+        for id in &request.images {
+            if !unique.insert(id) || !session.view.image_assets.iter().any(|a| &a.id == id) {
+                return Err(ApiError::bad(
+                    "image reference is duplicate or does not belong to this session",
+                ));
+            }
         }
         let old_view = session.view.clone();
         let mut inputs = Vec::new();
@@ -1314,6 +1438,12 @@ impl Sessions {
             )
             .into());
         }
+        if let Some(input) = inputs.last_mut() {
+            input.images = request.images.clone();
+        }
+        if session.view.task == SessionTask::ImageToText {
+            crate::vision::validate_controls(&generation)?;
+        }
         let input_bytes = inputs.iter().map(message_bytes).sum::<usize>();
         if session.history.len() + inputs.len() + 1 > self.0.limits.messages
             || session.keys.len() >= self.0.limits.turn_keys
@@ -1394,6 +1524,7 @@ impl Sessions {
         }
         let cache = session.cache.take().map(|(cache, _)| cache);
         Ok(BeginTurn::New(Box::new(TurnLease {
+            task: session.view.task,
             cache,
             sessions: self.clone(),
             id,
@@ -1729,7 +1860,7 @@ pub(crate) fn validate_document(
             "history documents cannot contain a duplicate page or KV state",
         ));
     }
-    if !matches!(doc.version, 1 | 2)
+    if !matches!(doc.version, 1..=3)
         || doc.messages.len() > limits.messages
         || doc.turns.len() > limits.turn_keys
         || doc.session.message_count != doc.messages.len()
@@ -1747,12 +1878,50 @@ pub(crate) fn validate_document(
     if let Some(alias) = &doc.session.alias {
         identifier(alias)?;
     }
+    let mut asset_ids = BTreeSet::new();
+    if doc.session.image_assets.len() > limits.images.session_items
+        || doc
+            .session
+            .image_assets
+            .iter()
+            .try_fold(0u64, |n, a| n.checked_add(a.bytes))
+            .is_none_or(|n| n > limits.images.session_bytes)
+    {
+        return Err(ApiError::bad("saved image quotas exceeded"));
+    }
+    for asset in &doc.session.image_assets {
+        asset.validate()?;
+        if !asset_ids.insert(asset.id.as_str()) {
+            return Err(ApiError::bad("duplicate saved image asset"));
+        }
+    }
+    if doc.session.task == SessionTask::TextGeneration && !asset_ids.is_empty() {
+        return Err(ApiError::bad("text history cannot contain image assets"));
+    }
+    if doc.session.task == SessionTask::ImageToText && doc.session.context > 4096 {
+        return Err(ApiError::bad(
+            "image history context exceeds the qualified 4096-position capacity",
+        ));
+    }
+    if doc.session.task == SessionTask::ImageToText && doc.version != 3 {
+        return Err(ApiError::bad("image histories require format version 3"));
+    }
     let mut ids = BTreeSet::new();
     let mut size = 0usize;
     let mut turn_ids = BTreeSet::new();
     let mut keys = BTreeSet::new();
     for message in &doc.messages {
         identifier(&message.id)?;
+        if !message.images.is_empty()
+            && (doc.session.task != SessionTask::ImageToText
+                || message.role != "user"
+                || message
+                    .images
+                    .iter()
+                    .any(|id| !asset_ids.contains(id.as_str())))
+        {
+            return Err(ApiError::bad("invalid saved image reference/role"));
+        }
         if !ids.insert(message.id.as_str())
             || !matches!(
                 message.role.as_str(),
@@ -1763,6 +1932,13 @@ pub(crate) fn validate_document(
             return Err(ApiError::bad(
                 "invalid history message identity, role or state",
             ));
+        }
+        if doc.session.task == SessionTask::ImageToText
+            && (message.role == "tool"
+                || !message.tool_calls.is_empty()
+                || message.tool_call_id.is_some())
+        {
+            return Err(ApiError::bad("tools are not qualified in image histories"));
         }
         if (!message.tool_calls.is_empty()
             && (message.role != "assistant" || message.status != TurnStatus::Completed))
@@ -1809,6 +1985,9 @@ pub(crate) fn validate_document(
             ..Default::default()
         }]);
         check.validate()?;
+        if doc.session.task == SessionTask::ImageToText {
+            crate::vision::validate_controls(&check)?;
+        }
         if let Some(result) = &turn.receipt.result {
             check
                 .tool_config()
@@ -1863,7 +2042,9 @@ pub(crate) fn validate_document(
             return Err(ApiError::bad("invalid saved turn message group"));
         }
         let inputs = &messages[..input_count];
-        if !(inputs.len() == 1 && inputs[0].role == "user" && !inputs[0].content.is_empty())
+        if !(inputs.len() == 1
+            && inputs[0].role == "user"
+            && (!inputs[0].content.is_empty() || !inputs[0].images.is_empty()))
             && !inputs.iter().all(|m| m.role == "tool")
         {
             return Err(ApiError::bad(
@@ -1938,6 +2119,7 @@ pub(crate) fn validate_document(
 
 fn message_bytes(m: &HistoryMessage) -> usize {
     m.content.len()
+        + m.images.iter().map(String::len).sum::<usize>()
         + m.tool_call_id.as_ref().map_or(0, String::len)
         + if m.tool_calls.is_empty() {
             0

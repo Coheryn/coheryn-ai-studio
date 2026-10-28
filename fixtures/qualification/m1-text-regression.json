@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "scope": "four-token native text smoke after codec dependency addition; not new model qualification",
+  "binary_sha256": "adda7cccb271ce842b6226e7733c4119d6b0bfd55461daf1b7d240fa4735c386",
+  "model": {
+    "id": "qwen2.5-0.5b-instruct-q4_k_m",
+    "repository": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+    "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+    "file": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+    "bytes": 491400032,
+    "sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+    "maximum_download_bytes": 491400032,
+    "license": "Apache-2.0",
+    "qualification": "native-reference-parity-tested-macos-arm64",
+    "evidence": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q4_k_m.json",
+    "qualification_contract": "primary",
+    "bytes_verified": true
+  },
+  "expected_fixture": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q4_k_m.json",
+  "expected_fixture_sha256": "c70957a7ae5730641d72cd957553f78f12c4015dded1f140521b34ceb445e28a",
+  "command": "target/release/coheryn --json run .cache/models/qwen2.5-0.5b-instruct-q4_k_m.gguf --prompt Hello --context 128 --max-tokens 4 --standalone",
+  "matches_independent_greedy_prefix": true,
+  "result": {
+    "batching": {
+      "profile": "coheryn-cpu-batch-v1",
+      "strategy": "single-sequence",
+      "forward_units": 4,
+      "batched_forward_units": 0,
+      "maximum_batch_width": 1,
+      "prefilled_tokens": 1,
+      "scheduler_wait_ms": 0.0
+    },
+    "sampling_metadata": {
+      "sampling_ms": 35.158208,
+      "profile": "coheryn-sampling-v2",
+      "settings": {
+        "temperature": 0.0,
+        "top_k": 0,
+        "top_p": 1.0,
+        "seed": 0
+      },
+      "penalties": {
+        "repetition_penalty": 1.0,
+        "frequency_penalty": 0.0,
+        "presence_penalty": 0.0
+      },
+      "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+      "tokenizer_fingerprint": "8f5c49a4f5fbfac3454db56577cfa7b6acbee856c371fc97a726e7f621e3143f",
+      "backend": "native-cpu",
+      "cache_dtype": "f32",
+      "threads": 2,
+      "prefill_chunk_tokens": 16,
+      "engine_version": "0.1.0-dev"
+    },
+    "text": "\n\nI am trying",
+    "token_ids": [
+      271,
+      40,
+      1079,
+      4460
+    ],
+    "prompt_tokens": 1,
+    "reused_prompt_tokens": 0,
+    "completion_tokens": 4,
+    "finish_reason": "length",
+    "prefill_ms": 787.7424579999999,
+    "tokenization_ms": 1.182792,
+    "decode_ms": 1237.7915830000002,
+    "output_delivery_ms": 0.006915999999999999,
+    "first_token_ms": 820.9425,
+    "memory": {
+      "reserved": 250746368,
+      "peak_reserved": 273411134,
+      "limit": 1073741824,
+      "session_buffer_capacity_bytes": 0,
+      "peak_session_buffer_capacity_bytes": 3059756
+    }
+  },
+  "cache_condition": "uncontrolled"
+}

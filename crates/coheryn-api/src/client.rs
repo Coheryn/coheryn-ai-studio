@@ -338,6 +338,31 @@ impl Client {
         let response = self.send(request, cancel).await?;
         self.decode(response, cancel).await
     }
+    pub async fn vision_generate(
+        &self,
+        value: &Value,
+        cancel: &Cancellation,
+        emit: impl FnMut(TokenEvent) -> Result<()>,
+    ) -> Result<GenerationResult> {
+        let request =
+            crate::vision::VisionRequest::from_value(value.clone()).map_err(|e| e.error)?;
+        let deadline = cancel.with_timeout(request.controls.timeout_seconds)?;
+        let response = self
+            .send(
+                self.request("POST", "/api/v1/generate", false)?.json(value),
+                &deadline,
+            )
+            .await?;
+        self.receive_generation(
+            response,
+            request.controls.stream,
+            false,
+            &deadline,
+            emit,
+            |_| Ok(()),
+        )
+        .await
+    }
     pub async fn generate(
         &self,
         request: &GenerationRequest,
@@ -365,6 +390,32 @@ impl Client {
             .await?;
         self.receive_generation(response, request.stream, false, cancel, emit, tool)
             .await
+    }
+    pub async fn attach_session_image(
+        &self,
+        session: &str,
+        path: &Path,
+        expected_revision: u64,
+        cancel: &Cancellation,
+    ) -> Result<Value> {
+        if session.is_empty()
+            || session.len() > 64
+            || !session
+                .bytes()
+                .all(|b| b.is_ascii_alphanumeric() || b"-_".contains(&b))
+        {
+            return Err(Error::request("invalid session ID/alias"));
+        }
+        let m = std::fs::symlink_metadata(path)?;
+        let limit = coheryn_engine::multimodal::image::ImageLimits::default().max_encoded_bytes;
+        if !m.is_file() || m.file_type().is_symlink() || m.len() > limit {
+            return Err(Error::request(
+                "image attachment must be a regular non-symlink bounded file",
+            ));
+        }
+        let file = tokio::fs::File::open(path).await?;
+        let response=self.send(self.request("POST",&format!("/coheryn/v1/sessions/{session}/images?expected_revision={expected_revision}"),false)?.header(reqwest::header::CONTENT_TYPE,"application/octet-stream").header(reqwest::header::CONTENT_LENGTH,m.len()).body(reqwest::Body::wrap_stream(ReaderStream::new(file))),cancel).await?;
+        self.decode(response, cancel).await
     }
     pub async fn session_generate(
         &self,

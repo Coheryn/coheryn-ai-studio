@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "profile": "coheryn-image-preprocess-v1",
+  "scope": "native processor foundation, not vision-language inference",
+  "profiles": [
+    {
+      "id": "llava15-pad336-v1",
+      "selected_model": "llava-1.5-7b",
+      "component_sha256": "50da4e5b0a011615f77686f9b02613571e65d23083c225e107c08c3b1775d9b1",
+      "normalization_mean": [
+        0.48145466,
+        0.4578275,
+        0.40821073
+      ],
+      "normalization_std": [
+        0.26862954,
+        0.26130258,
+        0.27577711
+      ],
+      "normalization": "F32 RGB/255, subtract mean, divide std; retain HWC storage",
+      "resize": "Keys bicubic a=-0.5, horizontal then vertical, 22-bit fixed coefficients, round/clamp U8 after each pass",
+      "geometry": {
+        "canvas": [
+          336,
+          336
+        ],
+        "mode": "aspect-preserving pad",
+        "pad_rgb": [
+          122,
+          116,
+          104
+        ],
+        "rounding": "F32 scale and ceil; centered floor offsets"
+      },
+      "patch_size": 14,
+      "temporal_patch_size": 1,
+      "spatial_merge_size": 1,
+      "patch_layout": "raster patches, channel then patch y/x",
+      "alignment_note": "Pinned GGUF reference pads; source HF config center-crops. Legacy feature layer mapping remains unresolved. This profile is specific to the selected reference, not a family-wide qualification."
+    },
+    {
+      "id": "qwen2vl-still-v1",
+      "selected_model": "qwen2-vl-2b",
+      "component_sha256": "ecb20cabcdd8dbc277de06bd6eb980aeb2adfaaba9f199a434e328d205675d03",
+      "normalization_mean": [
+        0.48145466,
+        0.4578275,
+        0.40821073
+      ],
+      "normalization_std": [
+        0.26862954,
+        0.26130258,
+        0.27577711
+      ],
+      "normalization": "F32 RGB/255, subtract mean, divide std; retain HWC storage",
+      "resize": "Keys bicubic a=-0.5, horizontal then vertical, 22-bit fixed coefficients, round/clamp U8 after each pass",
+      "geometry": {
+        "multiple": 28,
+        "minimum_pixels": 3136,
+        "maximum_pixels": 12845056,
+        "maximum_aspect_ratio": 200,
+        "rounding": "F32 scale and nearest ties-to-even; floor/ceil at pixel limits"
+      },
+      "patch_size": 14,
+      "temporal_patch_size": 2,
+      "spatial_merge_size": 2,
+      "patch_layout": "2x2 merge groups, channel then duplicated temporal frame then patch y/x",
+      "alignment_note": "Reference token limits explicitly set to 4/16384 to match source pixels; defaults differ."
+    }
+  ],
+  "formats": {
+    "png": "8-bit grayscale/gray-alpha/RGB/RGBA; validate all chunk CRCs; no palette/APNG/tRNS/ICC/cICP",
+    "jpeg": "baseline 8-bit grayscale/RGB, one interleaved scan; no progressive/CMYK/YCCK/ICC/MPO"
+  },
+  "orientation": "Apply primary EXIF orientation 1-8 before resize, without an oriented source copy",
+  "alpha": "Discard alpha, retain RGB channels; grayscale replicated to RGB",
+  "color": "Use decoded channel values without gamma/chromaticity transforms; embedded ICC/cICP rejected",
+  "decoder_reference": "Pillow 13.0.0; PNG exact and JPEG maximum channel difference 2; downstream comparisons use identical canonical RGB pixels",
+  "default_limits": {
+    "max_encoded_bytes": 16777216,
+    "max_total_encoded_bytes": 33554432,
+    "max_edge": 8192,
+    "max_source_pixels": 16777216,
+    "max_processed_pixels": 1048576,
+    "max_image_tokens": 1024,
+    "max_total_image_tokens": 4096,
+    "max_images": 4
+  },
+  "admission": "Reject canonical output exceeding resource limits; never shrink resolution to fit a budget. Ordered batch reserves aggregate encoded bytes plus peak sequential processor and retained outputs.",
+  "reference": "fixtures/vlm/preprocessing/reference.json",
+  "native_image_understanding_supported": false
+}

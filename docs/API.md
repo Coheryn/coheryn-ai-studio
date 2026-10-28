@@ -1,8 +1,8 @@
 # G2 CLI and HTTP service
 
-The service uses the same independent Rust engine as standalone execution. This is an experimental text-generation and embedding OpenAI-compatible subset. The G4 CPU planner, packed quantized kernels and controlled row parallelism are implemented. E2 adds native embeddings; GPU and vision remain later gates. See [planner contracts and M0 status](PLANNER.md).
+The service uses the same independent Rust engine as standalone execution. This is an experimental text-generation, embedding and qualified image-chat OpenAI-compatible subset. The G4 CPU planner, packed quantized kernels and controlled row parallelism are implemented. E2 adds native embeddings; the selected Qwen2-VL pair now supports [image CLI/API requests](IMAGE_API.md). GPU remains a later gate. See [planner contracts and M0 status](PLANNER.md).
 
-The mandatory release scope includes image attachments/multimodal chat and independent embeddings via `/v1/embeddings` and `coheryn embed`. Native CPU embeddings and the embeddings route are implemented; image execution remains pending. This guide documents current behavior; M0–M2 and E0–E3 govern the additional qualified contracts. The E2 guide identifies the implemented embedding/RAG interfaces and remaining qualification limits.
+The mandatory release scope includes image attachments/multimodal chat and independent embeddings via `/v1/embeddings` and `coheryn embed`. Native CPU embeddings, the embeddings route and the selected native CPU image-chat profile are implemented; broader model/backend/platform release qualification remains open. This guide documents current behavior; M0–M2 and E0–E3 govern the additional qualified contracts. The E2 guide identifies the implemented embedding/RAG interfaces and remaining qualification limits.
 
 ## Run the daemon
 
@@ -45,7 +45,7 @@ All protected routes require `Authorization: Bearer TOKEN`. Administrative crede
 | `GET /health` | Public | Minimal liveness result |
 | `GET /v1/models` | Inference | Registered local model IDs; loading is explicit |
 | `POST /v1/completions` | Inference | Text prompt, JSON result or SSE |
-| `POST /v1/chat/completions` | Inference | Text messages, JSON result or SSE |
+| `POST /v1/chat/completions` | Inference | Text or qualified text/image messages, JSON result or SSE |
 | `POST /v1/embeddings` | Inference | Single/batch strings; ordered float/Base64 vectors, usage and identity headers |
 | `POST /api/v1/generate` | Inference | Native generation result/events for CLI parity |
 | `GET /api/v1/models` | Admin | Registry records and resident state |
@@ -53,6 +53,7 @@ All protected routes require `Authorization: Bearer TOKEN`. Administrative crede
 | `POST /api/v1/models/validate` | Admin | `{"model":"ID","deep":true}`; no remote filesystem paths |
 | `POST /api/v1/models/import?name=ID&sha256=HASH` | Admin | Bounded `application/octet-stream` upload; hash optional |
 | `POST /api/v1/models/pull` | Admin | `{"name":"ID","url":"https://...","sha256":"HASH"}` |
+| `POST /api/v1/models/register-pair` | Admin | `{"model":"ID","language":"LANGUAGE_ID","vision":"VISION_ID"}` |
 | `POST /api/v1/models/load` | Admin | `{"model":"ID","context":4096}` |
 | `POST /api/v1/models/unload` | Admin | `{"model":"ID"}` |
 | `DELETE /api/v1/models/{id}` | Admin | Remove an unloaded model, including an orphaned managed file |
@@ -78,7 +79,7 @@ JSON requests require `Content-Type: application/json`. Unsupported fields fail 
 - `stream_options.include_usage`: boolean, only with streaming.
 - Coheryn extensions: `context` cannot exceed loaded capacity; `max_memory` adds a conservative per-request cap over model metadata, session, transport allowance, constraint reservation and profile headroom. `profile` accepts reference/performance/balanced/low-memory (default balanced). `threads` optionally selects a bounded compute worker count; each worker stack is included in admission. The daemon's global atomic budget also applies.
 
-Multimodal content, multiple choices, log-probability requests and undocumented schema/tool combinations are unsupported. Sampling and required numeric fields reject JSON null; optional `context`, `max_memory` and `threads` treat null as omitted. No request changes a specified context or sampling setting to make it fit.
+Qualified text/image content and its narrower greedy control subset are documented in [IMAGE_API.md](IMAGE_API.md). Multiple choices, log-probability requests and undocumented schema/tool combinations are unsupported. Sampling and required numeric fields reject JSON null; optional `context`, `max_memory` and `threads` treat null as omitted. No request changes a specified context or sampling setting to make it fit.
 
 OpenAI-shaped responses include IDs, object type, creation epoch, model, one choice, finish reason and usage. Chat streaming uses assistant-role/content deltas and a finish chunk. When requested, usage is null on preceding chunks and reported in a separate chunk with empty choices before `data: [DONE]`, following the [official streaming schema](https://developers.openai.com/api/reference/resources/chat/subresources/completions/streaming-events) and [include-usage contract](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create). The legacy completion shape follows the [official completion reference](https://developers.openai.com/api/reference/resources/completions/methods/create).
 
@@ -90,7 +91,7 @@ Defaults are one active generation, eight queued requests, four loaded models, a
 
 There are at most 64 in-flight authenticated HTTP responses, including their streaming-body lifetime. Ordinary generation JSON input is limited to one MiB; session imports have a separate 16 MiB limit; headers to 64 entries/8192 bytes. Token delivery holds at most sixteen events plus a reserved terminal event. JSON-body/upload idle timeout is 30 seconds, queue timeout 30 seconds, consumer backpressure timeout 30 seconds, generation timeout 300 seconds, and model acquisition timeout 600 seconds. Health is public but minimal. JSON client responses/SSE frames are bounded to 16 MiB.
 
-Plan estimates accept optional bounded image dimensions/profile descriptors, perform no URL fetch and return inadmissible/null vision costs until image execution is qualified. No generation endpoint accepts image parts yet.
+Image plans for registered qualified pairs accept task=image-to-text and bounded oriented dimensions, perform no image/URL fetch or weight loading, and report conservative stage costs and admission reasons. Text-only model plans still report images as unsupported; a component filename does not establish multimodal compatibility. [IMAGE_API.md](IMAGE_API.md) defines the image message, planning and security contracts.
 
 Loaded model descriptors, tokenizers and the read-only weight source are shared through `Arc<Model>`. KV, scratch and I/O buffers belong to each session. Weight cursor operations are synchronized. Queued and active requests pin residency; unload returns 409 until pins release. Remove requires explicit unload. A conflicting context reload returns 409 instead of silently changing running settings. SIGINT/SIGTERM cancel queued/active work and begin graceful shutdown; stalled HTTP connections have a bounded drain interval.
 
@@ -112,7 +113,7 @@ Integrated benchmark JSON reports `load_ms` for standalone metadata/tokenizer/st
 
 ## Managed sessions
 
-The separate `/coheryn/v1/sessions` namespace provides owned ephemeral/opt-in durable histories, revision-checked/idempotent turns, isolated bounded prefix-KV reuse and native SSE. Save/export/import and paged inspection use this namespace; persistence requires `serve --session-persistence`. See [SESSIONS.md](SESSIONS.md) for exact supported fields, context policies, CLI commands and resource limits. Existing stateless routes remain independent from managed histories.
+The separate `/coheryn/v1/sessions` namespace provides owned ephemeral/opt-in durable histories, revision-checked/idempotent turns, isolated bounded prefix-KV reuse and native SSE. Save/export/import and paged inspection use this namespace; persistence requires `serve --session-persistence`. See [SESSIONS.md](SESSIONS.md) for exact supported fields, context policies, CLI commands and resource limits. Qualified model-pair histories add original-byte uploads, image references, opt-in restart and cooperative CPU execution through [IMAGE_SESSIONS.md](IMAGE_SESSIONS.md). Existing stateless routes remain independent from managed histories.
 
 ## S4 function-call proposals
 

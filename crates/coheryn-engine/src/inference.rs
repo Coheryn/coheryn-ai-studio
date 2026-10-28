@@ -22,6 +22,7 @@ use std::{
 
 mod batch;
 mod generation;
+pub(crate) mod vlm;
 pub use batch::BatchStep;
 pub use generation::{BATCH_PROFILE, BatchingMetadata, GenerationState};
 
@@ -116,6 +117,8 @@ pub struct TokenEvent {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GenerationResult {
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vision: Option<Box<VisionMetadata>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub batching: Option<Box<BatchingMetadata>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sampling_metadata: Option<Box<SamplingMetadata>>,
@@ -136,6 +139,26 @@ pub struct GenerationResult {
     pub output_delivery_ms: f64,
     pub first_token_ms: Option<f64>,
     pub memory: MemoryStats,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct VisionMetadata {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cooperative: Option<Box<VisionExecution>>,
+    pub profile: String,
+    pub language_sha256: String,
+    pub vision_sha256: String,
+    pub images: usize,
+    pub vision_ms: f64,
+    pub effective_positions: u32,
+    pub peak_request_reserved_bytes: u64,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct VisionExecution {
+    pub profile: String,
+    pub units: u64,
+    pub yields: u64,
+    pub compute_lease_ms: f64,
+    pub waiting_for_compute_ms: f64,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ConstraintValidation {
@@ -201,6 +224,15 @@ pub struct SessionAdmission {
     pub reservation: Reservation,
     pub io_bytes: usize,
     pub execution: ExecutionSettings,
+}
+enum RowInput<'a> {
+    Token(u32),
+    Embedding(&'a [f32]),
+}
+struct ForwardRow<'a> {
+    input: RowInput<'a>,
+    rotary: Option<vlm::RotaryPosition>,
+    logits: bool,
 }
 impl Model {
     pub fn load(path: impl AsRef<Path>, limits: ResourceLimits) -> Result<Self> {
@@ -355,20 +387,56 @@ impl Model {
         token: u32,
         session: &mut Session,
         cancel: &Cancellation,
+        trace: Option<&mut LayerObserver<'_>>,
+    ) -> Result<()> {
+        self.forward_row(
+            ForwardRow {
+                input: RowInput::Token(token),
+                rotary: None,
+                logits: true,
+            },
+            session,
+            cancel,
+            trace,
+        )
+    }
+    fn forward_row(
+        &self,
+        row: ForwardRow<'_>,
+        session: &mut Session,
+        cancel: &Cancellation,
         mut trace: Option<&mut LayerObserver<'_>>,
     ) -> Result<()> {
         cancel.check()?;
         self.storage.unchanged()?;
-        if token as usize >= self.config.vocabulary {
-            return Err(Error::request("token ID outside vocabulary"));
-        }
         if session.position >= session.context {
             return Err(Error::resource("context capacity exhausted"));
         }
+        let ledger_token = match row.input {
+            RowInput::Token(token) => token,
+            RowInput::Embedding(_) => u32::MAX,
+        };
         let c = self.config.clone();
         let s = &mut session.scratch;
         let workspace = &mut session.workspace;
-        self.vector("token_embd.weight", token as usize, &mut s.x, workspace)?;
+        let rotary = row
+            .rotary
+            .map(|position| vlm::RotaryCache::new(c.head_dim, c.rope_base, position))
+            .transpose()?;
+        match row.input {
+            RowInput::Token(token) => {
+                if token as usize >= c.vocabulary {
+                    return Err(Error::request("token ID outside vocabulary"));
+                }
+                self.vector("token_embd.weight", token as usize, &mut s.x, workspace)?;
+            }
+            RowInput::Embedding(values) => {
+                if values.len() != c.hidden || values.iter().any(|v| !v.is_finite()) {
+                    return Err(Error::invalid("invalid projected input embedding"));
+                }
+                s.x.copy_from_slice(values);
+            }
+        }
         for i in 0..c.layers {
             cancel.check()?;
             let prefix = format!("blk.{i}");
@@ -401,10 +469,20 @@ impl Model {
                     *x += b;
                 }
             }
-            cpu::rope(&mut s.q, c.head_dim, session.position, c.rope_base);
-            cpu::rope(&mut s.k, c.head_dim, session.position, c.rope_base);
+            if let Some(rotation) = &rotary {
+                rotation.apply(&mut s.q)?;
+                rotation.apply(&mut s.k)?;
+            } else {
+                cpu::rope(&mut s.q, c.head_dim, session.position, c.rope_base);
+                cpu::rope(&mut s.k, c.head_dim, session.position, c.rope_base);
+            }
             session.keys[i].append(&s.k, session.context, &mut session.buffers)?;
             session.values[i].append(&s.v, session.context, &mut session.buffers)?;
+            // A non-output prompt row needs the final block's K/V, but its final
+            // attention/FFN state cannot affect any later layer or token.
+            if !row.logits && i + 1 == c.layers {
+                break;
+            }
             cpu::attention_rows(
                 &s.q,
                 &session.keys[i].data,
@@ -464,19 +542,21 @@ impl Model {
                 cb(&format!("blk.{i}.output"), &s.x)?;
             }
         }
-        self.vector("output_norm.weight", 0, &mut s.norm_weight, workspace)?;
-        cpu::rms_norm(&s.x, &s.norm_weight, c.norm_epsilon, &mut s.normalized);
-        let output = if self.tensors.contains_key("output.weight") {
-            "output.weight"
-        } else {
-            "token_embd.weight"
-        };
-        self.matvec(output, &s.normalized, &mut s.logits, cancel, workspace)?;
-        if let Some(ref mut cb) = trace {
-            cb("logits", &s.logits)?;
+        if row.logits {
+            self.vector("output_norm.weight", 0, &mut s.norm_weight, workspace)?;
+            cpu::rms_norm(&s.x, &s.norm_weight, c.norm_epsilon, &mut s.normalized);
+            let output = if self.tensors.contains_key("output.weight") {
+                "output.weight"
+            } else {
+                "token_embd.weight"
+            };
+            self.matvec(output, &s.normalized, &mut s.logits, cancel, workspace)?;
+            if let Some(ref mut cb) = trace {
+                cb("logits", &s.logits)?;
+            }
         }
         session.position += 1;
-        session.tokens.push(token);
+        session.tokens.push(ledger_token);
         Ok(())
     }
     /// Teacher-forced full logits and optional intermediate activations for oracle tests.

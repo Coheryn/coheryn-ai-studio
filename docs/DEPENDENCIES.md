@@ -79,3 +79,27 @@ Official registries were rechecked for all 24 directly managed Rust packages and
 ## S6 dependency verification
 
 The official registry refresh again confirms Rust 1.99.1 and all 24 directly managed Rust packages are current; S6 adds no Rust dependency. `fixtures/qualification/s6-dependency-versions.json` preserves the check. Model/reference snapshots and their original legal bytes remain unchanged. Local debug/test verification disables debug symbols and incremental artifacts through Cargo environment overrides to limit rebuild storage after cleanup; production release settings are unchanged.
+
+## M1 image codec dependency — 2026-10-28
+
+`image` **0.25.10** is the latest stable non-yanked release verified from the official registry. Only its PNG/JPEG codec features are enabled; resize, normalization, patch layout, admission and all model execution remain Coheryn-owned. Both lockfiles and the complete legal inventory are refreshed. The 25 direct Rust packages and Rust 1.99.1 are current in `fixtures/qualification/m1-dependency-versions.json`.
+
+Pillow **13.0.0** is used only in the isolated resource assessment environment for independent decoding and resize comparisons. It is not a native dependency or fallback. Original model/reference/license bytes remain unchanged. Development checks continue to disable debug symbols and incremental artifacts locally to limit disk use; release settings are unchanged.
+
+## M0 reference and position qualification
+
+No new Rust dependency is added. Official registries again confirm all 25 direct Rust packages and Rust 1.99.1 are current in `fixtures/qualification/m0-reference-dependency-versions.json`. Isolated assessment-only requirements pin NumPy 2.5.4, Pillow 13.0.0, Jinja2 3.1.6 and MarkupSafe 3.0.4; the independent tool record also verifies CMake 4.4.4 and pip 26.2.2. These packages and corrected reference execution remain outside both Cargo graphs and native CI/runtime. Original numerical inputs are retained; corrected outputs are separate versioned records under unchanged precision criteria.
+
+## M2 native vision component
+
+The native Qwen encoder/merger adds no Rust dependency. `fixtures/qualification/m2-vision-dependency-versions.json` again verifies Rust 1.99.1 and all 25 direct Rust packages against their official stable/non-yanked releases. Existing model/reference snapshots remain pinned. Native math, buffered weights, worker pools and resource accounting reuse Coheryn modules; independent capture tools remain outside production and CI execution.
+
+The offline Qwen language integration adds no Rust dependency. `fixtures/qualification/m2-offline-dependency-versions.json` verifies the same 25 direct stable/non-yanked packages and Rust 1.99.1. The isolated reference metadata correction and independent first-layer array assessment remain outside both Cargo graphs and native CI execution; their original inputs/licenses and prior captures are preserved.
+
+## Product image CLI/API integration
+
+The runtime reuses existing current Rust libraries for HTTP, canonical Base64 and serialization; image execution remains Coheryn-owned. API/CLI development fixtures now also declare the existing `half` 2.7.1 package directly to construct small independently authored F16 components. No new external package enters either lockfile. `fixtures/qualification/m3-service-dependency-versions.json` verifies Rust 1.99.1 and all 25 direct stable/non-yanked Rust package releases against official registries on 2026-10-28. The legal inventory is regenerated for the updated direct development edges while preserving all license and original reference bytes.
+
+## Managed image histories and cooperative scheduling
+
+This checkpoint adds no dependency. Private original assets, canonical portable encoding, history persistence and FIFO checkpoints reuse current workspace libraries and Coheryn numeric/storage code. `fixtures/qualification/m4-session-dependency-versions.json` verifies Rust 1.99.1 and all 25 direct Rust package releases against the official registries. Existing immutable model/reference/license bytes and thresholds are preserved.

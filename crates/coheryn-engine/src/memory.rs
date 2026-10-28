@@ -51,6 +51,11 @@ impl Reservation {
     pub fn bytes(&self) -> u64 {
         self.bytes
     }
+    /// Atomically grow this reservation; failure leaves its held capacity unchanged.
+    pub fn extend(&mut self, bytes: u64) -> Result<()> {
+        let additional = self.budget.reserve(bytes)?;
+        self.absorb(additional)
+    }
     /// Transfer part of an existing atomic reservation without releasing/reacquiring bytes.
     pub fn split(&mut self, bytes: u64) -> Result<Self> {
         if bytes > self.bytes {

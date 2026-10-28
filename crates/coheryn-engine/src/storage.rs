@@ -41,6 +41,13 @@ pub struct Storage {
 }
 impl Storage {
     pub fn open(path: &Path, descriptor: &Descriptor) -> Result<Self> {
+        Self::open_with_limits(path, descriptor, crate::ParseLimits::default())
+    }
+    pub(crate) fn open_with_limits(
+        path: &Path,
+        descriptor: &Descriptor,
+        limits: crate::ParseLimits,
+    ) -> Result<Self> {
         let file = File::open(path)?;
         let meta = file.metadata()?;
         if meta.len() != descriptor.file_bytes {
@@ -52,7 +59,7 @@ impl Storage {
         let current = crate::gguf::parse(
             std::io::BufReader::new(file.try_clone()?),
             meta.len(),
-            crate::ParseLimits::default(),
+            limits,
         )?;
         if current.header_sha256 != descriptor.header_sha256
             || file.metadata()?.modified().ok() != meta.modified().ok()

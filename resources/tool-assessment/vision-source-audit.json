@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "base_revision": "2280f0fd163b03d4331d49e08460f66502e35854",
+  "file_count": 3921,
+  "original_tree_sha256": "1397ac74a5231b3fec503bc3d09774aa3efe61065aa1cd546c7c437861cdb8ca",
+  "corrected_tree_sha256": "6d5c7b5f57acfc5d6ebc9e861fc3339fc959f8b03508d1d2b496c03adada574d",
+  "hash_algorithm": "SHA-256 of compact JSON sorted relative-path to file-SHA256 mapping; build/git/bytecode/OS metadata excluded",
+  "changed_files": [
+    "tools/mtmd/models/llava.cpp"
+  ],
+  "changes_record_sha256": "cd44a2dba7b908b43afb82a94e8c5541b5fb3751b5690a90b730f7e12deb45f6",
+  "source_archive_sha256": "3e64cac314dbb3fa31f91cebf897d32bad2b78cb75460495ff8cf556503f5fdd",
+  "archive_reverified_in_this_run": false,
+  "archive_note": "Original extracted cache and prior archive pin retained; source tree identities are independently reproducible from that pin."
+}

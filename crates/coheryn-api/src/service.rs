@@ -81,12 +81,25 @@ impl Service {
     pub fn model(&self, id: &str) -> Result<Arc<Model>> {
         match self.resident(id)? {
             Resident::Generation(m) => Ok(m),
-            Resident::Embedding(_) => Err(Error::new(
+            Resident::Embedding(_) | Resident::Vision(_) => Err(Error::new(
                 ErrorCode::UnsupportedModelArchitecture,
-                "embedding model cannot perform text generation",
+                "selected model cannot serve text-only generation; image model pairs require chat messages",
             )
             .into()),
         }
+    }
+    pub fn vision(&self, id: &str) -> Result<Arc<coheryn_engine::multimodal::qwen2vl::Qwen2Vl>> {
+        match self.resident(id)? {
+            Resident::Vision(m) => Ok(m),
+            _ => Err(Error::new(
+                ErrorCode::UnsupportedModelArchitecture,
+                "image chat requires a loaded compatible language/vision model pair",
+            )
+            .into()),
+        }
+    }
+    pub fn is_vision(&self, id: &str) -> Result<bool> {
+        Ok(matches!(self.resident(id)?, Resident::Vision(_)))
     }
     pub fn require_tool_model(
         &self,
@@ -105,7 +118,7 @@ impl Service {
     pub fn embedding(&self, id: &str) -> Result<Arc<ResidentEmbedding>> {
         match self.resident(id)? {
             Resident::Embedding(m) => Ok(m),
-            Resident::Generation(_) => Err(Error::new(
+            Resident::Generation(_) | Resident::Vision(_) => Err(Error::new(
                 ErrorCode::UnsupportedModelArchitecture,
                 "generation model cannot perform qualified embedding inference",
             )
@@ -117,7 +130,7 @@ impl Service {
     }
     pub fn status(&self) -> Result<Value> {
         Ok(
-            json!({"stage":"experimental-G4-E2-S6","continuous_batching":true,"batching_profile":"coheryn-cpu-batch-v1","compute_policy":"fifo-token-batch-and-embedding-microbatch","generation_resident_limit":self.scheduler.max_concurrency(),"placement":{"backend":"native-cpu","fallback":"disabled","reason":"CPU is the only qualified execution backend"},"session_limits":self.config.sessions,"session_storage":if self.sessions.persistence_enabled(){"opt-in-embedded"}else{"ephemeral"},"persistence_limits":self.config.persistence,"session_kv_reuse":true,"tool_calling":true,"tool_profiles":["qwen-tools-v1"],"strict_tool_arguments":true,"schema_constraints":true,"constraint_profile":"coheryn-json-v1","strict_tool_mode":"single-required-or-named-no-parallel","sampling_profile":"coheryn-sampling-v2","cache":self.sessions.cache_stats()?,"embedding_limits":self.config.embeddings,"backend":"cpu-reference","scheduler":self.scheduler.counters.snapshot(),"memory":self.budget.stats(),"loaded_models":self.loaded()?,"queue_capacity":self.config.queue_capacity,"active_limit":self.scheduler.max_concurrency()+self.config.embeddings.concurrency,"compute_unit_limit":1,"embedding_phase_limit":self.config.embeddings.concurrency,"configured_active_limit":self.config.max_concurrency,"shutting_down":self.shutdown.is_cancelled()}),
+            json!({"stage":"experimental-G4-E2-S6","continuous_batching":true,"batching_profile":"coheryn-cpu-batch-v1","compute_policy":"fifo-text-token-batch-embedding-microbatch-vision-tile-layer","image_input":true,"vision_limits":self.config.vision,"vision_profile":"qwen2vl-still-f16-cpu-greedy","generation_resident_limit":self.scheduler.max_concurrency(),"placement":{"backend":"native-cpu","fallback":"disabled","reason":"CPU is the only qualified execution backend"},"session_image_assets":self.sessions.image_stats()?,"session_limits":self.config.sessions,"session_storage":if self.sessions.persistence_enabled(){"opt-in-embedded"}else{"ephemeral"},"persistence_limits":self.config.persistence,"session_kv_reuse":true,"tool_calling":true,"tool_profiles":["qwen-tools-v1"],"strict_tool_arguments":true,"schema_constraints":true,"constraint_profile":"coheryn-json-v1","strict_tool_mode":"single-required-or-named-no-parallel","sampling_profile":"coheryn-sampling-v2","cache":self.sessions.cache_stats()?,"embedding_limits":self.config.embeddings,"backend":"cpu-reference","scheduler":self.scheduler.counters.snapshot(),"memory":self.budget.stats(),"loaded_models":self.loaded()?,"queue_capacity":self.config.queue_capacity,"active_limit":2*self.scheduler.max_concurrency()+self.config.embeddings.concurrency,"vision_phase_limit":self.scheduler.max_concurrency(),"compute_unit_limit":1,"embedding_phase_limit":self.config.embeddings.concurrency,"configured_active_limit":self.config.max_concurrency,"shutting_down":self.shutdown.is_cancelled()}),
         )
     }
     pub fn unload(&self, id: &str) -> Result<()> {
@@ -142,6 +155,27 @@ impl Service {
         }
         self.registry.remove(id)
     }
+    pub async fn register_pair(
+        self: &Arc<Self>,
+        id: String,
+        language: String,
+        vision: String,
+    ) -> Result<ModelRecord> {
+        let service = self.clone();
+        tokio::spawn(async move {
+            let _admin = service.admin.lock().await;
+            let record = service.registry.pair_record(&id, &language, &vision)?;
+            let validation_service = service.clone();
+            tokio::task::spawn_blocking(move || -> Result<()> {
+                let _inspection = validation_service.budget.reserve(128 << 20)?;
+                crate::vision_planner::descriptors(&validation_service, &record)?;
+                Ok(())
+            })
+            .await??;
+            service.registry.register_pair(&id, &language, &vision)
+        })
+        .await?
+    }
     pub async fn load(self: &Arc<Self>, id: String, context: usize) -> Result<Value> {
         // The owned task finishes the transaction even if the HTTP caller disconnects.
         let service = self.clone();
@@ -157,7 +191,23 @@ impl Service {
                 }
                 if residents.len()>=service.config.max_loaded_models {return Err(Error::resource("resident model limit reached").into());}
             }
-            let record=service.registry.get(&id)?;let path=service.registry.model_path(&id)?;let budget=service.budget.clone();let max_memory=service.config.max_memory;
+            let record=service.registry.get(&id)?;
+            if let Some(pair) = record.components.clone() {
+                let language = service.registry.model_path(&pair.language.model)?;
+                let vision = service.registry.model_path(&pair.vision.model)?;
+                let budget = service.budget.clone();
+                let limits = ResourceLimits { context, max_memory: service.config.max_memory };
+                let model = tokio::task::spawn_blocking(move || -> Result<_> {
+                    let model = coheryn_engine::multimodal::qwen2vl::Qwen2Vl::load(language, vision, limits, budget, &Default::default())?;
+                    if model.model_identities() != (pair.language.sha256.as_str(), pair.vision.sha256.as_str()) {
+                        return Err(Error::new(ErrorCode::ModelChanged, "model pair SHA-256 mismatch").into());
+                    }
+                    Ok(Resident::Vision(Arc::new(model)))
+                }).await??;
+                service.residents()?.insert(id.clone(), model);
+                return Ok(json!({"model":id,"context":context,"loaded":true,"task":"image-to-text"}));
+            }
+            let path=service.registry.model_path(&id)?;let budget=service.budget.clone();let max_memory=service.config.max_memory;
             let operation=service.budget.reserve(service.parser_limits().max_metadata_allocation)?;
             let max_concurrency=service.scheduler.max_concurrency();
             let model=tokio::task::spawn_blocking(move||->Result<Resident> {
@@ -190,6 +240,13 @@ impl Service {
     pub async fn inspect(self: &Arc<Self>, id: String, deep: bool) -> Result<Value> {
         let _admin = self.admin.lock().await;
         let record = self.registry.get(&id)?;
+        if record.components.is_some() {
+            let service = self.clone();
+            return tokio::task::spawn_blocking(move || {
+                crate::vision_planner::inspect(&service, &record, deep)
+            })
+            .await?;
+        }
         let path = self.registry.model_path(&id)?;
         let limits = self.parser_limits();
         let reservation = self.budget.reserve(limits.max_metadata_allocation)?;
@@ -223,7 +280,7 @@ impl Service {
             images.validate()?;
         }
         let task = request.task.as_deref().unwrap_or("text-generation");
-        if !matches!(task, "text-generation" | "embedding") {
+        if !matches!(task, "text-generation" | "embedding" | "image-to-text") {
             return Err(ApiError::bad("unsupported planning task"));
         }
         let service = self.clone();
@@ -252,6 +309,14 @@ impl Service {
             embedding,
             planner::{self, PlanInput, Profile},
         };
+        if record.components.is_some() {
+            return crate::vision_planner::estimate(self, request, record, loaded.is_some());
+        }
+        if request.task.as_deref() == Some("image-to-text") {
+            return Err(ApiError::bad(
+                "image-to-text planning requires a registered model pair",
+            ));
+        }
         let service = self;
         let profile = Profile::parse(&request.profile)?;
         let (descriptor, inspection_bytes);
@@ -465,6 +530,19 @@ impl Service {
             let d = coheryn_engine::inspect(path, limits)?;
             let report = coheryn_engine::validate(&d);
             if !report.executable {
+                let architecture = d
+                    .metadata
+                    .get("general.architecture")
+                    .and_then(|v| v.string());
+                if architecture == Some("qwen2vl") {
+                    coheryn_engine::multimodal::qwen2vl::language_configuration(&d)?;
+                    coheryn_engine::multimodal::qwen2vl::validate_language_tokenizer(&d)?;
+                    return Ok(());
+                }
+                if architecture == Some("clip") {
+                    coheryn_engine::multimodal::vision::VisionConfig::from_descriptor(&d)?;
+                    return Ok(());
+                }
                 let mut e: ApiError = report.diagnostics[0].clone().into();
                 e.details = Some(json!(report));
                 return Err(e);
@@ -474,6 +552,7 @@ impl Service {
         })
         .await??;
         let record = ModelRecord {
+            components: None,
             schema_version: 1,
             id: name,
             sha256,

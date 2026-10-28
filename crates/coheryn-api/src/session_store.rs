@@ -60,6 +60,12 @@ pub struct SavedTurn {
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ExportDocument {
+    #[serde(
+        default,
+        skip_serializing_if = "Vec::is_empty",
+        deserialize_with = "crate::bounded::sequence::<_,_,16>"
+    )]
+    pub assets: Vec<crate::sessions::ExportImage>,
     pub version: u32,
     pub session: SessionView,
     #[serde(deserialize_with = "crate::bounded::sequence::<_, _, 256>")]
@@ -293,7 +299,12 @@ impl Store {
             return Err(ApiError::bad("unknown or malformed stored history records"));
         }
         Ok(ExportDocument {
-            version: 2,
+            assets: vec![],
+            version: if view.task == crate::sessions::SessionTask::ImageToText {
+                3
+            } else {
+                2
+            },
             session: view,
             messages,
             turns,

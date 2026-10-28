@@ -1,0 +1,5272 @@
+{
+  "schema_version": 2,
+  "scope": "Independent metadata-correct Qwen2-VL language reference; original epsilon-zero records retained as diagnostics. No native qualification.",
+  "reference_revision": "2280f0fd163b03d4331d49e08460f66502e35854",
+  "source_record": "resources/tool-assessment/qwen-language-source-record.json",
+  "source_record_sha256": "73591b04358968c2f686f2ba3fe4d50f1007255e3bcace7779b9e9eaef7ff17b",
+  "capture_source_sha256": "f2acd4d5bf11c032dc9330aae6dd20abe654b1c5bf1cdb997a45fbbce1df0729",
+  "wrapper_source_sha256": "36af814ec719252657bc445d858af4b3f4087b6dc8b2617cf36c6295d392536a",
+  "base_wrapper_sha256": "86e1cef4b8381fa583fa783368b4d791c6400cdfa15c71ff6612fc357501d65d",
+  "binary_sha256": "cd890df3885ec4604d9b294aa8ef673915ddf74768a434a1848af4545cc3a5aa",
+  "original_reference_sha256": "c07a5049c2acb51fa77eb4f0f0804fb1ab08520b108dfd21faeaee000687f8ae",
+  "settings": {
+    "threads": 1,
+    "gpu_layers": 0,
+    "cache_dtype": "f32",
+    "temperature": 0,
+    "seed": 0,
+    "max_tokens": 8,
+    "batch_tokens": 32,
+    "context": {
+      "llava-1.5-7b": 768,
+      "qwen2-vl-2b": 256
+    }
+  },
+  "native_image_understanding_qualified": false,
+  "cases": [
+    {
+      "id": "left-red",
+      "last_prompt_batch": 3,
+      "tensors": [
+        {
+          "name": "batch_3_l_out-0",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 4.246626155,
+          "l2": 7.564752604,
+          "minimum": -1.623033047,
+          "maximum": 5.076931953,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.03423767164
+            },
+            {
+              "index": 1,
+              "value": -0.08841249347
+            },
+            {
+              "index": 12,
+              "value": -0.03252832592
+            },
+            {
+              "index": 24,
+              "value": 0.1458903253
+            }
+          ],
+          "sha256": "7e7ed587970dbea4253e9022b10c268447ccd44e4c41a7d44726be9ed18640b3",
+          "native_checkpoint": "prompt_blk.0.output"
+        },
+        {
+          "name": "batch_3_l_out-1",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 7.497284089,
+          "l2": 9.446296873,
+          "minimum": -2.081170797,
+          "maximum": 6.353876114,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.08453658223
+            },
+            {
+              "index": 1,
+              "value": -0.008467268199
+            },
+            {
+              "index": 12,
+              "value": -0.1191443875
+            },
+            {
+              "index": 24,
+              "value": 0.008210338652
+            }
+          ],
+          "sha256": "649d404891bba64961f32e5ace664e5b7ef9efa9a2c888ef987e3219bcd0e657",
+          "native_checkpoint": "prompt_blk.1.output"
+        },
+        {
+          "name": "batch_3_l_out-2",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 14.09484671,
+          "l2": 13.46440826,
+          "minimum": -2.592943907,
+          "maximum": 9.424178123,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1777387261
+            },
+            {
+              "index": 1,
+              "value": 0.001243636012
+            },
+            {
+              "index": 12,
+              "value": 0.2053962499
+            },
+            {
+              "index": 24,
+              "value": -0.4304675162
+            }
+          ],
+          "sha256": "cc7866f3ce752bd1a845ef3519ddf5caff56025a2cc37b5179674e9c240ee731",
+          "native_checkpoint": "prompt_blk.2.output"
+        },
+        {
+          "name": "batch_3_l_out-3",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 12.51981745,
+          "l2": 14.71351341,
+          "minimum": -3.042562962,
+          "maximum": 10.1647768,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.06505903602
+            },
+            {
+              "index": 1,
+              "value": 0.3031820357
+            },
+            {
+              "index": 12,
+              "value": 0.2563365698
+            },
+            {
+              "index": 24,
+              "value": -0.5141984224
+            }
+          ],
+          "sha256": "2dcba2f93dcd8dae4ab42fe84d42b3b926c4f023f903aaeb0f8d2a9c44c954b9",
+          "native_checkpoint": "prompt_blk.3.output"
+        },
+        {
+          "name": "batch_3_l_out-4",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 15.00308407,
+          "l2": 17.03372771,
+          "minimum": -3.310209036,
+          "maximum": 11.459095,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.01430617273
+            },
+            {
+              "index": 1,
+              "value": 0.2550285161
+            },
+            {
+              "index": 12,
+              "value": 0.2771060467
+            },
+            {
+              "index": 24,
+              "value": -0.5206503272
+            }
+          ],
+          "sha256": "a3361224a4582241de3c9f5d3ed286850f3e1db31271d9740357ca15314f0782",
+          "native_checkpoint": "prompt_blk.4.output"
+        },
+        {
+          "name": "batch_3_l_out-5",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": -4.483326105,
+          "l2": 18.0049509,
+          "minimum": -3.637731075,
+          "maximum": 10.4918251,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.1265683472
+            },
+            {
+              "index": 1,
+              "value": 0.08896102011
+            },
+            {
+              "index": 12,
+              "value": 0.1666004062
+            },
+            {
+              "index": 24,
+              "value": -0.3645831347
+            }
+          ],
+          "sha256": "9a01bd5ec862871acb4fc74333bcaa888389e5a2fb3d6fef2c487eb34fcd1123",
+          "native_checkpoint": "prompt_blk.5.output"
+        },
+        {
+          "name": "batch_3_l_out-6",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 10.88810905,
+          "l2": 23.93663867,
+          "minimum": -4.188872337,
+          "maximum": 15.41037178,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.07204966247
+            },
+            {
+              "index": 1,
+              "value": 0.2507021725
+            },
+            {
+              "index": 12,
+              "value": -0.00658416748
+            },
+            {
+              "index": 24,
+              "value": -0.1323003322
+            }
+          ],
+          "sha256": "1983d096e7e326436f0b7313427c8302579af154b236cff86027e367a4f83095",
+          "native_checkpoint": "prompt_blk.6.output"
+        },
+        {
+          "name": "batch_3_l_out-7",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 29.15237046,
+          "l2": 25.61486601,
+          "minimum": -4.270544529,
+          "maximum": 17.75918388,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1168865263
+            },
+            {
+              "index": 1,
+              "value": 0.5229486227
+            },
+            {
+              "index": 12,
+              "value": -0.2029498965
+            },
+            {
+              "index": 24,
+              "value": -0.08037544787
+            }
+          ],
+          "sha256": "323a77edaa9ad8aa5f43ccc97f062a8ba511e90d2c2d6ca8e71ce7ff83e802c5",
+          "native_checkpoint": "prompt_blk.7.output"
+        },
+        {
+          "name": "batch_3_l_out-8",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 39.65095255,
+          "l2": 24.25391518,
+          "minimum": -4.621757984,
+          "maximum": 17.50488663,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.02512679994
+            },
+            {
+              "index": 1,
+              "value": 0.5191001892
+            },
+            {
+              "index": 12,
+              "value": 0.07581568509
+            },
+            {
+              "index": 24,
+              "value": -0.2380579114
+            }
+          ],
+          "sha256": "cf781cebaf5b99f30ca3e03a0e20d3448dd9d037343e00bf55881229af72a429",
+          "native_checkpoint": "prompt_blk.8.output"
+        },
+        {
+          "name": "batch_3_l_out-9",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 38.38918428,
+          "l2": 23.68019434,
+          "minimum": -4.747067928,
+          "maximum": 17.56186104,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.2273103595
+            },
+            {
+              "index": 1,
+              "value": 0.4736053348
+            },
+            {
+              "index": 12,
+              "value": 0.1344631165
+            },
+            {
+              "index": 24,
+              "value": -0.1327876598
+            }
+          ],
+          "sha256": "f94dc46e81a5cb3436f38f77ca00d3886e4662f025a01ef8e1b74184ccd96056",
+          "native_checkpoint": "prompt_blk.9.output"
+        },
+        {
+          "name": "batch_3_l_out-10",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 22.10975761,
+          "l2": 25.37050418,
+          "minimum": -4.883150578,
+          "maximum": 18.62711143,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.3495103717
+            },
+            {
+              "index": 1,
+              "value": 0.7270198464
+            },
+            {
+              "index": 12,
+              "value": 0.3311095238
+            },
+            {
+              "index": 24,
+              "value": -0.2811562121
+            }
+          ],
+          "sha256": "538d1da79b54c0de371745f6a680626cc5e5b1a1620aaa7c847ccdcad97faa71",
+          "native_checkpoint": "prompt_blk.10.output"
+        },
+        {
+          "name": "batch_3_l_out-11",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 30.35344097,
+          "l2": 28.32234234,
+          "minimum": -5.124256611,
+          "maximum": 20.90217018,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1627104282
+            },
+            {
+              "index": 1,
+              "value": 0.6970009804
+            },
+            {
+              "index": 12,
+              "value": 0.1993427873
+            },
+            {
+              "index": 24,
+              "value": -0.3959582746
+            }
+          ],
+          "sha256": "3a3fb5b8cfc4984ec6e9f7ec81b6573619d38b6aef430e12ab237aa90b5773f9",
+          "native_checkpoint": "prompt_blk.11.output"
+        },
+        {
+          "name": "batch_3_l_out-12",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 49.89614268,
+          "l2": 30.9826265,
+          "minimum": -4.964855194,
+          "maximum": 22.91956139,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.2308135927
+            },
+            {
+              "index": 1,
+              "value": 0.9567140937
+            },
+            {
+              "index": 12,
+              "value": 0.5378257036
+            },
+            {
+              "index": 24,
+              "value": -0.08096055686
+            }
+          ],
+          "sha256": "ed04f925b6642aba8186284763ebb40c0b9b0adb81d129337c32ebd94686addf",
+          "native_checkpoint": "prompt_blk.12.output"
+        },
+        {
+          "name": "batch_3_l_out-13",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 35.30910582,
+          "l2": 30.63229824,
+          "minimum": -5.228982925,
+          "maximum": 22.50374603,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.04462209344
+            },
+            {
+              "index": 1,
+              "value": 1.178346515
+            },
+            {
+              "index": 12,
+              "value": 0.2511340678
+            },
+            {
+              "index": 24,
+              "value": -0.02795675397
+            }
+          ],
+          "sha256": "dd76216da0203822a9772e80f09b33c8fb6f9231e8d41bc0a0b4759eab001d9f",
+          "native_checkpoint": "prompt_blk.13.output"
+        },
+        {
+          "name": "batch_3_l_out-14",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 34.39178444,
+          "l2": 31.81381195,
+          "minimum": -5.142939091,
+          "maximum": 23.30459976,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.3012378812
+            },
+            {
+              "index": 1,
+              "value": 1.382447243
+            },
+            {
+              "index": 12,
+              "value": 0.133190304
+            },
+            {
+              "index": 24,
+              "value": -0.4369944036
+            }
+          ],
+          "sha256": "d003e2c09a1990bc911889deadff0aded705ce9ec675335af47ffe0b8abf6fce",
+          "native_checkpoint": "prompt_blk.14.output"
+        },
+        {
+          "name": "batch_3_l_out-15",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 16.7485928,
+          "l2": 33.45487199,
+          "minimum": -5.061356544,
+          "maximum": 23.70298195,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.201500833
+            },
+            {
+              "index": 1,
+              "value": 1.729346514
+            },
+            {
+              "index": 12,
+              "value": 0.3396704197
+            },
+            {
+              "index": 24,
+              "value": -0.5758168697
+            }
+          ],
+          "sha256": "c1a10932df3649359e40620d66706eb7aea80fdb80be3e74d2f7ee37df4c4c78",
+          "native_checkpoint": "prompt_blk.15.output"
+        },
+        {
+          "name": "batch_3_l_out-16",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 18.21595025,
+          "l2": 37.36964757,
+          "minimum": -4.370100021,
+          "maximum": 26.95105362,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.2512799799
+            },
+            {
+              "index": 1,
+              "value": 2.237140417
+            },
+            {
+              "index": 12,
+              "value": 0.3077718914
+            },
+            {
+              "index": 24,
+              "value": -0.5796135664
+            }
+          ],
+          "sha256": "e1a4c73e8a2c8c7d3e3a4ad936eb87ad1af6dbabe8df6456f106a9cbd45b7ccb",
+          "native_checkpoint": "prompt_blk.16.output"
+        },
+        {
+          "name": "batch_3_l_out-17",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 24.52616332,
+          "l2": 39.59275271,
+          "minimum": -3.924893618,
+          "maximum": 27.29880333,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1713001877
+            },
+            {
+              "index": 1,
+              "value": 2.71091485
+            },
+            {
+              "index": 12,
+              "value": 0.8764967918
+            },
+            {
+              "index": 24,
+              "value": -0.8586422205
+            }
+          ],
+          "sha256": "5311499c4c461591dfa0503c5774508615dcd67a7d090f68fe30393cfe852e74",
+          "native_checkpoint": "prompt_blk.17.output"
+        },
+        {
+          "name": "batch_3_l_out-18",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 20.98553021,
+          "l2": 43.46532492,
+          "minimum": -4.161018372,
+          "maximum": 28.90880013,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.09675756097
+            },
+            {
+              "index": 1,
+              "value": 3.787567377
+            },
+            {
+              "index": 12,
+              "value": 0.8860414624
+            },
+            {
+              "index": 24,
+              "value": -0.7899544239
+            }
+          ],
+          "sha256": "0d99c8b31f42341bc38b39aec7796f2a96fceb2875353e0dfa5fcdaf480c26d9",
+          "native_checkpoint": "prompt_blk.18.output"
+        },
+        {
+          "name": "batch_3_l_out-19",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 28.43944103,
+          "l2": 47.84143437,
+          "minimum": -5.008347034,
+          "maximum": 32.67082596,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1313275993
+            },
+            {
+              "index": 1,
+              "value": 3.644180059
+            },
+            {
+              "index": 12,
+              "value": 0.6962474585
+            },
+            {
+              "index": 24,
+              "value": -0.1203332543
+            }
+          ],
+          "sha256": "5979b98b1c36775d081838d76bf46b47966fdf7441ac0f83e6deb8bb0f2682be",
+          "native_checkpoint": "prompt_blk.19.output"
+        },
+        {
+          "name": "batch_3_l_out-20",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 12.85151165,
+          "l2": 56.8751876,
+          "minimum": -5.966687679,
+          "maximum": 37.74490356,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1471813619
+            },
+            {
+              "index": 1,
+              "value": 4.044086456
+            },
+            {
+              "index": 12,
+              "value": 0.9043380618
+            },
+            {
+              "index": 24,
+              "value": 0.2389667481
+            }
+          ],
+          "sha256": "9c0c1e9bf6359c7fbf17099244b850f5df291e471bc1428f36187f8a61ec2e03",
+          "native_checkpoint": "prompt_blk.20.output"
+        },
+        {
+          "name": "batch_3_l_out-21",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 10.92590006,
+          "l2": 73.82545796,
+          "minimum": -8.374485016,
+          "maximum": 48.76671219,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.4688911438
+            },
+            {
+              "index": 1,
+              "value": 4.55907917
+            },
+            {
+              "index": 12,
+              "value": 1.263979435
+            },
+            {
+              "index": 24,
+              "value": 0.05594590306
+            }
+          ],
+          "sha256": "96a8f4b64817aa130117ebbd05e7dcf30089f6b1cd92aa5b973bfedf093d2d64",
+          "native_checkpoint": "prompt_blk.21.output"
+        },
+        {
+          "name": "batch_3_l_out-22",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": -7.523746138,
+          "l2": 89.45068557,
+          "minimum": -17.60188866,
+          "maximum": 57.05841446,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.4393257499
+            },
+            {
+              "index": 1,
+              "value": 4.110402107
+            },
+            {
+              "index": 12,
+              "value": 2.055082798
+            },
+            {
+              "index": 24,
+              "value": 0.7832894325
+            }
+          ],
+          "sha256": "a4fbdb1b421e82f2f3bd1eba875bad0b5a59078a108fb7eab8f69f504ff1d631",
+          "native_checkpoint": "prompt_blk.22.output"
+        },
+        {
+          "name": "batch_3_l_out-23",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 17.15069002,
+          "l2": 105.8165579,
+          "minimum": -33.68243408,
+          "maximum": 66.69464111,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1349491477
+            },
+            {
+              "index": 1,
+              "value": 4.204504013
+            },
+            {
+              "index": 12,
+              "value": 1.608252406
+            },
+            {
+              "index": 24,
+              "value": 0.3804228604
+            }
+          ],
+          "sha256": "f146a1d97e573a1747cef556faa032d8a3ce7023308ac615fafec4d4a2e9ed44",
+          "native_checkpoint": "prompt_blk.23.output"
+        },
+        {
+          "name": "batch_3_l_out-24",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 6.072411045,
+          "l2": 125.8525986,
+          "minimum": -44.48783493,
+          "maximum": 77.21377563,
+          "samples": [
+            {
+              "index": 0,
+              "value": -1.462462187
+            },
+            {
+              "index": 1,
+              "value": 6.484427452
+            },
+            {
+              "index": 12,
+              "value": 1.689496756
+            },
+            {
+              "index": 24,
+              "value": 0.6769059896
+            }
+          ],
+          "sha256": "2b83e05aa34cedb83b84afdfa7c9a2aa1a6f93f7efbeb09149df3b32d06da859",
+          "native_checkpoint": "prompt_blk.24.output"
+        },
+        {
+          "name": "batch_3_l_out-25",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 53.10707561,
+          "l2": 151.9728964,
+          "minimum": -61.42977524,
+          "maximum": 90.27604675,
+          "samples": [
+            {
+              "index": 0,
+              "value": -1.596215248
+            },
+            {
+              "index": 1,
+              "value": 6.111973763
+            },
+            {
+              "index": 12,
+              "value": 1.917214155
+            },
+            {
+              "index": 24,
+              "value": 1.60090816
+            }
+          ],
+          "sha256": "5e9c423b818ae55ab6857c10869b3535f4892daeaa6d117b0933e703d9f52555",
+          "native_checkpoint": "prompt_blk.25.output"
+        },
+        {
+          "name": "batch_3_l_out-26",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 101.1367372,
+          "l2": 192.1913855,
+          "minimum": -77.98065948,
+          "maximum": 107.318512,
+          "samples": [
+            {
+              "index": 0,
+              "value": -4.392738342
+            },
+            {
+              "index": 1,
+              "value": 6.262870312
+            },
+            {
+              "index": 12,
+              "value": 2.204984426
+            },
+            {
+              "index": 24,
+              "value": 1.707542777
+            }
+          ],
+          "sha256": "925599baff18d616f8743960df795a1c1d89d2cf8270e291f8b400a6ba745450",
+          "native_checkpoint": "prompt_blk.26.output"
+        },
+        {
+          "name": "batch_3_l_out-27",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 135.536368,
+          "l2": 192.830045,
+          "minimum": -89.41230011,
+          "maximum": 55.56602478,
+          "samples": [
+            {
+              "index": 0,
+              "value": -3.263462067
+            },
+            {
+              "index": 1,
+              "value": 9.527551651
+            },
+            {
+              "index": 12,
+              "value": 2.995812416
+            },
+            {
+              "index": 24,
+              "value": 0.5705691576
+            }
+          ],
+          "sha256": "2f1bc20ec93160a8f40f26e7d1e1b80e981f17e6abef1340298e02d70a5cf2c0",
+          "native_checkpoint": "prompt_blk.27.output"
+        }
+      ]
+    },
+    {
+      "id": "explicit-system-eos",
+      "last_prompt_batch": 3,
+      "tensors": [
+        {
+          "name": "batch_3_l_out-0",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 5.436253816,
+          "l2": 7.689057429,
+          "minimum": -1.623260736,
+          "maximum": 5.109207153,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.0169269219
+            },
+            {
+              "index": 1,
+              "value": -0.1040069014
+            },
+            {
+              "index": 12,
+              "value": -0.01843975857
+            },
+            {
+              "index": 24,
+              "value": 0.1491369009
+            }
+          ],
+          "sha256": "157036f8b98dfa4b67154d286962f406d792606db555afbce5cd998a2bb69a90",
+          "native_checkpoint": "prompt_blk.0.output"
+        },
+        {
+          "name": "batch_3_l_out-1",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 6.61520572,
+          "l2": 9.556263867,
+          "minimum": -2.006646156,
+          "maximum": 6.405679226,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.06096824259
+            },
+            {
+              "index": 1,
+              "value": 0.01676185429
+            },
+            {
+              "index": 12,
+              "value": -0.09281879663
+            },
+            {
+              "index": 24,
+              "value": 0.03042534739
+            }
+          ],
+          "sha256": "00bee187f0b291094082d87cfbc8a7124b974ea4dc2c4e8f439f49ecce3bdd51",
+          "native_checkpoint": "prompt_blk.1.output"
+        },
+        {
+          "name": "batch_3_l_out-2",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 14.50727033,
+          "l2": 12.55091439,
+          "minimum": -2.450295687,
+          "maximum": 8.905736923,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.01908170059
+            },
+            {
+              "index": 1,
+              "value": 0.07746041566
+            },
+            {
+              "index": 12,
+              "value": 0.1005393118
+            },
+            {
+              "index": 24,
+              "value": -0.2684660256
+            }
+          ],
+          "sha256": "996e68ab742f34fbaa0949c97fa3048d500978bafe198427a5332b53013e389b",
+          "native_checkpoint": "prompt_blk.2.output"
+        },
+        {
+          "name": "batch_3_l_out-3",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 9.056167898,
+          "l2": 13.78882233,
+          "minimum": -2.911823273,
+          "maximum": 9.515431404,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.1167111546
+            },
+            {
+              "index": 1,
+              "value": 0.184625566
+            },
+            {
+              "index": 12,
+              "value": 0.1945741922
+            },
+            {
+              "index": 24,
+              "value": -0.472720325
+            }
+          ],
+          "sha256": "53484b72194e342b279ece9280fdaf6aeba40fbf5fc3c411a78a76d5f07bafc7",
+          "native_checkpoint": "prompt_blk.3.output"
+        },
+        {
+          "name": "batch_3_l_out-4",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 15.35005195,
+          "l2": 15.94503546,
+          "minimum": -3.257825613,
+          "maximum": 10.64715958,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.0442705676
+            },
+            {
+              "index": 1,
+              "value": 0.02628192306
+            },
+            {
+              "index": 12,
+              "value": 0.1898971498
+            },
+            {
+              "index": 24,
+              "value": -0.307670176
+            }
+          ],
+          "sha256": "6d3bf38dac9ebc1c81968b2357448559d17e21ca83a79a82c81a02ba5fa29ce1",
+          "native_checkpoint": "prompt_blk.4.output"
+        },
+        {
+          "name": "batch_3_l_out-5",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": -6.047981921,
+          "l2": 17.79395587,
+          "minimum": -3.52558279,
+          "maximum": 10.26722622,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.1416049153
+            },
+            {
+              "index": 1,
+              "value": -0.1793652922
+            },
+            {
+              "index": 12,
+              "value": 0.1415229738
+            },
+            {
+              "index": 24,
+              "value": -0.2735909522
+            }
+          ],
+          "sha256": "0c949bd4a5580a99bb851acbaab12a518b26c651d6cec8bb1a833d9b4779109e",
+          "native_checkpoint": "prompt_blk.5.output"
+        },
+        {
+          "name": "batch_3_l_out-6",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 7.183772082,
+          "l2": 22.85663396,
+          "minimum": -4.022108555,
+          "maximum": 14.63951111,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.2568175793
+            },
+            {
+              "index": 1,
+              "value": 0.08262704313
+            },
+            {
+              "index": 12,
+              "value": -0.1060794592
+            },
+            {
+              "index": 24,
+              "value": -0.1868729889
+            }
+          ],
+          "sha256": "7b67fb66bb9e367e2905dd3226133ac3f46e8ffd4239e1ac719aca4bc371ebad",
+          "native_checkpoint": "prompt_blk.6.output"
+        },
+        {
+          "name": "batch_3_l_out-7",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 28.50424264,
+          "l2": 24.83841352,
+          "minimum": -4.207516193,
+          "maximum": 16.66391754,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.1654867232
+            },
+            {
+              "index": 1,
+              "value": 0.4875694811
+            },
+            {
+              "index": 12,
+              "value": -0.1686953306
+            },
+            {
+              "index": 24,
+              "value": -0.1066505685
+            }
+          ],
+          "sha256": "2d71f636f2b078eaf42ec51d0fe6116162d720966ee51d2117a6307bb51bffac",
+          "native_checkpoint": "prompt_blk.7.output"
+        },
+        {
+          "name": "batch_3_l_out-8",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 35.6351504,
+          "l2": 23.84930321,
+          "minimum": -4.442844391,
+          "maximum": 16.46028137,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.01708850265
+            },
+            {
+              "index": 1,
+              "value": 0.477812916
+            },
+            {
+              "index": 12,
+              "value": -0.09011729062
+            },
+            {
+              "index": 24,
+              "value": -0.3582231998
+            }
+          ],
+          "sha256": "e9cc7ae27c3a6d5fed3d114435d4cac87baf2c0059b5410501248f9f82a60ec0",
+          "native_checkpoint": "prompt_blk.8.output"
+        },
+        {
+          "name": "batch_3_l_out-9",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 31.2358761,
+          "l2": 23.28205588,
+          "minimum": -4.534195423,
+          "maximum": 17.0285511,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.03311364353
+            },
+            {
+              "index": 1,
+              "value": 0.3743350804
+            },
+            {
+              "index": 12,
+              "value": 0.1287643164
+            },
+            {
+              "index": 24,
+              "value": -0.1999301612
+            }
+          ],
+          "sha256": "bcb032cde61e235243d7a0f7e801d1c1b89a45e61a9cfc87c3880c4bad2d22fc",
+          "native_checkpoint": "prompt_blk.9.output"
+        },
+        {
+          "name": "batch_3_l_out-10",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 23.29559166,
+          "l2": 24.44970511,
+          "minimum": -4.578271866,
+          "maximum": 17.2364006,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.1515309662
+            },
+            {
+              "index": 1,
+              "value": 0.8069671988
+            },
+            {
+              "index": 12,
+              "value": 0.3371791244
+            },
+            {
+              "index": 24,
+              "value": -0.5426141024
+            }
+          ],
+          "sha256": "31e4fc1de23b568f6cb3faee6b0df375793d96ee6a27b668753d217c197cb8dd",
+          "native_checkpoint": "prompt_blk.10.output"
+        },
+        {
+          "name": "batch_3_l_out-11",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 31.40919108,
+          "l2": 26.75483826,
+          "minimum": -4.868873119,
+          "maximum": 19.2775383,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1942058057
+            },
+            {
+              "index": 1,
+              "value": 0.9328299165
+            },
+            {
+              "index": 12,
+              "value": 0.2794110179
+            },
+            {
+              "index": 24,
+              "value": -0.6256892085
+            }
+          ],
+          "sha256": "7f6a1266a785ee0d701ed054a9c7034ca7511a8273b3d4286099eba884b67e43",
+          "native_checkpoint": "prompt_blk.11.output"
+        },
+        {
+          "name": "batch_3_l_out-12",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 38.87134902,
+          "l2": 30.65709367,
+          "minimum": -4.428207397,
+          "maximum": 22.6035347,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.2413686365
+            },
+            {
+              "index": 1,
+              "value": 1.48682642
+            },
+            {
+              "index": 12,
+              "value": 0.1959189177
+            },
+            {
+              "index": 24,
+              "value": -0.2761158347
+            }
+          ],
+          "sha256": "af9b4992e3b30d520f4555e86e76d71dd0e67951fad0453ddee55591c2661dd5",
+          "native_checkpoint": "prompt_blk.12.output"
+        },
+        {
+          "name": "batch_3_l_out-13",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 40.49561321,
+          "l2": 29.3976403,
+          "minimum": -4.54050827,
+          "maximum": 20.92540359,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.3627862334
+            },
+            {
+              "index": 1,
+              "value": 1.670104027
+            },
+            {
+              "index": 12,
+              "value": 0.01556844637
+            },
+            {
+              "index": 24,
+              "value": -0.2983314991
+            }
+          ],
+          "sha256": "753e6e6eaf343ba5063d47c165551c8e245850a78dbd4e3844bb75c83da998cf",
+          "native_checkpoint": "prompt_blk.13.output"
+        },
+        {
+          "name": "batch_3_l_out-14",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 45.45335649,
+          "l2": 30.67151662,
+          "minimum": -4.836998463,
+          "maximum": 21.34335327,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.3521065712
+            },
+            {
+              "index": 1,
+              "value": 1.878432035
+            },
+            {
+              "index": 12,
+              "value": -0.09868182242
+            },
+            {
+              "index": 24,
+              "value": -0.5811029673
+            }
+          ],
+          "sha256": "1a99c1f27563bbf2b07ab7e6a4d7b6742aebbb275a3642f57459130e0e3d41b8",
+          "native_checkpoint": "prompt_blk.14.output"
+        },
+        {
+          "name": "batch_3_l_out-15",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 25.22848401,
+          "l2": 33.0940833,
+          "minimum": -4.742519379,
+          "maximum": 22.16999245,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.0201587975
+            },
+            {
+              "index": 1,
+              "value": 2.65049386
+            },
+            {
+              "index": 12,
+              "value": 0.2142515182
+            },
+            {
+              "index": 24,
+              "value": -0.8337852955
+            }
+          ],
+          "sha256": "cb8b544102e67f80dc47072e62ee65c028935c5b0e5566eb365b85ec4b990a77",
+          "native_checkpoint": "prompt_blk.15.output"
+        },
+        {
+          "name": "batch_3_l_out-16",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 19.02142127,
+          "l2": 36.25728717,
+          "minimum": -5.507891178,
+          "maximum": 24.38628197,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.2517983615
+            },
+            {
+              "index": 1,
+              "value": 2.988962889
+            },
+            {
+              "index": 12,
+              "value": -0.1346995831
+            },
+            {
+              "index": 24,
+              "value": -0.4949621558
+            }
+          ],
+          "sha256": "8cc9ffce188c180a8053a34cee463dedf66864f3d2bc62c5b5411605773f6c81",
+          "native_checkpoint": "prompt_blk.16.output"
+        },
+        {
+          "name": "batch_3_l_out-17",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 19.81296476,
+          "l2": 42.76457837,
+          "minimum": -5.204147339,
+          "maximum": 26.76921082,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1768813878
+            },
+            {
+              "index": 1,
+              "value": 3.7265625
+            },
+            {
+              "index": 12,
+              "value": -0.2352528572
+            },
+            {
+              "index": 24,
+              "value": -0.9533230662
+            }
+          ],
+          "sha256": "1433912089da07cde21f29853b527c2b35b7e5848d93b25e4d8a54ede627b639",
+          "native_checkpoint": "prompt_blk.17.output"
+        },
+        {
+          "name": "batch_3_l_out-18",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 28.67061031,
+          "l2": 45.43634342,
+          "minimum": -5.442893028,
+          "maximum": 29.32930183,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.8089160919
+            },
+            {
+              "index": 1,
+              "value": 4.680482864
+            },
+            {
+              "index": 12,
+              "value": -8.148793131e-05
+            },
+            {
+              "index": 24,
+              "value": -0.549015522
+            }
+          ],
+          "sha256": "0deb6af44098510ea9b50cf5439b74ccdcb309c64e5b0c01d83c7fe920f0f268",
+          "native_checkpoint": "prompt_blk.18.output"
+        },
+        {
+          "name": "batch_3_l_out-19",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 24.84111625,
+          "l2": 50.59559488,
+          "minimum": -5.282331467,
+          "maximum": 31.99342346,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.8484342098
+            },
+            {
+              "index": 1,
+              "value": 4.771846294
+            },
+            {
+              "index": 12,
+              "value": -0.2365906835
+            },
+            {
+              "index": 24,
+              "value": -0.4894116223
+            }
+          ],
+          "sha256": "69527c7c41c48faccf58541c1117359a241103b8407f9eb90bdd9e6273b376ff",
+          "native_checkpoint": "prompt_blk.19.output"
+        },
+        {
+          "name": "batch_3_l_out-20",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 21.10357456,
+          "l2": 64.09032061,
+          "minimum": -6.105853081,
+          "maximum": 40.02529526,
+          "samples": [
+            {
+              "index": 0,
+              "value": -1.175541878
+            },
+            {
+              "index": 1,
+              "value": 5.964259148
+            },
+            {
+              "index": 12,
+              "value": -0.2425099611
+            },
+            {
+              "index": 24,
+              "value": -0.1674659252
+            }
+          ],
+          "sha256": "f0c6dc73f15de6525a06c17765c4c116fa3491badcffd2c49a0344d837b68791",
+          "native_checkpoint": "prompt_blk.20.output"
+        },
+        {
+          "name": "batch_3_l_out-21",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 45.60172984,
+          "l2": 77.75239047,
+          "minimum": -10.65120411,
+          "maximum": 51.96603775,
+          "samples": [
+            {
+              "index": 0,
+              "value": -1.860562325
+            },
+            {
+              "index": 1,
+              "value": 7.488796234
+            },
+            {
+              "index": 12,
+              "value": -0.4521948099
+            },
+            {
+              "index": 24,
+              "value": -1.092931986
+            }
+          ],
+          "sha256": "fb11dbc726b8b6604401b4ea3eb8cdf850bdc73127ea222e12fcf328ac3bca50",
+          "native_checkpoint": "prompt_blk.21.output"
+        },
+        {
+          "name": "batch_3_l_out-22",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 8.274319889,
+          "l2": 98.65769239,
+          "minimum": -28.85683441,
+          "maximum": 62.27747726,
+          "samples": [
+            {
+              "index": 0,
+              "value": -2.514476538
+            },
+            {
+              "index": 1,
+              "value": 7.690606594
+            },
+            {
+              "index": 12,
+              "value": -0.09557700157
+            },
+            {
+              "index": 24,
+              "value": -1.110725045
+            }
+          ],
+          "sha256": "4344ccac19dc3a8d9059f56af6e7802bb3a0c2ba680982de051e75270ffd1cb1",
+          "native_checkpoint": "prompt_blk.22.output"
+        },
+        {
+          "name": "batch_3_l_out-23",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 27.7694211,
+          "l2": 117.043301,
+          "minimum": -47.46781921,
+          "maximum": 75.88171387,
+          "samples": [
+            {
+              "index": 0,
+              "value": -2.51172924
+            },
+            {
+              "index": 1,
+              "value": 8.181219101
+            },
+            {
+              "index": 12,
+              "value": -0.3151942492
+            },
+            {
+              "index": 24,
+              "value": -0.4125938416
+            }
+          ],
+          "sha256": "c4e1eca4a37e59fbaf687f9c8024df614830cb0fbbfb69c36b636cf0801d71af",
+          "native_checkpoint": "prompt_blk.23.output"
+        },
+        {
+          "name": "batch_3_l_out-24",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 26.80598497,
+          "l2": 136.0326722,
+          "minimum": -57.55264282,
+          "maximum": 86.48791504,
+          "samples": [
+            {
+              "index": 0,
+              "value": -3.469419956
+            },
+            {
+              "index": 1,
+              "value": 9.299533844
+            },
+            {
+              "index": 12,
+              "value": -0.05520451069
+            },
+            {
+              "index": 24,
+              "value": -0.3836387992
+            }
+          ],
+          "sha256": "e9f818484f17bb1f7a445a0dc92b08dcd086ec1ee47a88f188507392048b5707",
+          "native_checkpoint": "prompt_blk.24.output"
+        },
+        {
+          "name": "batch_3_l_out-25",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 94.60850691,
+          "l2": 164.2401883,
+          "minimum": -78.64227295,
+          "maximum": 98.55622864,
+          "samples": [
+            {
+              "index": 0,
+              "value": -4.858823776
+            },
+            {
+              "index": 1,
+              "value": 10.26765633
+            },
+            {
+              "index": 12,
+              "value": -0.2463950962
+            },
+            {
+              "index": 24,
+              "value": 0.3774189949
+            }
+          ],
+          "sha256": "43241ad29883582d239a3f2d3e92a5cc98633392a555854cbcd0f5746c46cc2c",
+          "native_checkpoint": "prompt_blk.25.output"
+        },
+        {
+          "name": "batch_3_l_out-26",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 33.59433338,
+          "l2": 202.1151066,
+          "minimum": -98.1600647,
+          "maximum": 107.3073807,
+          "samples": [
+            {
+              "index": 0,
+              "value": -6.160630703
+            },
+            {
+              "index": 1,
+              "value": 9.899131775
+            },
+            {
+              "index": 12,
+              "value": 0.391797483
+            },
+            {
+              "index": 24,
+              "value": 0.1479236931
+            }
+          ],
+          "sha256": "06fc3255542e1ef2da73418c48d4099e14a1cf75d2b29834a2e59f0cbfd8a51a",
+          "native_checkpoint": "prompt_blk.26.output"
+        },
+        {
+          "name": "batch_3_l_out-27",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 47.09619072,
+          "l2": 233.3195708,
+          "minimum": -108.007782,
+          "maximum": 76.50769806,
+          "samples": [
+            {
+              "index": 0,
+              "value": -8.688694
+            },
+            {
+              "index": 1,
+              "value": 16.93566132
+            },
+            {
+              "index": 12,
+              "value": 0.2879245877
+            },
+            {
+              "index": 24,
+              "value": 0.6884162426
+            }
+          ],
+          "sha256": "b91d3c3b107a7e0ca7081911f5d696cda51ab1e266955b93804b8b37aaf92683",
+          "native_checkpoint": "prompt_blk.27.output"
+        }
+      ]
+    },
+    {
+      "id": "left-blue",
+      "last_prompt_batch": 3,
+      "tensors": [
+        {
+          "name": "batch_3_l_out-0",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 4.253405631,
+          "l2": 7.562997511,
+          "minimum": -1.623685241,
+          "maximum": 5.075063705,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.03516710177
+            },
+            {
+              "index": 1,
+              "value": -0.08853910863
+            },
+            {
+              "index": 12,
+              "value": -0.0331036672
+            },
+            {
+              "index": 24,
+              "value": 0.1459049433
+            }
+          ],
+          "sha256": "6c02a6df85f81a8b6291b789dd13531001b8ab4c69f894b4219631db4df19bbc",
+          "native_checkpoint": "prompt_blk.0.output"
+        },
+        {
+          "name": "batch_3_l_out-1",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 7.554960315,
+          "l2": 9.444260419,
+          "minimum": -2.081280947,
+          "maximum": 6.355912685,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.08352075517
+            },
+            {
+              "index": 1,
+              "value": -0.007522836328
+            },
+            {
+              "index": 12,
+              "value": -0.1192361563
+            },
+            {
+              "index": 24,
+              "value": 0.008234031498
+            }
+          ],
+          "sha256": "f13acec3a81955830a3a1599a2572d86fbb376ddc6fd5b638d5a330c424f85b7",
+          "native_checkpoint": "prompt_blk.1.output"
+        },
+        {
+          "name": "batch_3_l_out-2",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 14.15225954,
+          "l2": 13.45407243,
+          "minimum": -2.595367432,
+          "maximum": 9.41488266,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1750904024
+            },
+            {
+              "index": 1,
+              "value": 0.001347512007
+            },
+            {
+              "index": 12,
+              "value": 0.2023494542
+            },
+            {
+              "index": 24,
+              "value": -0.4287176132
+            }
+          ],
+          "sha256": "504b5c911d9d15876c68b6ef0f156d19f8637a7c56beac2e3c354ff141feb7e5",
+          "native_checkpoint": "prompt_blk.2.output"
+        },
+        {
+          "name": "batch_3_l_out-3",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 12.57671249,
+          "l2": 14.72353167,
+          "minimum": -3.047573805,
+          "maximum": 10.16851234,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.06642059982
+            },
+            {
+              "index": 1,
+              "value": 0.3021931052
+            },
+            {
+              "index": 12,
+              "value": 0.2541251779
+            },
+            {
+              "index": 24,
+              "value": -0.5165140629
+            }
+          ],
+          "sha256": "7aa1347dfa7f588ea49623a5120ccf10f5a116d2fc1c16469665256441db4b18",
+          "native_checkpoint": "prompt_blk.3.output"
+        },
+        {
+          "name": "batch_3_l_out-4",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 15.01223368,
+          "l2": 17.06375159,
+          "minimum": -3.309505701,
+          "maximum": 11.47743511,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.008640855551
+            },
+            {
+              "index": 1,
+              "value": 0.2554034889
+            },
+            {
+              "index": 12,
+              "value": 0.2758744359
+            },
+            {
+              "index": 24,
+              "value": -0.5135442019
+            }
+          ],
+          "sha256": "6e1f81d395ed7d85bd45e64bba3ce1e45eb536fa42bc1993be45d5d661cdf90f",
+          "native_checkpoint": "prompt_blk.4.output"
+        },
+        {
+          "name": "batch_3_l_out-5",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": -4.454292423,
+          "l2": 18.00896137,
+          "minimum": -3.629433393,
+          "maximum": 10.51711845,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.143489182
+            },
+            {
+              "index": 1,
+              "value": 0.1024008542
+            },
+            {
+              "index": 12,
+              "value": 0.1620992124
+            },
+            {
+              "index": 24,
+              "value": -0.3509415984
+            }
+          ],
+          "sha256": "47ebf40d34b8b32bfe5ade1b17195306a01bedf53625105ffc180e373daf59f9",
+          "native_checkpoint": "prompt_blk.5.output"
+        },
+        {
+          "name": "batch_3_l_out-6",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 10.69243762,
+          "l2": 23.89197776,
+          "minimum": -4.179297447,
+          "maximum": 15.42088985,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.06929978728
+            },
+            {
+              "index": 1,
+              "value": 0.2592655122
+            },
+            {
+              "index": 12,
+              "value": -0.003863215446
+            },
+            {
+              "index": 24,
+              "value": -0.09468854964
+            }
+          ],
+          "sha256": "9a46f0f9d735dd82e52f209b2cd76cb69610bcac65e96ca6f94b0c3c6eebfe9f",
+          "native_checkpoint": "prompt_blk.6.output"
+        },
+        {
+          "name": "batch_3_l_out-7",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 29.50688872,
+          "l2": 25.5818049,
+          "minimum": -4.268344402,
+          "maximum": 17.7343502,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1233346984
+            },
+            {
+              "index": 1,
+              "value": 0.5105965734
+            },
+            {
+              "index": 12,
+              "value": -0.1980267316
+            },
+            {
+              "index": 24,
+              "value": -0.07031275332
+            }
+          ],
+          "sha256": "dfd37df4cd18c997b73c5ef797dbc14b95644c7ac3060bd4f2f4a84ecd91760a",
+          "native_checkpoint": "prompt_blk.7.output"
+        },
+        {
+          "name": "batch_3_l_out-8",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 40.26274075,
+          "l2": 24.2368946,
+          "minimum": -4.624399185,
+          "maximum": 17.47892189,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.03163679689
+            },
+            {
+              "index": 1,
+              "value": 0.5082258582
+            },
+            {
+              "index": 12,
+              "value": 0.07174667716
+            },
+            {
+              "index": 24,
+              "value": -0.2327251136
+            }
+          ],
+          "sha256": "a568128ab20711552e04118abc0cbf4c967bdecf89ea8ad2331309ff79f2c4a0",
+          "native_checkpoint": "prompt_blk.8.output"
+        },
+        {
+          "name": "batch_3_l_out-9",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 39.06074957,
+          "l2": 23.66254306,
+          "minimum": -4.751004696,
+          "maximum": 17.52487373,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.2363761067
+            },
+            {
+              "index": 1,
+              "value": 0.4678646922
+            },
+            {
+              "index": 12,
+              "value": 0.1330471933
+            },
+            {
+              "index": 24,
+              "value": -0.1364540607
+            }
+          ],
+          "sha256": "3e22d454ef2d21a8bcc508a193f2ace3260aaa5687b6b7d7015a5f27dde7483d",
+          "native_checkpoint": "prompt_blk.9.output"
+        },
+        {
+          "name": "batch_3_l_out-10",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 22.3815725,
+          "l2": 25.3720295,
+          "minimum": -4.880527973,
+          "maximum": 18.59613419,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.3508452177
+            },
+            {
+              "index": 1,
+              "value": 0.7342252135
+            },
+            {
+              "index": 12,
+              "value": 0.3376374245
+            },
+            {
+              "index": 24,
+              "value": -0.2807751
+            }
+          ],
+          "sha256": "b746ad5e74c50911893814c51d71c1e3851495435dbc8035a6d59e22ed7f0f8c",
+          "native_checkpoint": "prompt_blk.10.output"
+        },
+        {
+          "name": "batch_3_l_out-11",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 30.17127138,
+          "l2": 28.26755213,
+          "minimum": -5.127279758,
+          "maximum": 20.80953979,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1563178301
+            },
+            {
+              "index": 1,
+              "value": 0.7022538185
+            },
+            {
+              "index": 12,
+              "value": 0.2075695693
+            },
+            {
+              "index": 24,
+              "value": -0.4004912376
+            }
+          ],
+          "sha256": "127aedb35d58664e40dc383cc84404070b8947686016a36d5c2682f254975321",
+          "native_checkpoint": "prompt_blk.11.output"
+        },
+        {
+          "name": "batch_3_l_out-12",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 49.35575091,
+          "l2": 30.95880467,
+          "minimum": -4.951708794,
+          "maximum": 22.86303329,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.2518801391
+            },
+            {
+              "index": 1,
+              "value": 0.9366642237
+            },
+            {
+              "index": 12,
+              "value": 0.5060111284
+            },
+            {
+              "index": 24,
+              "value": -0.08522602916
+            }
+          ],
+          "sha256": "bbe095f5ef5113e2e479038ee7710df630c561e19a411f9ffe691871ba93fb43",
+          "native_checkpoint": "prompt_blk.12.output"
+        },
+        {
+          "name": "batch_3_l_out-13",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 35.25161749,
+          "l2": 30.50032643,
+          "minimum": -5.214447975,
+          "maximum": 22.32578278,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.04222989082
+            },
+            {
+              "index": 1,
+              "value": 1.179880619
+            },
+            {
+              "index": 12,
+              "value": 0.2235429287
+            },
+            {
+              "index": 24,
+              "value": -0.04883858562
+            }
+          ],
+          "sha256": "2ed58cbdc8e8066110067bbb5ac74b90c5a4a88e8c1c025baa52881eb8d7f07d",
+          "native_checkpoint": "prompt_blk.13.output"
+        },
+        {
+          "name": "batch_3_l_out-14",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 34.75389212,
+          "l2": 31.75446404,
+          "minimum": -5.112692833,
+          "maximum": 23.23527718,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.2904221416
+            },
+            {
+              "index": 1,
+              "value": 1.366699576
+            },
+            {
+              "index": 12,
+              "value": 0.07049998641
+            },
+            {
+              "index": 24,
+              "value": -0.4431621134
+            }
+          ],
+          "sha256": "cc9961ceb010ce3f8cdc051f901ad2f012c20c2f48da79bc2d6d1fec9ff95c53",
+          "native_checkpoint": "prompt_blk.14.output"
+        },
+        {
+          "name": "batch_3_l_out-15",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 16.21553893,
+          "l2": 33.45640264,
+          "minimum": -5.025903702,
+          "maximum": 23.70148468,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.2553848028
+            },
+            {
+              "index": 1,
+              "value": 1.708801508
+            },
+            {
+              "index": 12,
+              "value": 0.2610497475
+            },
+            {
+              "index": 24,
+              "value": -0.6598879099
+            }
+          ],
+          "sha256": "64ac31df6d86ad844a851ffeff5c00a0e6ceaf5e775ddc20daa05652bcdbd394",
+          "native_checkpoint": "prompt_blk.15.output"
+        },
+        {
+          "name": "batch_3_l_out-16",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 18.56743627,
+          "l2": 37.07316103,
+          "minimum": -4.346664906,
+          "maximum": 26.70056534,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.3094338179
+            },
+            {
+              "index": 1,
+              "value": 2.128009081
+            },
+            {
+              "index": 12,
+              "value": 0.2093709111
+            },
+            {
+              "index": 24,
+              "value": -0.677285254
+            }
+          ],
+          "sha256": "ff0dec6cd1e576187c5d42f6c29aa8665a750b722e9e3f419ba7e3fdd7d43bcf",
+          "native_checkpoint": "prompt_blk.16.output"
+        },
+        {
+          "name": "batch_3_l_out-17",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 24.98050359,
+          "l2": 39.01331266,
+          "minimum": -4.021118164,
+          "maximum": 27.04849243,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1504194438
+            },
+            {
+              "index": 1,
+              "value": 2.48186636
+            },
+            {
+              "index": 12,
+              "value": 0.7876067758
+            },
+            {
+              "index": 24,
+              "value": -0.9650367498
+            }
+          ],
+          "sha256": "99d39ac451909b5f99166bfb0e8c1c0721680a918c3d804bbd58fa563ad0bea2",
+          "native_checkpoint": "prompt_blk.17.output"
+        },
+        {
+          "name": "batch_3_l_out-18",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 21.39977212,
+          "l2": 42.75808734,
+          "minimum": -4.140642166,
+          "maximum": 28.51412773,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1230764985
+            },
+            {
+              "index": 1,
+              "value": 3.521642923
+            },
+            {
+              "index": 12,
+              "value": 0.8368804455
+            },
+            {
+              "index": 24,
+              "value": -0.9362894297
+            }
+          ],
+          "sha256": "16e785f4f643127f6958ece849c060fbe9d069c4ce9c2efc8e8199aa583dee55",
+          "native_checkpoint": "prompt_blk.18.output"
+        },
+        {
+          "name": "batch_3_l_out-19",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 28.00996395,
+          "l2": 47.47554309,
+          "minimum": -5.052824497,
+          "maximum": 32.60520935,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.103854388
+            },
+            {
+              "index": 1,
+              "value": 3.389291286
+            },
+            {
+              "index": 12,
+              "value": 0.5330206156
+            },
+            {
+              "index": 24,
+              "value": -0.3392758667
+            }
+          ],
+          "sha256": "38008cb0b0ee7e1df74c4c15ead6a768374eea83f2f9bcf474d3d23a9d970a2e",
+          "native_checkpoint": "prompt_blk.19.output"
+        },
+        {
+          "name": "batch_3_l_out-20",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 14.98524414,
+          "l2": 56.60093677,
+          "minimum": -6.08741045,
+          "maximum": 37.74674606,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.1234204173
+            },
+            {
+              "index": 1,
+              "value": 3.670260906
+            },
+            {
+              "index": 12,
+              "value": 0.7428265214
+            },
+            {
+              "index": 24,
+              "value": -0.04415366054
+            }
+          ],
+          "sha256": "2ad2a286e23c6b4d171735749557c9559a343132144ee812aacf71fff6af8492",
+          "native_checkpoint": "prompt_blk.20.output"
+        },
+        {
+          "name": "batch_3_l_out-21",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 6.796700682,
+          "l2": 74.02354418,
+          "minimum": -8.654603958,
+          "maximum": 49.33601761,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1139333695
+            },
+            {
+              "index": 1,
+              "value": 4.10191679
+            },
+            {
+              "index": 12,
+              "value": 0.9821788073
+            },
+            {
+              "index": 24,
+              "value": -0.6125183702
+            }
+          ],
+          "sha256": "c0eef1599184c6779441a40e124228a763a2d5bee3801696fb524c8926001952",
+          "native_checkpoint": "prompt_blk.21.output"
+        },
+        {
+          "name": "batch_3_l_out-22",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": -19.93008668,
+          "l2": 89.14425581,
+          "minimum": -18.82313919,
+          "maximum": 58.76860809,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.6575403214
+            },
+            {
+              "index": 1,
+              "value": 3.626076937
+            },
+            {
+              "index": 12,
+              "value": 1.327310681
+            },
+            {
+              "index": 24,
+              "value": -0.9627515078
+            }
+          ],
+          "sha256": "621cc7fd615352a68fab4e368f01dabb33348a7f161fce049aa6c7f46c98c2a6",
+          "native_checkpoint": "prompt_blk.22.output"
+        },
+        {
+          "name": "batch_3_l_out-23",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 7.163592333,
+          "l2": 106.3883589,
+          "minimum": -34.47241211,
+          "maximum": 68.49139404,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.1956192404
+            },
+            {
+              "index": 1,
+              "value": 3.484013796
+            },
+            {
+              "index": 12,
+              "value": 0.7534289956
+            },
+            {
+              "index": 24,
+              "value": -1.0418365
+            }
+          ],
+          "sha256": "36dd2d637e8d1747f1532f0f6dce4e0234e4853d6358b640e27e632889ed3e75",
+          "native_checkpoint": "prompt_blk.23.output"
+        },
+        {
+          "name": "batch_3_l_out-24",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": -8.318897381,
+          "l2": 125.7997163,
+          "minimum": -44.37030792,
+          "maximum": 77.76216888,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.8136659861
+            },
+            {
+              "index": 1,
+              "value": 5.541307449
+            },
+            {
+              "index": 12,
+              "value": 0.8422862887
+            },
+            {
+              "index": 24,
+              "value": -0.920203805
+            }
+          ],
+          "sha256": "4df88a21c25bb5e7de1fc989648555e684c0583d4d05ee180392533f25e07101",
+          "native_checkpoint": "prompt_blk.24.output"
+        },
+        {
+          "name": "batch_3_l_out-25",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 32.8050128,
+          "l2": 150.794627,
+          "minimum": -60.97345734,
+          "maximum": 88.72316742,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.9949508905
+            },
+            {
+              "index": 1,
+              "value": 4.997381687
+            },
+            {
+              "index": 12,
+              "value": 0.7270508409
+            },
+            {
+              "index": 24,
+              "value": 0.1314669251
+            }
+          ],
+          "sha256": "d25e2927f4e5f7c9eb95575c191b97e7c22e984c5d375da6be07d699f61a7251",
+          "native_checkpoint": "prompt_blk.25.output"
+        },
+        {
+          "name": "batch_3_l_out-26",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 63.05240868,
+          "l2": 191.4146406,
+          "minimum": -77.07953644,
+          "maximum": 105.9403992,
+          "samples": [
+            {
+              "index": 0,
+              "value": -3.64487052
+            },
+            {
+              "index": 1,
+              "value": 4.477829933
+            },
+            {
+              "index": 12,
+              "value": 0.1840395629
+            },
+            {
+              "index": 24,
+              "value": -0.4494299889
+            }
+          ],
+          "sha256": "0e63cb1842b960900fdcdb7078f3b85491f5707fde3a728665acbf591dc5d814",
+          "native_checkpoint": "prompt_blk.26.output"
+        },
+        {
+          "name": "batch_3_l_out-27",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 96.56026323,
+          "l2": 194.3252399,
+          "minimum": -89.36465454,
+          "maximum": 54.81170273,
+          "samples": [
+            {
+              "index": 0,
+              "value": -1.979886532
+            },
+            {
+              "index": 1,
+              "value": 7.384931087
+            },
+            {
+              "index": 12,
+              "value": 0.0497809127
+            },
+            {
+              "index": 24,
+              "value": -1.314535379
+            }
+          ],
+          "sha256": "233d4138574adb43cbd4a3186d6d31b44e83281b11659cfb03c4a462adb927fd",
+          "native_checkpoint": "prompt_blk.27.output"
+        }
+      ]
+    },
+    {
+      "id": "ordered-images",
+      "last_prompt_batch": 5,
+      "tensors": [
+        {
+          "name": "batch_5_l_out-0",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 5.271440622,
+          "l2": 7.573485704,
+          "minimum": -1.637798667,
+          "maximum": 5.05038166,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.04078614339
+            },
+            {
+              "index": 1,
+              "value": -0.08290241659
+            },
+            {
+              "index": 12,
+              "value": -0.01334441081
+            },
+            {
+              "index": 24,
+              "value": 0.1448365301
+            }
+          ],
+          "sha256": "4153c0705990991fbc8f396b46e58aac64c2b6fe35dff4680541d7bcbf2cbd93",
+          "native_checkpoint": "prompt_blk.0.output"
+        },
+        {
+          "name": "batch_5_l_out-1",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 7.897670143,
+          "l2": 9.562614939,
+          "minimum": -2.132555008,
+          "maximum": 6.434770107,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.06257212907
+            },
+            {
+              "index": 1,
+              "value": -0.03081426397
+            },
+            {
+              "index": 12,
+              "value": -0.1026584432
+            },
+            {
+              "index": 24,
+              "value": 0.02227959037
+            }
+          ],
+          "sha256": "e110cff974e0ed3a81c0ec7154fc2a44080cc56c688b1a139914132d9b478065",
+          "native_checkpoint": "prompt_blk.1.output"
+        },
+        {
+          "name": "batch_5_l_out-2",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 16.26528999,
+          "l2": 13.40171238,
+          "minimum": -2.617282629,
+          "maximum": 9.552318573,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.0782084465
+            },
+            {
+              "index": 1,
+              "value": -0.03135854006
+            },
+            {
+              "index": 12,
+              "value": 0.2262285054
+            },
+            {
+              "index": 24,
+              "value": -0.2951972485
+            }
+          ],
+          "sha256": "6bbe211eeef174cd2d5331e60078d06467b87c41104f7dfebba6472ee7da0ba8",
+          "native_checkpoint": "prompt_blk.2.output"
+        },
+        {
+          "name": "batch_5_l_out-3",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 11.99901985,
+          "l2": 14.67745158,
+          "minimum": -3.076271057,
+          "maximum": 10.23315907,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.007697570603
+            },
+            {
+              "index": 1,
+              "value": 0.07019245625
+            },
+            {
+              "index": 12,
+              "value": 0.4378958941
+            },
+            {
+              "index": 24,
+              "value": -0.417231679
+            }
+          ],
+          "sha256": "7b5ce6c5ed95bd0bbf4db7030c23b43a0f567c99d530edeed265a0ba28b75338",
+          "native_checkpoint": "prompt_blk.3.output"
+        },
+        {
+          "name": "batch_5_l_out-4",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 12.60211625,
+          "l2": 15.9057799,
+          "minimum": -3.312660694,
+          "maximum": 10.95990086,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.06047974527
+            },
+            {
+              "index": 1,
+              "value": 0.05955963582
+            },
+            {
+              "index": 12,
+              "value": 0.3069902062
+            },
+            {
+              "index": 24,
+              "value": -0.2450183332
+            }
+          ],
+          "sha256": "23b1fa7be7f15b64dbbbb4bb07f024b188cbdc2447d92813af0a0001fe07620f",
+          "native_checkpoint": "prompt_blk.4.output"
+        },
+        {
+          "name": "batch_5_l_out-5",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": -11.3078265,
+          "l2": 16.73776934,
+          "minimum": -3.626465321,
+          "maximum": 9.956269264,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.2694396377
+            },
+            {
+              "index": 1,
+              "value": -0.03772230446
+            },
+            {
+              "index": 12,
+              "value": 0.3081996441
+            },
+            {
+              "index": 24,
+              "value": -0.2005764395
+            }
+          ],
+          "sha256": "8dbb9f3a193271978a08fe51404d31af2ec41de5eec32eaebd320d1cf97f86d2",
+          "native_checkpoint": "prompt_blk.5.output"
+        },
+        {
+          "name": "batch_5_l_out-6",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": -2.057550652,
+          "l2": 20.9767952,
+          "minimum": -3.817152023,
+          "maximum": 14.15659714,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.3618444502
+            },
+            {
+              "index": 1,
+              "value": 0.06059847772
+            },
+            {
+              "index": 12,
+              "value": 0.1075199544
+            },
+            {
+              "index": 24,
+              "value": -0.108203344
+            }
+          ],
+          "sha256": "95f726203e18bf7bd0367921fb83e1fc34e17d0fb4e7a16e43cd73c6c818a43f",
+          "native_checkpoint": "prompt_blk.6.output"
+        },
+        {
+          "name": "batch_5_l_out-7",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 22.25770092,
+          "l2": 23.90698392,
+          "minimum": -4.00107193,
+          "maximum": 16.25528908,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1291182637
+            },
+            {
+              "index": 1,
+              "value": 0.1944600642
+            },
+            {
+              "index": 12,
+              "value": -0.1419544369
+            },
+            {
+              "index": 24,
+              "value": -0.04138900712
+            }
+          ],
+          "sha256": "880410557248131f63b789b8608113ed528088363b49c372fe58fdd014623280",
+          "native_checkpoint": "prompt_blk.7.output"
+        },
+        {
+          "name": "batch_5_l_out-8",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 35.23971263,
+          "l2": 22.87338553,
+          "minimum": -4.3187356,
+          "maximum": 15.06487083,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.02983254939
+            },
+            {
+              "index": 1,
+              "value": 0.3133324981
+            },
+            {
+              "index": 12,
+              "value": -0.3263914585
+            },
+            {
+              "index": 24,
+              "value": -0.2054953277
+            }
+          ],
+          "sha256": "304b79dbee783bd9dac402764dd99925d48e074e6c36b4fc00511ca5245ee11e",
+          "native_checkpoint": "prompt_blk.8.output"
+        },
+        {
+          "name": "batch_5_l_out-9",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 33.42494283,
+          "l2": 22.17322221,
+          "minimum": -4.410447598,
+          "maximum": 15.25088406,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.1250839233
+            },
+            {
+              "index": 1,
+              "value": 0.06517747045
+            },
+            {
+              "index": 12,
+              "value": -0.07051434368
+            },
+            {
+              "index": 24,
+              "value": -0.2955613434
+            }
+          ],
+          "sha256": "48ec222695e994f28dd2bd1bab84e262edc3b93f03aa3cd06688e9df22ec3584",
+          "native_checkpoint": "prompt_blk.9.output"
+        },
+        {
+          "name": "batch_5_l_out-10",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 20.55502348,
+          "l2": 23.90398333,
+          "minimum": -4.374248028,
+          "maximum": 16.84975243,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.4583264291
+            },
+            {
+              "index": 1,
+              "value": 0.05196106806
+            },
+            {
+              "index": 12,
+              "value": 0.07230064273
+            },
+            {
+              "index": 24,
+              "value": -0.4109038413
+            }
+          ],
+          "sha256": "85741be92faf9cf0701d4bfed175fd726b5b95a372f174870b479dc198ee66e3",
+          "native_checkpoint": "prompt_blk.10.output"
+        },
+        {
+          "name": "batch_5_l_out-11",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 36.84061512,
+          "l2": 25.60612056,
+          "minimum": -4.532463551,
+          "maximum": 18.5229702,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.4122498631
+            },
+            {
+              "index": 1,
+              "value": -0.04206354171
+            },
+            {
+              "index": 12,
+              "value": 0.2315067649
+            },
+            {
+              "index": 24,
+              "value": -0.6293596625
+            }
+          ],
+          "sha256": "3eb39d0da58bcfe4d576a0598eaa82a53eb1cab8434346a286043714adcf04de",
+          "native_checkpoint": "prompt_blk.11.output"
+        },
+        {
+          "name": "batch_5_l_out-12",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 27.67480024,
+          "l2": 26.44492922,
+          "minimum": -4.418402672,
+          "maximum": 18.87073135,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.398870647
+            },
+            {
+              "index": 1,
+              "value": -0.127070725
+            },
+            {
+              "index": 12,
+              "value": 0.3564053476
+            },
+            {
+              "index": 24,
+              "value": -0.4809818268
+            }
+          ],
+          "sha256": "aabecfc1c2336711cb76a5267c94beae1c121c509210601989ebdb14bda310df",
+          "native_checkpoint": "prompt_blk.12.output"
+        },
+        {
+          "name": "batch_5_l_out-13",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 26.48461835,
+          "l2": 26.66386962,
+          "minimum": -4.583134174,
+          "maximum": 18.22611618,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.03865835071
+            },
+            {
+              "index": 1,
+              "value": -0.1620261073
+            },
+            {
+              "index": 12,
+              "value": 0.507389009
+            },
+            {
+              "index": 24,
+              "value": -0.4629526734
+            }
+          ],
+          "sha256": "eee2d5e58e428ed184a481d9df7fe40287cc14c72598b8795f3180f0ca1c76b5",
+          "native_checkpoint": "prompt_blk.13.output"
+        },
+        {
+          "name": "batch_5_l_out-14",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 25.30405834,
+          "l2": 28.12284215,
+          "minimum": -4.735464096,
+          "maximum": 19.4543705,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.08539191633
+            },
+            {
+              "index": 1,
+              "value": 0.05652172863
+            },
+            {
+              "index": 12,
+              "value": 0.3736421764
+            },
+            {
+              "index": 24,
+              "value": -0.7014752626
+            }
+          ],
+          "sha256": "0f6f7661dd95f38cfa4ba90c76e8d43db48121562a6d70eb16a00ce3f6128009",
+          "native_checkpoint": "prompt_blk.14.output"
+        },
+        {
+          "name": "batch_5_l_out-15",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 19.72251125,
+          "l2": 33.5457387,
+          "minimum": -4.895184517,
+          "maximum": 23.7518158,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.2285696864
+            },
+            {
+              "index": 1,
+              "value": 0.3658033609
+            },
+            {
+              "index": 12,
+              "value": 0.5200054646
+            },
+            {
+              "index": 24,
+              "value": -0.9320095778
+            }
+          ],
+          "sha256": "f3b7f8cb81f1ba5807c6d706b4fe1395ccae0a601aa8ecb2ac327b15f03563cf",
+          "native_checkpoint": "prompt_blk.15.output"
+        },
+        {
+          "name": "batch_5_l_out-16",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 1.929694816,
+          "l2": 34.34872181,
+          "minimum": -5.369754791,
+          "maximum": 21.77394104,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.6959319115
+            },
+            {
+              "index": 1,
+              "value": 0.4045809209
+            },
+            {
+              "index": 12,
+              "value": 0.5311527252
+            },
+            {
+              "index": 24,
+              "value": -1.139289737
+            }
+          ],
+          "sha256": "dca9d96008180fa29769cc0d86493b479a33ccf18db7cb09809f6dbe2f9fa077",
+          "native_checkpoint": "prompt_blk.16.output"
+        },
+        {
+          "name": "batch_5_l_out-17",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 12.68684972,
+          "l2": 40.88985155,
+          "minimum": -5.696895599,
+          "maximum": 25.10531044,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.8415987492
+            },
+            {
+              "index": 1,
+              "value": 0.1445817053
+            },
+            {
+              "index": 12,
+              "value": 0.8308389783
+            },
+            {
+              "index": 24,
+              "value": -1.47159636
+            }
+          ],
+          "sha256": "1c09496d66deee7431a375dc63663d576a3199f9800206d6b64b310a31149669",
+          "native_checkpoint": "prompt_blk.17.output"
+        },
+        {
+          "name": "batch_5_l_out-18",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 5.485811042,
+          "l2": 43.47483444,
+          "minimum": -6.287252426,
+          "maximum": 26.29302597,
+          "samples": [
+            {
+              "index": 0,
+              "value": -1.223625422
+            },
+            {
+              "index": 1,
+              "value": 0.4555637836
+            },
+            {
+              "index": 12,
+              "value": 0.7853372097
+            },
+            {
+              "index": 24,
+              "value": -1.745229125
+            }
+          ],
+          "sha256": "a3f95f9f0c909750eaf740fa09bfd49ba11049c1ef2e7e58af1cc8c62757e09a",
+          "native_checkpoint": "prompt_blk.18.output"
+        },
+        {
+          "name": "batch_5_l_out-19",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 11.60031711,
+          "l2": 49.59933955,
+          "minimum": -6.764568329,
+          "maximum": 28.05195999,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.2218927145
+            },
+            {
+              "index": 1,
+              "value": -0.1092783064
+            },
+            {
+              "index": 12,
+              "value": 0.3970328867
+            },
+            {
+              "index": 24,
+              "value": -2.360819817
+            }
+          ],
+          "sha256": "95763fddac3cd1e4116a4c54d272e310038c1c4d60d48be19417422e85da2af4",
+          "native_checkpoint": "prompt_blk.19.output"
+        },
+        {
+          "name": "batch_5_l_out-20",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 19.33391184,
+          "l2": 62.36215716,
+          "minimum": -9.517559052,
+          "maximum": 31.90667343,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.07348057628
+            },
+            {
+              "index": 1,
+              "value": -0.7709878683
+            },
+            {
+              "index": 12,
+              "value": -0.3455410004
+            },
+            {
+              "index": 24,
+              "value": -2.339436769
+            }
+          ],
+          "sha256": "2b28cceada0b5e503a0d52c310224f26bde27d6816a2ccce0d3e5c5a5208e704",
+          "native_checkpoint": "prompt_blk.20.output"
+        },
+        {
+          "name": "batch_5_l_out-21",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 11.41414115,
+          "l2": 78.86185058,
+          "minimum": -10.57500648,
+          "maximum": 41.37785721,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.8361114264
+            },
+            {
+              "index": 1,
+              "value": -0.8332102895
+            },
+            {
+              "index": 12,
+              "value": -0.3723596632
+            },
+            {
+              "index": 24,
+              "value": -2.411801577
+            }
+          ],
+          "sha256": "368356b781b2c118743a5e897fc7a83c328c6596fc93efb3ed3bb4d20239c8be",
+          "native_checkpoint": "prompt_blk.21.output"
+        },
+        {
+          "name": "batch_5_l_out-22",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 57.71046791,
+          "l2": 89.53850727,
+          "minimum": -21.42286682,
+          "maximum": 49.33159637,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.5880572796
+            },
+            {
+              "index": 1,
+              "value": -1.071570039
+            },
+            {
+              "index": 12,
+              "value": 0.1399641037
+            },
+            {
+              "index": 24,
+              "value": -2.388954878
+            }
+          ],
+          "sha256": "d95b7a6ddf806e6c84918e6552ec514718b2abcf8012c64b556b6880407c1dbf",
+          "native_checkpoint": "prompt_blk.22.output"
+        },
+        {
+          "name": "batch_5_l_out-23",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 100.7296926,
+          "l2": 103.1966606,
+          "minimum": -34.11819839,
+          "maximum": 59.24339294,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.3636655807
+            },
+            {
+              "index": 1,
+              "value": -0.8462566733
+            },
+            {
+              "index": 12,
+              "value": -0.1761551499
+            },
+            {
+              "index": 24,
+              "value": -2.139650345
+            }
+          ],
+          "sha256": "ceced797d87b53ec7367f001f778ae085be861494f69ef65475a9ecde796a1a0",
+          "native_checkpoint": "prompt_blk.23.output"
+        },
+        {
+          "name": "batch_5_l_out-24",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 130.0941314,
+          "l2": 120.4830559,
+          "minimum": -42.71059036,
+          "maximum": 70.10368347,
+          "samples": [
+            {
+              "index": 0,
+              "value": 1.980890751
+            },
+            {
+              "index": 1,
+              "value": 1.452705383
+            },
+            {
+              "index": 12,
+              "value": -0.2321176231
+            },
+            {
+              "index": 24,
+              "value": -3.815392017
+            }
+          ],
+          "sha256": "5aa71cbbda5f69587fc322186813e472c8489123d46df259ea26671b1ca06723",
+          "native_checkpoint": "prompt_blk.24.output"
+        },
+        {
+          "name": "batch_5_l_out-25",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 176.3579265,
+          "l2": 137.924579,
+          "minimum": -55.58068466,
+          "maximum": 74.46057892,
+          "samples": [
+            {
+              "index": 0,
+              "value": 3.460009098
+            },
+            {
+              "index": 1,
+              "value": 2.305044651
+            },
+            {
+              "index": 12,
+              "value": 0.2192832232
+            },
+            {
+              "index": 24,
+              "value": -2.729129791
+            }
+          ],
+          "sha256": "3cef7dfca88e8c9bccfcbd6b15cb736ca29763ca9d2a0f5dd7d036572a1334d3",
+          "native_checkpoint": "prompt_blk.25.output"
+        },
+        {
+          "name": "batch_5_l_out-26",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 208.177867,
+          "l2": 157.4065195,
+          "minimum": -67.44146729,
+          "maximum": 82.61585236,
+          "samples": [
+            {
+              "index": 0,
+              "value": 2.445543289
+            },
+            {
+              "index": 1,
+              "value": 3.375516891
+            },
+            {
+              "index": 12,
+              "value": 0.6133487225
+            },
+            {
+              "index": 24,
+              "value": -4.112103939
+            }
+          ],
+          "sha256": "659d2c5c9d8f9339c296f56322796162805236e90914196fdaafd76e0167faa8",
+          "native_checkpoint": "prompt_blk.26.output"
+        },
+        {
+          "name": "batch_5_l_out-27",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 78.3812231,
+          "l2": 134.2857926,
+          "minimum": -41.65364838,
+          "maximum": 17.40148544,
+          "samples": [
+            {
+              "index": 0,
+              "value": 2.598533869
+            },
+            {
+              "index": 1,
+              "value": 7.408630848
+            },
+            {
+              "index": 12,
+              "value": 1.260925412
+            },
+            {
+              "index": 24,
+              "value": -4.732949257
+            }
+          ],
+          "sha256": "391d2de46a58bf0ec356954b16b74e956745b38ef8227822bf3834daf2a3904b",
+          "native_checkpoint": "prompt_blk.27.output"
+        }
+      ]
+    },
+    {
+      "id": "reversed-images",
+      "last_prompt_batch": 5,
+      "tensors": [
+        {
+          "name": "batch_5_l_out-0",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 5.267639881,
+          "l2": 7.573488011,
+          "minimum": -1.638207674,
+          "maximum": 5.05036068,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.0406910032
+            },
+            {
+              "index": 1,
+              "value": -0.08338288963
+            },
+            {
+              "index": 12,
+              "value": -0.01334480569
+            },
+            {
+              "index": 24,
+              "value": 0.1447528899
+            }
+          ],
+          "sha256": "853b92ed0a8ae50571d8648a46d5bbbdce9875982b8a7f0ddf6ed31dd52adc2c",
+          "native_checkpoint": "prompt_blk.0.output"
+        },
+        {
+          "name": "batch_5_l_out-1",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 7.890968501,
+          "l2": 9.562837599,
+          "minimum": -2.133137941,
+          "maximum": 6.434364319,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.06262526661
+            },
+            {
+              "index": 1,
+              "value": -0.03186905012
+            },
+            {
+              "index": 12,
+              "value": -0.1025966853
+            },
+            {
+              "index": 24,
+              "value": 0.02207195759
+            }
+          ],
+          "sha256": "8d69e892e71f177d468b7fa72c8d2c99eab0f1b98d3470dd82167511176d5027",
+          "native_checkpoint": "prompt_blk.1.output"
+        },
+        {
+          "name": "batch_5_l_out-2",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 16.25258126,
+          "l2": 13.39939875,
+          "minimum": -2.617521763,
+          "maximum": 9.548511505,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.07853039354
+            },
+            {
+              "index": 1,
+              "value": -0.03218081594
+            },
+            {
+              "index": 12,
+              "value": 0.2275891006
+            },
+            {
+              "index": 24,
+              "value": -0.2962217033
+            }
+          ],
+          "sha256": "67412a44d1253b8e724c742843bfd8f38065ab6300db1b13c5459e52823088ed",
+          "native_checkpoint": "prompt_blk.2.output"
+        },
+        {
+          "name": "batch_5_l_out-3",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 12.0167846,
+          "l2": 14.67655944,
+          "minimum": -3.075622559,
+          "maximum": 10.23263264,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.009368485771
+            },
+            {
+              "index": 1,
+              "value": 0.0703279227
+            },
+            {
+              "index": 12,
+              "value": 0.4369750619
+            },
+            {
+              "index": 24,
+              "value": -0.4158599675
+            }
+          ],
+          "sha256": "ce1e6c325dec3508c8a765a3f84777aed4274f70ca9aed0c9a3a67f5d90514ae",
+          "native_checkpoint": "prompt_blk.3.output"
+        },
+        {
+          "name": "batch_5_l_out-4",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 12.5877412,
+          "l2": 15.90354053,
+          "minimum": -3.311805964,
+          "maximum": 10.95482063,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.06066456065
+            },
+            {
+              "index": 1,
+              "value": 0.05984758586
+            },
+            {
+              "index": 12,
+              "value": 0.3081669211
+            },
+            {
+              "index": 24,
+              "value": -0.2450631559
+            }
+          ],
+          "sha256": "eb708abff282ca2d7e20a28020733685e26c2b27b66ef1f78a4126ab52312fc8",
+          "native_checkpoint": "prompt_blk.4.output"
+        },
+        {
+          "name": "batch_5_l_out-5",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": -11.50294842,
+          "l2": 16.73451315,
+          "minimum": -3.624946594,
+          "maximum": 9.939229012,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.2687518895
+            },
+            {
+              "index": 1,
+              "value": -0.03736425936
+            },
+            {
+              "index": 12,
+              "value": 0.3099353611
+            },
+            {
+              "index": 24,
+              "value": -0.2010457963
+            }
+          ],
+          "sha256": "0b8d3b52337371b75356c52f6dfcbf07cb3b0f0365e4c2c3a8e7a098770023aa",
+          "native_checkpoint": "prompt_blk.5.output"
+        },
+        {
+          "name": "batch_5_l_out-6",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": -1.976872135,
+          "l2": 20.97985947,
+          "minimum": -3.809724092,
+          "maximum": 14.1672554,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.3628469706
+            },
+            {
+              "index": 1,
+              "value": 0.06279058754
+            },
+            {
+              "index": 12,
+              "value": 0.1023932099
+            },
+            {
+              "index": 24,
+              "value": -0.1109536663
+            }
+          ],
+          "sha256": "b59d517cbc977eabe34888f7ed4498037b115b7fe75090d8da31880b2dc628b8",
+          "native_checkpoint": "prompt_blk.6.output"
+        },
+        {
+          "name": "batch_5_l_out-7",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 22.43657865,
+          "l2": 23.91467488,
+          "minimum": -4.00003624,
+          "maximum": 16.2686615,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1257467866
+            },
+            {
+              "index": 1,
+              "value": 0.1980425864
+            },
+            {
+              "index": 12,
+              "value": -0.1460775882
+            },
+            {
+              "index": 24,
+              "value": -0.03807678446
+            }
+          ],
+          "sha256": "378830578e8be59db67f046fe1c1bd5c0a99cad67823597c2d91589a3dfe1145",
+          "native_checkpoint": "prompt_blk.7.output"
+        },
+        {
+          "name": "batch_5_l_out-8",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 35.33692222,
+          "l2": 22.87616233,
+          "minimum": -4.31474781,
+          "maximum": 15.07133102,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.02992639691
+            },
+            {
+              "index": 1,
+              "value": 0.3150029182
+            },
+            {
+              "index": 12,
+              "value": -0.3272024095
+            },
+            {
+              "index": 24,
+              "value": -0.2008436918
+            }
+          ],
+          "sha256": "104fcf018ae9baf0d1d74e956a2f329e5c8494885462c262cbf3e0a782ecd3cc",
+          "native_checkpoint": "prompt_blk.8.output"
+        },
+        {
+          "name": "batch_5_l_out-9",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 33.43788162,
+          "l2": 22.16681855,
+          "minimum": -4.40950489,
+          "maximum": 15.25309658,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.1248750687
+            },
+            {
+              "index": 1,
+              "value": 0.0627444461
+            },
+            {
+              "index": 12,
+              "value": -0.06672809273
+            },
+            {
+              "index": 24,
+              "value": -0.2917211056
+            }
+          ],
+          "sha256": "8b9b1326272fddb3fadc11304a9783c3db3fa279e351b1db6e6d8387954a5577",
+          "native_checkpoint": "prompt_blk.9.output"
+        },
+        {
+          "name": "batch_5_l_out-10",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 20.78207949,
+          "l2": 23.90363983,
+          "minimum": -4.375878811,
+          "maximum": 16.85633278,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.459884584
+            },
+            {
+              "index": 1,
+              "value": 0.05206544697
+            },
+            {
+              "index": 12,
+              "value": 0.07945391536
+            },
+            {
+              "index": 24,
+              "value": -0.415391773
+            }
+          ],
+          "sha256": "b04b20ba9cfd06ac6111e3ec6c2438ffeff6fa86547cdc829f6e091bdad325cb",
+          "native_checkpoint": "prompt_blk.10.output"
+        },
+        {
+          "name": "batch_5_l_out-11",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 36.96284143,
+          "l2": 25.60211741,
+          "minimum": -4.536933422,
+          "maximum": 18.52879333,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.4238361418
+            },
+            {
+              "index": 1,
+              "value": -0.03897085786
+            },
+            {
+              "index": 12,
+              "value": 0.2402365506
+            },
+            {
+              "index": 24,
+              "value": -0.6299872398
+            }
+          ],
+          "sha256": "c0771af5dc6c60615bc1d2a5455991cd279626a5fbc0ba6c0393785eaaea7d26",
+          "native_checkpoint": "prompt_blk.11.output"
+        },
+        {
+          "name": "batch_5_l_out-12",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 27.84864242,
+          "l2": 26.45161659,
+          "minimum": -4.42083168,
+          "maximum": 18.88425255,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.4021342993
+            },
+            {
+              "index": 1,
+              "value": -0.1205917448
+            },
+            {
+              "index": 12,
+              "value": 0.36128214
+            },
+            {
+              "index": 24,
+              "value": -0.4783267677
+            }
+          ],
+          "sha256": "c00fe1c9759d5057e90eae3b4a6b68a913b12c8ffb43e6324048039e9a51a2b5",
+          "native_checkpoint": "prompt_blk.12.output"
+        },
+        {
+          "name": "batch_5_l_out-13",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 26.90961252,
+          "l2": 26.64049334,
+          "minimum": -4.58651495,
+          "maximum": 18.22749901,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.04481631517
+            },
+            {
+              "index": 1,
+              "value": -0.1547842026
+            },
+            {
+              "index": 12,
+              "value": 0.5071514845
+            },
+            {
+              "index": 24,
+              "value": -0.4628995955
+            }
+          ],
+          "sha256": "bdfea3fb3b73d90fb4a069545b9994c1ff37305f503cab44e5106b3326a47f78",
+          "native_checkpoint": "prompt_blk.13.output"
+        },
+        {
+          "name": "batch_5_l_out-14",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 25.67911034,
+          "l2": 28.13666779,
+          "minimum": -4.734592915,
+          "maximum": 19.48864365,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.07723705471
+            },
+            {
+              "index": 1,
+              "value": 0.06718561053
+            },
+            {
+              "index": 12,
+              "value": 0.3640215695
+            },
+            {
+              "index": 24,
+              "value": -0.6959717274
+            }
+          ],
+          "sha256": "46b1a147cca6fcb842300b3ad24d20de680ee171f2a609e9021bd970ff166d28",
+          "native_checkpoint": "prompt_blk.14.output"
+        },
+        {
+          "name": "batch_5_l_out-15",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 20.4434772,
+          "l2": 33.53519486,
+          "minimum": -4.88547039,
+          "maximum": 23.76296616,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.2416700125
+            },
+            {
+              "index": 1,
+              "value": 0.3756780624
+            },
+            {
+              "index": 12,
+              "value": 0.5250808001
+            },
+            {
+              "index": 24,
+              "value": -0.9357834458
+            }
+          ],
+          "sha256": "a611184c2ca6624c2a56d6b91bbeb44587b8bace5bef96dc08b70647fb98232e",
+          "native_checkpoint": "prompt_blk.15.output"
+        },
+        {
+          "name": "batch_5_l_out-16",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 2.26016539,
+          "l2": 34.37690213,
+          "minimum": -5.35392189,
+          "maximum": 21.80854034,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.7003284693
+            },
+            {
+              "index": 1,
+              "value": 0.4299774766
+            },
+            {
+              "index": 12,
+              "value": 0.5242410898
+            },
+            {
+              "index": 24,
+              "value": -1.142952323
+            }
+          ],
+          "sha256": "28df745514ea79564de4b391a487b4bf5cf12faf63658eb63ff319cf3214761f",
+          "native_checkpoint": "prompt_blk.16.output"
+        },
+        {
+          "name": "batch_5_l_out-17",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 13.10041269,
+          "l2": 40.89996165,
+          "minimum": -5.662760735,
+          "maximum": 25.06745529,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.8270314336
+            },
+            {
+              "index": 1,
+              "value": 0.1705006063
+            },
+            {
+              "index": 12,
+              "value": 0.8364016414
+            },
+            {
+              "index": 24,
+              "value": -1.499151111
+            }
+          ],
+          "sha256": "8975fe3e322908efb1c6d3b36a82ec8adc5bf2d1f809ed03fb15d043e54a1c8e",
+          "native_checkpoint": "prompt_blk.17.output"
+        },
+        {
+          "name": "batch_5_l_out-18",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 5.130955065,
+          "l2": 43.44224164,
+          "minimum": -6.24919796,
+          "maximum": 26.23077774,
+          "samples": [
+            {
+              "index": 0,
+              "value": -1.216966867
+            },
+            {
+              "index": 1,
+              "value": 0.4974720776
+            },
+            {
+              "index": 12,
+              "value": 0.778223753
+            },
+            {
+              "index": 24,
+              "value": -1.79021883
+            }
+          ],
+          "sha256": "ce7e245aae837ab2335a7845cf73e93a3d13268f0ef2b03cc732f7814b9bc0cd",
+          "native_checkpoint": "prompt_blk.18.output"
+        },
+        {
+          "name": "batch_5_l_out-19",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 11.53674883,
+          "l2": 49.53293909,
+          "minimum": -6.720507145,
+          "maximum": 27.97130966,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.2366684675
+            },
+            {
+              "index": 1,
+              "value": -0.05822601914
+            },
+            {
+              "index": 12,
+              "value": 0.3844920099
+            },
+            {
+              "index": 24,
+              "value": -2.405631781
+            }
+          ],
+          "sha256": "90060ad8a43c7e2900b578a44999460b4c549f021da4988a02780e56283bced5",
+          "native_checkpoint": "prompt_blk.19.output"
+        },
+        {
+          "name": "batch_5_l_out-20",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 18.41001812,
+          "l2": 62.25144709,
+          "minimum": -9.480461121,
+          "maximum": 31.75678825,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.04254448414
+            },
+            {
+              "index": 1,
+              "value": -0.7518659234
+            },
+            {
+              "index": 12,
+              "value": -0.3321226835
+            },
+            {
+              "index": 24,
+              "value": -2.391517878
+            }
+          ],
+          "sha256": "35345488553a26c1c9a28c60838777254fb56591ca4bd82e561f37d93ea9c218",
+          "native_checkpoint": "prompt_blk.20.output"
+        },
+        {
+          "name": "batch_5_l_out-21",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 11.89131689,
+          "l2": 78.70310315,
+          "minimum": -10.49168682,
+          "maximum": 40.96498108,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.7386910915
+            },
+            {
+              "index": 1,
+              "value": -0.7801653147
+            },
+            {
+              "index": 12,
+              "value": -0.372422725
+            },
+            {
+              "index": 24,
+              "value": -2.476051569
+            }
+          ],
+          "sha256": "844e6d0f287e11d941c98d548703b3060b963507be9da025a006512477bfc8ee",
+          "native_checkpoint": "prompt_blk.21.output"
+        },
+        {
+          "name": "batch_5_l_out-22",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 58.48540078,
+          "l2": 89.62397089,
+          "minimum": -21.72527695,
+          "maximum": 49.09567261,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.6932001114
+            },
+            {
+              "index": 1,
+              "value": -1.018033028
+            },
+            {
+              "index": 12,
+              "value": 0.1872866154
+            },
+            {
+              "index": 24,
+              "value": -2.447239399
+            }
+          ],
+          "sha256": "80cdb3af44b3c5c117df9e5a8300f48afdbf371889a493b26caa0ffca4fb2bed",
+          "native_checkpoint": "prompt_blk.22.output"
+        },
+        {
+          "name": "batch_5_l_out-23",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 102.1495056,
+          "l2": 103.2968293,
+          "minimum": -34.40495682,
+          "maximum": 58.9979744,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.4773469567
+            },
+            {
+              "index": 1,
+              "value": -0.8001676798
+            },
+            {
+              "index": 12,
+              "value": -0.1045554727
+            },
+            {
+              "index": 24,
+              "value": -2.129658461
+            }
+          ],
+          "sha256": "d18968872f7925692d47527bd9e494eeba1cbeb9de255f1c7a6e403f6fc124bd",
+          "native_checkpoint": "prompt_blk.23.output"
+        },
+        {
+          "name": "batch_5_l_out-24",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 129.9923089,
+          "l2": 120.4439603,
+          "minimum": -42.94755173,
+          "maximum": 69.70863342,
+          "samples": [
+            {
+              "index": 0,
+              "value": 2.125162363
+            },
+            {
+              "index": 1,
+              "value": 1.508386135
+            },
+            {
+              "index": 12,
+              "value": -0.1030476689
+            },
+            {
+              "index": 24,
+              "value": -3.800673008
+            }
+          ],
+          "sha256": "1e553cf432e01bec960c173c745c55f2776d414aa5a8aa02a51a155354abab6f",
+          "native_checkpoint": "prompt_blk.24.output"
+        },
+        {
+          "name": "batch_5_l_out-25",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 178.393098,
+          "l2": 138.2070192,
+          "minimum": -55.78106689,
+          "maximum": 74.01169586,
+          "samples": [
+            {
+              "index": 0,
+              "value": 3.644826412
+            },
+            {
+              "index": 1,
+              "value": 2.419621944
+            },
+            {
+              "index": 12,
+              "value": 0.3561620116
+            },
+            {
+              "index": 24,
+              "value": -2.644383669
+            }
+          ],
+          "sha256": "b3dcc1b1c84c790a459a3a4ce585a2f33f307050ef0b463c17c3ac9a0d80de9e",
+          "native_checkpoint": "prompt_blk.25.output"
+        },
+        {
+          "name": "batch_5_l_out-26",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 207.6587181,
+          "l2": 157.4452917,
+          "minimum": -67.44970703,
+          "maximum": 81.92351532,
+          "samples": [
+            {
+              "index": 0,
+              "value": 2.642759562
+            },
+            {
+              "index": 1,
+              "value": 3.475372076
+            },
+            {
+              "index": 12,
+              "value": 0.7090727091
+            },
+            {
+              "index": 24,
+              "value": -4.035680294
+            }
+          ],
+          "sha256": "79d2d57ec43a8b6f68b5b5983d8f1c3f5e995bca76df875cb10691ea72b72422",
+          "native_checkpoint": "prompt_blk.26.output"
+        },
+        {
+          "name": "batch_5_l_out-27",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 79.47522248,
+          "l2": 134.368832,
+          "minimum": -40.95278931,
+          "maximum": 17.43471909,
+          "samples": [
+            {
+              "index": 0,
+              "value": 2.767921448
+            },
+            {
+              "index": 1,
+              "value": 7.47569561
+            },
+            {
+              "index": 12,
+              "value": 1.386768341
+            },
+            {
+              "index": 24,
+              "value": -4.730166912
+            }
+          ],
+          "sha256": "369ed54aed470f4caf5c907d28e74620151a70d3a4d21623d7ab6ae3f59ad55a",
+          "native_checkpoint": "prompt_blk.27.output"
+        }
+      ]
+    },
+    {
+      "id": "unicode-multiturn",
+      "last_prompt_batch": 4,
+      "tensors": [
+        {
+          "name": "batch_4_l_out-0",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 8.66060123,
+          "l2": 7.677500427,
+          "minimum": -1.682249069,
+          "maximum": 5.108333588,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.03400591761
+            },
+            {
+              "index": 1,
+              "value": -0.06039842218
+            },
+            {
+              "index": 12,
+              "value": 0.01972456276
+            },
+            {
+              "index": 24,
+              "value": 0.16250512
+            }
+          ],
+          "sha256": "9db3c689b50ca16bb0f6f59f0c1b3677e2c0f92a04f5b87c534df73c6822b4c2",
+          "native_checkpoint": "prompt_blk.0.output"
+        },
+        {
+          "name": "batch_4_l_out-1",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 10.60863921,
+          "l2": 9.40110283,
+          "minimum": -2.098032475,
+          "maximum": 6.330385208,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1455842257
+            },
+            {
+              "index": 1,
+              "value": 0.05407469347
+            },
+            {
+              "index": 12,
+              "value": -0.02678309008
+            },
+            {
+              "index": 24,
+              "value": 0.0808653757
+            }
+          ],
+          "sha256": "c27cadeac6cd61aa3918ee13bbe62f4f035a3c2ee4ba81ab7180f039fd5a0ba8",
+          "native_checkpoint": "prompt_blk.1.output"
+        },
+        {
+          "name": "batch_4_l_out-2",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 16.8288586,
+          "l2": 12.88977244,
+          "minimum": -2.514161348,
+          "maximum": 9.020558357,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1343525201
+            },
+            {
+              "index": 1,
+              "value": 0.241468966
+            },
+            {
+              "index": 12,
+              "value": 0.2395495325
+            },
+            {
+              "index": 24,
+              "value": -0.4079213738
+            }
+          ],
+          "sha256": "d3ed06eaeba067b8701cebbfa201db4de828abd01a021eed45b6619206716069",
+          "native_checkpoint": "prompt_blk.2.output"
+        },
+        {
+          "name": "batch_4_l_out-3",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 15.19577868,
+          "l2": 14.30134548,
+          "minimum": -3.004466295,
+          "maximum": 9.708652496,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1734199822
+            },
+            {
+              "index": 1,
+              "value": 0.631562531
+            },
+            {
+              "index": 12,
+              "value": 0.2083302736
+            },
+            {
+              "index": 24,
+              "value": -0.4291358888
+            }
+          ],
+          "sha256": "ec694ce857a6cc0f3ecb8566a94d985ddbe9fdf291d710e4fcbb411e86223883",
+          "native_checkpoint": "prompt_blk.3.output"
+        },
+        {
+          "name": "batch_4_l_out-4",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 18.72818576,
+          "l2": 16.5781301,
+          "minimum": -3.253409386,
+          "maximum": 11.25805664,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.08000135422
+            },
+            {
+              "index": 1,
+              "value": 0.5802158117
+            },
+            {
+              "index": 12,
+              "value": 0.2214009762
+            },
+            {
+              "index": 24,
+              "value": -0.3765000105
+            }
+          ],
+          "sha256": "b2523593262d903d2362e95a59df5dfc0090a68d6bb3e42f3b5dafb369a12f6c",
+          "native_checkpoint": "prompt_blk.4.output"
+        },
+        {
+          "name": "batch_4_l_out-5",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 1.421038531,
+          "l2": 16.4770588,
+          "minimum": -3.531270266,
+          "maximum": 10.10649014,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.01947389171
+            },
+            {
+              "index": 1,
+              "value": 0.4530143738
+            },
+            {
+              "index": 12,
+              "value": -0.01219505072
+            },
+            {
+              "index": 24,
+              "value": -0.4145895839
+            }
+          ],
+          "sha256": "efc3aa9adb3e77eb150027b4e68f19aa4320e01895f3cfad5e845b585ead9c39",
+          "native_checkpoint": "prompt_blk.5.output"
+        },
+        {
+          "name": "batch_4_l_out-6",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 13.64264527,
+          "l2": 20.51636203,
+          "minimum": -3.921317816,
+          "maximum": 14.35182571,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.005771391094
+            },
+            {
+              "index": 1,
+              "value": 0.4740352035
+            },
+            {
+              "index": 12,
+              "value": -0.2081810832
+            },
+            {
+              "index": 24,
+              "value": -0.2515532076
+            }
+          ],
+          "sha256": "dd4b3df54ca16546cdb17a6bade9aecfbc4bc041c6876d837e6be97a73720246",
+          "native_checkpoint": "prompt_blk.6.output"
+        },
+        {
+          "name": "batch_4_l_out-7",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 29.04434702,
+          "l2": 23.33107666,
+          "minimum": -3.817513943,
+          "maximum": 17.16984367,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.365326494
+            },
+            {
+              "index": 1,
+              "value": 0.8310791254
+            },
+            {
+              "index": 12,
+              "value": -0.2756476402
+            },
+            {
+              "index": 24,
+              "value": -0.06402172148
+            }
+          ],
+          "sha256": "79ca20054ab6e92d62629b6922a69387a55cbb666f45098f2e9b67d6902498a0",
+          "native_checkpoint": "prompt_blk.7.output"
+        },
+        {
+          "name": "batch_4_l_out-8",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 38.03203398,
+          "l2": 22.61053534,
+          "minimum": -3.95749259,
+          "maximum": 16.61103821,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.2443188429
+            },
+            {
+              "index": 1,
+              "value": 0.7798719406
+            },
+            {
+              "index": 12,
+              "value": -0.1060128361
+            },
+            {
+              "index": 24,
+              "value": -0.2307021767
+            }
+          ],
+          "sha256": "5f825e5c6d742f2c73f458a1662e4b33a5058a930cbee2b3026e97da8a0947c4",
+          "native_checkpoint": "prompt_blk.8.output"
+        },
+        {
+          "name": "batch_4_l_out-9",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 33.14250494,
+          "l2": 22.02716532,
+          "minimum": -4.226735592,
+          "maximum": 15.83764076,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.06351350248
+            },
+            {
+              "index": 1,
+              "value": 0.7698948979
+            },
+            {
+              "index": 12,
+              "value": -0.03087412007
+            },
+            {
+              "index": 24,
+              "value": -0.3169077933
+            }
+          ],
+          "sha256": "cc147d74fa383f3031614695f7749aa494c75b8a70948fafa265a5ecefab7760",
+          "native_checkpoint": "prompt_blk.9.output"
+        },
+        {
+          "name": "batch_4_l_out-10",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 23.05521109,
+          "l2": 23.73823155,
+          "minimum": -4.340456009,
+          "maximum": 17.39511681,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.01584637165
+            },
+            {
+              "index": 1,
+              "value": 0.6766280532
+            },
+            {
+              "index": 12,
+              "value": 0.3019466698
+            },
+            {
+              "index": 24,
+              "value": -0.2545522749
+            }
+          ],
+          "sha256": "bbf05b424605b2994ef64c42c589d7a46994f2f08e6fbafc3686a3f46d2971cd",
+          "native_checkpoint": "prompt_blk.10.output"
+        },
+        {
+          "name": "batch_4_l_out-11",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 30.08271943,
+          "l2": 25.59022094,
+          "minimum": -4.782114029,
+          "maximum": 18.80124092,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.165866524
+            },
+            {
+              "index": 1,
+              "value": 0.7936401963
+            },
+            {
+              "index": 12,
+              "value": 0.2390622646
+            },
+            {
+              "index": 24,
+              "value": -0.6861899495
+            }
+          ],
+          "sha256": "80bc3db7605ba8ff25fee9a0d8edb3ba80fa8bc9d88dfea433c83429b5a61edc",
+          "native_checkpoint": "prompt_blk.11.output"
+        },
+        {
+          "name": "batch_4_l_out-12",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 34.43944245,
+          "l2": 28.00560764,
+          "minimum": -4.686238289,
+          "maximum": 21.12834358,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.196246475
+            },
+            {
+              "index": 1,
+              "value": 0.8038986921
+            },
+            {
+              "index": 12,
+              "value": 0.3729631901
+            },
+            {
+              "index": 24,
+              "value": -0.2990192175
+            }
+          ],
+          "sha256": "f630c0d6444a3f2b0a2b6fcd45f9764ca24dd220de973bf1306c092b58578d7c",
+          "native_checkpoint": "prompt_blk.12.output"
+        },
+        {
+          "name": "batch_4_l_out-13",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 29.69234764,
+          "l2": 25.71250429,
+          "minimum": -4.956638813,
+          "maximum": 18.23543167,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.2247153074
+            },
+            {
+              "index": 1,
+              "value": 0.6840178967
+            },
+            {
+              "index": 12,
+              "value": 0.112973541
+            },
+            {
+              "index": 24,
+              "value": -0.2277643979
+            }
+          ],
+          "sha256": "29c0623ab5f1a4167bcf7f03e3f84c1761892934f3b85b3c1bd6f40e4dfb3149",
+          "native_checkpoint": "prompt_blk.13.output"
+        },
+        {
+          "name": "batch_4_l_out-14",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 23.95586615,
+          "l2": 26.14627408,
+          "minimum": -5.364957809,
+          "maximum": 18.40694809,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.2749794722
+            },
+            {
+              "index": 1,
+              "value": 0.8084697127
+            },
+            {
+              "index": 12,
+              "value": 0.02138067782
+            },
+            {
+              "index": 24,
+              "value": -0.6005141735
+            }
+          ],
+          "sha256": "d231859f719ec4d542e9211b2af6d644229dd605a34fe09198d1716c89ab1fae",
+          "native_checkpoint": "prompt_blk.14.output"
+        },
+        {
+          "name": "batch_4_l_out-15",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 20.8741214,
+          "l2": 29.16559377,
+          "minimum": -5.171941757,
+          "maximum": 20.25610352,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.2009651661
+            },
+            {
+              "index": 1,
+              "value": 1.513656259
+            },
+            {
+              "index": 12,
+              "value": -0.09951983392
+            },
+            {
+              "index": 24,
+              "value": -0.9705604315
+            }
+          ],
+          "sha256": "92b436d8686dce76e94213353550089acb3c179e4fc12e9fde5d984ba90e4959",
+          "native_checkpoint": "prompt_blk.15.output"
+        },
+        {
+          "name": "batch_4_l_out-16",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 24.47754561,
+          "l2": 32.84633103,
+          "minimum": -4.675584793,
+          "maximum": 23.15377426,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.3274130225
+            },
+            {
+              "index": 1,
+              "value": 2.083750725
+            },
+            {
+              "index": 12,
+              "value": 0.2334098518
+            },
+            {
+              "index": 24,
+              "value": -0.739097476
+            }
+          ],
+          "sha256": "793daf49c5eda5be0001d1051f51fc71f10ee7d7dde242c0b20101840015d7eb",
+          "native_checkpoint": "prompt_blk.16.output"
+        },
+        {
+          "name": "batch_4_l_out-17",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 35.87968517,
+          "l2": 37.03000698,
+          "minimum": -4.931797028,
+          "maximum": 25.84570122,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.153170988
+            },
+            {
+              "index": 1,
+              "value": 2.47971487
+            },
+            {
+              "index": 12,
+              "value": 0.5698264837
+            },
+            {
+              "index": 24,
+              "value": -0.7100977898
+            }
+          ],
+          "sha256": "0611ae716bac38a1ff0930a966324502085981055ee8948ed32cebdaef51b47e",
+          "native_checkpoint": "prompt_blk.17.output"
+        },
+        {
+          "name": "batch_4_l_out-18",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 31.25257769,
+          "l2": 37.82810823,
+          "minimum": -5.376078129,
+          "maximum": 25.09170151,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.3261642456
+            },
+            {
+              "index": 1,
+              "value": 3.777664185
+            },
+            {
+              "index": 12,
+              "value": 0.4672039151
+            },
+            {
+              "index": 24,
+              "value": -0.736536622
+            }
+          ],
+          "sha256": "e41be3e9888cb261b4f337df9b5ad00e9bfb5fac4d7fd1c6595bc1d138f2c333",
+          "native_checkpoint": "prompt_blk.18.output"
+        },
+        {
+          "name": "batch_4_l_out-19",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 33.12320844,
+          "l2": 43.14514613,
+          "minimum": -5.896063805,
+          "maximum": 29.05775261,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.1293984801
+            },
+            {
+              "index": 1,
+              "value": 4.040583134
+            },
+            {
+              "index": 12,
+              "value": 0.3674445748
+            },
+            {
+              "index": 24,
+              "value": -1.134949923
+            }
+          ],
+          "sha256": "02be9864d52834c2ecdbd3efcb6abdc8b4975d83ed7cfd59829b14ee431ff498",
+          "native_checkpoint": "prompt_blk.19.output"
+        },
+        {
+          "name": "batch_4_l_out-20",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 35.93905926,
+          "l2": 51.99007173,
+          "minimum": -8.245570183,
+          "maximum": 35.30299377,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.2603704929
+            },
+            {
+              "index": 1,
+              "value": 3.766644955
+            },
+            {
+              "index": 12,
+              "value": 0.7179076672
+            },
+            {
+              "index": 24,
+              "value": -1.301512957
+            }
+          ],
+          "sha256": "d690b39a5bfd605e23e71e12d7540989f93e672a31e42e46692b4d854664bd22",
+          "native_checkpoint": "prompt_blk.20.output"
+        },
+        {
+          "name": "batch_4_l_out-21",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 44.15904132,
+          "l2": 68.06450772,
+          "minimum": -9.566651344,
+          "maximum": 46.47430801,
+          "samples": [
+            {
+              "index": 0,
+              "value": 8.642673492e-06
+            },
+            {
+              "index": 1,
+              "value": 4.164399624
+            },
+            {
+              "index": 12,
+              "value": 1.003251314
+            },
+            {
+              "index": 24,
+              "value": -1.523216605
+            }
+          ],
+          "sha256": "0558ca1d9c0ba1e9adfd0acadfeff29dbe1721beedbbd31aca9b5d960016cf74",
+          "native_checkpoint": "prompt_blk.21.output"
+        },
+        {
+          "name": "batch_4_l_out-22",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 53.2855111,
+          "l2": 85.014958,
+          "minimum": -22.47597504,
+          "maximum": 54.95595169,
+          "samples": [
+            {
+              "index": 0,
+              "value": 0.1690399647
+            },
+            {
+              "index": 1,
+              "value": 3.595835447
+            },
+            {
+              "index": 12,
+              "value": 2.130204916
+            },
+            {
+              "index": 24,
+              "value": -0.4207598567
+            }
+          ],
+          "sha256": "001efc8547506c8a0c4c82b4451fc251ccb04d386888328ae28155fbe10f9762",
+          "native_checkpoint": "prompt_blk.22.output"
+        },
+        {
+          "name": "batch_4_l_out-23",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 66.14921904,
+          "l2": 100.9076197,
+          "minimum": -35.68362808,
+          "maximum": 60.95518112,
+          "samples": [
+            {
+              "index": 0,
+              "value": -0.6185564399
+            },
+            {
+              "index": 1,
+              "value": 3.809625626
+            },
+            {
+              "index": 12,
+              "value": 2.29288125
+            },
+            {
+              "index": 24,
+              "value": -1.643121004
+            }
+          ],
+          "sha256": "06c97f743c87b6620ba87a394d00ac762a49965bb052dbe5d8b483a7a121009c",
+          "native_checkpoint": "prompt_blk.23.output"
+        },
+        {
+          "name": "batch_4_l_out-24",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 36.26123065,
+          "l2": 123.1138452,
+          "minimum": -44.30704498,
+          "maximum": 68.01325989,
+          "samples": [
+            {
+              "index": 0,
+              "value": -1.990341425
+            },
+            {
+              "index": 1,
+              "value": 4.65241909
+            },
+            {
+              "index": 12,
+              "value": 1.428484917
+            },
+            {
+              "index": 24,
+              "value": -0.8872136474
+            }
+          ],
+          "sha256": "6ac796113b1ebade3bd274124cea1f71a3c291e611a3b46e911f1c5f336679c4",
+          "native_checkpoint": "prompt_blk.24.output"
+        },
+        {
+          "name": "batch_4_l_out-25",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 82.22124791,
+          "l2": 145.9558539,
+          "minimum": -57.60676956,
+          "maximum": 71.10957336,
+          "samples": [
+            {
+              "index": 0,
+              "value": -2.697593212
+            },
+            {
+              "index": 1,
+              "value": 4.525980473
+            },
+            {
+              "index": 12,
+              "value": 0.8480899334
+            },
+            {
+              "index": 24,
+              "value": 0.2862026691
+            }
+          ],
+          "sha256": "a659e23733f564d2f999665086e8b1f6c2dc116b873100608c5b4b163025a1bf",
+          "native_checkpoint": "prompt_blk.25.output"
+        },
+        {
+          "name": "batch_4_l_out-26",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": 117.3368419,
+          "l2": 175.9395025,
+          "minimum": -66.47879028,
+          "maximum": 83.70603943,
+          "samples": [
+            {
+              "index": 0,
+              "value": -7.191192627
+            },
+            {
+              "index": 1,
+              "value": 3.915874481
+            },
+            {
+              "index": 12,
+              "value": 1.185729384
+            },
+            {
+              "index": 24,
+              "value": -0.6199299097
+            }
+          ],
+          "sha256": "1ed795a3a91f779bd27450657423cf46d12adfd31a0895f9ac037f6ffc51d62c",
+          "native_checkpoint": "prompt_blk.26.output"
+        },
+        {
+          "name": "batch_4_l_out-27",
+          "count": 1536,
+          "shape": [
+            1536
+          ],
+          "sum": -82.25387222,
+          "l2": 197.9453123,
+          "minimum": -58.67532349,
+          "maximum": 44.63314056,
+          "samples": [
+            {
+              "index": 0,
+              "value": -6.703152657
+            },
+            {
+              "index": 1,
+              "value": -1.679712772
+            },
+            {
+              "index": 12,
+              "value": -0.6332550049
+            },
+            {
+              "index": 24,
+              "value": 1.286201239
+            }
+          ],
+          "sha256": "26d9bdcc343f73e01f254d3abd2338a6d48bafa929256fe611206283436cd1e5",
+          "native_checkpoint": "prompt_blk.27.output"
+        }
+      ]
+    }
+  ]
+}

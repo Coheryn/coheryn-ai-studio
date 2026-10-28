@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "scope": "Native component execution with an empty executable search path; does not claim absence of cached software or validate a shipped package.",
+  "binary_sha256": "a029848b3b3466e62b35f54bc54ef78bed3eada6579ada4176b55ed6c120d859",
+  "request": {
+    "image": "fixtures/vlm/images/landscape.png",
+    "options": {
+      "threads": 1,
+      "tile_tokens": 32,
+      "max_patches": 64
+    },
+    "max_memory": 134217728
+  },
+  "path_entries": 0,
+  "output_matches_qualified_case": "left-red",
+  "native": {
+    "memory_after_release": {
+      "limit": 134217728,
+      "peak_reserved": 9203200,
+      "peak_session_buffer_capacity_bytes": 3520256,
+      "reserved": 0,
+      "session_buffer_capacity_bytes": 0
+    },
+    "result": {
+      "config": {
+        "declared_intermediate": 1536,
+        "head_dim": 80,
+        "heads": 16,
+        "hidden": 1280,
+        "intermediate": 5120,
+        "layers": 32,
+        "norm_epsilon": 9.999999974752427e-07,
+        "output_width": 1536,
+        "patch_size": 14,
+        "projector_hidden": 5120
+      },
+      "count": 12288,
+      "encoding_ms": 18941.323875,
+      "image_to_text_supported": false,
+      "l2": 244.71821621187743,
+      "memory_while_output_retained": {
+        "limit": 134217728,
+        "peak_reserved": 9203200,
+        "peak_session_buffer_capacity_bytes": 3520256,
+        "reserved": 947200,
+        "session_buffer_capacity_bytes": 124416
+      },
+      "model_sha256": "ecb20cabcdd8dbc277de06bd6eb980aeb2adfaaba9f199a434e328d205675d03",
+      "plan": {
+        "grid": [
+          1,
+          4,
+          8
+        ],
+        "output_bytes": 53248,
+        "output_tokens": 8,
+        "output_width": 1536,
+        "patch_rows": 32,
+        "peak_reserved_bytes": 5550384,
+        "profile": "coheryn-qwen2vl-vision-v1",
+        "threads": 1,
+        "tile_tokens": 32,
+        "workspace_bytes": 5497136
+      },
+      "scope": "native Qwen2-VL vision encoder and merger only",
+      "sha256": "83612b87a69feb229171eac2be9542ebed82680abef1aa10ffad0c5dfa95070a",
+      "sum": 623.1926513749058
+    }
+  },
+  "passed": true
+}

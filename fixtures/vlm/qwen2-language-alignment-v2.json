@@ -1,0 +1,26 @@
+{
+  "schema_version": 2,
+  "scope": "Metadata alignment resolution for the selected Qwen2-VL pair; original references are retained as epsilon-zero diagnostics.",
+  "original_reference": "fixtures/vlm/image-conditioned-reference-v1.json",
+  "original_reference_sha256": "c07a5049c2acb51fa77eb4f0f0804fb1ab08520b108dfd21faeaee000687f8ae",
+  "corrected_reference": "fixtures/vlm/qwen2-image-conditioned-reference-v2.json",
+  "corrected_reference_sha256": "06d19d21d85fa69e33a43362c7be4f86e44ae3472d2a6a50caede7c482b2b215",
+  "source_configuration": "fixtures/vlm/qwen2-vl-2b/config.json",
+  "source_configuration_sha256": "422adefa19e62dd175961cec85bc0400344fe5bf9b22bd1182e05aaae78556e0",
+  "original_source_file_sha256": "2d00d03c371b87e158f95d69a89bf91cfbcbfa066c8d07f3738e264b3fe919c0",
+  "published_rms_norm_epsilon": 1e-06,
+  "original_logged_epsilon": 0,
+  "corrected_logged_epsilon": 1e-06,
+  "correction_source_record": "resources/tool-assessment/qwen-language-source-record.json",
+  "correction_source_record_sha256": "73591b04358968c2f686f2ba3fe4d50f1007255e3bcace7779b9e9eaef7ff17b",
+  "independent_check": "fixtures/vlm/qwen2-language-independent-v2.json",
+  "independent_check_sha256": "7bfc46be3c5e8eaf3629189fac2fbf7495a1395dae44feb2e4eae146aa04b9f7",
+  "unchanged": [
+    "All four original component files and source/reference archive bytes.",
+    "Qwen prompt bytes, tokens, image embeddings and positional spans.",
+    "F32 KV settings, generation controls and frozen absolute/relative/normalized-L2 thresholds."
+  ],
+  "changed_greedy_sequences": [],
+  "native_qualification_claim": false,
+  "build_inventory_note": "The source record hashes all original object inputs, including the replaced unity object; its link_argv explicitly selects the separate replacement object."
+}

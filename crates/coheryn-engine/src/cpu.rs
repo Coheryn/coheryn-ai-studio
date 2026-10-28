@@ -350,3 +350,31 @@ mod row_attention_tests {
         assert_eq!(error.code, crate::ErrorCode::Cancelled);
     }
 }
+
+/// Affine LayerNorm shared by native encoder graphs.
+pub fn layer_norm(x: &mut [f32], weight: &[f32], bias: &[f32], epsilon: f32) -> Result<()> {
+    if x.is_empty()
+        || x.len() != weight.len()
+        || x.len() != bias.len()
+        || !epsilon.is_finite()
+        || epsilon <= 0.
+    {
+        return Err(Error::invalid("LayerNorm shape/epsilon mismatch"));
+    }
+    let mean = (x.iter().map(|v| f64::from(*v)).sum::<f64>() as f32) / x.len() as f32;
+    let mut variance = 0f64;
+    for value in x.iter_mut() {
+        *value -= mean;
+        variance += f64::from(*value * *value);
+    }
+    let scale = 1. / ((variance / x.len() as f64) as f32 + epsilon).sqrt();
+    for ((value, weight), bias) in x.iter_mut().zip(weight).zip(bias) {
+        *value *= scale;
+        *value *= weight;
+        *value += bias;
+        if !value.is_finite() {
+            return Err(Error::invalid("non-finite LayerNorm output"));
+        }
+    }
+    Ok(())
+}

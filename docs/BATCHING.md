@@ -75,3 +75,7 @@ python3 tools/check_constraints.py --report fixtures/qualification/s6-constraint
 `fixtures/qualification/s6-service.json` records standalone-versus-batched sequences, dynamic joins/retirements, Unicode constraints, peer RNG, incomplete failures, disconnect cleanup and incompatible execution groups for the exact pinned 0.5B Q4_K_M CPU file. This compares native execution strategies and does not regenerate frozen independent oracle inputs. The S5 contract regression uses the new binary while preserving the original S5 records.
 
 No end-to-end throughput improvement, controlled cold-cache behavior, sustained security/soak result, universal model compatibility, GPU or cross-platform model qualification is inferred from these tests. S6 has an initial CPU checkpoint; full release qualification still requires all mandatory text, vision, embedding, backend and platform evidence.
+
+## Cooperative image phases
+
+The selected native Qwen2-VL adapter now shares the FIFO compute gate through `coheryn-vlm-cooperative-v1`. It yields after joined vision weight tiles, 32-query attention groups and decoder checkpoints, and returns compute during delivery backpressure. Separate bounded phase residency, shared request slots and full atomic reservations permit text/embedding progress while an image request retains its private state. Image requests do not join a shared-weight batched forward pass. [IMAGE_SESSIONS.md](IMAGE_SESSIONS.md) documents the scope, metrics, ownership and remaining weighted-fairness/tail-latency qualification.

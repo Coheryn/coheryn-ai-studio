@@ -62,6 +62,31 @@ pub struct HardwareSnapshot {
     pub gpu_backend_qualified: bool,
 }
 
+/// Shared CPU policy for text, image and metadata-only execution planning.
+pub fn execution_threads(
+    profile: Profile,
+    threads: Option<usize>,
+    logical_cpus: usize,
+    max_concurrency: usize,
+) -> Result<usize> {
+    let cpu_share = (logical_cpus / max_concurrency.max(1)).clamp(1, 16);
+    let automatic_threads = match profile {
+        Profile::Reference | Profile::LowMemory => 1,
+        Profile::Balanced => cpu_share.min(2),
+        Profile::Performance => cpu_share.min(4),
+    };
+    let threads_per_session = threads.unwrap_or(automatic_threads);
+    if threads_per_session == 0
+        || threads_per_session > cpu_share
+        || (matches!(profile, Profile::Reference | Profile::LowMemory) && threads_per_session != 1)
+    {
+        return Err(Error::request(
+            "threads exceed the per-session CPU share or the reference/low-memory single-thread contract",
+        ));
+    }
+    Ok(threads_per_session)
+}
+
 /// M0/M1 boundary: caller-provided dimensions cannot invent an executable vision graph.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -246,21 +271,8 @@ pub fn estimate(input: PlanInput<'_>) -> Result<ExecutionPlan> {
     } else {
         256 << 10
     };
-    let cpu_share = (hardware.logical_cpus / max_concurrency).clamp(1, 16);
-    let automatic_threads = match profile {
-        Profile::Reference | Profile::LowMemory => 1,
-        Profile::Balanced => cpu_share.min(2),
-        Profile::Performance => cpu_share.min(4),
-    };
-    let threads_per_session = threads.unwrap_or(automatic_threads);
-    if threads_per_session == 0
-        || threads_per_session > cpu_share
-        || (matches!(profile, Profile::Reference | Profile::LowMemory) && threads_per_session != 1)
-    {
-        return Err(Error::request(
-            "threads exceed the per-session CPU share or the reference/low-memory single-thread contract",
-        ));
-    }
+    let threads_per_session =
+        execution_threads(profile, threads, hardware.logical_cpus, max_concurrency)?;
     let prefill_chunk_tokens = match profile {
         Profile::Reference => 1,
         Profile::LowMemory => 8,

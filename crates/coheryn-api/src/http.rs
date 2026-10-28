@@ -40,6 +40,7 @@ pub fn router(service: Arc<Service>) -> Router {
         .route("/api/v1/models/import", post(import_model))
         .route("/api/v1/models/pull", post(pull))
         .route("/api/v1/models/load", post(load))
+        .route("/api/v1/models/register-pair", post(register_pair))
         .route("/api/v1/models/unload", post(unload))
         .route("/api/v1/models/{id}/inspect", get(inspect_model))
         .route("/api/v1/models/{id}", delete(remove))
@@ -413,12 +414,66 @@ async fn completions(State(s): State<Arc<Service>>, request: Request) -> Result<
     generation(s, json_body(request).await?, Flavor::Completion).await
 }
 async fn chat(State(s): State<Arc<Service>>, request: Request) -> Result<Response> {
-    let _ingress = s.budget.reserve(coheryn_engine::planner::REQUEST_BYTES)?;
-    generation(s, json_body(request).await?, Flavor::Chat).await
+    chat_or_native(s, request, Flavor::Chat).await
 }
 async fn native(State(s): State<Arc<Service>>, request: Request) -> Result<Response> {
-    let _ingress = s.budget.reserve(coheryn_engine::planner::REQUEST_BYTES)?;
-    generation(s, json_body(request).await?, Flavor::Native).await
+    chat_or_native(s, request, Flavor::Native).await
+}
+async fn chat_or_native(s: Arc<Service>, request: Request, flavor: Flavor) -> Result<Response> {
+    let (value, wire_bytes, mut ingress) =
+        crate::vision::read_body(request, &s.budget, &s.config.vision).await?;
+    let model = value["model"]
+        .as_str()
+        .ok_or_else(|| ApiError::bad("model must be a managed ID"))?
+        .to_owned();
+    let vision = s.is_vision(&model).unwrap_or(false);
+    if vision || crate::vision::has_parts(&value) {
+        let request = crate::vision::VisionRequest::from_value(value)?;
+        let engine = s.vision(&model)?; // Reject unsupported models before any image acquisition.
+        ingress.extend(s.config.vision.images.max_total_encoded_bytes)?;
+        let streaming = request.controls.stream;
+        let include_usage = request
+            .controls
+            .stream_options
+            .as_ref()
+            .is_some_and(|o| o.include_usage);
+        let cancel = coheryn_engine::Cancellation::default()
+            .with_timeout(request.controls.timeout_seconds)?;
+        let (controls, messages, images) = tokio::time::timeout(
+            Duration::from_secs(s.config.vision.acquisition_timeout_seconds),
+            request.acquire(&s.config.vision, &cancel),
+        )
+        .await
+        .map_err(|_| ApiError::bad("image request acquisition timeout"))??;
+        let handle = s
+            .scheduler
+            .submit_vision(engine, controls, messages, images, ingress)
+            .await?;
+        generation_response(handle, model, streaming, include_usage, false, flavor).await
+    } else {
+        // Preserve the ordinary text request ceiling even though this endpoint accepts images.
+        if wire_bytes > 1 << 20 {
+            return Err(ApiError::bad("text request exceeds one MiB"));
+        }
+        let request = serde_json::from_value(value)
+            .map_err(|e| ApiError::bad(format!("invalid request JSON: {e}")))?;
+        generation(s, request, flavor).await
+    }
+}
+#[derive(serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RegisterPair {
+    model: String,
+    language: String,
+    vision: String,
+}
+async fn register_pair(State(s): State<Arc<Service>>, request: Request) -> Result<Response> {
+    let request: RegisterPair = json_body(request).await?;
+    Ok(Json(
+        s.register_pair(request.model, request.language, request.vision)
+            .await?,
+    )
+    .into_response())
 }
 fn reason(reason: FinishReason) -> &'static str {
     match reason {
@@ -456,7 +511,7 @@ fn response_value(
         json!([{"index":0,"text":result.text,"logprobs":null,"finish_reason":reason(result.finish_reason)}])
     };
     let mut response = json!({"id":id,"object":if flavor==Flavor::Chat{"chat.completion"}else{"text_completion"},"created":created,"model":model,"choices":choices,"usage":usage(&result)});
-    response["coheryn"] = json!({"sampling_profile":coheryn_engine::sampling::PROFILE,"sampling":result.sampling_metadata,"constraint_validation":result.constraint_validation,"batching":result.batching});
+    response["coheryn"] = json!({"vision":result.vision,"sampling_profile":if result.vision.is_some(){None}else{Some(coheryn_engine::sampling::PROFILE)},"sampling":result.sampling_metadata,"constraint_validation":result.constraint_validation,"batching":result.batching});
     response
 }
 fn chunk(flavor: Flavor, id: &str, model: &str, created: u64, choices: Value) -> Value {
@@ -493,6 +548,17 @@ async fn generation(
         .stream_options
         .as_ref()
         .is_some_and(|v| v.include_usage);
+    let handle = s.scheduler.submit(s.model(&model)?, request)?;
+    generation_response(handle, model, streaming, include_usage, tool_mode, flavor).await
+}
+async fn generation_response(
+    handle: GenerationHandle,
+    model: String,
+    streaming: bool,
+    include_usage: bool,
+    tool_mode: bool,
+    flavor: Flavor,
+) -> Result<Response> {
     let id = format!(
         "{}{}",
         if flavor == Flavor::Chat {
@@ -506,7 +572,6 @@ async fn generation(
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default()
         .as_secs();
-    let handle = s.scheduler.submit(s.model(&model)?, request)?;
     if !streaming {
         let mut handle = handle;
         while let Some(message) = handle.next().await {
@@ -631,7 +696,7 @@ fn sse_stream(
                             state.created,
                             choices,
                         );
-                        finish["coheryn"] = json!({"sampling_profile":coheryn_engine::sampling::PROFILE,"sampling":result.sampling_metadata,"constraint_validation":result.constraint_validation,"batching":result.batching});
+                        finish["coheryn"] = json!({"vision":result.vision,"sampling_profile":if result.vision.is_some(){None}else{Some(coheryn_engine::sampling::PROFILE)},"sampling":result.sampling_metadata,"constraint_validation":result.constraint_validation,"batching":result.batching});
                         if state.include_usage {
                             let mut u = chunk(
                                 state.flavor,

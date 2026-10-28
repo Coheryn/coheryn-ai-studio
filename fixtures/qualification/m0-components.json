@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "stage": "M0 complete component identity, not inference qualification",
+  "selection_manifest_sha256": "97e3c862db44cb87bdef07869614816fd86abdb74202d245e2f416c9ac543942",
+  "components": [
+    {
+      "model": "qwen2-vl-2b",
+      "role": "language",
+      "file": "Qwen2-VL-2B-Instruct-f16.gguf",
+      "bytes": 3093667808,
+      "sha256": "ec8b6dc5fd686f12b7d74850561f74b779db67424e477403fc043b98a0f40752",
+      "repository": "ggml-org/Qwen2-VL-2B-Instruct-GGUF",
+      "revision": "bb307c036e8a1ed7b663bbd0c35b41c4c9294cfd",
+      "status": "full-file-byte-verified",
+      "model_execution_qualified": false
+    },
+    {
+      "model": "qwen2-vl-2b",
+      "role": "vision-projector",
+      "file": "mmproj-Qwen2-VL-2B-Instruct-f16.gguf",
+      "bytes": 1331656160,
+      "sha256": "ecb20cabcdd8dbc277de06bd6eb980aeb2adfaaba9f199a434e328d205675d03",
+      "repository": "ggml-org/Qwen2-VL-2B-Instruct-GGUF",
+      "revision": "bb307c036e8a1ed7b663bbd0c35b41c4c9294cfd",
+      "status": "full-file-byte-verified",
+      "model_execution_qualified": false
+    },
+    {
+      "model": "llava-1.5-7b",
+      "role": "language",
+      "file": "llava-v1.5-7b-Q4_K_M.gguf",
+      "bytes": 4081004320,
+      "sha256": "2687b20ac8b7a23f6c70296d5b1e7f908fef2ce4769ecdebd1bb9503528a75bf",
+      "repository": "second-state/Llava-v1.5-7B-GGUF",
+      "revision": "ffb5e9a1a3172f82448fbdbe578a051c8dc2ff77",
+      "status": "full-file-byte-verified",
+      "model_execution_qualified": false
+    },
+    {
+      "model": "llava-1.5-7b",
+      "role": "vision-projector",
+      "file": "llava-v1.5-7b-mmproj-model-f16.gguf",
+      "bytes": 624434368,
+      "sha256": "50da4e5b0a011615f77686f9b02613571e65d23083c225e107c08c3b1775d9b1",
+      "repository": "second-state/Llava-v1.5-7B-GGUF",
+      "revision": "ffb5e9a1a3172f82448fbdbe578a051c8dc2ff77",
+      "status": "full-file-byte-verified",
+      "model_execution_qualified": false
+    }
+  ],
+  "minimum_free_bytes": 4294967296,
+  "acquisition": "Sequential atomic writes, exact byte/checksum ceilings and bounded stream buffers; no model execution.",
+  "remaining": [
+    "component/processor semantic alignment",
+    "independent vision/projector/logit/greedy captures",
+    "native vision-language execution and release license qualification"
+  ]
+}

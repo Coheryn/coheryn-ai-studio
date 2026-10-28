@@ -1,0 +1,283 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-10-28",
+  "stage": "M0 provenance/reference advance and M1 native image preprocessing foundation",
+  "host": {
+    "os": "macOS-27.0.1-arm64-arm-64bit",
+    "architecture": "arm64"
+  },
+  "baseline_commit": "032d6f9dcd0b4f43a035a20949835870549eee33",
+  "source_state": "local uncommitted image-stage implementation; no push",
+  "rust_toolchain_pin": "1.99.1",
+  "binary_sha256": "adda7cccb271ce842b6226e7733c4119d6b0bfd55461daf1b7d240fa4735c386",
+  "input_identity": {
+    "algorithm": "SHA-256 of compact JSON sorted path-to-SHA256 mapping; excludes generated qualification reports",
+    "combined_sha256": "d8a40456171d0cfb62d4602c4c2324b5515fa7e2996c30555c92b4b52fef91f3",
+    "files": {
+      ".github/workflows/ci.yml": "052c4597033811b10de4508dacf91369cd9ddd5aebd400bf33d975fbfa762354",
+      "AGENT.md": "640b010ae389a71688ebd1f25581013ef7eb7c86e68f2941563b392e2093a081",
+      "Cargo.lock": "5bce24df42d8bcfd19ac81173a02390c21974f9220fb9b096d9e0ad99c14b903",
+      "Cargo.toml": "c3c5b8326eec6d4ce8466beb0b8fa5f4ba5b33fcf85af4b8b6267abca41c6083",
+      "crates/coheryn-api/Cargo.toml": "3f1d8126ef5b7b2dfb77905badf5cd18136aa39f1a8595edbbbc70316d5b667a",
+      "crates/coheryn-api/src/auth.rs": "8a9c74dce253f40920f4e49f7edbb515dd90f415ed72b5492a6a011ee20c73e7",
+      "crates/coheryn-api/src/bounded.rs": "76801e61806e861ff0bf3a8ec868b7ec20f841aa34a2433640e233e24578f566",
+      "crates/coheryn-api/src/client.rs": "819acf440b42c290135583e987a42490f58ab1592e9ef8deacfd43ef731d5e0c",
+      "crates/coheryn-api/src/config.rs": "2b3eb67cc1fc482e0d305cfa6c1758b7db6d97d3b101ef9a2843e0b6461e9099",
+      "crates/coheryn-api/src/download.rs": "ecb1722846e3b87d0c869c1a7b8471f8ede4d08779b13888995ce970cf41bf9c",
+      "crates/coheryn-api/src/embeddings.rs": "05083a5377df5ba3c3025e1e913edf77767cf8afdb023e44e0c3847b8b6b70a9",
+      "crates/coheryn-api/src/error.rs": "cb594498db4b3319beaa027d3553c5fba3a6334153f57dd5b89e39ba6e6f2403",
+      "crates/coheryn-api/src/hardware.rs": "c30bc9a3fd07db1e2cba66f6a7f7cf1c27dbabc38133264f6b5df72f34d20431",
+      "crates/coheryn-api/src/http.rs": "fa5a078efeaa248045736b6283173e6df58d9bfcaa5cfc0f29201357450a7e48",
+      "crates/coheryn-api/src/lib.rs": "c608af2916d966d59cb0126f1d6c6ebe7e5e728a8e454dd363d361674d1848d2",
+      "crates/coheryn-api/src/registry.rs": "6c593d45deb1d483c6da2dc4a08eec515ae172d1f0bedea4469c5e8a8d1957ad",
+      "crates/coheryn-api/src/resident.rs": "2c8999c43d14828915f8d696db56a0ffc81668677db2b8202a01921992989aa7",
+      "crates/coheryn-api/src/scheduler/batching.rs": "90d676614f5b8e5b815e39f033b10a99d8049cb0760a4e2e9b6c6ad43fe3d8e2",
+      "crates/coheryn-api/src/scheduler/embedding.rs": "70aec8addc007191d0578669d9209d95f16eb5c8749194e43ac6b567b30069de",
+      "crates/coheryn-api/src/scheduler.rs": "97d77d846c72fa5ceb5ee443bd623e3f3ce3c2c2fb09c6d7be8231188b8ece8e",
+      "crates/coheryn-api/src/service.rs": "1c4609bf1a86d64b75ed2e1e8b44254720f2806b1884feaa03e564ce0022c147",
+      "crates/coheryn-api/src/session_http.rs": "0a8d9975d882f7bb63e5b35e8a1980f9bf8e848102b26c01ccdeeafac0b36d74",
+      "crates/coheryn-api/src/session_store.rs": "6a902e0f9b15d7fec09e8dae43639a05b0e9bda722e0d0f2fd55b44620378b45",
+      "crates/coheryn-api/src/sessions.rs": "93ad9d425a03614fbfa1aadea8bace44c4dcc25c220430552438e5048476f2b8",
+      "crates/coheryn-api/src/wire.rs": "88f24e63bf30352a3d3c81755039cee4755110e7f437c08dfffbbfbd542e8072",
+      "crates/coheryn-api/tests/embeddings.rs": "897e03f042e39984e5b7a0b72e87b8fa67627a1ff09e6efafea94f6c62e78889",
+      "crates/coheryn-api/tests/service.rs": "3c43173e1a5f7239753cc05dfa12fbb7b5360382dd23b5b26343ba6023d6fd35",
+      "crates/coheryn-api/tests/session_state.rs": "be08f50a44c51b5c437747c6a42111bf07865995280357608abb03e859d934e3",
+      "crates/coheryn-api/tests/sessions.rs": "c45a91de9c9218a41f50111a5eb06d7975033bb9600c1258252678d8999cd18d",
+      "crates/coheryn-api/tests/tools.rs": "d45c0329490ba35252a84959f77945f8287dc5d47ec0a2179cfa2755e44b12f0",
+      "crates/coheryn-bench/Cargo.toml": "602589e8f73ab7b229fa86d8e74311402153bf9f53159c8dbcac88c8cda43349",
+      "crates/coheryn-bench/build.rs": "45a4b130d289c60d248465d102aece23e7e0e4b93deadaed868194deba8ceb5f",
+      "crates/coheryn-bench/src/main.rs": "e2d26f5642c4dc3d2b8a350a731384bdbb10fd8012d0e885e6742638f5455cfe",
+      "crates/coheryn-cli/Cargo.toml": "5e7e71a52cef525a0cf3814201619ff43547f229920924e14a5fa072ba898950",
+      "crates/coheryn-cli/src/daemon.rs": "e15e481952718d6f17e369f179ec0a8f3953e6ad1e3d2559628cd6823063550e",
+      "crates/coheryn-cli/src/embedding.rs": "3ba21c358a975d3b324c1703febd96744c3b872df153f203c34bd43616bafee8",
+      "crates/coheryn-cli/src/main.rs": "30c912f53f4e79e01ac790318b1c1ec9bf85475e7d3ff2c14cd7e9999037e865",
+      "crates/coheryn-cli/src/sessions.rs": "47d72852156d57e02682aacd0f83c8ca54cf9e4813e8e38f45b5ec7309e54c6e",
+      "crates/coheryn-cli/src/tool_chat.rs": "d48de1822c642354a746f05b25f51bc51729d3c28ed3b3ff74ee4c7be6fe62fb",
+      "crates/coheryn-cli/tests/commands.rs": "d1f3208b9fca7ac683af529ef0ba9694b8b6cdbccfe144a9b9f03972cd009b20",
+      "crates/coheryn-cli/tests/embeddings.rs": "5edefcfcf573cac33120d62184c28bfeb33a8b3f44182b076fd50644c8c09c19",
+      "crates/coheryn-cli/tests/sessions.rs": "f7ef09f05a2497891e1272d082331077931656c168a5ce2dfbf4d139a4086eb3",
+      "crates/coheryn-engine/Cargo.toml": "97b9cf3421e481039fb5a29fa6879289bfb456f44ed0b751a35abd916d1f5739",
+      "crates/coheryn-engine/examples/bench_sampling.rs": "b4e7cfa04c4be9aaa5095f9f33607619df45b572bab1262f8ab3a6628d11802f",
+      "crates/coheryn-engine/examples/embedding_probe.rs": "ad715c13e8d53d45cc6d94909e2ece6f1a8fd2a28f5fa7fb1b221da3855db538",
+      "crates/coheryn-engine/examples/inspect_header.rs": "74fc98713cadeab753f2e0ac29b0e4d9ecc5a8268d426af771aafdffbfe90286",
+      "crates/coheryn-engine/examples/prepare_image.rs": "1a0448950e1e1b33bd9035da2ed5d86b73faec1ac51d6d4c5c781c55a7393b71",
+      "crates/coheryn-engine/src/compat.rs": "7ddf12f4c84b8b86cd82ae2a770d76708fd5934f5620d6fdaabc4f5abd9ee3d5",
+      "crates/coheryn-engine/src/constraints.rs": "5d77006e6778ac1e2105de0873ec29c9b27ec6ba87912a45e57b3b62437501de",
+      "crates/coheryn-engine/src/cpu.rs": "11f38728632b63f60badffe3be5e4c1d6cf54b1b878a7e60a522d8df13eab81e",
+      "crates/coheryn-engine/src/embedding/config.rs": "13c069438245b8151b8e7a0bd8b5de995d983f3cac6f47194f6ffd4884e59b65",
+      "crates/coheryn-engine/src/embedding/execution.rs": "2a6a574fece54137d39e1076a352a46b95e50da57ee32b0a23cec79ed64b3aba",
+      "crates/coheryn-engine/src/embedding/mod.rs": "f16819e95fc0a88d180b9e509b3a65d632ab4ac640f5d5f8232d8cf25195314d",
+      "crates/coheryn-engine/src/embedding/plan.rs": "0eae46a1636eeb929ec5f37d5c71f52674b3b9cd9ed034ca7620554efc99c6c6",
+      "crates/coheryn-engine/src/embedding/tokenizer.rs": "5f32d4bf7581dbef13f07171b475c9a03ec077362735cf16191c6e7bca228dc6",
+      "crates/coheryn-engine/src/error.rs": "4f4c863dc4787fcde9866fec2a3aeb950cf9e2acc991d7a90a405fb6d1f273b1",
+      "crates/coheryn-engine/src/gguf.rs": "00e2984aab5280aa4dcceaf00dd95b80dbb64b96d736ea5da36d764bbe66999a",
+      "crates/coheryn-engine/src/inference/batch.rs": "1d719673f1aad0929b2775c696cb68c8e4343f640ac5977c727a36d002e1534e",
+      "crates/coheryn-engine/src/inference/generation.rs": "f90a17df6c7dacd28845b8316dc1882c52c9db3b2dbbb7bec607f7b702b2f3cc",
+      "crates/coheryn-engine/src/inference.rs": "7cf9f634aec51f7d589e25d5a391a169ad7c41428e6e6fb7e4ff4ea44a853db7",
+      "crates/coheryn-engine/src/lib.rs": "7c0b5cfbea69970283d96033996a96d537e2c650cc347b84ef2fdd210e97ec76",
+      "crates/coheryn-engine/src/memory.rs": "ef24e0f353049bd449b10649b9640383a634604e704123ce2dbb18691ecb64cc",
+      "crates/coheryn-engine/src/multimodal/image/header.rs": "e35ab543f9886b6eb2baa5364a9981faa05f202b432c50c37246626990e72ddd",
+      "crates/coheryn-engine/src/multimodal/image/mod.rs": "c3cb96ca6f33eaa6a6554725f6841eb5648a92e872dd6efe2d07fe0f6d96fcd6",
+      "crates/coheryn-engine/src/multimodal/image/resample.rs": "a58754820aa1b418e8421a06e5214f63133217d8408a3753453694e860ca1813",
+      "crates/coheryn-engine/src/multimodal.rs": "86391418e149d429695ff24958cac7f53f5fb1a460402715aafd9591e124512d",
+      "crates/coheryn-engine/src/parallel.rs": "fb84751d0ee63c12e8d5158cd66fefb54709d325b7ed72754c199196e4a168cb",
+      "crates/coheryn-engine/src/planner.rs": "cbdb7f1cd92bfb23ee4899aeaf714c1ecd9e8a1a6034750a087470f2d85908d4",
+      "crates/coheryn-engine/src/quant.rs": "9040de31c02e5942674c010b272b28c608b4792a7b7d571db38da1d7aac54d4b",
+      "crates/coheryn-engine/src/sampling.rs": "936adee56fc9bf21bb7ae6868aab88e4c94b56f04488b36faab888d22df9e935",
+      "crates/coheryn-engine/src/storage.rs": "d99089d398c66ac137646636f9da1b52009935e40512110884202a1f830064fe",
+      "crates/coheryn-engine/src/tensor.rs": "3d21006b7a758190ce4351995f736a7312c6db1f1e7114a611969326a0b148ed",
+      "crates/coheryn-engine/src/tokenizer.rs": "0b5db623a453b0e80bb3ef0e6857fa551c914741d53d26b51a48293350711c74",
+      "crates/coheryn-engine/src/tools.rs": "177b4dd6b8901c08c3946063ba39a281d936ac6c04b16c799c4a88771db86161",
+      "crates/coheryn-engine/tests/batching.rs": "75665ac84d2dfe996d36dee674fe8e30bd0bea360ededa4d12363b09631d0b45",
+      "crates/coheryn-engine/tests/common/mod.rs": "d63aab7f909f616deb37bd7077d9033eb4e9956ee867e42d525f45ff4bc3fe2e",
+      "crates/coheryn-engine/tests/constraints.rs": "23667607edc0c6415df3059a1dc46534740e536e9d786a20081a371ec13a132c",
+      "crates/coheryn-engine/tests/embedding.rs": "d78f68a759e8d1c61dea46c6ada362330a84cb1d8addbfb4d28d778dd31dc683",
+      "crates/coheryn-engine/tests/engine.rs": "924989c004d6f16e3724b12f150766cff6963a0a73ffe41169c922ac8b127da6",
+      "crates/coheryn-engine/tests/gguf.rs": "f11e988a549e040fc5bb0ea6601e9947fedfb0d66c334c11dcfd3d43461f82d5",
+      "crates/coheryn-engine/tests/image.rs": "f3e7ef23817316da738fd82068bcb7af3d353f6bd40ccac2aea49653d8578c16",
+      "crates/coheryn-engine/tests/multimodal.rs": "03f445269f19ace6d5ff3bf4f435e4eafff0d8b7c216ab383d7c9f115f1ea60b",
+      "crates/coheryn-engine/tests/planner.rs": "fe70d3c767571a6154dac184af6923a5bf207d7252fbe287695d46a7c4321599",
+      "crates/coheryn-engine/tests/quant.rs": "e79d6f06df6f126c9a6761b973f87f3292c7f890938d87dfda3778bb26037d2f",
+      "crates/coheryn-engine/tests/reference.rs": "995ad6edc00f2176e3c8d5572eded4c1e8394f6082d756a802476ca42a2dd51d",
+      "crates/coheryn-engine/tests/tools.rs": "44d95b0fdebd6e434caa90c0a1f3ed8ef8cdc1ee76751c8415cacb8d872d032e",
+      "docs/IMAGES.md": "84b46dec45e0f2e4363d848160f852737480252a3202df876f52db79b8bde6bc",
+      "fixtures/vlm/alignment.json": "bd30c539228cc5fd8178c8a6462cca37c428293da88c7723035951a1bca0023b",
+      "fixtures/vlm/preprocessing/profiles.json": "febe04020f72b7c0fc3da489449a07ab36860ca8d03c8daac19f48869287894e",
+      "fixtures/vlm/preprocessing/reference.json": "353ccb2568ba56b33177e9bfeb4fa7e8f18c0190e0e1e51787da0cdd5a5e72b9",
+      "fixtures/vlm/vision-reference.json": "df35e9709346ae74ff2b79803f15fadc1e1710776c1378f5368d9bf2c70d8128",
+      "fuzz/Cargo.lock": "fc6b0cd244a3a3958470d73c4bc6ad6fbc5dbcddf008034e7fac0b776f82911c",
+      "fuzz/Cargo.toml": "1baca0b69843d646fad4fe7ae8bde0511b6702abf7cf62546113bea2b7ab14f6",
+      "fuzz/fuzz_targets/constraints.rs": "00aca3fdae866aa1f3a61be47cde37fbe7c87a2e6b8d8ff20a7aa4015105544e",
+      "fuzz/fuzz_targets/gguf.rs": "5d57a055353c6298c2dd3a3860e8746cee3906cdaae6453e0eaa5d6565e10925",
+      "fuzz/fuzz_targets/images.rs": "a40b4692c46a62b44c91fdf1dbd9d8d5d5e64aedc5beb49a7bf6eda53409a123",
+      "fuzz/fuzz_targets/tools.rs": "e608fba160dce460e0220d4b3dc869ffb42036674199782a631c8c71092f4030",
+      "resources/licensing/dependencies.json": "9ad425ac4684718ffdfaf8c071255c6c533dda736c171ca9d6c32a3d6e6a3258",
+      "resources/tool-assessment/capture_images.py": "4701b251cb22b45781d5906d7aaea8b738c5e2f5f2dd1fd0c6f5c46d3b235b30",
+      "resources/tool-assessment/capture_vision.py": "389e3a01c2a7ffd01ea49d5b1606bdbc3e9714168a812e1e4fc5081679519fe1",
+      "resources/tool-assessment/image_oracle.cpp": "ffecb5640f9bb30ea2f65b367f70a6677e0c101cdc3dd58b8e62e9df991f3884",
+      "resources/tool-assessment/vision_oracle.cpp": "d763591bcf8bdcc40cd3e09c206c3543b7fd84bb017fc19f454207b0e84e869f",
+      "rust-toolchain.toml": "d13306be0ecda81ce779baa290ffb417380d525928477f16200884b5169cca33",
+      "tools/check_image_fixtures.py": "0c6b1914927e2cac3c31951237a7d41e8ab80fe5deb3de8a1f964ef16e8bbd9e",
+      "tools/check_image_preprocessing.py": "7ccbe21f026e5e654f77785e6df8d47b415ffad76fc045ca05facbcfdec6cb03",
+      "tools/check_vlm_inventory.py": "0afbf44212815dece3a3af2822408808a1d59821a2c58b7cf24736aea5ca118e",
+      "tools/fetch_vlm.py": "7e192a2cc942aeababb7ccf1b33baf07b34ab3b1296bd2601689051fe23f7d05"
+    }
+  },
+  "checks": [
+    {
+      "name": "format",
+      "status": "passed",
+      "local_log": ".cache/m1-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clippy",
+      "status": "passed",
+      "local_log": ".cache/m1-clippy-final.log",
+      "log_sha256": "de48f6754ef13d7f1ca4c97721cffbd3ebdea96f81d77727af2f9618d81e0f51"
+    },
+    {
+      "name": "workspace-tests",
+      "status": "passed",
+      "local_log": ".cache/m1-tests-complete.log",
+      "log_sha256": "b99a6e5a55332d8adf7f4995f7d66be7c87e3024a26678bf4cf11f0c46272e25"
+    },
+    {
+      "name": "fuzz-target-build",
+      "status": "passed",
+      "local_log": ".cache/m1-fuzz-check-final.log",
+      "log_sha256": "9e6da5e83d4f669d5352c3a4dee1cda71071d50fe0c22f5a3ada7e49e9ed37a1"
+    },
+    {
+      "name": "release-build",
+      "status": "passed",
+      "local_log": ".cache/m1-release-final.log",
+      "log_sha256": "3e0073bd8012946516ad24308a6101f71f186cb527fe01686f1d79227af83137"
+    },
+    {
+      "name": "offline-image-fixtures",
+      "status": "passed",
+      "local_log": ".cache/m1-fixtures-final.log",
+      "log_sha256": "18d63c60c3d7e5d1e2f3b04dd291527338c2178c27877294d1bc7189763cfd20"
+    },
+    {
+      "name": "native-image-observations",
+      "status": "passed",
+      "local_log": ".cache/m1-preprocessing.log",
+      "log_sha256": "ea6839e5bd180a72203c660a61a1733d73b1a24f7b3f8b5fa035f85fe6b17d7e"
+    },
+    {
+      "name": "source-policy",
+      "status": "passed",
+      "local_log": ".cache/m1-policy-final.log",
+      "log_sha256": "e4cc21feaec18e074bf5478713908c4d50cf456753fb7f6ca703ecc8bd61576c"
+    },
+    {
+      "name": "independence-and-archive",
+      "status": "passed",
+      "local_log": ".cache/m1-independence-final.log",
+      "log_sha256": "7eb41078efde3b2a2abaae2f4f6f2d9e3601e824464714ae893facd319cb492d"
+    },
+    {
+      "name": "release-strings",
+      "status": "passed",
+      "local_log": ".cache/m1-artifacts-final.log",
+      "log_sha256": "e1b4fec5b5d40d698fef673532c521d35630916ad846a7ec767cc31a855e4ee4"
+    },
+    {
+      "name": "license-inventory",
+      "status": "passed",
+      "local_log": ".cache/m1-licenses-final.log",
+      "log_sha256": "14f28943d7530381867cd350ef60d9efa0d7cd62f895e2837b2f28a16d459675"
+    },
+    {
+      "name": "license-tests",
+      "status": "passed",
+      "local_log": ".cache/m1-license-tests.log",
+      "log_sha256": "f4f89112bd809a8bd9a3e472def5bc9863f7b0d357f1ac9cb0a7944e3ab66211"
+    },
+    {
+      "name": "policy-tests",
+      "status": "passed",
+      "local_log": ".cache/m1-policy-tests.log",
+      "log_sha256": "bbb17d37f4aff1504bd3c29e594020df481ecca599ce8980549aa53022d8879b"
+    },
+    {
+      "name": "embedding-fixtures",
+      "status": "passed",
+      "local_log": ".cache/m1-embedding-fixtures.log",
+      "log_sha256": "29db053ea6376ae2554796a8946539701fd55327470f0f224b0722c71dbf067d"
+    },
+    {
+      "name": "tool-fixtures",
+      "status": "passed",
+      "local_log": ".cache/m1-tool-fixtures.log",
+      "log_sha256": "f4e2a064b09e3a6dab18a8e91c9f6a89bc785c1642e7b62bd37a8331e03e0873"
+    },
+    {
+      "name": "constraint-fixtures",
+      "status": "passed",
+      "local_log": ".cache/m1-constraint-fixtures.log",
+      "log_sha256": "7583f06152a7c9f0f14ff29041b8ab9de79f33de8b80ac7647d940acb83d9fb8"
+    },
+    {
+      "name": "pinned-tokenizer-opt-in",
+      "status": "passed",
+      "local_log": ".cache/m1-tokenizer-opt-in.log",
+      "log_sha256": "4e865a82d233116e41ca390837f5a0d1f11178e40091864472866629cae656a7"
+    },
+    {
+      "name": "complete-component-inventories",
+      "status": "passed",
+      "local_log": ".cache/m0-native-inventories.log",
+      "log_sha256": "966c4cb6f1ddf3926f205d6ed9836d3c1433c92b07c704b5a283b11aa76db687"
+    }
+  ],
+  "ordinary_tests": {
+    "passed": 174,
+    "failed": 0,
+    "ignored": 2
+  },
+  "additional_opt_in": {
+    "pinned_fp16_tokenizer_template_cases": 8,
+    "test_status": "passed"
+  },
+  "processor_cases": 20,
+  "source_decode_cases": 10,
+  "coordinate_orientations_tested": 8,
+  "full_components_byte_verified": 4,
+  "independent_vision_cases": 4,
+  "independent_vision_tensor_records": 116,
+  "fuzz_targets_compiled": [
+    "gguf",
+    "tools",
+    "constraints",
+    "images"
+  ],
+  "sustained_fuzz_campaign_run": false,
+  "native_inference_graph_dependencies": "Coheryn-owned execution only; general-purpose PNG/JPEG codec dependency added",
+  "legal_inventory": {
+    "external_packages": 311,
+    "attributed_assets": 36,
+    "immutable_archived_records_byte_preserved": 30
+  },
+  "evidence": [
+    "fixtures/qualification/m0-components.json",
+    "fixtures/qualification/m0-container-inventories.json",
+    "fixtures/vlm/preprocessing/reference.json",
+    "fixtures/vlm/vision-reference.json",
+    "fixtures/vlm/alignment.json",
+    "fixtures/qualification/m1-preprocessing.json",
+    "fixtures/qualification/m1-text-regression.json",
+    "fixtures/qualification/m1-dependency-versions.json",
+    "fixtures/qualification/m1-independence.json",
+    "fixtures/qualification/m1-artifacts.json"
+  ],
+  "qualification_boundary": {
+    "M0": "open: component/source semantic alignment, image-conditioned logits/greedy, multi-image and release license review",
+    "M1": "processor foundation implemented; secure acquisition, product attachments and scheduler/CAEP integration remain",
+    "M2": "native vision encoder/projector/language integration not implemented",
+    "image_to_text_supported": false,
+    "other_platforms_and_gpu_qualified": false
+  }
+}

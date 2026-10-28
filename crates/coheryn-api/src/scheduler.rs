@@ -18,6 +18,7 @@ use tokio::sync::{OwnedSemaphorePermit, Semaphore, mpsc};
 
 mod batching;
 mod embedding;
+mod vision;
 pub use embedding::{EmbeddingDelivery, EmbeddingHandle};
 
 async fn finalize_turn(
@@ -71,6 +72,7 @@ pub enum GenerationEvent {
     Failed(ApiError),
 }
 pub struct GenerationHandle {
+    _vision: Option<vision::VisionOwner>,
     receiver: mpsc::Receiver<GenerationEvent>,
     cancel: Cancellation,
 }
@@ -82,6 +84,7 @@ pub(crate) fn protocol_fixture(events: Vec<GenerationEvent>) -> GenerationHandle
     }
     GenerationHandle {
         receiver,
+        _vision: None,
         cancel: Cancellation::default(),
     }
 }
@@ -105,6 +108,11 @@ pub struct Counters {
     matrix_tile_reads: AtomicU64,
     matrix_read_bytes: AtomicU64,
     embedding_microbatches: AtomicU64,
+    vision_backpressure_waits: AtomicU64,
+    vision_units: AtomicU64,
+    vision_yields: AtomicU64,
+    vision_waiting_units: AtomicU64,
+    vision_max_unit_micros: AtomicU64,
     active: AtomicU64,
     queued: AtomicU64,
     completed: AtomicU64,
@@ -122,6 +130,11 @@ pub struct SchedulerStats {
     pub matrix_tile_reads: u64,
     pub matrix_read_bytes: u64,
     pub embedding_microbatches: u64,
+    pub vision_backpressure_waits: u64,
+    pub vision_units: u64,
+    pub vision_yields: u64,
+    pub vision_waiting_units: u64,
+    pub vision_max_unit_micros: u64,
     pub active: u64,
     pub queued: u64,
     pub completed: u64,
@@ -140,6 +153,11 @@ impl Counters {
             matrix_tile_reads: self.matrix_tile_reads.load(Ordering::Relaxed),
             matrix_read_bytes: self.matrix_read_bytes.load(Ordering::Relaxed),
             embedding_microbatches: self.embedding_microbatches.load(Ordering::Relaxed),
+            vision_backpressure_waits: self.vision_backpressure_waits.load(Ordering::Relaxed),
+            vision_units: self.vision_units.load(Ordering::Relaxed),
+            vision_yields: self.vision_yields.load(Ordering::Relaxed),
+            vision_waiting_units: self.vision_waiting_units.load(Ordering::Relaxed),
+            vision_max_unit_micros: self.vision_max_unit_micros.load(Ordering::Relaxed),
             active: self.active.load(Ordering::Relaxed),
             queued: self.queued.load(Ordering::Relaxed),
             completed: self.completed.load(Ordering::Relaxed),
@@ -160,6 +178,7 @@ pub struct Scheduler {
     waiting: Arc<Semaphore>,
     embedding_slots: Arc<Semaphore>,
     embedding_active: Arc<Semaphore>,
+    vision_active: Arc<Semaphore>,
     pub counters: Arc<Counters>,
     shutdown: CancellationToken,
     config: ServerConfig,
@@ -183,6 +202,7 @@ impl Scheduler {
                 config.queue_capacity + config.max_concurrency,
             )),
             active: Arc::new(Semaphore::new(config.max_concurrency)),
+            vision_active: Arc::new(Semaphore::new(config.max_concurrency)),
             balanced: Arc::new(Semaphore::new(config.max_concurrency.min(2))),
             waiting: Arc::new(Semaphore::new(config.queue_capacity)),
             embedding_slots: Arc::new(Semaphore::new(config.embeddings.requests)),
@@ -608,7 +628,11 @@ impl Scheduler {
             // A terminal message cannot keep admission/model residency pinned forever.
             let _ = tokio::time::timeout(consumer_timeout, sender.send(event)).await;
         });
-        Ok(GenerationHandle { receiver, cancel })
+        Ok(GenerationHandle {
+            receiver,
+            cancel,
+            _vision: None,
+        })
     }
     pub async fn drained(&self) {
         while self.slots.available_permits()

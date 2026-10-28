@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "stage": "M1 native image preprocessing foundation, not image understanding",
+  "host": {
+    "os": "macOS-27.0.1-arm64-arm-64bit",
+    "architecture": "arm64"
+  },
+  "binary_sha256": "e13e8b20e698fa235bba62ec8dc63fd0909bbe112ba2f2946e26dec879a795ae",
+  "reference_sha256": "353ccb2568ba56b33177e9bfeb4fa7e8f18c0190e0e1e51787da0cdd5a5e72b9",
+  "cases": [
+    {
+      "id": "llava15-pad336-v1:landscape.png",
+      "elapsed_seconds": 0.028758208,
+      "peak_reserved_bytes": 1697746,
+      "peak_engine_buffer_capacity_bytes": 1693440,
+      "retained_output_reserved_bytes": 1358848,
+      "processed_rgb_sha256": "4cacfa2e5621d07ac277f0bfc02b0a64b60126ea7da8a920a9d3e211efc77f61",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "qwen2vl-still-v1:landscape.png",
+      "elapsed_seconds": 0.001114292,
+      "peak_reserved_bytes": 1147382,
+      "peak_engine_buffer_capacity_bytes": 94080,
+      "retained_output_reserved_bytes": 79360,
+      "processed_rgb_sha256": "3140bef36ad2b59e29d09fe358bdab9cc4d4bfc5d88fff0ef1deeaf6e6c8d91d",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "llava15-pad336-v1:swapped.png",
+      "elapsed_seconds": 0.027928916,
+      "peak_reserved_bytes": 1697747,
+      "peak_engine_buffer_capacity_bytes": 1693440,
+      "retained_output_reserved_bytes": 1358848,
+      "processed_rgb_sha256": "5216d882f93393f9cfea0ee251a956507c77df637a5bb5bd3f8fa0574bf71af1",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "qwen2vl-still-v1:swapped.png",
+      "elapsed_seconds": 0.00121575,
+      "peak_reserved_bytes": 1147385,
+      "peak_engine_buffer_capacity_bytes": 94080,
+      "retained_output_reserved_bytes": 79360,
+      "processed_rgb_sha256": "0c3d73cfd1e041743ef88660f01670fd91d1b3c566a2bbf4c5c14283e0387808",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "llava15-pad336-v1:portrait.png",
+      "elapsed_seconds": 0.031186833,
+      "peak_reserved_bytes": 1697793,
+      "peak_engine_buffer_capacity_bytes": 1693440,
+      "retained_output_reserved_bytes": 1358848,
+      "processed_rgb_sha256": "a20fbd88c85721619136c3fd2072c3f7bf8b136a08dfceb2bab5f978c26230ba",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "qwen2vl-still-v1:portrait.png",
+      "elapsed_seconds": 0.001296625,
+      "peak_reserved_bytes": 1147523,
+      "peak_engine_buffer_capacity_bytes": 94080,
+      "retained_output_reserved_bytes": 79360,
+      "processed_rgb_sha256": "ab2ff34b302029e81fe7841f7e06abf0c186506571a73fc0a28c5303997c1a81",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "llava15-pad336-v1:minimum.png",
+      "elapsed_seconds": 0.025009584,
+      "peak_reserved_bytes": 1697605,
+      "peak_engine_buffer_capacity_bytes": 1693440,
+      "retained_output_reserved_bytes": 1358848,
+      "processed_rgb_sha256": "86b5a0751ce8b22d4ec5700b803aa2a8bc72cd009a3f92feb7c42a296e206914",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "qwen2vl-still-v1:minimum.png",
+      "elapsed_seconds": 0.000701208,
+      "peak_reserved_bytes": 1052894,
+      "peak_engine_buffer_capacity_bytes": 47040,
+      "retained_output_reserved_bytes": 41728,
+      "processed_rgb_sha256": "2047659a194e0b71b9d3fd6a2c79c5c3e62ec4bfa4457a7e8dac99034ea60bd3",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "llava15-pad336-v1:alpha.png",
+      "elapsed_seconds": 0.044447667,
+      "peak_reserved_bytes": 1697647,
+      "peak_engine_buffer_capacity_bytes": 1693440,
+      "retained_output_reserved_bytes": 1358848,
+      "processed_rgb_sha256": "86b5a0751ce8b22d4ec5700b803aa2a8bc72cd009a3f92feb7c42a296e206914",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "qwen2vl-still-v1:alpha.png",
+      "elapsed_seconds": 0.001675709,
+      "peak_reserved_bytes": 1064765,
+      "peak_engine_buffer_capacity_bytes": 47040,
+      "retained_output_reserved_bytes": 41728,
+      "processed_rgb_sha256": "2047659a194e0b71b9d3fd6a2c79c5c3e62ec4bfa4457a7e8dac99034ea60bd3",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "llava15-pad336-v1:landscape.jpg",
+      "elapsed_seconds": 0.034056625,
+      "peak_reserved_bytes": 1697768,
+      "peak_engine_buffer_capacity_bytes": 1693440,
+      "retained_output_reserved_bytes": 1358848,
+      "processed_rgb_sha256": "dc49ffd0c75ca893f4f48454e9e101487634104d7a07349f43df7e181489215f",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "qwen2vl-still-v1:landscape.jpg",
+      "elapsed_seconds": 0.001384625,
+      "peak_reserved_bytes": 1147448,
+      "peak_engine_buffer_capacity_bytes": 94080,
+      "retained_output_reserved_bytes": 79360,
+      "processed_rgb_sha256": "d158c2c857fda3cd01bf87e5f03d9eb7065d48c1b5875de81c0edd9cbd1bf6a1",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "llava15-pad336-v1:odd-rgb.png",
+      "elapsed_seconds": 0.026605667,
+      "peak_reserved_bytes": 1697751,
+      "peak_engine_buffer_capacity_bytes": 1693440,
+      "retained_output_reserved_bytes": 1358848,
+      "processed_rgb_sha256": "648e060b5fa5db7d4a589ccc434ccfac8ba1aa98752aba1af9a928ece50ed659",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "qwen2vl-still-v1:odd-rgb.png",
+      "elapsed_seconds": 0.002124375,
+      "peak_reserved_bytes": 1063862,
+      "peak_engine_buffer_capacity_bytes": 70560,
+      "retained_output_reserved_bytes": 60544,
+      "processed_rgb_sha256": "1b58b3117129eddbc54c29dfdc5e796dfa7d315d310bb4135c042939fc107611",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "llava15-pad336-v1:downscale.png",
+      "elapsed_seconds": 0.251409167,
+      "peak_reserved_bytes": 13016033,
+      "peak_engine_buffer_capacity_bytes": 2775579,
+      "retained_output_reserved_bytes": 1358848,
+      "processed_rgb_sha256": "a39caf3c8bece6b7c559cc11bd37b94ff65244b41917fe9bc9d6b1d6c7fa4eba",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "qwen2vl-still-v1:downscale.png",
+      "elapsed_seconds": 0.550786292,
+      "peak_reserved_bytes": 13016033,
+      "peak_engine_buffer_capacity_bytes": 11748240,
+      "retained_output_reserved_bytes": 9402688,
+      "processed_rgb_sha256": "c83abbfefe70cd52003c68386813a26a536d2d9c9d92d978784c91219606a40d",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "llava15-pad336-v1:gray.png",
+      "elapsed_seconds": 0.029333209,
+      "peak_reserved_bytes": 1697635,
+      "peak_engine_buffer_capacity_bytes": 1693440,
+      "retained_output_reserved_bytes": 1358848,
+      "processed_rgb_sha256": "77c3807b5fb00d404f2d09906be54be0396e3efe7cb568b5a5398a8e26d5e746",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "qwen2vl-still-v1:gray.png",
+      "elapsed_seconds": 0.002272875,
+      "peak_reserved_bytes": 1061384,
+      "peak_engine_buffer_capacity_bytes": 70560,
+      "retained_output_reserved_bytes": 60544,
+      "processed_rgb_sha256": "d133989dd36f8b0f0153f84d4364f95f34aae1d273bcf9bf1b485479f5d5c23a",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "llava15-pad336-v1:exif6.jpg",
+      "elapsed_seconds": 0.033315625,
+      "peak_reserved_bytes": 1697812,
+      "peak_engine_buffer_capacity_bytes": 1693440,
+      "retained_output_reserved_bytes": 1358848,
+      "processed_rgb_sha256": "4258289dc99b101295cb1c4a6cd449f37a97bf3a3fcb42a2aed2e127c69a5885",
+      "cleanup_reserved_bytes": 0
+    },
+    {
+      "id": "qwen2vl-still-v1:exif6.jpg",
+      "elapsed_seconds": 0.001326083,
+      "peak_reserved_bytes": 1147580,
+      "peak_engine_buffer_capacity_bytes": 94080,
+      "retained_output_reserved_bytes": 79360,
+      "processed_rgb_sha256": "94200949560d71e1165dc6301765988578f6c9132ed5177f47d1c2bcb3c7c443",
+      "cleanup_reserved_bytes": 0
+    }
+  ],
+  "image_to_text_supported": false,
+  "measurement_limits": [
+    "Uncontrolled host/cache conditions; descriptive observations, no comparative speed claim.",
+    "Engine vector capacities exclude codec allocations, allocator overhead and OS residency.",
+    "No vision encoder, projector, language-model or GPU allocation is included."
+  ]
+}

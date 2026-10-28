@@ -1,0 +1,5 @@
+# Isolated independent assessment only; never a native runtime dependency.
+numpy==2.5.4
+Pillow==13.0.0
+Jinja2==3.1.6
+MarkupSafe==3.0.4

@@ -478,6 +478,7 @@ impl GenerationState {
         self.constraint_reservation.take();
         Ok((
             GenerationResult {
+                vision: None,
                 batching: Some(Box::new(self.batching)),
                 sampling_metadata: Some(Box::new(SamplingMetadata {
                     sampling_ms: self.sampling_ms,

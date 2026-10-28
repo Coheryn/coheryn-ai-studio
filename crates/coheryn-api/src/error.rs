@@ -42,6 +42,9 @@ impl From<Error> for ApiError {
             | ErrorCode::ConstraintIncomplete
             | ErrorCode::ConstraintViolation => StatusCode::UNPROCESSABLE_ENTITY,
             ErrorCode::InvalidRequest
+            | ErrorCode::InvalidImage
+            | ErrorCode::UnsupportedImageFormat
+            | ErrorCode::UnsupportedImageProcessor
             | ErrorCode::InvalidGguf
             | ErrorCode::UnsupportedGgufVersion
             | ErrorCode::UnsupportedGgufTensorType
@@ -50,9 +53,10 @@ impl From<Error> for ApiError {
             | ErrorCode::UnsupportedChatTemplate
             | ErrorCode::UnsupportedFeature
             | ErrorCode::UnsupportedEmbeddingDimensions => StatusCode::BAD_REQUEST,
-            ErrorCode::EmbeddingInputLimitExceeded | ErrorCode::EmbeddingBatchLimitExceeded => {
-                StatusCode::PAYLOAD_TOO_LARGE
-            }
+            ErrorCode::ContextLimitExceeded
+            | ErrorCode::ImageInputLimitExceeded
+            | ErrorCode::EmbeddingInputLimitExceeded
+            | ErrorCode::EmbeddingBatchLimitExceeded => StatusCode::PAYLOAD_TOO_LARGE,
             ErrorCode::ResourceExhausted | ErrorCode::Unavailable => {
                 StatusCode::SERVICE_UNAVAILABLE
             }

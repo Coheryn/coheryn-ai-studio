@@ -16,6 +16,7 @@ rayon = "1.12.0"
 tokenizers = { version = "0.23.2", default-features = false, features = ["fancy-regex"] }
 minijinja = { version = "3.0.4", features = ["json", "fuel", "serde"] }
 unicode-normalization = "0.1.26"
+image = { version = "0.25.10", default-features = false, features = ["png", "jpeg"] }
 
 [dev-dependencies]
 tempfile = "3.27.0"

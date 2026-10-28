@@ -45,6 +45,7 @@ fn create(s: &Sessions, name: &str, context: usize) {
 }
 fn proposal(budget: &Budget, text: &str, calls: Vec<ToolCall>) -> GenerationResult {
     GenerationResult {
+        vision: None,
         batching: None,
         sampling_metadata: None,
         constraint_validation: None,
@@ -72,6 +73,7 @@ fn calls() -> Vec<ToolCall> {
 }
 fn body(revision: u64, key: &str) -> SubmitTurn {
     SubmitTurn {
+        images: vec![],
         expected_revision: revision,
         idempotency_key: key.into(),
         content: "Use add.".into(),

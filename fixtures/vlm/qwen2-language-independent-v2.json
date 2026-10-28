@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "scope": "Independent first decoder layer under both original epsilon-zero and metadata-correct profiles; identical weights, token inputs, frozen image embeddings and positions. This does not replace native end-to-end PNG execution.",
+  "numpy_version": "2.5.4",
+  "source_sha256": "8f0d1b9a96ef3b763d5e87d9e54fe1436824ff5535fc68dd0c2fea3679d6559c",
+  "math_source_sha256": "ea02fd9b324e497e047eb7443384dd18f353ab13f52f671d6c9386cf1e065216",
+  "base_math_source_sha256": "4a384c544063cc746893b989291dcd1d07f513327e4e267778efaad917d16fa3",
+  "math_binary_sha256": "0672b34e14a0306489b6453552c30f2b4b67ec2be1ce3b829f1f6b87d38a376b",
+  "language_sha256": "ec8b6dc5fd686f12b7d74850561f74b779db67424e477403fc043b98a0f40752",
+  "tolerances": {
+    "absolute": 0.003,
+    "relative": 0.001,
+    "normalized_l2": 0.0005
+  },
+  "comparisons": [
+    {
+      "profile": "original-diagnostic",
+      "epsilon": 0.0,
+      "count": 1536,
+      "independent_sha256": "d982d7ec4b80803b40baab05e845d189483877bf271a2833ddcdfe28283907e8",
+      "reference_sha256": "d982d7ec4b80803b40baab05e845d189483877bf271a2833ddcdfe28283907e8",
+      "maximum_absolute": 0.0,
+      "outside_tolerance": 0,
+      "normalized_l2": 0.0,
+      "elapsed_seconds": 0.6516234999871813
+    },
+    {
+      "profile": "metadata-correct",
+      "epsilon": 9.999999974752427e-07,
+      "count": 1536,
+      "independent_sha256": "7e7ed587970dbea4253e9022b10c268447ccd44e4c41a7d44726be9ed18640b3",
+      "reference_sha256": "7e7ed587970dbea4253e9022b10c268447ccd44e4c41a7d44726be9ed18640b3",
+      "maximum_absolute": 0.0,
+      "outside_tolerance": 0,
+      "normalized_l2": 0.0,
+      "elapsed_seconds": 0.09253250001347624
+    }
+  ]
+}

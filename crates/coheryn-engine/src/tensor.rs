@@ -114,6 +114,21 @@ pub(crate) fn matmul(
     work: &mut Workspace,
     cancel: &Cancellation,
 ) -> Result<()> {
+    matmul_cooperative(
+        storage, data, tensor, input, output, work, cancel, &mut None,
+    )
+}
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn matmul_cooperative(
+    storage: &Storage,
+    data: u64,
+    tensor: &Tensor,
+    input: &[f32],
+    output: &mut [f32],
+    work: &mut Workspace,
+    cancel: &Cancellation,
+    cooperate: &mut Option<&mut crate::multimodal::WorkYield<'_>>,
+) -> Result<()> {
     if tensor.dimensions.len() != 2 {
         return Err(Error::invalid("matrix needs two dimensions"));
     }
@@ -246,6 +261,9 @@ pub(crate) fn matmul(
                 for (i, dst) in output.chunks_exact_mut(rows).enumerate() {
                     compute_row(i, dst)?;
                 }
+            }
+            if let Some(yield_work) = cooperate.as_deref_mut() {
+                yield_work()?;
             }
         }
     }

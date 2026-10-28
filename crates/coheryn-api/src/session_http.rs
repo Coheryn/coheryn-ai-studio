@@ -31,6 +31,7 @@ pub(crate) fn routes() -> Router<Arc<Service>> {
         .route("/coheryn/v1/sessions/{id}/reset", post(reset))
         .route("/coheryn/v1/sessions/{id}/save", post(save))
         .route("/coheryn/v1/sessions/{id}/messages", post(messages))
+        .route("/coheryn/v1/sessions/{id}/images", post(attach_image))
 }
 async fn blocking<T: Send + 'static>(
     work: impl FnOnce() -> Result<T> + Send + 'static,
@@ -115,37 +116,66 @@ async fn create(State(s): State<Arc<Service>>, request: Request) -> Result<Respo
     let owner = s.auth.principal(request.headers())?;
     let _payload = s.budget.reserve(4 << 20)?;
     let body: CreateSession = json_body(request).await?;
-    let model = s.model(&body.model)?;
-    if !model.tokenizer.supports_conversations() {
-        return Err(Error::new(
-            ErrorCode::UnsupportedChatTemplate,
-            "template is not qualified for managed multi-turn histories",
-        )
-        .into());
-    }
-    if body.context == 0
-        || body.context > model.context_limit()
-        || body.context > s.config.max_context
-    {
-        return Err(ApiError::bad(
-            "session context exceeds loaded model/server capacity",
-        ));
-    }
-    if let Some(system) = &body.system {
-        let prompt = model.render(&[coheryn_engine::tokenizer::Message {
-            role: "system".into(),
-            content: system.clone(),
-            ..Default::default()
-        }])?;
-        if model.tokenizer.encode(&prompt)?.len() >= body.context {
+    let task = if s.is_vision(&body.model)? {
+        let model = s.vision(&body.model)?;
+        if body.context == 0
+            || body.context > model.context_limit()
+            || body.context > s.config.max_context
+        {
             return Err(ApiError::bad(
-                "initial instructions cannot fit the session context",
+                "session context exceeds loaded model/server capacity",
             ));
         }
-    }
+        let mut messages = Vec::new();
+        if let Some(system) = &body.system {
+            messages.push(coheryn_engine::multimodal::qwen2vl::ChatMessage {
+                role: "system".into(),
+                content: coheryn_engine::multimodal::qwen2vl::ChatContent::Text(system.clone()),
+            });
+        }
+        messages.push(coheryn_engine::multimodal::qwen2vl::ChatMessage {
+            role: "user".into(),
+            content: coheryn_engine::multimodal::qwen2vl::ChatContent::Text(" ".into()),
+        });
+        coheryn_engine::multimodal::qwen2vl::render(&messages, 0)?;
+        crate::sessions::SessionTask::ImageToText
+    } else {
+        let model = s.model(&body.model)?;
+        if !model.tokenizer.supports_conversations() {
+            return Err(Error::new(
+                ErrorCode::UnsupportedChatTemplate,
+                "template is not qualified for managed multi-turn histories",
+            )
+            .into());
+        }
+        if body.context == 0
+            || body.context > model.context_limit()
+            || body.context > s.config.max_context
+        {
+            return Err(ApiError::bad(
+                "session context exceeds loaded model/server capacity",
+            ));
+        }
+        if let Some(system) = &body.system {
+            let prompt = model.render(&[coheryn_engine::tokenizer::Message {
+                role: "system".into(),
+                content: system.clone(),
+                ..Default::default()
+            }])?;
+            if model.tokenizer.encode(&prompt)?.len() >= body.context {
+                return Err(ApiError::bad(
+                    "initial instructions cannot fit the session context",
+                ));
+            }
+        }
+        crate::sessions::SessionTask::TextGeneration
+    };
     let hash = s.registry.get(&body.model)?.sha256;
     let sessions = s.sessions.clone();
-    let (view, _payload) = reserved(_payload, move || sessions.create(owner, body, hash)).await?;
+    let (view, _payload) = reserved(_payload, move || {
+        sessions.create_task(owner, body, hash, task)
+    })
+    .await?;
     reply(&s, view)
 }
 async fn list(State(s): State<Arc<Service>>, request: Request) -> Result<Response> {
@@ -277,6 +307,10 @@ async fn messages(
         BeginTurn::New(turn) => turn,
     };
     let watch = turn.watch.clone();
+    if turn.task() == crate::sessions::SessionTask::ImageToText {
+        let handle = managed_vision(&s, turn, _payload).await?;
+        return managed_response(s, handle, watch, streaming).await;
+    }
     let model = match s.model(turn.model_id()).and_then(|model| {
         if s.registry.get(turn.model_id())?.sha256 != turn.model_hash() {
             return Err(ApiError::conflict(
@@ -321,7 +355,15 @@ async fn messages(
         }
     };
     let scheduler = s.scheduler.clone();
-    let mut handle = blocking(move || scheduler.submit_managed(model, request, turn)).await?;
+    let handle = blocking(move || scheduler.submit_managed(model, request, turn)).await?;
+    managed_response(s, handle, watch, streaming).await
+}
+async fn managed_response(
+    s: Arc<Service>,
+    mut handle: crate::scheduler::GenerationHandle,
+    watch: crate::sessions::TurnWatch,
+    streaming: bool,
+) -> Result<Response> {
     if !streaming {
         while let Some(event) = handle.next().await {
             match event {
@@ -406,4 +448,97 @@ mod tests {
         .await
         .unwrap();
     }
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ImageRevision {
+    expected_revision: u64,
+}
+async fn attach_image(
+    State(s): State<Arc<Service>>,
+    Path(id): Path<String>,
+    request: Request,
+) -> Result<Response> {
+    let owner = s.auth.principal(request.headers())?;
+    let axum::extract::Query(query) =
+        axum::extract::Query::<ImageRevision>::try_from_uri(request.uri())
+            .map_err(|_| ApiError::bad("image upload requires expected_revision"))?;
+    if request
+        .headers()
+        .get(axum::http::header::CONTENT_TYPE)
+        .and_then(|v| v.to_str().ok())
+        .is_none_or(|v| !matches!(v, "application/octet-stream" | "image/png" | "image/jpeg"))
+    {
+        return Err(ApiError::bad(
+            "image uploads require application/octet-stream, image/png or image/jpeg",
+        ));
+    }
+    let limits = s.config.vision.images;
+    let reservation = s.budget.reserve(limits.max_encoded_bytes * 3 + (1 << 20))?;
+    let body = tokio::time::timeout(
+        Duration::from_secs(s.config.vision.acquisition_timeout_seconds),
+        axum::body::to_bytes(request.into_body(), limits.max_encoded_bytes as usize),
+    )
+    .await
+    .map_err(|_| ApiError::bad("image upload timeout"))?
+    .map_err(|_| ApiError::bad("image upload exceeds byte limit or was interrupted"))?;
+    let sessions = s.sessions.clone();
+    let (attachment, _reservation) = reserved(reservation, move || {
+        sessions.attach_image(
+            &owner,
+            &id,
+            query.expected_revision,
+            &body,
+            limits,
+            &Cancellation::default(),
+        )
+    })
+    .await?;
+    reply(&s, attachment)
+}
+async fn managed_vision(
+    s: &Arc<Service>,
+    mut turn: Box<crate::sessions::TurnLease>,
+    payload: Reservation,
+) -> Result<crate::scheduler::GenerationHandle> {
+    let preflight = (|| -> Result<_> {
+        if s.registry.get(turn.model_id())?.sha256 != turn.model_hash() {
+            return Err(ApiError::conflict("session model-pair identity changed"));
+        }
+        let model = s.vision(turn.model_id())?;
+        let request = turn.vision_request();
+        let options = s.scheduler.vision_options(&model, &request)?;
+        Ok((model, request, options))
+    })();
+    let (model, request, options) = match preflight {
+        Ok(v) => v,
+        Err(e) => {
+            let error = e.clone();
+            blocking(move || turn.finish(&GenerationEvent::Failed(error))).await?;
+            return Err(e);
+        }
+    };
+    let cancel = Cancellation::default().with_timeout(request.timeout_seconds)?;
+    let guard = PrepareCancellation(cancel.clone());
+    let engine = model.clone();
+    let limits = s.config.vision.images;
+    let mut job = tokio::task::spawn_blocking(move || {
+        let prepared = turn.prepare_vision(&engine, &options, limits, &cancel);
+        (turn, prepared)
+    });
+    let (turn, prepared) =
+        tokio::select! {r=&mut job=>r?,_=s.shutdown.cancelled()=>{guard.0.cancel();job.await?}};
+    drop(guard);
+    let prepared = match prepared {
+        Ok(v) => v,
+        Err(e) => {
+            let mut turn = turn;
+            let error = e.clone();
+            blocking(move || turn.finish(&GenerationEvent::Failed(error))).await?;
+            return Err(e);
+        }
+    };
+    s.scheduler
+        .submit_managed_vision(model, request, prepared, payload, turn)
 }

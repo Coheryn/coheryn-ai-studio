@@ -17,7 +17,7 @@ const QWEN_PATTERN: &str = r"(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\r\n\p{L}\p{N}]?\p{L
 fn unsupported(message: impl Into<String>) -> Error {
     Error::new(ErrorCode::UnsupportedTokenizer, message)
 }
-pub fn check_metadata(d: &Descriptor) -> Result<()> {
+fn check_codec(d: &Descriptor) -> Result<()> {
     if d.text("tokenizer.ggml.model") != Some("gpt2")
         || d.text("tokenizer.ggml.pre") != Some("qwen2")
     {
@@ -43,6 +43,26 @@ pub fn check_metadata(d: &Descriptor) -> Result<()> {
             return Err(unsupported(format!("{key}=true is not qualified")));
         }
     }
+    Ok(())
+}
+pub(crate) fn check_qwen_vl_metadata(d: &Descriptor) -> Result<()> {
+    check_codec(d)?;
+    let source = d
+        .text("tokenizer.chat_template")
+        .ok_or_else(|| unsupported("missing vision chat template"))?;
+    let hash = crate::storage::digest_hex(
+        Sha256::digest(serde_json::to_vec(source).map_err(|e| unsupported(e.to_string()))?).into(),
+    );
+    if hash != "4df95d05455c2a6f762616492bba63d0f9bef904ef47daabad35f5715d6d2e4e" {
+        return Err(Error::new(
+            ErrorCode::UnsupportedChatTemplate,
+            "unqualified Qwen2-VL chat template",
+        ));
+    }
+    Ok(())
+}
+pub fn check_metadata(d: &Descriptor) -> Result<()> {
+    check_codec(d)?;
     let template = d.text("tokenizer.chat_template").ok_or_else(|| {
         Error::new(
             ErrorCode::UnsupportedChatTemplate,
@@ -126,6 +146,13 @@ fn byte_decoder() -> HashMap<char, u8> {
 impl TextTokenizer {
     pub fn from_descriptor(d: &Descriptor) -> Result<Self> {
         check_metadata(d)?;
+        Self::from_checked_descriptor(d)
+    }
+    pub(crate) fn from_qwen_vl_descriptor(d: &Descriptor) -> Result<Self> {
+        check_qwen_vl_metadata(d)?;
+        Self::from_checked_descriptor(d)
+    }
+    fn from_checked_descriptor(d: &Descriptor) -> Result<Self> {
         let tokens = d
             .get("tokenizer.ggml.tokens")
             .and_then(Value::array)

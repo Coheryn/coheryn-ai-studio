@@ -2,7 +2,7 @@
 
 Source licensing records and distribution staging are in [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md). CI checks the locked all-target dependency notice inventory and file-level mirrored asset mapping. Every source/binary package must retain the complete legal payload; `python3 tools/license_notices.py --bundle target/distribution` stages it for packaging. Custom model terms and final platform/package/legal review remain applicable.
 
-Status: experimental G4 text CPU CLI/API and E2 native embedding CPU CLI/API; M0 provenance groundwork, automated S0 checks and initial S1–S5 managed text sessions and tool proposals, isolated KV reuse and opt-in histories. Full v1.0 is not complete.
+Status: experimental G4 text CPU CLI/API and E2 native embedding CPU CLI/API; M0 component byte verification and corrected image-conditioned references, plus M1 native preprocessing/position foundation, automated S0 checks and initial S1–S6 managed text sessions and tool proposals, isolated KV reuse and opt-in histories. Full v1.0 is not complete.
 
 The mandatory release scope includes C01–C28 and C29–C38: sessions, persistence, tools, constraints, sampling, continuous batching and independence/presentation proof. S0 has scoped automated checks and S1 has initial text CPU implementation/evidence. S2/S3 now have initial current-host CPU implementation/evidence; S4–S6 now have initial exact-file CPU implementation/evidence; broader batching/backend and complete release qualification remain open. Native Nomic F16/Q8_0 CPU embedding execution is qualified on macOS ARM64; embedding CLI, `/v1/embeddings` and external RAG interfaces have initial E2 evidence. Multimodal extensions to C02/C03/C06/C08/C09/C12–C18/C22/C23 require M0–M2 and G5/G6 evidence, including component manifests, image-aware admission and secure acquisition; existing text-only checks do not satisfy those additions.
 
@@ -12,7 +12,7 @@ The G0/G1 engine, G2/G3 service/planner and G4 packed CPU execution have passed 
 |---|---|---|
 | C01 native execution | Coheryn scalar Qwen2 graph and CPU kernels | Complete backend/format qualification |
 | C02 CLI | Standalone/client run and chat; registry commands, serve, inspect/validate, plan preview, status, metrics, bench and doctor | Versioned configuration evolution and final CLI release qualification |
-| C03 HTTP API | Text completion/chat, SSE, native generation and versioned admin routes | Broader compatibility/release security qualification |
+| C03 HTTP API | Text completion/chat, qualified paired-image chat, SSE, native generation and versioned admin routes | Broader compatibility/release security qualification |
 | C04 streaming | Bounded CLI/SSE delivery, reserved terminal slot, consumer timeout, disconnect cancellation | Cross-platform release soak tests |
 | C05 headless | Same Rust engine in standalone CLI and Axum daemon | Packaged offline release tests |
 | C06 GGUF | Bounded v3 parser; F32/F16 and packed Qwen2 execution | Broader backend/platform qualification |
@@ -33,7 +33,7 @@ The G0/G1 engine, G2/G3 service/planner and G4 packed CPU execution have passed 
 | C21 diagnostics | Structured HTTP logs/errors, explicit exits, private persistent registry/credentials, reproducible flags | Versioned configuration files and final contract qualification |
 | C22 scheduling | Shared residency, configurable budget-admitted sessions (default one), exclusive low-memory execution, strict waiting queue, pin-aware unload and cancellation | Broader concurrent-serving optimization and soak tests |
 | C23 verification | Engine/parser tests, independent oracle, actual HTTP/SSE integration, pinned-model service smoke, fuzz target and benchmarks | Sustained fuzz/sanitizer campaigns and complete backend/platform matrix |
-| C24 image understanding (P0) | M0 pinned components, header inventories, processor/content contracts and image inputs; no image execution qualification | Pinned LLaVA and Qwen-VL model sets; native JPEG/PNG preprocessing, vision/projector/integration; CLI/API/SSE, multi-image, reference parity, CPU/Metal, memory and security evidence |
+| C24 image understanding (P0) | Verified components and processor/reference fixtures; exact-pair native Qwen2-VL CPU CLI/API/SSE, bounded ingress/admission, original assets, managed follow-ups, restart and cooperative scheduling; see IMAGE_SESSIONS.md | LLaVA, broader model/image-count/resolution qualification, Metal, other CPU platforms and sustained memory/security/performance campaigns |
 | C25 native embeddings (P0) | E1 independent Nomic F16/Q8_0 graph, 768-D mean/L2 vectors, exact tokenizer, single/batch/profile parity, 50 multilingual cases, bounded admission and cleanup; see EMBEDDINGS.md | Broader pretrained architecture/encoding qualification, Metal, actual Linux/Windows evidence and comparable memory/throughput benchmarks |
 | C26 embeddings API (P0) | E2 strings/arrays, float/Base64, exact usage, identity headers, task-aware residency, bounded shared scheduling and SDK checks | Broader platform/backend, sustained security and release contract qualification |
 | C27 embedding CLI (P0) | E2 headless text/file windows, native/client parity, quotas, atomic export/overwrite protection, identity-switch abort and cancellation | Cross-platform packaging and extended disk/transport fault campaigns |
@@ -52,7 +52,7 @@ The G0/G1 engine, G2/G3 service/planner and G4 packed CPU execution have passed 
 
 G0/G1 evidence lives in `fixtures/models.json`, `fixtures/golden/`, `fixtures/qualification/`, and the ordinary Rust tests. Large raw traces and models remain ignored. Qualification records must identify their exact hardware, inputs, settings and tolerances. Do not mark G0/G1 accepted solely because synthetic tests pass.
 
-G3 CPU planner behavior and remaining M0 acceptance are described in [PLANNER.md](PLANNER.md). Actual VLM tensor payloads remain unverified; header inventories are not inference qualification. Existing text compatibility entries retain their exact-file evidence.
+G3 CPU planner behavior and remaining M0 acceptance are described in [PLANNER.md](PLANNER.md). All four VLM tensor payload files are now byte-verified in `m0-components.json`; complete file identity is not inference qualification. See [native image-stage evidence and limitations](IMAGES.md). Existing text compatibility entries retain their exact-file evidence.
 
 Full v1.0 under v1.7 requires C01–C38, G0–G6/M0–M2/E0–E3/S0–S6 evidence, including embedded persistent-history capability with opt-in runtime use, tool/schema and independent audit acceptance. Existing feature rows above describe their historical scope and do not qualify the newly extended contracts. Optional full RAG/storage/retrieval/reranking features do not gate the core release.
 
@@ -65,3 +65,17 @@ S0–S3 evidence and exact supported contracts are documented in [INDEPENDENCE.m
 S4 current-host evidence and exact supported fields are in [TOOL_CALLING.md](TOOL_CALLING.md), `fixtures/tools/manifest.json` and `fixtures/qualification/s4-verification.json`. This qualifies a specific file/profile, preserves the original malformed-output rejection fixture and leaves broader release obligations open.
 
 S5 pinned-model evidence is in `fixtures/qualification/s5-service.json`, with independent sampling fixtures in `fixtures/constraints/`. Legal/schema profile limits and exact unsupported combinations remain explicit. S6 has an initial CPU checkpoint described in [BATCHING.md](BATCHING.md); broader batching qualification, native vision, Metal and final release qualification remain open.
+
+The selected reference alignment and image-conditioned fixtures are documented in [VLM_REFERENCE.md](VLM_REFERENCE.md). Full-file identity and independently executed model outputs do not qualify a native executor. C24 and the image extensions to the other requirements remain release-gating until native implementation and backend/platform/security evidence pass.
+
+The partial M2 [native Qwen vision component](VISION.md) adds exact-file encoder/merger parity, bounded reusable scratch and cleanup tests. C24 remains open: image-conditioned language output and product ingress are not enabled. Existing complete-model/backend/platform release requirements are unchanged.
+
+The [offline Qwen image-to-text checkpoint](MULTIMODAL.md) adds native projected-input decoding, multidimensional rotary positions and atomic local request admission. Versioned corrected reference evidence preserves the original epsilon-zero diagnostics. C24 remains release-gating until product ingress/lifecycle, remaining required VLM/backend/platform and security evidence pass.
+
+## Image product ingress checkpoint
+
+The selected native Qwen2-VL pair now reaches the main CLI/OpenAI-shaped API through managed pair registration, secure bounded acquisition, stage-aware planning and queue-held full admission. Workspace coverage includes multiple images, exact CLI/native/OpenAI parity, authorization, hostile inputs, component protection, saturation, backpressure and acknowledged disconnect cleanup. See [IMAGE_API.md](IMAGE_API.md). This extends C02/C03/C06/C08/C09/C12–C18 evidence for the tested CPU subset; it does not close managed multimodal histories, sustained network/fuzz/security campaigns, LLaVA, Metal, other CPU-platform execution or the complete mandatory release gate.
+
+## Managed image histories and cooperative CPU checkpoint
+
+[IMAGE_SESSIONS.md](IMAGE_SESSIONS.md) extends the current Qwen2-VL subset with private original assets, no-resend conversation history, opt-in save/restart, bounded portable image documents and cooperative text/embedding/image compute. This adds scoped C24/C29–C32/C36 evidence; image tools/constraints, continuous image batching, broader model/backend/platform coverage and sustained network/security/fuzz/crash/performance campaigns remain open. Complete v1.0 acceptance remains unchanged.

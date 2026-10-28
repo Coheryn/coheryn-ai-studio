@@ -1,0 +1,20 @@
+{
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {"type": "image", "index": 0},
+        {"type": "text", "text": "Which color is on the left? Answer with one color word."}
+      ]
+    }
+  ],
+  "images": ["fixtures/vlm/preprocessing/canonical/landscape-png.png"],
+  "options": {
+    "max_tokens": 8,
+    "threads": 2,
+    "vision": {"threads": 2, "tile_tokens": 32, "max_patches": 64}
+  },
+  "context": 256,
+  "max_memory": 805306368,
+  "stream": true
+}

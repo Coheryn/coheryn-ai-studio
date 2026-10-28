@@ -46,7 +46,7 @@ OS RAM/swap observations are separate from both counters. Zero/unavailable avail
 }
 ```
 
-This interface performs no image URL fetch or decoding. Image plans are **not admissible** until processor/vision execution is qualified: acquisition, decoded pixels, preprocessing, encoder workspace, embeddings and effective positions are explicitly null. Text-stage estimates do not stand in for missing vision costs. No image content is accepted by the current generation endpoint.
+The service planner performs no image URL fetch or decoding. Registered qualified Qwen2-VL pairs now accept `task=image-to-text` and dimension descriptors, reporting native processor/encoder/decoder costs, transport, metadata and explicit admission reasons; see [IMAGE_API.md](IMAGE_API.md). A text-only model still returns inadmissible/null vision stages, because text estimates cannot establish a vision graph. Exact prompt tokens, physical/rotary positions and attachment limits are checked before the owned request receives full queue-held admission.
 
 ## M0 evidence and remaining acceptance
 
@@ -58,7 +58,7 @@ The Qwen2.5-VL 3B candidate was excluded after its conversion metadata and pinne
 
 Reproduce selected provenance with `python3 tools/prepare_vlm.py`. This fetches bounded pinned source assets and GGUF prefixes, validates their checksums and runs the development-only native header inventory example. Full GGUF payloads are not downloaded or hash-verified by this tool. `--pin` explicitly refreshes revision selection; it is not part of normal reproduction. The tool never executes an external runtime or unverified weights.
 
-[Procedural PNG/JPEG inputs](../fixtures/vlm/images/manifest.json), ordered/image-sensitive cases and [comparison settings](../fixtures/vlm/reference-contract.json) are committed. Numeric criteria are frozen before native vision implementation, but independent vision outputs have **not** been captured. M0 remains open for complete asset byte verification, component/processor alignment and license review, independent processor/feature/embedding/logit/greedy capture and multi-image qualification. M1/M2 image execution is not implemented. These records do not expand the executable entries in `fixtures/compatibility.json`.
+[Procedural PNG/JPEG inputs](../fixtures/vlm/images/manifest.json), ordered/image-sensitive cases and [comparison settings](../fixtures/vlm/reference-contract.json) are committed. Numeric criteria are frozen before native vision implementation, but the newer [image-stage checkpoint](IMAGES.md) now adds all four complete file hashes and 20 independent processor cases. The [reference checkpoint](VLM_REFERENCE.md) now resolves the selected reference graph policy and adds single/two-image logits/greedy, Unicode and EOS inputs. Native execution and model-chain release qualification remain open. M1 has native processor-only staged admission; secure ingress and product attachments remain open. M2 has a native Qwen2-VL vision/merger component checkpoint; language integration and complete workload admission remain open. These records do not expand the executable entries in `fixtures/compatibility.json`.
 
 ## Verification
 
@@ -83,3 +83,19 @@ Observed session-buffer counters also include actual private trie/mask/alias/sch
 ## S6 live CPU packing
 
 Resumable generation and embedding microbatches share a FIFO compute gate. Each compatible token group reads matrix tiles once using existing admitted per-request workspaces; changing membership requires no batch-sized activation allocation or reservation gap. Independent sequence capacities and grammar reservations remain unchanged. No memory discount is applied merely because requests may share a batch. CPU remains the only qualified placement, with no automatic backend/model fallback. [BATCHING.md](BATCHING.md) documents generation residency versus compute/embedding limits and the scope of observed counters.
+
+The native `multimodal::positions::ImagePositions` helper is now checked against ten independent image spans. Physical KV entries and rotary-position counts are separate: the 112×56 Qwen fixture contributes eight feature rows and advances four rotary positions. Full image workload estimates remain inadmissible until component costs, language KV and scheduling are integrated and qualified; this helper alone does not authorize execution.
+
+The native vision plan reserves reusable encoder/merger scratch, row-wise attention, owned worker allowances and retained projected embeddings under the same budget as prepared pixels. It does not modify the HTTP planner or enable image request admission. Complete weights are read through buffered storage; reservations are distinct from OS file-cache residency. See [VISION.md](VISION.md).
+
+## Offline Qwen request admission
+
+The [offline image-to-text adapter](MULTIMODAL.md) computes actual processor/vision, decoder, physical KV, rotary span and output costs for its supported graph. It atomically reserves a complete request peak, splits reservations into stages and recycles image capacity between attachments. This is separate from the daemon planner contract: the HTTP image estimate remains inadmissible and its unimplemented costs remain unknown. Connecting the qualified graph, model-pair residency and image inputs to CAEP/scheduling is the next product integration gate.
+
+## Product image requests
+
+Registered Qwen2-VL pairs accept `task=image-to-text` and bounded oriented image dimensions through the planner endpoint. The estimate validates both component graphs from headers and reports conservative processor/encoder/decoder, transport and model metadata costs without loading weights. Exact token/image geometry and full capacity are atomically reserved before scheduling. Profile worker/concurrency policy is shared with text planning; the initial image request holds the CPU FIFO gate for one bounded request. [IMAGE_API.md](IMAGE_API.md) documents fields, conservative byte ceilings, cancellation and the remaining image-history/batching/backend limits.
+
+## Managed image history admission
+
+Image sessions reconstruct selected original-byte references under session/owner/global disk quotas. Exact prompt/feature geometry, full decoder capacity and the sequential image-stage peak are admitted before scheduling; metadata/history and transport reservations are counted separately. Explicit oldest-complete-turn exclusion can remove older image turns and records their IDs. Cooperative compute checkpoints retain the existing reservation and buffers while parked; output backpressure releases CPU ownership. Original assets remain on disk and KV/pixels/embeddings remain request-local. See [IMAGE_SESSIONS.md](IMAGE_SESSIONS.md) for finite limits, phase residency and persistence semantics.

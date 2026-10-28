@@ -15,5 +15,8 @@ fuzz_target!(|data: &[u8]| {
     {
         // Exercise both decoder and encoder compatibility before execution allocation.
         let _ = coheryn_engine::validate(&descriptor);
+        if descriptor.architecture.as_deref() == Some("qwen2vl") {
+            let _ = coheryn_engine::multimodal::qwen2vl::language_configuration(&descriptor);
+        }
     }
 });

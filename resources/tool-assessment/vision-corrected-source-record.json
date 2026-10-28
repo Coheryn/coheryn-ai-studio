@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "base_revision": "2280f0fd163b03d4331d49e08460f66502e35854",
+  "original_source_sha256": "b150542a0adf4945c90b21cfca317edc975941c0a7b5cb7cc3139fc9a5d55cf0",
+  "corrected_source_sha256": "e58336b66faa996d9d3d4a90ecd5e109425c93e6e085d223333e2e003d187794",
+  "changes": [
+    {
+      "before": "int il_last = hparams.n_layer - 1;",
+      "after": "int il_last = hparams.n_layer - (proj_type == PROJECTOR_TYPE_MLP ? 0 : 1);"
+    },
+    {
+      "before": "inp = ggml_concat(ctx0, inp, model.class_embedding, 1);",
+      "after": "inp = ggml_concat(ctx0, model.class_embedding, inp, 1);"
+    }
+  ],
+  "scope": "research-only corrected legacy MLP reference; original files/weights/captures remain unchanged",
+  "upstream_reports": [
+    "https://github.com/ggml-org/llama.cpp/issues/25817",
+    "https://github.com/ggml-org/llama.cpp/issues/25814"
+  ],
+  "qualification": "Requires independent numerical cross-check; upstream reports alone are not acceptance."
+}

@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "native_vlm_execution_supported": false,
+  "profiles": [
+    {
+      "id": "llava15-legacy23-cls-first-pad336-v1",
+      "model": "llava-1.5-7b",
+      "components": {
+        "language": {
+          "sha256": "2687b20ac8b7a23f6c70296d5b1e7f908fef2ce4769ecdebd1bb9503528a75bf",
+          "bytes": 4081004320,
+          "inventory": "fixtures/vlm/llava-1.5-7b/language.inventory.json"
+        },
+        "vision-projector": {
+          "sha256": "50da4e5b0a011615f77686f9b02613571e65d23083c225e107c08c3b1775d9b1",
+          "bytes": 624434368,
+          "inventory": "fixtures/vlm/llava-1.5-7b/vision-projector.inventory.json"
+        }
+      },
+      "processor": "llava15-pad336-v1",
+      "processor_rules": "fixtures/vlm/preprocessing/profiles.json",
+      "vision": {
+        "blocks": 23,
+        "hidden": 1024,
+        "attention_heads": 16,
+        "intermediate": 4096,
+        "patch": 14,
+        "temporal_patch": 1,
+        "spatial_merge": 1,
+        "class_token": "first; omit before projection",
+        "projector_output": 4096,
+        "normalization_epsilon": 9.999999747378752e-06
+      },
+      "positions": {
+        "layout": "linear",
+        "physical_tokens": "576",
+        "position_count": "576",
+        "reservation_note": "Physical KV entries and positional span are independent quantities."
+      },
+      "language_metadata": {
+        "general.architecture": "llama",
+        "general.file_type": 15,
+        "general.name": "LLaMA v2",
+        "general.quantization_version": 2,
+        "llama.attention.head_count": 32,
+        "llama.attention.head_count_kv": 32,
+        "llama.attention.layer_norm_rms_epsilon": 9.999999747378752e-06,
+        "llama.block_count": 32,
+        "llama.context_length": 4096,
+        "llama.embedding_length": 4096,
+        "llama.feed_forward_length": 11008,
+        "llama.rope.dimension_count": 128
+      },
+      "maximum_images_in_reference_cases": 1,
+      "native_execution_supported": false,
+      "scope": "exact-file candidate graph contract; requires native executor parity before inference compatibility",
+      "alignment_policy": "Execute all 23 stored blocks; CLS first; select patch rows 1..576; explicit selected-GGUF pad336 processor, no HF center-crop parity claim."
+    },
+    {
+      "id": "qwen2vl-still-source-limits-v1",
+      "model": "qwen2-vl-2b",
+      "components": {
+        "language": {
+          "sha256": "ec8b6dc5fd686f12b7d74850561f74b779db67424e477403fc043b98a0f40752",
+          "bytes": 3093667808,
+          "inventory": "fixtures/vlm/qwen2-vl-2b/language.inventory.json"
+        },
+        "vision-projector": {
+          "sha256": "ecb20cabcdd8dbc277de06bd6eb980aeb2adfaaba9f199a434e328d205675d03",
+          "bytes": 1331656160,
+          "inventory": "fixtures/vlm/qwen2-vl-2b/vision-projector.inventory.json"
+        }
+      },
+      "processor": "qwen2vl-still-v1",
+      "processor_rules": "fixtures/vlm/preprocessing/profiles.json",
+      "vision": {
+        "blocks": 32,
+        "hidden": 1280,
+        "attention_heads": 16,
+        "intermediate": 5120,
+        "patch": 14,
+        "temporal_patch": 2,
+        "spatial_merge": 2,
+        "class_token": "absent",
+        "projector_output": 1536,
+        "normalization_epsilon": 9.999999974752427e-07
+      },
+      "positions": {
+        "layout": "temporal-vertical-horizontal-reserved",
+        "physical_tokens": "processed_grid_rows * processed_grid_columns / 4",
+        "position_count": "max(processed_grid_rows/2, processed_grid_columns/2)",
+        "reservation_note": "Physical KV entries and positional span are independent quantities."
+      },
+      "language_metadata": {
+        "general.architecture": "qwen2vl",
+        "general.base_model.0.name": "Qwen2 VL 2B",
+        "general.base_model.0.organization": "Qwen",
+        "general.base_model.0.repo_url": "https://huggingface.co/Qwen/Qwen2-VL-2B",
+        "general.base_model.count": 1,
+        "general.basename": "Qwen2-VL",
+        "general.file_type": 1,
+        "general.finetune": "Instruct",
+        "general.languages": [
+          "en"
+        ],
+        "general.license": "apache-2.0",
+        "general.name": "Qwen2 VL 2B Instruct",
+        "general.quantization_version": 2,
+        "general.size_label": "2B",
+        "general.tags": [
+          "multimodal",
+          "image-text-to-text"
+        ],
+        "general.type": "model",
+        "qwen2vl.attention.head_count": 12,
+        "qwen2vl.attention.head_count_kv": 2,
+        "qwen2vl.attention.layer_norm_rms_epsilon": 9.999999974752427e-07,
+        "qwen2vl.block_count": 28,
+        "qwen2vl.context_length": 32768,
+        "qwen2vl.embedding_length": 1536,
+        "qwen2vl.feed_forward_length": 8960,
+        "qwen2vl.rope.dimension_sections": [
+          16,
+          24,
+          24,
+          0
+        ],
+        "qwen2vl.rope.freq_base": 1000000.0
+      },
+      "maximum_images_in_reference_cases": 2,
+      "native_execution_supported": false,
+      "scope": "exact-file candidate graph contract; requires native executor parity before inference compatibility",
+      "alignment_policy": "Actual tensors override misleading feed-forward metadata; explicit source pixel limits."
+    }
+  ]
+}

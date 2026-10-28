@@ -64,6 +64,29 @@ fn build_with_options(
     template: &str,
     tool_tokens: bool,
 ) -> Vec<u8> {
+    build_profile(hidden, packed, template, tool_tokens, false)
+}
+#[allow(dead_code)]
+pub fn tiny_vlm_model() -> Vec<u8> {
+    let template: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../fixtures/vlm/qwen2-vl-2b/chat_template.json"
+    ))
+    .unwrap();
+    build_profile(
+        256,
+        Some(1),
+        template["chat_template"].as_str().unwrap(),
+        false,
+        true,
+    )
+}
+fn build_profile(
+    hidden: usize,
+    packed: Option<u32>,
+    template: &str,
+    tool_tokens: bool,
+    vision: bool,
+) -> Vec<u8> {
     let mut metadata = BTreeMap::new();
     for (key, value) in [
         ("general.architecture", "qwen2"),
@@ -121,19 +144,54 @@ fn build_with_options(
             "<|im_end|>".into(),
         ]
     });
+    if vision {
+        tokens.extend([
+            "<|vision_start|>".into(),
+            "<|vision_end|>".into(),
+            "<|image_pad|>".into(),
+        ]);
+    }
+    let vocabulary = tokens.len();
     metadata.insert("tokenizer.ggml.tokens", array_text(&tokens));
     metadata.insert("tokenizer.ggml.merges", array_text(&[]));
     let mut types = 9u32.to_le_bytes().to_vec();
     types.extend(4u32.to_le_bytes());
-    types.extend(259u64.to_le_bytes());
-    for i in 0..259 {
+    types.extend((vocabulary as u64).to_le_bytes());
+    for i in 0..vocabulary {
         types.extend((if i >= 256 { 3u32 } else { 1u32 }).to_le_bytes());
     }
     metadata.insert("tokenizer.ggml.token_type", types);
+    let mut metadata: BTreeMap<String, Vec<u8>> = metadata
+        .into_iter()
+        .map(|(k, v)| {
+            (
+                if vision {
+                    k.replace("qwen2.", "qwen2vl.")
+                } else {
+                    k.to_owned()
+                },
+                v,
+            )
+        })
+        .collect();
+    if vision {
+        metadata.insert("general.architecture".into(), text("qwen2vl"));
+        let mut sections = 9u32.to_le_bytes().to_vec();
+        sections.extend(4u32.to_le_bytes());
+        sections.extend(4u64.to_le_bytes());
+        for n in [16u32, 24, 24, 0] {
+            sections.extend(n.to_le_bytes());
+        }
+        metadata.insert("qwen2vl.rope.dimension_sections".into(), sections);
+    }
     let mut tensors = vec![
-        ("token_embd.weight".to_string(), vec![hidden, 259], 1f32),
+        (
+            "token_embd.weight".to_string(),
+            vec![hidden, vocabulary],
+            1f32,
+        ),
         ("output_norm.weight".to_string(), vec![hidden], 1.),
-        ("output.weight".to_string(), vec![hidden, 259], 0.),
+        ("output.weight".to_string(), vec![hidden, vocabulary], 0.),
     ];
     for (name, shape, value) in [
         ("attn_norm.weight", vec![hidden], 1.),
@@ -156,7 +214,7 @@ fn build_with_options(
     b.extend((tensors.len() as u64).to_le_bytes());
     b.extend((metadata.len() as u64).to_le_bytes());
     for (k, v) in metadata {
-        string(&mut b, k);
+        string(&mut b, &k);
         b.extend(v);
     }
     let mut data = Vec::new();

@@ -1,0 +1,36 @@
+{
+  "verified_on": "2026-10-28",
+  "scope": "Isolated assessment tools, outside all Cargo graphs",
+  "packages": [
+    {
+      "package": "numpy",
+      "latest_stable": "2.5.4",
+      "source": "https://pypi.org/pypi/numpy/json"
+    },
+    {
+      "package": "Pillow",
+      "latest_stable": "13.0.0",
+      "source": "https://pypi.org/pypi/Pillow/json"
+    },
+    {
+      "package": "Jinja2",
+      "latest_stable": "3.1.6",
+      "source": "https://pypi.org/pypi/Jinja2/json"
+    },
+    {
+      "package": "MarkupSafe",
+      "latest_stable": "3.0.4",
+      "source": "https://pypi.org/pypi/MarkupSafe/json"
+    },
+    {
+      "package": "cmake",
+      "latest_stable": "4.4.4",
+      "source": "https://pypi.org/pypi/cmake/json"
+    },
+    {
+      "package": "pip",
+      "latest_stable": "26.2.2",
+      "source": "https://pypi.org/pypi/pip/json"
+    }
+  ]
+}

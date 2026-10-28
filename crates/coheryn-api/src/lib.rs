@@ -15,6 +15,8 @@ pub mod service;
 mod session_http;
 pub mod session_store;
 pub mod sessions;
+pub mod vision;
+mod vision_planner;
 pub mod wire;
 
 #[cfg(test)]

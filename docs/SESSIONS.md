@@ -1,6 +1,6 @@
-# Managed text conversations — S1–S4 CPU preview
+# Managed conversations — CPU preview
 
-The native daemon supports owned conversations, session-safe prefix KV reuse and opt-in embedded history storage. These capabilities are qualified initially for the pinned Qwen text template on macOS ARM64 CPU. Qualified tool-call/result turns and pending-call persistence are documented in [TOOL_CALLING.md](TOOL_CALLING.md). Developer roles, images, constrained output and continuous batching remain later gates. Functions are never executed automatically. Stateless completion/chat/embedding endpoints and ordinary standalone chat retain their contracts.
+The native daemon supports owned conversations, session-safe prefix KV reuse and opt-in embedded history storage. These capabilities are qualified initially for the pinned Qwen text template on macOS ARM64 CPU. Qualified tool-call/result turns and pending-call persistence are documented in [TOOL_CALLING.md](TOOL_CALLING.md). Managed Qwen2-VL image histories and cooperative image scheduling are documented in [IMAGE_SESSIONS.md](IMAGE_SESSIONS.md). Qualified text constraints/sampling and batching are documented in [CONSTRAINTS.md](CONSTRAINTS.md) and [BATCHING.md](BATCHING.md). Developer roles remain unsupported. Functions are never executed automatically. Stateless completion/chat/embedding endpoints and ordinary standalone chat retain their contracts.
 
 After importing a model as `qwen` and loading it with context 512:
 
@@ -26,7 +26,7 @@ coheryn sessions delete project-alpha --expected-revision CURRENT_REVISION
 
 Reset preserves system instructions by default and starts a new epoch. Clearing stored instructions still permits the model's qualified default-system behavior. Delete releases history, replay and cache state. Its bounded control-plane request remains usable under workload budget exhaustion.
 
-## Prefix KV reuse
+## Text prefix KV reuse
 
 Each session owns an isolated cache. Reuse requires the same loaded model instance, validated model/header and tokenizer identity, context capacity, execution settings and an exact token prefix. The final prompt token is recomputed to obtain logits. Generation results expose `reused_prompt_tokens`; session views expose `cached_tokens` and `cache_reserved_bytes`. These fields report cache state, not a performance guarantee.
 
@@ -67,11 +67,12 @@ All routes require an inference or administrative Bearer credential. Its fingerp
 | `POST /coheryn/v1/sessions` | `{ "model": "qwen", "alias": "project-alpha", "context": 512, "system": "Be brief.", "overflow": "reject", "persist": false }` |
 | `GET /coheryn/v1/sessions` | Owned summaries without message bodies |
 | `GET /coheryn/v1/sessions/{id-or-alias}?offset=0&limit=100` | One page, IDs/statuses, digest, revision, epoch, limits and cache state; `next_offset` when more messages exist |
+| `POST /coheryn/v1/sessions/{id-or-alias}/images?expected_revision=N` | Bounded original PNG/JPEG bytes for an owned image session; returns revision and opaque asset identity |
 | `POST /coheryn/v1/sessions/{id-or-alias}/messages` | Revision-checked idempotent user turn; JSON receipt or native SSE |
 | `POST /coheryn/v1/sessions/{id-or-alias}/reset` | `{ "expected_revision": 2, "clear_instructions": false }` |
 | `DELETE /coheryn/v1/sessions/{id-or-alias}` | `{ "expected_revision": 3 }`; maximum 1 KiB request body |
 | `POST /coheryn/v1/sessions/{id-or-alias}/save` | `{ "expected_revision": 2 }`; promote ephemeral to durable |
-| `GET /coheryn/v1/sessions/{id-or-alias}/export` | Complete bounded version-1 text or version-2 tool document; refuses active writers |
+| `GET /coheryn/v1/sessions/{id-or-alias}/export` | Complete bounded version-1 text, version-2 tool or version-3 image document; refuses active writers |
 | `POST /coheryn/v1/sessions/import` | `{ "document": { ... }, "name": "new-copy", "persist": false }`; validates and assigns new ownership/ID |
 
 Example turn:

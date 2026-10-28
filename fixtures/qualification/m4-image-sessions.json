@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "scope": "Current-host exact-pair native CPU image histories, opt-in save/restart, CLI no-resend follow-up, stateless parity, original-byte export, cleanup and live text progress. Synthetic tests separately cover embeddings, mutation, ownership, quotas and failed imports. Not a performance or complete release qualification.",
+  "host": "macOS-27.0.1-arm64-arm-64bit",
+  "binary_sha256": "57572b1cc11808e276b84c2fe995666eb930814f031e8e46d8ede8fccf02808f",
+  "checker_sha256": "4f56f1d4a3eb936e58a7f22ee4fc45e5ee9bcde20e4df2cd03b522142ccdae7c",
+  "reference_sha256": "06d19d21d85fa69e33a43362c7be4f86e44ae3472d2a6a50caede7c482b2b215",
+  "model_pair": {
+    "bytes": 4425323968,
+    "components": {
+      "language": {
+        "bytes": 3093667808,
+        "model": "language",
+        "sha256": "ec8b6dc5fd686f12b7d74850561f74b779db67424e477403fc043b98a0f40752"
+      },
+      "vision": {
+        "bytes": 1331656160,
+        "model": "vision",
+        "sha256": "ecb20cabcdd8dbc277de06bd6eb980aeb2adfaaba9f199a434e328d205675d03"
+      }
+    },
+    "id": "qwen-vl",
+    "schema_version": 1,
+    "sha256": "609dda0c0b6c139fad9502b15f1c9663238eb07402d5377cea972634fdfbda43",
+    "source": null
+  },
+  "image_sha256": "0a9d90ca18f58fa362b4409894406bfa32dc148f481fc6d4d0336251419cf6cf",
+  "first_reference_case": "left-red",
+  "first_text": "Red",
+  "followup_text": "Red",
+  "evidence": {
+    "first": {
+      "path": ".cache/m4-image-sessions/e8c64cf8dc1642a7a99f44c4569e20fc/first-image.json",
+      "sha256": "d8a06a369f0bc95750b7e1265fe34f644d8716f39a2230bec99ed872eca0de48"
+    },
+    "followup": {
+      "path": ".cache/m4-image-sessions/e8c64cf8dc1642a7a99f44c4569e20fc/cli-resumed-no-image.json",
+      "sha256": "c32d145aa54b60181744f3f350affc46820fa7d045d2ce41cf78a1d6bd653a9a"
+    },
+    "stateless_parity": {
+      "path": ".cache/m4-image-sessions/e8c64cf8dc1642a7a99f44c4569e20fc/stateless-history-parity.json",
+      "sha256": "646d4fd5dc5eb2ef9a3f865b2350a362d2d0d8f2a3c1777680faffcdfe827570"
+    },
+    "portable_document": {
+      "path": ".cache/m4-image-sessions/e8c64cf8dc1642a7a99f44c4569e20fc/portable-image-document.json",
+      "sha256": "8e52b1ba3d46bae5baaae5e5fd945d839b5d23a5afb49b651951005900a6280e"
+    }
+  },
+  "shared_compute": {
+    "max_concurrency": 1,
+    "text_completed_before_image": true,
+    "text_response": {
+      "choices": [
+        {
+          "finish_reason": "length",
+          "index": 0,
+          "logprobs": null,
+          "text": "\n\n"
+        }
+      ],
+      "coheryn": {
+        "batching": {
+          "batched_forward_units": 0,
+          "forward_units": 1,
+          "maximum_batch_width": 1,
+          "prefilled_tokens": 1,
+          "profile": "coheryn-cpu-batch-v1",
+          "scheduler_wait_ms": 163.632125,
+          "strategy": "continuous-weight-tiled"
+        },
+        "constraint_validation": null,
+        "sampling": {
+          "backend": "native-cpu",
+          "cache_dtype": "f32",
+          "engine_version": "0.1.0-dev",
+          "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+          "penalties": {
+            "frequency_penalty": 0.0,
+            "presence_penalty": 0.0,
+            "repetition_penalty": 1.0
+          },
+          "prefill_chunk_tokens": 1,
+          "profile": "coheryn-sampling-v2",
+          "sampling_ms": 1.620209,
+          "settings": {
+            "seed": 0,
+            "temperature": 0.0,
+            "top_k": 0,
+            "top_p": 1.0
+          },
+          "threads": 1,
+          "tokenizer_fingerprint": "8f5c49a4f5fbfac3454db56577cfa7b6acbee856c371fc97a726e7f621e3143f"
+        },
+        "sampling_profile": "coheryn-sampling-v2",
+        "vision": null
+      },
+      "created": 1793208331,
+      "id": "cmpl-66de30995693404982f88c001672f81e",
+      "model": "small-text",
+      "object": "text_completion",
+      "usage": {
+        "completion_tokens": 1,
+        "prompt_tokens": 1,
+        "total_tokens": 2
+      }
+    },
+    "text_elapsed_seconds": 0.7694254169982742,
+    "image_elapsed_seconds": 211.7703924160014,
+    "policy": "FIFO vision weight tiles/32-query attention groups/decoder checkpoints; output delivery releases compute"
+  },
+  "followup_elapsed_seconds": 247.95860529100173,
+  "restored_before_loading_weights": true,
+  "idempotent_replay": true,
+  "cache_condition": "uncontrolled",
+  "final_status": {
+    "active_limit": 3,
+    "backend": "cpu-reference",
+    "batching_profile": "coheryn-cpu-batch-v1",
+    "cache": {
+      "idle_caches": 0,
+      "limits": {
+        "global_bytes": 268435456,
+        "idle_seconds": 300,
+        "session_bytes": 67108864
+      },
+      "reserved_bytes": 0
+    },
+    "compute_policy": "fifo-text-token-batch-embedding-microbatch-vision-tile-layer",
+    "compute_unit_limit": 1,
+    "configured_active_limit": 1,
+    "constraint_profile": "coheryn-json-v1",
+    "continuous_batching": true,
+    "embedding_limits": {
+      "batch_size": 8,
+      "batch_tokens": 2048,
+      "body_bytes": 1048576,
+      "concurrency": 1,
+      "input_bytes": 65536,
+      "input_tokens": 512,
+      "items": 256,
+      "request_bytes": 8388608,
+      "requests": 4,
+      "response_bytes": 16777216,
+      "total_tokens": 32768
+    },
+    "embedding_phase_limit": 1,
+    "generation_resident_limit": 1,
+    "image_input": true,
+    "loaded_models": [],
+    "memory": {
+      "limit": 1610612736,
+      "peak_reserved": 536002048,
+      "peak_session_buffer_capacity_bytes": 8901420,
+      "reserved": 16777216,
+      "session_buffer_capacity_bytes": 0
+    },
+    "persistence_limits": {
+      "enabled": true,
+      "owner_bytes": 536870912,
+      "retention_seconds": 2592000,
+      "total_bytes": 1073741824
+    },
+    "placement": {
+      "backend": "native-cpu",
+      "fallback": "disabled",
+      "reason": "CPU is the only qualified execution backend"
+    },
+    "queue_capacity": 3,
+    "sampling_profile": "coheryn-sampling-v2",
+    "scheduler": {
+      "active": 0,
+      "batched_generation_units": 0,
+      "cancelled": 0,
+      "completed": 2,
+      "embedding_microbatches": 0,
+      "failed": 0,
+      "forwarded_tokens": 0,
+      "generation_units": 0,
+      "matrix_read_bytes": 0,
+      "matrix_tile_reads": 0,
+      "maximum_batch_width": 0,
+      "queued": 0,
+      "rejected": 0,
+      "vision_backpressure_waits": 0,
+      "vision_max_unit_micros": 1282044,
+      "vision_units": 14440,
+      "vision_waiting_units": 0,
+      "vision_yields": 14436,
+      "waiting_generation_units": 0
+    },
+    "schema_constraints": true,
+    "session_image_assets": {
+      "assets": 0,
+      "decoded_pixel_cache": false,
+      "disk_bytes": 0,
+      "limits": {
+        "owner_bytes": 134217728,
+        "session_bytes": 67108864,
+        "session_items": 16,
+        "total_bytes": 536870912
+      },
+      "persisted_kv": false,
+      "referenced_bytes": 0,
+      "storage": "private-original-bytes"
+    },
+    "session_kv_reuse": true,
+    "session_limits": {
+      "history_bytes": 1048576,
+      "idle_seconds": 86400,
+      "images": {
+        "owner_bytes": 134217728,
+        "session_bytes": 67108864,
+        "session_items": 16,
+        "total_bytes": 536870912
+      },
+      "messages": 256,
+      "per_owner": 64,
+      "total": 128,
+      "turn_keys": 128
+    },
+    "session_storage": "opt-in-embedded",
+    "shutting_down": false,
+    "stage": "experimental-G4-E2-S6",
+    "strict_tool_arguments": true,
+    "strict_tool_mode": "single-required-or-named-no-parallel",
+    "tool_calling": true,
+    "tool_profiles": [
+      "qwen-tools-v1"
+    ],
+    "vision_limits": {
+      "acquisition_timeout_seconds": 30,
+      "allow_urls": false,
+      "body_bytes": 50331648,
+      "images": {
+        "max_edge": 8192,
+        "max_encoded_bytes": 16777216,
+        "max_image_tokens": 1024,
+        "max_images": 4,
+        "max_processed_pixels": 1048576,
+        "max_source_pixels": 16777216,
+        "max_total_encoded_bytes": 33554432,
+        "max_total_image_tokens": 4096
+      },
+      "redirects": 3
+    },
+    "vision_phase_limit": 1,
+    "vision_profile": "qwen2vl-still-f16-cpu-greedy"
+  },
+  "run_directory": ".cache/m4-image-sessions/e8c64cf8dc1642a7a99f44c4569e20fc",
+  "independence": "Native executables run with an empty executable search path; no external inference runtime."
+}

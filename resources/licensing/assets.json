@@ -218,6 +218,26 @@
           "sha256": "cf6d4c7111bfda8ef3f3ee16b82cbde745ca9cf9e357ecde83a915db2cd9e11b"
         }
       ]
+    },
+    {
+      "id": "llava-original-config",
+      "source": {
+        "repository": "https://huggingface.co/liuhaotian/llava-v1.5-7b",
+        "revision": "4481d270cc22fd5c4d1bb5df129622006ccd9234"
+      },
+      "license": "LicenseRef-Llama-2-Community",
+      "license_files": [
+        "resources/licensing/upstream/llama2-LICENSE.txt",
+        "resources/licensing/upstream/llama2-USE_POLICY-md.txt",
+        "resources/licensing/Notice"
+      ],
+      "notes": "Original publisher configuration retained unchanged to distinguish pad policy from the HF processor conversion; custom source terms and attribution retained. No weights included.",
+      "files": [
+        {
+          "path": "resources/vlm-provenance/llava-original-config.json",
+          "sha256": "f112de882e31171a105f0d3f69d9e6e8700a40149f0944f4b507d3a41789e492"
+        }
+      ]
     }
   ]
 }

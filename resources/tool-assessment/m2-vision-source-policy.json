@@ -1,0 +1,233 @@
+{
+  "schema_version": 1,
+  "policy_sha256": "f911a30794aaf6d8f0aff16320b0c26271e8456b436b81df7cb45bc2976f9471",
+  "source": {
+    "files_checked": 321,
+    "issues": [],
+    "excluded": [
+      {
+        "path": "target",
+        "reason": "Build staging; release artifacts require the separate artifact scan"
+      },
+      {
+        "path": ".git",
+        "reason": "Version-control object database; not a distribution input"
+      },
+      {
+        "path": ".cache",
+        "reason": "External tool/model/download cache; never packaged or used by native CI"
+      },
+      {
+        "path": ".DS_Store",
+        "reason": "OS folder metadata"
+      },
+      {
+        "path": "tools/__pycache__",
+        "reason": "Interpreter bytecode cache"
+      },
+      {
+        "path": "tools/.DS_Store",
+        "reason": "OS folder metadata"
+      },
+      {
+        "path": "crates/.DS_Store",
+        "reason": "OS folder metadata"
+      },
+      {
+        "path": "crates/coheryn-engine/.DS_Store",
+        "reason": "OS folder metadata"
+      },
+      {
+        "path": "crates/coheryn-cli/.DS_Store",
+        "reason": "OS folder metadata"
+      },
+      {
+        "path": "crates/coheryn-api/.DS_Store",
+        "reason": "OS folder metadata"
+      },
+      {
+        "path": "examples/__pycache__",
+        "reason": "Interpreter bytecode cache"
+      },
+      {
+        "path": "fixtures/.DS_Store",
+        "reason": "OS folder metadata"
+      },
+      {
+        "path": "fixtures/vlm/.DS_Store",
+        "reason": "OS folder metadata"
+      },
+      {
+        "path": "fuzz/target",
+        "reason": "Fuzzer build staging"
+      },
+      {
+        "path": "fuzz/.DS_Store",
+        "reason": "OS folder metadata"
+      }
+    ],
+    "binary_assets": [
+      {
+        "path": "fixtures/vlm/images/landscape.jpg",
+        "bytes": 1069
+      },
+      {
+        "path": "fixtures/vlm/images/landscape.png",
+        "bytes": 169
+      },
+      {
+        "path": "fixtures/vlm/images/portrait.png",
+        "bytes": 160
+      },
+      {
+        "path": "fixtures/vlm/images/alpha.png",
+        "bytes": 97
+      },
+      {
+        "path": "fixtures/vlm/images/swapped.png",
+        "bytes": 169
+      },
+      {
+        "path": "fixtures/vlm/images/minimum.png",
+        "bytes": 69
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/llava15-pad336-v1-portrait-png.png",
+        "bytes": 1102
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/qwen2vl-still-v1-landscape-jpg.png",
+        "bytes": 232
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/llava15-pad336-v1-exif6-jpg.png",
+        "bytes": 1190
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/llava15-pad336-v1-swapped-png.png",
+        "bytes": 1083
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/llava15-pad336-v1-gray-png.png",
+        "bytes": 8429
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/qwen2vl-still-v1-landscape-png.png",
+        "bytes": 210
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/qwen2vl-still-v1-minimum-png.png",
+        "bytes": 169
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/qwen2vl-still-v1-exif6-jpg.png",
+        "bytes": 276
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/llava15-pad336-v1-odd-rgb-png.png",
+        "bytes": 26134
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/qwen2vl-still-v1-gray-png.png",
+        "bytes": 1652
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/qwen2vl-still-v1-downscale-png.png",
+        "bytes": 837397
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/qwen2vl-still-v1-odd-rgb-png.png",
+        "bytes": 4111
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/llava15-pad336-v1-landscape-jpg.png",
+        "bytes": 1138
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/qwen2vl-still-v1-portrait-png.png",
+        "bytes": 257
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/llava15-pad336-v1-minimum-png.png",
+        "bytes": 1052
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/qwen2vl-still-v1-alpha-png.png",
+        "bytes": 169
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/llava15-pad336-v1-landscape-png.png",
+        "bytes": 1082
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/qwen2vl-still-v1-swapped-png.png",
+        "bytes": 211
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/llava15-pad336-v1-alpha-png.png",
+        "bytes": 1052
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/resized/llava15-pad336-v1-downscale-png.png",
+        "bytes": 217922
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/canonical/landscape-png.png",
+        "bytes": 210
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/canonical/odd-rgb-png.png",
+        "bytes": 215
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/canonical/landscape-jpg.png",
+        "bytes": 232
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/canonical/portrait-png.png",
+        "bytes": 257
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/canonical/downscale-png.png",
+        "bytes": 46662
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/canonical/exif6-jpg.png",
+        "bytes": 276
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/canonical/swapped-png.png",
+        "bytes": 211
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/canonical/alpha-png.png",
+        "bytes": 111
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/canonical/gray-png.png",
+        "bytes": 99
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/canonical/minimum-png.png",
+        "bytes": 69
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/inputs/gray.png",
+        "bytes": 81
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/inputs/exif6.jpg",
+        "bytes": 1027
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/inputs/downscale.png",
+        "bytes": 46662
+      },
+      {
+        "path": "fixtures/vlm/preprocessing/inputs/odd-rgb.png",
+        "bytes": 215
+      }
+    ]
+  },
+  "artifacts": []
+}

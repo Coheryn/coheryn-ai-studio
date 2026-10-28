@@ -20,6 +20,7 @@ pub fn public_address(ip: IpAddr) -> bool {
                 || x >= 240
                 || (x == 100 && (64..=127).contains(&y))
                 || (x == 192 && y == 0)
+                || (x == 192 && y == 88 && z == 99)
                 || (x == 198 && (y == 18 || y == 19))
                 || (x == 198 && y == 51 && z == 100)
                 || (x == 203 && y == 0 && z == 113))
@@ -51,8 +52,18 @@ fn validate_url(url: &Url) -> Result<()> {
     Ok(())
 }
 pub async fn response(raw: &str) -> Result<reqwest::Response> {
+    response_with_limits(raw, 5, 600).await
+}
+pub async fn response_with_limits(
+    raw: &str,
+    redirects: usize,
+    timeout_seconds: u64,
+) -> Result<reqwest::Response> {
+    if redirects > 5 || timeout_seconds == 0 || timeout_seconds > 600 {
+        return Err(ApiError::bad("invalid finite acquisition policy"));
+    }
     let mut url = Url::parse(raw).map_err(|_| ApiError::bad("invalid download URL"))?;
-    for _ in 0..=5 {
+    for _ in 0..=redirects {
         validate_url(&url)?;
         let host = url
             .host_str()
@@ -65,8 +76,12 @@ pub async fn response(raw: &str) -> Result<reqwest::Response> {
         .await
         .map_err(|_| ApiError::bad("download DNS timeout"))?
         .map_err(|_| ApiError::bad("download DNS resolution failed"))?
+        .take(65)
         .collect();
-        if addresses.is_empty() || addresses.iter().any(|a| !public_address(a.ip())) {
+        if addresses.is_empty()
+            || addresses.len() > 64
+            || addresses.iter().any(|a| !public_address(a.ip()))
+        {
             return Err(ApiError::bad(
                 "downloads cannot target private, local, reserved or unspecified addresses",
             ));
@@ -75,7 +90,7 @@ pub async fn response(raw: &str) -> Result<reqwest::Response> {
             .no_proxy()
             .redirect(Policy::none())
             .connect_timeout(Duration::from_secs(10))
-            .timeout(Duration::from_secs(600))
+            .timeout(Duration::from_secs(timeout_seconds))
             .resolve_to_addrs(&host, &addresses)
             .build()
             .map_err(|_| ApiError::bad("download client initialization failed"))?;

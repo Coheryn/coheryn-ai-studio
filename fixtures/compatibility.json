@@ -318,20 +318,200 @@
       "RoPE scaling",
       "sliding-window attention",
       "unapproved templates",
-      "graphs other than validated Qwen2 generation and nomic-bert embedding adapters"
+      "graphs other than validated Qwen2 generation, nomic-bert embedding and paired Qwen2-VL still-image adapters"
     ]
   },
   "qualification_note": "Descriptor validation identifies implemented capabilities; exact-file parity evidence is limited to these hashes and settings. Other platforms remain unqualified.",
   "service_evidence": "fixtures/qualification/g4-service.json",
   "planner_evidence": "fixtures/qualification/g4-planner.json",
   "multimodal": {
-    "status": "not-implemented-not-qualified",
+    "status": "initial-macos-arm64-native-qwen2vl-managed-image-conversation-checkpoint",
     "selection_manifest": "fixtures/vlm/models.json",
     "reference_contract": "fixtures/vlm/reference-contract.json",
     "input_fixtures": "fixtures/vlm/images/manifest.json",
-    "full_tensor_payloads_verified": false,
-    "image_execution_supported": false,
-    "note": "Selected model sets have bounded header/provenance inventories only. No VLM, image format or image backend is executable yet."
+    "full_tensor_payloads_verified": true,
+    "image_execution_supported": true,
+    "note": "The exact selected Qwen2-VL F16 pair has native CPU image-to-text, product transport, private original assets, opt-in image-history save/restart and cooperative scheduling evidence. Other VLMs, Metal and broader platform/network/security/release qualification remain open.",
+    "component_verification": "fixtures/qualification/m0-components.json",
+    "processor_profiles": "fixtures/vlm/preprocessing/profiles.json",
+    "processor_reference": "fixtures/vlm/preprocessing/reference.json",
+    "native_preprocessing": {
+      "backend": "native-cpu",
+      "host_qualified": "macos-arm64",
+      "profiles": [
+        "llava15-pad336-v1",
+        "qwen2vl-still-v1"
+      ],
+      "formats": [
+        "bounded 8-bit grayscale/RGB/alpha PNG subset",
+        "bounded baseline grayscale/RGB JPEG subset"
+      ],
+      "image_to_text": false
+    },
+    "vision_reference": "fixtures/vlm/vision-reference.json",
+    "alignment_review": "fixtures/vlm/alignment.json",
+    "alignment_resolution": "fixtures/vlm/alignment-resolution-v1.json",
+    "execution_profiles": "fixtures/vlm/execution-profiles-v1.json",
+    "image_conditioned_reference": "fixtures/vlm/image-conditioned-reference-v1.json",
+    "native_positions": {
+      "evidence": "fixtures/vlm/positions-v1.json",
+      "independent_spans": 10,
+      "physical_and_rotary_counts_separate": true,
+      "full_vision_admission": false
+    },
+    "native_vision": {
+      "status": "initial-macos-arm64-native-cpu-component-checkpoint",
+      "profile": "coheryn-qwen2vl-vision-v2",
+      "model": "qwen2-vl-2b",
+      "component_role": "vision-projector",
+      "component_sha256": "ecb20cabcdd8dbc277de06bd6eb980aeb2adfaaba9f199a434e328d205675d03",
+      "tensor_encodings": {
+        "matrices": "F16",
+        "bias_and_norm": "F32"
+      },
+      "processor": "qwen2vl-still-v1",
+      "output_width": 1536,
+      "backend": "native-cpu",
+      "host_qualified": "macos-arm64",
+      "qualified_threads": [
+        1,
+        2
+      ],
+      "qualified_tile_tokens": [
+        32,
+        7
+      ],
+      "qualified_inputs": "Five canonical PNG images: color order, portrait, minimum resolution, odd dimensions; no arbitrary-resolution accuracy claim.",
+      "evidence": "fixtures/qualification/m2-vision-v2.json",
+      "extra_reference": "fixtures/vlm/qwen2-vision-extra-v1.json",
+      "image_to_text": false,
+      "scheduler_integrated": false,
+      "multi_image_session_qualified": false,
+      "gpu_qualified": false,
+      "precision": "F16 matrices, F32 bias/norm/activations and explicit F16-input/output merger lookup-GELU contract; historical v1 full-F32 GELU record retained."
+    },
+    "product_image_cli_api_supported": true,
+    "native_image_to_text": {
+      "status": "initial-macos-arm64-native-cpu-product-checkpoint",
+      "scope": "unstable native library/development runner plus main CLI and strict native/OpenAI-shaped image requests through managed component pairs",
+      "profile": "coheryn-qwen2vl-offline-v1",
+      "vision_profile": "coheryn-qwen2vl-vision-v2",
+      "model": "qwen2-vl-2b",
+      "architecture": "qwen2vl",
+      "language_sha256": "ec8b6dc5fd686f12b7d74850561f74b779db67424e477403fc043b98a0f40752",
+      "vision_sha256": "ecb20cabcdd8dbc277de06bd6eb980aeb2adfaaba9f199a434e328d205675d03",
+      "backend": "native-cpu",
+      "cache_dtype": "f32",
+      "language_tensor_encodings": [
+        "F16 matrices",
+        "F32 norm/bias"
+      ],
+      "host_qualified": "macos-arm64",
+      "qualified_threads": [
+        1,
+        2
+      ],
+      "qualified_physical_contexts": [
+        128,
+        256
+      ],
+      "qualified_images_per_request": [
+        1,
+        2
+      ],
+      "qualified_model_input_cases": "Canonical procedural PNGs; image identity/order, explicit system/EOS and Unicode multi-turn chat. This is not a broad visual or multilingual proficiency benchmark.",
+      "sampling": "greedy only",
+      "local_request_admission": true,
+      "scheduler_integrated": true,
+      "managed_multimodal_sessions": true,
+      "reference": "fixtures/vlm/qwen2-image-conditioned-reference-v2.json",
+      "decoder_layer_reference": "fixtures/vlm/qwen2-language-reference-v2.json",
+      "alignment_resolution": "fixtures/vlm/qwen2-language-alignment-v2.json",
+      "evidence": [
+        "fixtures/qualification/m2-offline-vlm.json",
+        "fixtures/qualification/m2-offline-verification.json",
+        "fixtures/qualification/m3-image-service.json",
+        "fixtures/qualification/m3-service-verification.json",
+        "fixtures/qualification/m4-image-sessions.json",
+        "fixtures/qualification/m4-cooperative-numerics.json",
+        "fixtures/qualification/m4-session-verification.json"
+      ],
+      "unqualified": [
+        "Other file pairs, encodings, formats/resolutions or generation settings beyond their stated stage evidence.",
+        "Image tools/constraints and non-greedy sampling; persisted/reused image KV or encoder caches.",
+        "Four-image numerical qualification, continuous image batching, weighted fairness/tail-latency and broad successful-public-HTTPS/security/fuzz/crash campaigns.",
+        "LLaVA, Metal, other CPU platforms and final release qualification."
+      ]
+    },
+    "product_image_transport": {
+      "profile": "qwen2vl-still-f16-cpu-greedy",
+      "interfaces": [
+        "CLI chat --image",
+        "POST /v1/chat/completions",
+        "POST /api/v1/generate"
+      ],
+      "model_selection": "registered immutable language/vision pair; exact component hashes verified at load",
+      "attachments": [
+        "bounded canonical PNG/JPEG Base64 data URLs",
+        "local regular files through CLI",
+        "operator-opt-in public HTTPS with pinned DNS and redirect validation"
+      ],
+      "default_url_fetching": false,
+      "runtime_max_images": 4,
+      "qualified_images_per_request": [
+        1,
+        2
+      ],
+      "qualified_physical_contexts": [
+        256
+      ],
+      "qualified_product_threads": [
+        2
+      ],
+      "reference_subset": [
+        "CLI left-red",
+        "OpenAI SSE left-blue",
+        "native ordered-images",
+        "OpenAI unicode-multiturn"
+      ],
+      "synthetic_tests": "independent small pairs: CLI/API/standalone parity, role/control/byte limits, pair lifecycle, mutation, admission, queue saturation and disconnect/backpressure",
+      "planning": "metadata-only component graphs and bounded dimension descriptors; conservative costs and explicit rejection reasons",
+      "scheduler": "complete owned admission before queueing; FIFO vision weight tiles/32-query attention groups/decoder checkpoints; compute released during delivery; terminal capacity and acknowledged cancellation",
+      "persistent_image_histories": true,
+      "contract": "docs/IMAGE_API.md",
+      "evidence": "fixtures/qualification/m3-image-service.json",
+      "image_conversations": "docs/IMAGE_SESSIONS.md"
+    },
+    "managed_image_sessions": {
+      "status": "initial-macos-arm64-native-cpu-exact-pair-checkpoint",
+      "model": "qwen2-vl-2b",
+      "model_identity": "immutable managed language/vision pair hash with both original component SHA-256 identities",
+      "profile": "qwen2vl-still-f16-cpu-greedy",
+      "scheduling_profile": "coheryn-vlm-cooperative-v1",
+      "backend": "native-cpu",
+      "qualified_real_model_context": 256,
+      "qualified_real_model_threads": 2,
+      "qualified_original_images_per_session": 1,
+      "synthetic_tests": "one/two selected image refs, CLI/API no-resend follow-ups, save/restart, original-byte portable documents, image-only turns, revisions/idempotency, quotas/ownership, mutation/import failure, context exclusion, cleanup/orphan recovery, text/embedding progress during prefill and backpressure",
+      "asset_storage": "private original encoded files with per-session IDs, SHA-256 and checked image descriptors; session/owner/global disk quotas",
+      "runtime_asset_limit_per_session": 16,
+      "runtime_selected_image_limit": 4,
+      "default_persistence": false,
+      "history_document_version": 3,
+      "sqlite_schema_version": 2,
+      "portable_document_limit_bytes": 8388608,
+      "persisted_kv": false,
+      "retained_decoded_pixels": false,
+      "prefix_kv_reuse": false,
+      "concurrency": "separate bounded phase residency; one shared CPU compute unit, atomic full reservations and shared request slots",
+      "numeric_reference": "fixtures/vlm/cooperative-attention-v1.json",
+      "contract": "docs/IMAGE_SESSIONS.md",
+      "evidence": [
+        "fixtures/qualification/m4-image-sessions.json",
+        "fixtures/qualification/m4-cooperative-numerics.json",
+        "fixtures/qualification/m4-session-verification.json"
+      ]
+    }
   },
   "embeddings": {
     "status": "experimental-native-CPU-CLI-API-parity-tested",
@@ -402,18 +582,20 @@
     ],
     "not_qualified": [
       "constraints",
-      "vision",
       "metal",
       "other-platform-model-execution",
-      "full-release-crash-security-campaigns"
+      "full-release-crash-security-campaigns",
+      "image tools/constraints, cached image KV and broader VLM/platform/security qualification"
     ],
     "history_format_versions": [
       1,
-      2
+      2,
+      3
     ],
     "store_schema_version": 2,
     "tool_qualification": "exact file/profile in tool_calling section; broader combinations unqualified",
-    "constraint_qualification": "S5 managed-turn/replay evidence applies to the exact Q4_K_M file/profile in constraints; the original FP16 session qualification above does not include constraints"
+    "constraint_qualification": "S5 managed-turn/replay evidence applies to the exact Q4_K_M file/profile in constraints; the original FP16 session qualification above does not include constraints",
+    "image_conversations": "multimodal.managed_image_sessions"
   },
   "tool_calling": {
     "status": "initial-macos-arm64-native-cpu-preview",
@@ -518,7 +700,7 @@
       "Q4_K",
       "Q6_K"
     ],
-    "mixed_task_fairness": "FIFO shared compute units; native synthetic API tests cover both text-to-embedding and embedding-to-text progress",
+    "mixed_task_fairness": "FIFO text token batches, embedding microbatches and cooperative image tensor/decoder units; image delivery releases compute. Initial ordinary and pinned-model evidence is separate from weighted fairness/tail-latency qualification.",
     "placement": "native CPU only; automatic backend/model fallback disabled",
     "metrics": "private result batching metadata and aggregate admin unit/tile counters; no raw history/arguments/vectors",
     "evidence": [

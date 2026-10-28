@@ -19,6 +19,28 @@ pub struct ModelRecord {
     pub sha256: String,
     pub bytes: u64,
     pub source: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub components: Option<ModelPair>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct ComponentRef {
+    pub model: String,
+    pub sha256: String,
+    pub bytes: u64,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct ModelPair {
+    pub language: ComponentRef,
+    pub vision: ComponentRef,
+}
+impl ModelPair {
+    pub fn identity(&self) -> String {
+        use sha2::{Digest, Sha256};
+        let bytes = serde_json::to_vec(self).expect("serializable model pair");
+        coheryn_engine::storage::digest_hex(Sha256::digest(bytes).into())
+    }
 }
 pub fn validate_id(id: &str) -> Result<()> {
     if id.is_empty()
@@ -105,7 +127,7 @@ impl Registry {
         }
         Ok(path)
     }
-    pub fn get(&self, id: &str) -> Result<ModelRecord> {
+    fn read_record(&self, id: &str) -> Result<ModelRecord> {
         let path = self.record_path(id)?;
         if !path.exists() {
             return Err(ApiError::missing("managed model not found"));
@@ -121,10 +143,97 @@ impl Registry {
             return Err(ApiError::bad("registry record identity/version mismatch"));
         }
         validate_hash(&record.sha256)?;
-        if self.model_path(id)?.metadata()?.len() != record.bytes {
+        Ok(record)
+    }
+    pub fn get(&self, id: &str) -> Result<ModelRecord> {
+        let record = self.read_record(id)?;
+        if let Some(pair) = &record.components {
+            if pair.language.model == pair.vision.model
+                || record.sha256 != pair.identity()
+                || pair.language.bytes.checked_add(pair.vision.bytes) != Some(record.bytes)
+            {
+                return Err(ApiError::bad("invalid model pair identity"));
+            }
+            for component in [&pair.language, &pair.vision] {
+                let child = self.read_record(&component.model)?;
+                if child.components.is_some()
+                    || child.sha256 != component.sha256
+                    || child.bytes != component.bytes
+                    || self.model_path(&component.model)?.metadata()?.len() != component.bytes
+                {
+                    return Err(Error::new(
+                        ErrorCode::ModelChanged,
+                        "model pair component changed",
+                    )
+                    .into());
+                }
+            }
+        } else if self.model_path(id)?.metadata()?.len() != record.bytes {
             return Err(Error::new(ErrorCode::ModelChanged, "managed model size changed").into());
         }
         Ok(record)
+    }
+    pub(crate) fn pair_record(
+        &self,
+        id: &str,
+        language: &str,
+        vision: &str,
+    ) -> Result<ModelRecord> {
+        self.check_new(id)?;
+        if language == vision {
+            return Err(ApiError::bad("language and vision components must differ"));
+        }
+        let component = |id: &str| -> Result<ComponentRef> {
+            let r = self.get(id)?;
+            if r.components.is_some() {
+                return Err(ApiError::bad("nested model pairs are unsupported"));
+            }
+            Ok(ComponentRef {
+                model: r.id,
+                sha256: r.sha256,
+                bytes: r.bytes,
+            })
+        };
+        let pair = ModelPair {
+            language: component(language)?,
+            vision: component(vision)?,
+        };
+        let record = ModelRecord {
+            schema_version: 1,
+            id: id.into(),
+            sha256: pair.identity(),
+            bytes: pair
+                .language
+                .bytes
+                .checked_add(pair.vision.bytes)
+                .ok_or_else(|| Error::resource("model pair byte overflow"))?,
+            source: None,
+            components: Some(pair),
+        };
+        Ok(record)
+    }
+    pub fn register_pair(&self, id: &str, language: &str, vision: &str) -> Result<ModelRecord> {
+        let record = self.pair_record(id, language, vision)?;
+        self.write_record(&record)?;
+        Ok(record)
+    }
+    fn write_record(&self, record: &ModelRecord) -> Result<()> {
+        let path = self.record_path(&record.id)?;
+        let tmp = path.with_extension(format!("{}.part", uuid::Uuid::new_v4().simple()));
+        let result = (|| -> Result<()> {
+            let mut file = private_file(&tmp)?;
+            file.write_all(
+                &serde_json::to_vec(record)
+                    .map_err(|_| ApiError::bad("record serialization failed"))?,
+            )?;
+            file.sync_all()?;
+            std::fs::rename(&tmp, &path)?;
+            Ok(())
+        })();
+        if result.is_err() {
+            let _ = std::fs::remove_file(tmp);
+        }
+        result
     }
     pub fn list(&self) -> Result<Vec<ModelRecord>> {
         let mut ids = Vec::new();
@@ -210,6 +319,15 @@ impl Registry {
         result
     }
     pub fn remove(&self, id: &str) -> Result<()> {
+        if self.list()?.iter().any(|r| {
+            r.components
+                .as_ref()
+                .is_some_and(|p| p.language.model == id || p.vision.model == id)
+        }) {
+            return Err(ApiError::conflict(
+                "component is referenced by a model pair; remove the pair first",
+            ));
+        }
         let record = self.record_path(id)?;
         let model = self.model_path(id)?;
         if !record.exists() && !model.exists() {

@@ -1,0 +1,954 @@
+{
+  "schema_version": 1,
+  "scope": "Scoped existing-text regression after shared decoder/tokenizer refactor; not new model qualification. Arrays compare the previously qualified Coheryn native executable; greedy outputs compare unchanged independent fixtures.",
+  "current_binary_sha256": "e4535789bbaa2be0fd69835e7667defc39cebb24a1dfdbc14ec00fc87110f848",
+  "qualified_native_baseline_sha256": "b7359ee945ab3ba64d9fe47130a3743a496e98bc32e47131f0900edb5fc059cd",
+  "tolerances": {
+    "absolute": 0.003,
+    "relative": 0.001,
+    "normalized_l2": 0.0005
+  },
+  "models": [
+    {
+      "model": "qwen2.5-0.5b-instruct-fp16",
+      "model_sha256": "8e0ae26000627ed62de0e78e41860af70094558b9d2913385c842a6aa06cf3fc",
+      "independent_greedy_fixture": "fixtures/golden/qwen2.5-0.5b-instruct-fp16.json",
+      "independent_greedy_fixture_sha256": "674e079a3272716a8e0660ff99e47f2d0535266ea2a39ecea8e433479ed78ed7",
+      "matches_independent_greedy": true,
+      "trace_prompt": "Hello world",
+      "trace_comparisons_to_qualified_native_baseline": [
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.0.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.1.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.2.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.3.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.4.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.5.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.6.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.7.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.8.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.9.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.10.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.11.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.12.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.13.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.14.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.15.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.16.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.17.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.18.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.19.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.20.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.21.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.22.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.23.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "logits"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.0.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.1.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.2.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.3.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.4.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.5.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.6.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.7.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.8.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.9.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.10.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.11.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.12.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.13.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.14.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.15.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.16.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.17.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.18.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.19.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.20.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.21.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.22.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.23.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "logits"
+        }
+      ],
+      "result": {
+        "batching": {
+          "profile": "coheryn-cpu-batch-v1",
+          "strategy": "single-sequence",
+          "forward_units": 8,
+          "batched_forward_units": 0,
+          "maximum_batch_width": 1,
+          "prefilled_tokens": 1,
+          "scheduler_wait_ms": 0.0
+        },
+        "sampling_metadata": {
+          "sampling_ms": 9.713334000000001,
+          "profile": "coheryn-sampling-v2",
+          "settings": {
+            "temperature": 0.0,
+            "top_k": 0,
+            "top_p": 1.0,
+            "seed": 0
+          },
+          "penalties": {
+            "repetition_penalty": 1.0,
+            "frequency_penalty": 0.0,
+            "presence_penalty": 0.0
+          },
+          "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+          "tokenizer_fingerprint": "1bdb17cd46489fd1bde410073ce0e405974b88831fcc5d24e2dba8c3a9a0a306",
+          "backend": "native-cpu",
+          "cache_dtype": "f32",
+          "threads": 1,
+          "prefill_chunk_tokens": 16,
+          "engine_version": "0.1.0-dev"
+        },
+        "text": "\n\nI am trying to create a program",
+        "token_ids": [
+          271,
+          40,
+          1079,
+          4460,
+          311,
+          1855,
+          264,
+          2025
+        ],
+        "prompt_tokens": 1,
+        "reused_prompt_tokens": 0,
+        "completion_tokens": 8,
+        "finish_reason": "length",
+        "prefill_ms": 1223.552167,
+        "tokenization_ms": 1.408375,
+        "decode_ms": 8687.493499999999,
+        "output_delivery_ms": 0.005750000000000001,
+        "first_token_ms": 1226.230917,
+        "memory": {
+          "reserved": 250746368,
+          "peak_reserved": 272113521,
+          "limit": 1073741824,
+          "session_buffer_capacity_bytes": 0,
+          "peak_session_buffer_capacity_bytes": 3059756
+        }
+      }
+    },
+    {
+      "model": "qwen2.5-0.5b-instruct-q4_k_m",
+      "model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+      "independent_greedy_fixture": "fixtures/qualification/g4-qwen2.5-0.5b-instruct-q4_k_m.json",
+      "independent_greedy_fixture_sha256": "c70957a7ae5730641d72cd957553f78f12c4015dded1f140521b34ceb445e28a",
+      "matches_independent_greedy": true,
+      "trace_prompt": "Hello world",
+      "trace_comparisons_to_qualified_native_baseline": [
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.0.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.1.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.2.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.3.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.4.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.5.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.6.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.7.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.8.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.9.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.10.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.11.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.12.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.13.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.14.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.15.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.16.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.17.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.18.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.19.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.20.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.21.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.22.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "blk.23.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 0,
+          "name": "logits"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.0.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.1.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.2.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.3.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.4.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.5.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.6.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.7.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.8.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.9.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.10.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.11.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.12.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.13.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.14.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.15.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.16.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.17.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.18.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.19.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.20.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.21.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.22.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "blk.23.output"
+        },
+        {
+          "maximum_absolute_error": 0.0,
+          "outside_tolerance": 0,
+          "normalized_l2": 0.0,
+          "passed": true,
+          "position": 1,
+          "name": "logits"
+        }
+      ],
+      "result": {
+        "batching": {
+          "profile": "coheryn-cpu-batch-v1",
+          "strategy": "single-sequence",
+          "forward_units": 8,
+          "batched_forward_units": 0,
+          "maximum_batch_width": 1,
+          "prefilled_tokens": 1,
+          "scheduler_wait_ms": 0.0
+        },
+        "sampling_metadata": {
+          "sampling_ms": 9.630417000000001,
+          "profile": "coheryn-sampling-v2",
+          "settings": {
+            "temperature": 0.0,
+            "top_k": 0,
+            "top_p": 1.0,
+            "seed": 0
+          },
+          "penalties": {
+            "repetition_penalty": 1.0,
+            "frequency_penalty": 0.0,
+            "presence_penalty": 0.0
+          },
+          "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+          "tokenizer_fingerprint": "8f5c49a4f5fbfac3454db56577cfa7b6acbee856c371fc97a726e7f621e3143f",
+          "backend": "native-cpu",
+          "cache_dtype": "f32",
+          "threads": 1,
+          "prefill_chunk_tokens": 16,
+          "engine_version": "0.1.0-dev"
+        },
+        "text": "\n\nI am trying to create a simple",
+        "token_ids": [
+          271,
+          40,
+          1079,
+          4460,
+          311,
+          1855,
+          264,
+          4285
+        ],
+        "prompt_tokens": 1,
+        "reused_prompt_tokens": 0,
+        "completion_tokens": 8,
+        "finish_reason": "length",
+        "prefill_ms": 366.950542,
+        "tokenization_ms": 1.5486250000000001,
+        "decode_ms": 2578.9889590000002,
+        "output_delivery_ms": 0.004208,
+        "first_token_ms": 369.735625,
+        "memory": {
+          "reserved": 250746368,
+          "peak_reserved": 272113521,
+          "limit": 1073741824,
+          "session_buffer_capacity_bytes": 0,
+          "peak_session_buffer_capacity_bytes": 3059756
+        }
+      }
+    }
+  ],
+  "passed": true
+}

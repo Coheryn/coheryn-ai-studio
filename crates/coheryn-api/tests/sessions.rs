@@ -545,6 +545,7 @@ async fn finite_session_and_history_quotas_reclaim_budget_after_delete_and_expir
     let budget = Budget::new(32 << 20);
     let sessions = Sessions::new(
         SessionLimits {
+            images: Default::default(),
             total: 1,
             per_owner: 1,
             history_bytes: 64,
@@ -572,6 +573,7 @@ async fn finite_session_and_history_quotas_reclaim_budget_after_delete_and_expir
     );
     assert!(sessions.get("two", "owned").is_err());
     let body = SubmitTurn {
+        images: vec![],
         tool_results: vec![],
         expected_revision: 0,
         idempotency_key: "one".into(),
@@ -589,6 +591,7 @@ async fn finite_session_and_history_quotas_reclaim_budget_after_delete_and_expir
     drop(lease);
     assert_eq!(sessions.get("one", "owned").unwrap().revision, 2);
     let body = SubmitTurn {
+        images: vec![],
         tool_results: vec![],
         expected_revision: 2,
         idempotency_key: "two".into(),

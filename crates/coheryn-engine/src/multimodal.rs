@@ -1,4 +1,14 @@
-//! M0 contracts only. The text service does not accept these parts until M1/M2 qualify them.
+//! Native multimodal contracts, bounded image preparation and cooperative execution.
+pub mod image;
+pub mod positions;
+pub mod vision;
+/// Fallible scheduler checkpoint, called only after owned CPU workers have joined.
+pub type WorkYield<'a> = dyn FnMut() -> crate::Result<()> + 'a;
+/// Unstable native image-to-text adapter shared by product and development entry points.
+pub mod qwen2vl {
+    pub use crate::inference::vlm::*;
+}
+
 use crate::{Error, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeSet;

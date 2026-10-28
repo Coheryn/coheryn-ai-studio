@@ -11,6 +11,7 @@ pub struct ServerConfig {
     pub persistence: crate::session_store::PersistenceLimits,
     pub cache: crate::sessions::CacheLimits,
     pub sessions: crate::sessions::SessionLimits,
+    pub vision: crate::vision::VisionLimits,
     pub embeddings: crate::embeddings::EmbeddingLimits,
     pub host: IpAddr,
     pub port: u16,
@@ -53,6 +54,7 @@ impl Default for ServerConfig {
             cache: Default::default(),
             sessions: Default::default(),
             embeddings: Default::default(),
+            vision: Default::default(),
             host: IpAddr::V4(Ipv4Addr::LOCALHOST),
             port: 11450,
             data_dir: default_data_dir(),
@@ -76,6 +78,7 @@ impl ServerConfig {
         self.cache.validate()?;
         self.persistence.validate()?;
         self.embeddings.validate()?;
+        self.vision.validate()?;
         if self.embeddings.concurrency > self.max_concurrency
             || self.embedding_timeout_seconds == 0
             || self.embedding_timeout_seconds > 86400

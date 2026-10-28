@@ -74,6 +74,9 @@ enum SessionCommand {
     /// Submit one revision-checked turn and print the complete JSON receipt.
     Send {
         session: String,
+        /// Upload a session-owned image before submitting this turn. Repeat for attachments.
+        #[arg(long = "image")]
+        images: Vec<std::path::PathBuf>,
         #[arg(long)]
         input: String,
         #[arg(long)]
@@ -261,14 +264,32 @@ pub async fn run(cli: &Cli, args: &SessionArgs, cancel: &Cancellation) -> Result
         ),
         SessionCommand::Send {
             session,
+            images,
             input,
             expected_revision,
             idempotency_key,
             max_tokens,
             controls,
         } => {
+            let mut revision = *expected_revision;
+            let mut image_ids = Vec::new();
+            for path in images {
+                let attached = client
+                    .attach_session_image(session, path, revision, cancel)
+                    .await?;
+                revision = attached["revision"]
+                    .as_u64()
+                    .ok_or_else(|| Error::request("invalid attachment revision"))?;
+                image_ids.push(
+                    attached["image"]["id"]
+                        .as_str()
+                        .ok_or_else(|| Error::request("invalid image ID"))?
+                        .to_owned(),
+                );
+            }
             let request = SubmitTurn {
-                expected_revision: *expected_revision,
+                images: image_ids,
+                expected_revision: revision,
                 idempotency_key: idempotency_key.clone().unwrap_or_else(fresh_key),
                 content: input.clone(),
                 tool_results: vec![],

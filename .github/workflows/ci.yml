@@ -12,6 +12,9 @@ jobs:
         with:
           python-version: '3.x'
           check-latest: true
+      - run: python tools/check_vlm_references.py
+      - run: python tools/check_image_fixtures.py
+      - run: python tools/check_cooperative_attention.py
       - run: python tools/check_embedding_fixtures.py
       - run: python tools/check_tool_fixtures.py
       - run: python tools/check_constraint_fixtures.py

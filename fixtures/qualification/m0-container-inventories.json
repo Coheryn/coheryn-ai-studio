@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "scope": "complete byte verification and native GGUF descriptor/range validation, not tensor numerical execution",
+  "binary_sha256": "adda7cccb271ce842b6226e7733c4119d6b0bfd55461daf1b7d240fa4735c386",
+  "selection_manifest_sha256": "97e3c862db44cb87bdef07869614816fd86abdb74202d245e2f416c9ac543942",
+  "components": [
+    {
+      "model": "llava-1.5-7b",
+      "role": "language",
+      "sha256": "2687b20ac8b7a23f6c70296d5b1e7f908fef2ce4769ecdebd1bb9503528a75bf",
+      "file_bytes": 4081004320,
+      "architecture": "llama",
+      "tensor_count": 291,
+      "encodings": {
+        "F32": 65,
+        "Q4_K": 193,
+        "Q6_K": 33
+      },
+      "header_sha256": "2355440ca366536f3c2163282fdd13a95f1682c547c7062df1db1c3febf19191",
+      "matches_frozen_prefix_inventory": true,
+      "native_inference_qualified": false
+    },
+    {
+      "model": "llava-1.5-7b",
+      "role": "vision-projector",
+      "sha256": "50da4e5b0a011615f77686f9b02613571e65d23083c225e107c08c3b1775d9b1",
+      "file_bytes": 624434368,
+      "architecture": "clip",
+      "tensor_count": 377,
+      "encodings": {
+        "F16": 142,
+        "F32": 235
+      },
+      "header_sha256": "29cfde5723f39e8cd6e6bf41242743aefc9272b560bcb24b193489f6b7ca4f5b",
+      "matches_frozen_prefix_inventory": true,
+      "native_inference_qualified": false
+    },
+    {
+      "model": "qwen2-vl-2b",
+      "role": "language",
+      "sha256": "ec8b6dc5fd686f12b7d74850561f74b779db67424e477403fc043b98a0f40752",
+      "file_bytes": 3093667808,
+      "architecture": "qwen2vl",
+      "tensor_count": 338,
+      "encodings": {
+        "F16": 197,
+        "F32": 141
+      },
+      "header_sha256": "d3864d4ad2780f9599e866d62523234ca5282763540fc68950223c24f2eda7a2",
+      "matches_frozen_prefix_inventory": true,
+      "native_inference_qualified": false
+    },
+    {
+      "model": "qwen2-vl-2b",
+      "role": "vision-projector",
+      "sha256": "ecb20cabcdd8dbc277de06bd6eb980aeb2adfaaba9f199a434e328d205675d03",
+      "file_bytes": 1331656160,
+      "architecture": "clip",
+      "tensor_count": 520,
+      "encodings": {
+        "F16": 196,
+        "F32": 324
+      },
+      "header_sha256": "b1291adface81313eced390166dbd915b3db2b75c7f46f203557b98addd7c298",
+      "matches_frozen_prefix_inventory": true,
+      "native_inference_qualified": false
+    }
+  ]
+}
