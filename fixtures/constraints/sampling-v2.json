@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "profile": "coheryn-sampling-v2",
+  "source": "resources/tool-assessment/sampling_reference.py",
+  "source_sha256": "4eb4ed8706d483320da5d3105a661e0014c8deb0c0a7dd3f5fe1197905f776f6",
+  "scope": "Scalar arithmetic/RNG reference with f32 inputs and f64 probabilities; not model inference or cross-device bitwise qualification.",
+  "cases": [
+    {
+      "id": "greedy-tie",
+      "logits": [
+        0,
+        0,
+        -1
+      ],
+      "allowed": [
+        true,
+        true,
+        true
+      ],
+      "history": [],
+      "settings": {
+        "temperature": 0,
+        "top_k": 0,
+        "top_p": 1,
+        "seed": 0
+      },
+      "penalties": {
+        "repetition_penalty": 1,
+        "frequency_penalty": 0,
+        "presence_penalty": 0
+      },
+      "expected_ids": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "seeded-masked-top-k-p",
+      "logits": [
+        1,
+        200,
+        3,
+        0,
+        100
+      ],
+      "allowed": [
+        true,
+        false,
+        true,
+        true,
+        false
+      ],
+      "history": [],
+      "settings": {
+        "temperature": 0.8,
+        "top_k": 2,
+        "top_p": 0.99,
+        "seed": 42
+      },
+      "penalties": {
+        "repetition_penalty": 1,
+        "frequency_penalty": 0,
+        "presence_penalty": 0
+      },
+      "expected_ids": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "penalties-and-history",
+      "logits": [
+        2,
+        2,
+        1,
+        0
+      ],
+      "allowed": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "history": [
+        0,
+        1,
+        0
+      ],
+      "settings": {
+        "temperature": 0.7,
+        "top_k": 0,
+        "top_p": 0.95,
+        "seed": 7
+      },
+      "penalties": {
+        "repetition_penalty": 1.1,
+        "frequency_penalty": 0.5,
+        "presence_penalty": 0.1
+      },
+      "expected_ids": [
+        1,
+        2,
+        3,
+        1,
+        0,
+        2,
+        1,
+        0,
+        2,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        2,
+        0,
+        3,
+        2,
+        1,
+        2,
+        3,
+        3,
+        2
+      ]
+    },
+    {
+      "id": "negative-frequency-and-max-seed",
+      "logits": [
+        -1,
+        0.5,
+        1,
+        -2
+      ],
+      "allowed": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "history": [
+        0,
+        0,
+        3
+      ],
+      "settings": {
+        "temperature": 1.2,
+        "top_k": 3,
+        "top_p": 0.8,
+        "seed": 18446744073709551615
+      },
+      "penalties": {
+        "repetition_penalty": 0.75,
+        "frequency_penalty": -0.25,
+        "presence_penalty": -0.5
+      },
+      "expected_ids": [
+        0,
+        1,
+        1,
+        1,
+        2,
+        1,
+        2,
+        2,
+        1,
+        2,
+        2,
+        1,
+        2,
+        1,
+        2,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    }
+  ]
+}

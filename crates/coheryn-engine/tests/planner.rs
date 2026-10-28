@@ -29,6 +29,7 @@ fn with_input(f: impl FnOnce(PlanInput<'_>)) {
     let d = gguf::parse(Cursor::new(&bytes), bytes.len() as u64, Default::default()).unwrap();
     let c = coheryn_engine::validate(&d).config.unwrap();
     f(PlanInput {
+        constraints: false,
         descriptor: &d,
         config: &c,
         model: "tiny",
@@ -44,6 +45,43 @@ fn with_input(f: impl FnOnce(PlanInput<'_>)) {
         hardware: hardware(),
         images: None,
         threads: None,
+    });
+}
+#[test]
+fn constraints_are_separate_per_request_and_scale_without_changing_shared_weights_or_kv() {
+    with_input(|p| {
+        let plain = planner::estimate(PlanInput {
+            profile: Profile::Reference,
+            hardware: p.hardware.clone(),
+            ..p
+        })
+        .unwrap();
+        let one = planner::estimate(PlanInput {
+            constraints: true,
+            profile: Profile::Reference,
+            hardware: p.hardware.clone(),
+            ..p
+        })
+        .unwrap();
+        let two = planner::estimate(PlanInput {
+            constraints: true,
+            concurrency: 2,
+            profile: Profile::Reference,
+            hardware: p.hardware.clone(),
+            ..p
+        })
+        .unwrap();
+        assert_eq!(one.constraint_reserved_bytes, 32 << 20);
+        assert_eq!(
+            one.additional_reserved_bytes - plain.additional_reserved_bytes,
+            32 << 20
+        );
+        assert_eq!(one.session, plain.session);
+        assert_eq!(two.shared_weight_bytes, plain.shared_weight_bytes);
+        assert_eq!(
+            two.additional_reserved_bytes - one.model_metadata_additional,
+            2 * (one.additional_reserved_bytes - one.model_metadata_additional)
+        );
     });
 }
 #[test]
@@ -295,6 +333,7 @@ fn session_handoff_uses_one_reservation_and_observed_buffers_are_released() {
                 ..Default::default()
             },
             coheryn_engine::inference::SessionAdmission {
+                constraints: None,
                 context: 64,
                 reservation: foreign,
                 io_bytes: 256 << 10,

@@ -1,0 +1,336 @@
+{
+  "schema_version": 1,
+  "stage": "S5 exact-file native CPU preview",
+  "model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+  "model_bytes": 491400032,
+  "binary_sha256": "bc8ab578871dd8392dedf0762edf48d1f7a40bd31f8c7cb8a830c1e5d9951fe5",
+  "os": "macOS-27.0.1-arm64-arm-64bit",
+  "architecture": "arm64",
+  "backend": "native-cpu",
+  "context": 512,
+  "cache_dtype": "f32",
+  "profile": "reference",
+  "threads": 1,
+  "seed": 0,
+  "temperature": 0,
+  "schema_profile": "coheryn-json-v1",
+  "sampling_profile": "coheryn-sampling-v2",
+  "checks": [
+    {
+      "case": "native-cli-api-exact-schema-parity",
+      "token_ids": [
+        715,
+        90,
+        330,
+        9217,
+        3252,
+        562,
+        1,
+        335
+      ],
+      "usage": 8,
+      "validation": {
+        "compile_ms": 88.59183399999999,
+        "mask_ms": 1.3479580000000002,
+        "profile": "coheryn-json-v1",
+        "schema_fingerprint": "d536057c3b52aa6d6d1e685578cdcac43a91b6cba62d1fc7de4ffb08f4c48936",
+        "target": "response",
+        "valid": true
+      },
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 539667372,
+        "peak_session_buffer_capacity_bytes": 20600562,
+        "reserved": 267523584,
+        "session_buffer_capacity_bytes": 0
+      },
+      "sampling": {
+        "backend": "native-cpu",
+        "cache_dtype": "f32",
+        "engine_version": "0.1.0-dev",
+        "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+        "penalties": {
+          "frequency_penalty": 0.0,
+          "presence_penalty": 0.0,
+          "repetition_penalty": 1.0
+        },
+        "prefill_chunk_tokens": 1,
+        "profile": "coheryn-sampling-v2",
+        "sampling_ms": 1.6763769999999998,
+        "settings": {
+          "seed": 0,
+          "temperature": 0.0,
+          "top_k": 0,
+          "top_p": 1.0
+        },
+        "threads": 1,
+        "tokenizer_fingerprint": "8f5c49a4f5fbfac3454db56577cfa7b6acbee856c371fc97a726e7f621e3143f"
+      }
+    },
+    {
+      "case": "openai-completion-chat-sse-and-usage"
+    },
+    {
+      "case": "json-object",
+      "text": " \n{ \"error\": \"invalid input\" }",
+      "validation": {
+        "compile_ms": 95.706375,
+        "mask_ms": 56.246332,
+        "profile": "coheryn-json-v1",
+        "schema_fingerprint": "c494647c847f43cd3ebb2a21dc35000ed295c55f1a1368866a031a6acbaf0b3b",
+        "target": "response",
+        "valid": true
+      }
+    },
+    {
+      "case": "unicode-schema",
+      "text": " {\"বাংলা\":\"日本語 🌍\"}",
+      "validation": {
+        "compile_ms": 89.714708,
+        "mask_ms": 0.555335,
+        "profile": "coheryn-json-v1",
+        "schema_fingerprint": "a991a60317a30f11102c41e74383e8376c118e10720430f2f0dbdc6d29af77f0",
+        "target": "response",
+        "valid": true
+      }
+    },
+    {
+      "case": "strict-single-required-named-and-streamed-tool",
+      "validation": {
+        "compile_ms": 93.039208,
+        "mask_ms": 3.0387049999999998,
+        "profile": "coheryn-json-v1",
+        "schema_fingerprint": "eecf83de0f2123fa4e70da653c74d5195b12e2b8a57f5073873d75a9e6dbe34d",
+        "target": "tool_arguments",
+        "valid": true
+      }
+    },
+    {
+      "case": "seeded-penalty-cli-api-parity-and-token-stop",
+      "token_ids": [
+        5571,
+        279,
+        5189,
+        4226,
+        369,
+        498,
+        13,
+        2308,
+        2550,
+        374,
+        2567,
+        382
+      ]
+    },
+    {
+      "case": "incomplete-and-unsupported-schema-errors"
+    },
+    {
+      "case": "deadline-disconnect-and-reservation-cleanup",
+      "baseline_reserved_bytes": 250746368
+    },
+    {
+      "case": "queued-request-grammar-and-rng-isolation"
+    },
+    {
+      "case": "managed-schema-turn-and-idempotent-replay",
+      "revision": 2
+    },
+    {
+      "case": "standard-sdk-schema-response"
+    }
+  ],
+  "cache_conditions": "Uncontrolled OS/file cache; stateless KV and private grammar state rebuilt per request.",
+  "rss_bytes": null,
+  "process_private_bytes": null,
+  "scope": "Correctness, interface parity and lifecycle; no cross-platform/GPU, retrieval-quality or controlled inference throughput claim.",
+  "hardware": {
+    "architecture": "aarch64",
+    "cpu_features": [
+      "neon",
+      "fp16"
+    ],
+    "gpu_available_bytes": null,
+    "gpu_backend_qualified": false,
+    "logical_cpus": 8,
+    "observed_unix_ms": 1793124938056,
+    "os": "macos",
+    "ram_available_bytes": 2948939776,
+    "ram_total_bytes": 8589934592,
+    "swap_total_bytes": 3221225472,
+    "swap_used_bytes": 2724397056
+  },
+  "constraint_plan": {
+    "additional_reserved_bytes": 62428588,
+    "admissible": true,
+    "backend": "cpu-reference",
+    "cache_dtype": "f32",
+    "concurrency": 1,
+    "concurrency_limit": 1,
+    "conservative_host_working_set_additional_bytes": 547880876,
+    "constraint_reserved_bytes": 33554432,
+    "context": 512,
+    "cpu_gpu_transfer_bytes": 0,
+    "gpu_allocation_bytes": 0,
+    "hardware": {
+      "architecture": "aarch64",
+      "cpu_features": [
+        "neon",
+        "fp16"
+      ],
+      "gpu_available_bytes": null,
+      "gpu_backend_qualified": false,
+      "logical_cpus": 8,
+      "observed_unix_ms": 1793124938056,
+      "os": "macos",
+      "ram_available_bytes": 2948939776,
+      "ram_total_bytes": 8589934592,
+      "swap_total_bytes": 3221225472,
+      "swap_used_bytes": 2724397056
+    },
+    "host_allocation_feasible": true,
+    "host_memory_feasible": true,
+    "image_stages": null,
+    "io_buffer_bytes": 262144,
+    "limitations": [
+      "Reservations are conservative estimates, not allocator measurements or an OS-wide RAM cap",
+      "Full-weight page-cache residency is an advisory upper bound, counted once; only engine allocation needs enter buffered-backend admission",
+      "Available RAM is a point-in-time observation; only engine budget admission is atomic",
+      "Row-parallel CPU workers preserve per-row arithmetic; packed inputs use Q8_0/Q8_K activation quantization; prefill remains sequential within bounded chunks; F32 KV and CPU-only placement are retained",
+      "Vision stage costs remain unavailable until a qualified model/processor manifest exists"
+    ],
+    "mapped_weight_bytes": 0,
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 539667372,
+      "peak_session_buffer_capacity_bytes": 0,
+      "reserved": 250746368,
+      "session_buffer_capacity_bytes": 0
+    },
+    "model": "s5",
+    "model_metadata_additional": 0,
+    "prefill_chunk_tokens": 1,
+    "profile": "reference",
+    "reasons": [
+      "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+    ],
+    "request_reserved_bytes": 8388608,
+    "required_reserved_bytes": 313174956,
+    "safety_headroom_bytes": 0,
+    "schema_version": 1,
+    "session": {
+      "kv_capacity_bytes": 12582912,
+      "total_bytes": 20485548,
+      "workspace_bytes": 7902636
+    },
+    "session_reserved_bytes": 20485548,
+    "shared_weight_bytes": 485452288,
+    "temporary_inspection_reserved_bytes": 0,
+    "threads_per_session": 1,
+    "warnings": [],
+    "weight_storage": "read-only-buffered"
+  },
+  "optional_sdk": {
+    "name": "openai",
+    "version": "3.40.0"
+  },
+  "final_status": {
+    "active_limit": 2,
+    "backend": "cpu-reference",
+    "batching_profile": "coheryn-cpu-batch-v1",
+    "cache": {
+      "idle_caches": 1,
+      "limits": {
+        "global_bytes": 268435456,
+        "idle_seconds": 300,
+        "session_bytes": 67108864
+      },
+      "reserved_bytes": 1580160
+    },
+    "compute_policy": "fifo-token-batch-and-embedding-microbatch",
+    "compute_unit_limit": 1,
+    "configured_active_limit": 1,
+    "constraint_profile": "coheryn-json-v1",
+    "continuous_batching": true,
+    "embedding_limits": {
+      "batch_size": 8,
+      "batch_tokens": 2048,
+      "body_bytes": 1048576,
+      "concurrency": 1,
+      "input_bytes": 65536,
+      "input_tokens": 512,
+      "items": 256,
+      "request_bytes": 8388608,
+      "requests": 4,
+      "response_bytes": 16777216,
+      "total_tokens": 32768
+    },
+    "embedding_phase_limit": 1,
+    "generation_resident_limit": 1,
+    "loaded_models": [
+      {
+        "context": 512,
+        "embedding_space": null,
+        "id": "s5",
+        "pinned": false,
+        "task": "text-generation"
+      }
+    ],
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 539667372,
+      "peak_session_buffer_capacity_bytes": 23747262,
+      "reserved": 252362736,
+      "session_buffer_capacity_bytes": 1576064
+    },
+    "persistence_limits": {
+      "enabled": false,
+      "owner_bytes": 536870912,
+      "retention_seconds": 2592000,
+      "total_bytes": 1073741824
+    },
+    "placement": {
+      "backend": "native-cpu",
+      "fallback": "disabled",
+      "reason": "CPU is the only qualified execution backend"
+    },
+    "queue_capacity": 8,
+    "sampling_profile": "coheryn-sampling-v2",
+    "scheduler": {
+      "active": 0,
+      "batched_generation_units": 0,
+      "cancelled": 2,
+      "completed": 16,
+      "embedding_microbatches": 0,
+      "failed": 1,
+      "forwarded_tokens": 955,
+      "generation_units": 957,
+      "matrix_read_bytes": 374101751492,
+      "matrix_tile_reads": 1537232,
+      "maximum_batch_width": 1,
+      "queued": 0,
+      "rejected": 0,
+      "waiting_generation_units": 0
+    },
+    "schema_constraints": true,
+    "session_kv_reuse": true,
+    "session_limits": {
+      "history_bytes": 1048576,
+      "idle_seconds": 86400,
+      "messages": 256,
+      "per_owner": 64,
+      "total": 128,
+      "turn_keys": 128
+    },
+    "session_storage": "ephemeral",
+    "shutting_down": false,
+    "stage": "experimental-G4-E2-S6",
+    "strict_tool_arguments": true,
+    "strict_tool_mode": "single-required-or-named-no-parallel",
+    "tool_calling": true,
+    "tool_profiles": [
+      "qwen-tools-v1"
+    ]
+  },
+  "native_only": true
+}

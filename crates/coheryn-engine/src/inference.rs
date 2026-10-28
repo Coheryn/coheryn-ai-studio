@@ -20,11 +20,16 @@ use std::{
     time::Instant,
 };
 
+mod batch;
+mod generation;
+pub use batch::BatchStep;
+pub use generation::{BATCH_PROFILE, BatchingMetadata, GenerationState};
+
 const IO_BYTES: usize = 256 << 10;
 type LayerObserver<'a> = dyn FnMut(&str, &[f32]) -> Result<()> + 'a;
 pub type TraceObserver<'a> = dyn FnMut(usize, &str, &[f32]) -> Result<()> + 'a;
 #[derive(Default, Clone)]
-pub struct Cancellation(Arc<AtomicBool>);
+pub struct Cancellation(Arc<AtomicBool>, Option<Instant>);
 impl Cancellation {
     pub fn cancel(&self) {
         self.0.store(true, Ordering::Relaxed);
@@ -32,9 +37,32 @@ impl Cancellation {
     pub fn check(&self) -> Result<()> {
         if self.0.load(Ordering::Relaxed) {
             Err(Error::new(ErrorCode::Cancelled, "generation cancelled"))
+        } else if self.1.is_some_and(|deadline| Instant::now() >= deadline) {
+            Err(Error::new(
+                ErrorCode::DeadlineExceeded,
+                "generation deadline exceeded",
+            ))
         } else {
             Ok(())
         }
+    }
+    pub fn with_timeout(&self, seconds: Option<u64>) -> Result<Self> {
+        let deadline = match seconds {
+            Some(n) if (1..=86400).contains(&n) => Some(
+                Instant::now()
+                    .checked_add(std::time::Duration::from_secs(n))
+                    .ok_or_else(|| Error::request("deadline overflow"))?,
+            ),
+            Some(_) => return Err(Error::request("timeout_seconds must be in 1..=86400")),
+            None => None,
+        };
+        Ok(Self(
+            self.0.clone(),
+            match (self.1, deadline) {
+                (Some(a), Some(b)) => Some(a.min(b)),
+                (a, b) => a.or(b),
+            },
+        ))
     }
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -42,6 +70,17 @@ pub struct GenerationOptions {
     pub max_tokens: usize,
     pub sampling: Sampling,
     pub stop: Vec<String>,
+    #[serde(default)]
+    pub stop_tokens: Vec<u32>,
+    #[serde(default)]
+    pub penalties: crate::sampling::Penalties,
+    #[serde(default)]
+    pub response_format: crate::constraints::ResponseFormat,
+    /// Internal, derived only from validated single-function strict tool contracts.
+    #[serde(skip)]
+    pub strict_tool: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub timeout_seconds: Option<u64>,
     /// Preserve qualified tool delimiters for the native parser; other control tokens stay hidden.
     #[serde(default)]
     pub tool_markers: bool,
@@ -52,6 +91,11 @@ impl Default for GenerationOptions {
             max_tokens: 128,
             sampling: Sampling::default(),
             stop: vec![],
+            stop_tokens: vec![],
+            penalties: crate::sampling::Penalties::default(),
+            response_format: crate::constraints::ResponseFormat::Text,
+            strict_tool: false,
+            timeout_seconds: None,
             tool_markers: false,
         }
     }
@@ -71,6 +115,12 @@ pub struct TokenEvent {
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GenerationResult {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub batching: Option<Box<BatchingMetadata>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sampling_metadata: Option<Box<SamplingMetadata>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub constraint_validation: Option<Box<ConstraintValidation>>,
     pub text: String,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub tool_calls: Vec<crate::tools::ToolCall>,
@@ -86,6 +136,29 @@ pub struct GenerationResult {
     pub output_delivery_ms: f64,
     pub first_token_ms: Option<f64>,
     pub memory: MemoryStats,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ConstraintValidation {
+    pub profile: String,
+    pub valid: bool,
+    pub target: String,
+    pub schema_fingerprint: String,
+    pub compile_ms: f64,
+    pub mask_ms: f64,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SamplingMetadata {
+    pub sampling_ms: f64,
+    pub profile: String,
+    pub settings: Sampling,
+    pub penalties: crate::sampling::Penalties,
+    pub history_scope: String,
+    pub tokenizer_fingerprint: String,
+    pub backend: String,
+    pub cache_dtype: String,
+    pub threads: usize,
+    pub prefill_chunk_tokens: usize,
+    pub engine_version: String,
 }
 
 pub struct Model {
@@ -123,6 +196,7 @@ impl ExecutionSettings {
 }
 /// A queue-held reservation transferred to execution. Validated against the model's budget.
 pub struct SessionAdmission {
+    pub constraints: Option<Reservation>,
     pub context: usize,
     pub reservation: Reservation,
     pub io_bytes: usize,
@@ -224,6 +298,7 @@ impl Model {
             .checked_add(overhead_bytes)
             .ok_or_else(|| Error::resource("session admission overflow"))?;
         Ok(SessionAdmission {
+            constraints: None,
             context,
             reservation: self.budget.reserve(bytes)?,
             io_bytes,
@@ -452,6 +527,7 @@ impl Model {
             prompt,
             options,
             SessionAdmission {
+                constraints: None,
                 context,
                 reservation,
                 io_bytes: IO_BYTES,
@@ -491,189 +567,40 @@ impl Model {
         mut cache: Option<&mut Option<PrefixCache>>,
         mut emit: impl FnMut(TokenEvent) -> Result<()>,
     ) -> Result<GenerationResult> {
-        let SessionAdmission {
-            context,
-            reservation,
-            io_bytes,
-            execution,
-        } = admission;
-        execution.validate()?;
-        for tensor in &self.descriptor.tensors {
-            if quant::row_bytes(tensor.dtype, tensor.dimensions[0] as usize)? > io_bytes {
-                return Err(Error::resource(
-                    "I/O tile cannot hold a validated tensor row",
-                ));
-            }
-        }
-        if context == 0 || context > self.limits.context {
-            return Err(Error::request(
-                "requested context exceeds the loaded context limit",
-            ));
-        }
-        let request_start = Instant::now();
-        if options.max_tokens > context
-            || options.stop.len() > 16
-            || options.stop.iter().any(|s| s.is_empty() || s.len() > 4096)
-        {
-            return Err(Error::request(
-                "invalid generation length or stop sequences",
-            ));
-        }
-        let mut sampler = Sampler::new(options.sampling.clone())?;
-        cancel.check()?;
-        let prompt_tokens = self.tokenizer.encode(prompt)?;
-        let tokenization_ms = request_start.elapsed().as_secs_f64() * 1000.;
-        if prompt_tokens.is_empty()
-            || prompt_tokens
-                .len()
-                .checked_add(options.max_tokens)
-                .is_none_or(|n| n > context)
-        {
-            return Err(Error::request(
-                "prompt must be nonempty and prompt plus max_tokens must fit context",
-            ));
-        }
-        let mut prior = cache.as_deref_mut().and_then(Option::take);
-        if let Some(old) = &prior
-            && !self.cache_compatible(old, context, io_bytes, execution)?
-        {
-            prior = None;
-        }
-        let mut session = Session::admitted_cached(
-            &self.config,
-            context,
-            &self.budget,
-            reservation,
-            io_bytes,
-            execution,
-            prior,
-        )?;
-        // Recompute the last prompt token so logits never need a second retained copy.
-        let reused_prompt_tokens = session
-            .tokens
-            .iter()
-            .zip(&prompt_tokens)
-            .take_while(|(a, b)| a == b)
-            .count()
-            .min(prompt_tokens.len() - 1);
-        session.position = reused_prompt_tokens;
-        session.tokens.truncate(reused_prompt_tokens);
-        let row = self.config.kv_heads * self.config.head_dim;
-        for kv in session.keys.iter_mut().chain(&mut session.values) {
-            kv.data.truncate(reused_prompt_tokens * row);
-        }
-        let start = Instant::now();
-        for chunk in prompt_tokens[reused_prompt_tokens..].chunks(execution.prefill_chunk_tokens) {
-            cancel.check()?;
-            for token in chunk {
-                self.forward(*token, &mut session, cancel, None)?;
-            }
-        }
-        let prefill_ms = start.elapsed().as_secs_f64() * 1000.;
-        let decode = Instant::now();
-        let mut stream = Utf8Stream::default();
-        let mut stop = StopBuffer::new(options.stop.clone());
-        let mut text = String::new();
-        let mut ids = Vec::new();
-        let mut finish_reason = FinishReason::Length;
-        let mut first_token_ms = None;
-        let mut output_delivery_ms = 0.;
-        let mut emit_timed = |event| {
-            let output_start = Instant::now();
-            let result = emit(event);
-            output_delivery_ms += output_start.elapsed().as_secs_f64() * 1000.;
-            result
-        };
-        for index in 0..options.max_tokens {
-            if cancel.check().is_err() {
-                finish_reason = FinishReason::Cancelled;
-                break;
-            }
-            let token = sampler.sample(&session.scratch.logits)?;
-            ids.push(token);
-            first_token_ms.get_or_insert_with(|| request_start.elapsed().as_secs_f64() * 1000.);
-            if self.tokenizer.is_eog(token) {
-                finish_reason = FinishReason::Stop;
-                break;
-            }
-            let decoded = if self.tokenizer.is_special(token)
-                && !(options.tool_markers && self.tokenizer.is_tool_marker(token))
-            {
-                String::new()
+        let prior = cache.as_deref_mut().and_then(Option::take);
+        let mut state = self.begin_generation(prompt, options, admission, cancel, prior)?;
+        while !state.is_finished() {
+            let result = if state.needs_forward() {
+                self.step_generation(&mut state)
             } else {
-                stream.push(self.tokenizer.token_bytes(token)?, false)
+                Ok(())
             };
-            let (safe, matched) = stop.push(&decoded, false);
-            if text.len().saturating_add(safe.len()) > 1 << 20 {
-                return Err(Error::resource(
-                    "generated text exceeds one MiB output limit",
-                ));
-            }
-            text.push_str(&safe);
-            emit_timed(TokenEvent {
-                token_id: Some(token),
-                text: safe,
-            })?;
-            if matched {
-                finish_reason = FinishReason::Stop;
-                break;
-            }
-            if index + 1 < options.max_tokens {
-                match self.forward(token, &mut session, cancel, None) {
-                    Err(e) if e.code == ErrorCode::Cancelled => {
-                        finish_reason = FinishReason::Cancelled;
-                        break;
-                    }
-                    result => result?,
+            if let Err(error) = result {
+                if error.code == ErrorCode::Cancelled && !state.is_prefilling() {
+                    state.cancelled();
+                    break;
                 }
+                return Err(error);
+            }
+            match state.sample(self) {
+                Ok(Some(event)) => {
+                    let start = Instant::now();
+                    emit(event)?;
+                    state.record_delivery(start.elapsed().as_secs_f64() * 1000.);
+                }
+                Ok(None) => {}
+                Err(error) if error.code == ErrorCode::Cancelled && !state.is_prefilling() => {
+                    state.cancelled();
+                    break;
+                }
+                Err(error) => return Err(error),
             }
         }
-        if !stop.matched {
-            let tail = stream.push(&[], true);
-            let (safe, _) = stop.push(&tail, true);
-            if text.len().saturating_add(safe.len()) > 1 << 20 {
-                return Err(Error::resource(
-                    "generated text exceeds one MiB output limit",
-                ));
-            }
-            text.push_str(&safe);
-            if !safe.is_empty() {
-                emit_timed(TokenEvent {
-                    token_id: None,
-                    text: safe,
-                })?;
-            }
-        }
-        let decode_ms = (decode.elapsed().as_secs_f64() * 1000. - output_delivery_ms).max(0.);
+        let (result, new_cache) = state.finish(self, cache.is_some(), emit)?;
         if let Some(output) = cache {
-            if finish_reason != FinishReason::Cancelled && cancel.check().is_ok() {
-                *output = Some(session.into_cache(
-                    Arc::downgrade(&self.cache_owner),
-                    self.cache_key()?,
-                    io_bytes,
-                    execution,
-                )?);
-            } else {
-                drop(session);
-            }
-        } else {
-            drop(session);
+            *output = new_cache;
         }
-        Ok(GenerationResult {
-            tool_calls: Vec::new(),
-            text,
-            completion_tokens: ids.len(),
-            token_ids: ids,
-            prompt_tokens: prompt_tokens.len(),
-            reused_prompt_tokens,
-            finish_reason,
-            prefill_ms,
-            tokenization_ms,
-            decode_ms,
-            output_delivery_ms,
-            first_token_ms,
-            memory: self.budget.stats(),
-        })
+        Ok(result)
     }
 }
 
@@ -704,7 +631,7 @@ impl PrefixCache {
 
 #[cfg(test)]
 #[path = "../tests/common/mod.rs"]
-mod cache_model_fixture;
+pub(crate) mod cache_model_fixture;
 #[cfg(test)]
 mod cache_tests {
     use super::*;
@@ -892,6 +819,7 @@ mod cache_tests {
                 seed: 77,
             },
             stop: vec![],
+            ..GenerationOptions::default()
         };
         let cold = other
             .generate("seeded", &settings, &Cancellation::default(), |_| Ok(()))
@@ -949,6 +877,7 @@ impl Model {
             io_bytes,
             execution,
             reservation: self.budget.reserve(needed)?,
+            constraints: None,
         })
     }
     pub fn cache_compatible(
@@ -1271,5 +1200,20 @@ mod tests {
         let d = c.clone();
         d.cancel();
         assert!(c.check().is_err());
+    }
+    #[test]
+    fn deadlines_are_scoped_preserve_earlier_limits_and_do_not_poison_parent() {
+        let parent = Cancellation::default();
+        assert!(parent.with_timeout(Some(0)).is_err());
+        assert!(parent.with_timeout(Some(86401)).is_err());
+        let expired = Cancellation(parent.0.clone(), Some(Instant::now()));
+        assert_eq!(
+            expired.check().unwrap_err().code,
+            ErrorCode::DeadlineExceeded
+        );
+        assert_eq!(expired.with_timeout(Some(10)).unwrap().1, expired.1);
+        assert!(parent.check().is_ok());
+        parent.cancel();
+        assert_eq!(expired.check().unwrap_err().code, ErrorCode::Cancelled);
     }
 }

@@ -123,6 +123,25 @@ pub struct TurnSettings {
     pub top_k: usize,
     #[serde(default)]
     pub seed: u64,
+    #[serde(default = "default_top_p", skip_serializing_if = "one_penalty")]
+    pub repetition_penalty: f32,
+    #[serde(default, skip_serializing_if = "zero_penalty")]
+    pub frequency_penalty: f32,
+    #[serde(default, skip_serializing_if = "zero_penalty")]
+    pub presence_penalty: f32,
+    #[serde(
+        default,
+        skip_serializing_if = "coheryn_engine::constraints::ResponseFormat::is_text"
+    )]
+    pub response_format: coheryn_engine::constraints::ResponseFormat,
+    #[serde(
+        default,
+        skip_serializing_if = "Vec::is_empty",
+        deserialize_with = "crate::bounded::sequence::<_,_,16>"
+    )]
+    pub stop_tokens: Vec<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub timeout_seconds: Option<u64>,
     #[serde(default, deserialize_with = "crate::bounded::sequence::<_, _, 16>")]
     pub stop: Vec<String>,
     #[serde(default = "default_profile")]
@@ -148,6 +167,12 @@ fn default_tokens() -> usize {
 fn default_top_p() -> f32 {
     1.0
 }
+fn one_penalty(value: &f32) -> bool {
+    *value == 1.
+}
+fn zero_penalty(value: &f32) -> bool {
+    *value == 0.
+}
 fn default_profile() -> String {
     "balanced".into()
 }
@@ -159,6 +184,12 @@ impl Default for TurnSettings {
             top_p: 1.,
             top_k: 0,
             seed: 0,
+            repetition_penalty: 1.,
+            frequency_penalty: 0.,
+            presence_penalty: 0.,
+            response_format: coheryn_engine::constraints::ResponseFormat::Text,
+            stop_tokens: vec![],
+            timeout_seconds: None,
             stop: vec![],
             profile: default_profile(),
             threads: None,
@@ -180,6 +211,15 @@ impl TurnSettings {
 
     fn request(&self, model: String, context: usize, prompt: String) -> GenerationRequest {
         let options = GenerationOptions {
+            timeout_seconds: self.timeout_seconds,
+            strict_tool: false,
+            penalties: coheryn_engine::sampling::Penalties {
+                repetition_penalty: self.repetition_penalty,
+                frequency_penalty: self.frequency_penalty,
+                presence_penalty: self.presence_penalty,
+            },
+            response_format: self.response_format.clone(),
+            stop_tokens: self.stop_tokens.clone(),
             tool_markers: self.tool_config().enabled(),
             max_tokens: self.max_tokens,
             sampling: Sampling {
@@ -1515,7 +1555,10 @@ impl TurnLease {
         let (status, result, error) = match event {
             GenerationEvent::Finished(result) => (TurnStatus::Completed, Some(result), None),
             GenerationEvent::Failed(error) => (
-                if error.error.code == ErrorCode::Cancelled {
+                if matches!(
+                    error.error.code,
+                    ErrorCode::Cancelled | ErrorCode::DeadlineExceeded
+                ) {
                     TurnStatus::Cancelled
                 } else {
                     TurnStatus::Failed

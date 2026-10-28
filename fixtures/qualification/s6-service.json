@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "stage": "S6 initial exact-file native CPU batching",
+  "model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+  "model_bytes": 491400032,
+  "binary_sha256": "bc8ab578871dd8392dedf0762edf48d1f7a40bd31f8c7cb8a830c1e5d9951fe5",
+  "os": "macOS-27.0.1-arm64-arm-64bit",
+  "architecture": "arm64",
+  "context": 128,
+  "backend": "native-cpu",
+  "cache_dtype": "f32",
+  "threads": 1,
+  "batching_profile": "coheryn-cpu-batch-v1",
+  "generation_resident_limit": 2,
+  "cache_conditions": "Uncontrolled OS/file cache; request-private KV, grammar and RNG.",
+  "scope": "Native individual-versus-batch correctness, real weight-read reuse and lifecycle. Not independent model-oracle replacement or a throughput/speed advantage claim.",
+  "checks": [
+    {
+      "case": "original-single-sequence-baselines",
+      "sequences": [
+        {
+          "prompt_tokens": 3,
+          "token_ids": [
+            1096,
+            374,
+            264,
+            501,
+            2319,
+            315,
+            279,
+            3766
+          ]
+        },
+        {
+          "prompt_tokens": 15,
+          "token_ids": [
+            3555,
+            374,
+            279,
+            2629,
+            315,
+            1493,
+            25780,
+            30,
+            2014,
+            1477,
+            279,
+            2629,
+            315,
+            279,
+            1156,
+            220,
+            16,
+            15,
+            15,
+            6785,
+            25780,
+            11,
+            582,
+            646,
+            990,
+            279,
+            14806,
+            369,
+            279,
+            2629,
+            315,
+            458
+          ]
+        }
+      ]
+    },
+    {
+      "case": "simultaneous-seeded-penalty-cli-api-parity",
+      "batches": [
+        {
+          "batched_forward_units": 7,
+          "forward_units": 10,
+          "maximum_batch_width": 2,
+          "prefilled_tokens": 3,
+          "profile": "coheryn-cpu-batch-v1",
+          "scheduler_wait_ms": 2710.8364989999995,
+          "strategy": "continuous-weight-tiled"
+        },
+        {
+          "batched_forward_units": 7,
+          "forward_units": 46,
+          "maximum_batch_width": 2,
+          "prefilled_tokens": 15,
+          "profile": "coheryn-cpu-batch-v1",
+          "scheduler_wait_ms": 841.510626,
+          "strategy": "continuous-weight-tiled"
+        }
+      ]
+    },
+    {
+      "case": "late-join-individual-retirement-and-slot-reuse",
+      "short": {
+        "batched_forward_units": 4,
+        "forward_units": 4,
+        "maximum_batch_width": 2,
+        "prefilled_tokens": 3,
+        "profile": "coheryn-cpu-batch-v1",
+        "scheduler_wait_ms": 553.597959,
+        "strategy": "continuous-weight-tiled"
+      },
+      "third": {
+        "batched_forward_units": 5,
+        "forward_units": 5,
+        "maximum_batch_width": 2,
+        "prefilled_tokens": 3,
+        "profile": "coheryn-cpu-batch-v1",
+        "scheduler_wait_ms": 936.0428340000001,
+        "strategy": "continuous-weight-tiled"
+      },
+      "long": {
+        "batched_forward_units": 9,
+        "forward_units": 46,
+        "maximum_batch_width": 2,
+        "prefilled_tokens": 15,
+        "profile": "coheryn-cpu-batch-v1",
+        "scheduler_wait_ms": 1.7755020000000001,
+        "strategy": "continuous-weight-tiled"
+      }
+    },
+    {
+      "case": "request-private-unicode-grammar-and-peer-rng",
+      "batching": {
+        "batched_forward_units": 14,
+        "forward_units": 30,
+        "maximum_batch_width": 2,
+        "prefilled_tokens": 18,
+        "profile": "coheryn-cpu-batch-v1",
+        "scheduler_wait_ms": 4088.7921669999996,
+        "strategy": "continuous-weight-tiled"
+      }
+    },
+    {
+      "case": "incomplete-sequence-failure-isolation"
+    },
+    {
+      "case": "stream-disconnect-isolation-and-acknowledged-cleanup"
+    },
+    {
+      "case": "incompatible-execution-contracts-are-not-packed"
+    }
+  ],
+  "rss_bytes": null,
+  "process_private_bytes": null,
+  "final_status": {
+    "active_limit": 3,
+    "backend": "cpu-reference",
+    "batching_profile": "coheryn-cpu-batch-v1",
+    "cache": {
+      "idle_caches": 0,
+      "limits": {
+        "global_bytes": 268435456,
+        "idle_seconds": 300,
+        "session_bytes": 67108864
+      },
+      "reserved_bytes": 0
+    },
+    "compute_policy": "fifo-token-batch-and-embedding-microbatch",
+    "compute_unit_limit": 1,
+    "configured_active_limit": 2,
+    "constraint_profile": "coheryn-json-v1",
+    "continuous_batching": true,
+    "embedding_limits": {
+      "batch_size": 8,
+      "batch_tokens": 2048,
+      "body_bytes": 1048576,
+      "concurrency": 1,
+      "input_bytes": 65536,
+      "input_tokens": 512,
+      "items": 256,
+      "request_bytes": 8388608,
+      "requests": 4,
+      "response_bytes": 16777216,
+      "total_tokens": 32768
+    },
+    "embedding_phase_limit": 1,
+    "generation_resident_limit": 2,
+    "loaded_models": [
+      {
+        "context": 512,
+        "embedding_space": null,
+        "id": "batch",
+        "pinned": false,
+        "task": "text-generation"
+      }
+    ],
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 539667372,
+      "peak_session_buffer_capacity_bytes": 25480743,
+      "reserved": 250746368,
+      "session_buffer_capacity_bytes": 0
+    },
+    "persistence_limits": {
+      "enabled": false,
+      "owner_bytes": 536870912,
+      "retention_seconds": 2592000,
+      "total_bytes": 1073741824
+    },
+    "placement": {
+      "backend": "native-cpu",
+      "fallback": "disabled",
+      "reason": "CPU is the only qualified execution backend"
+    },
+    "queue_capacity": 8,
+    "sampling_profile": "coheryn-sampling-v2",
+    "scheduler": {
+      "active": 0,
+      "batched_generation_units": 60,
+      "cancelled": 1,
+      "completed": 11,
+      "embedding_microbatches": 0,
+      "failed": 1,
+      "forwarded_tokens": 320,
+      "generation_units": 261,
+      "matrix_read_bytes": 102200684544,
+      "matrix_tile_reads": 419949,
+      "maximum_batch_width": 2,
+      "queued": 0,
+      "rejected": 0,
+      "waiting_generation_units": 0
+    },
+    "schema_constraints": true,
+    "session_kv_reuse": true,
+    "session_limits": {
+      "history_bytes": 1048576,
+      "idle_seconds": 86400,
+      "messages": 256,
+      "per_owner": 64,
+      "total": 128,
+      "turn_keys": 128
+    },
+    "session_storage": "ephemeral",
+    "shutting_down": false,
+    "stage": "experimental-G4-E2-S6",
+    "strict_tool_arguments": true,
+    "strict_tool_mode": "single-required-or-named-no-parallel",
+    "tool_calling": true,
+    "tool_profiles": [
+      "qwen-tools-v1"
+    ]
+  },
+  "native_only": true
+}

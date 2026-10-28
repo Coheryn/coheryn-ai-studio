@@ -22,6 +22,129 @@ fn credentials() -> Credentials {
         admin_token: "a".repeat(64),
     }
 }
+fn constrained_request(stream: bool) -> Value {
+    json!({"model":"tiny","prompt":"json","max_tokens":64,"stream":stream,
+        "response_format":{"type":"json_schema","json_schema":{"name":"result","strict":true,"schema":{"type":"object","properties":{"answer":{"type":"string","const":"ok"}},"required":["answer"],"additionalProperties":false}}}})
+}
+#[tokio::test]
+async fn constrained_completion_stream_and_incomplete_errors_are_explicit() {
+    let (_dir, service, app) = setup(1);
+    loaded(&service).await;
+    let (status, complete) = call(
+        &app,
+        "POST",
+        "/v1/completions",
+        Some(false),
+        constrained_request(false),
+    )
+    .await;
+    assert_eq!(status, 200, "{complete}");
+    assert_eq!(
+        serde_json::from_str::<Value>(complete["choices"][0]["text"].as_str().unwrap()).unwrap(),
+        json!({"answer":"ok"})
+    );
+    assert_eq!(complete["coheryn"]["constraint_validation"]["valid"], true);
+    let response = app
+        .clone()
+        .oneshot(request(
+            "POST",
+            "/v1/completions",
+            Some(false),
+            constrained_request(true),
+        ))
+        .await
+        .unwrap();
+    assert_eq!(response.status(), 200);
+    let bytes = to_bytes(response.into_body(), 1 << 20).await.unwrap();
+    let body = std::str::from_utf8(&bytes).unwrap();
+    let chunks: Vec<Value> = body
+        .lines()
+        .filter_map(|line| line.strip_prefix("data: "))
+        .filter(|s| *s != "[DONE]")
+        .map(|s| serde_json::from_str(s).unwrap())
+        .collect();
+    let text: String = chunks
+        .iter()
+        .filter_map(|v| v["choices"][0]["text"].as_str())
+        .collect();
+    assert_eq!(text, complete["choices"][0]["text"]);
+    assert!(
+        chunks
+            .iter()
+            .any(|v| v["coheryn"]["constraint_validation"]["valid"] == true)
+    );
+    assert!(body.contains("data: [DONE]"));
+    let mut short = constrained_request(false);
+    short["max_tokens"] = json!(1);
+    let (status, error) = call(&app, "POST", "/v1/completions", Some(false), short.clone()).await;
+    assert_eq!(status, 422);
+    assert_eq!(error["error"]["code"], "CONSTRAINT_INCOMPLETE");
+    short["stream"] = json!(true);
+    let response = app
+        .clone()
+        .oneshot(request("POST", "/v1/completions", Some(false), short))
+        .await
+        .unwrap();
+    let bytes = to_bytes(response.into_body(), 1 << 20).await.unwrap();
+    let body = std::str::from_utf8(&bytes).unwrap();
+    assert!(body.contains("CONSTRAINT_INCOMPLETE"));
+    assert!(!body.contains("\"finish_reason\":\"stop\""));
+}
+#[tokio::test]
+async fn schemas_and_control_conflicts_fail_before_model_execution() {
+    let (_dir, _service, app) = setup(1);
+    for (key, value) in [
+        ("minimum", json!(0)),
+        ("pattern", json!(".*")),
+        ("$ref", json!("https://example.com/schema")),
+        ("additionalProperties", json!(true)),
+    ] {
+        let mut body = constrained_request(false);
+        body["response_format"]["json_schema"]["schema"][key] = value;
+        let (status, error) = call(&app, "POST", "/v1/completions", Some(false), body).await;
+        assert_eq!(status, 400);
+        assert_eq!(error["error"]["code"], "UNSUPPORTED_FEATURE");
+    }
+    let mut body = constrained_request(false);
+    body["stop"] = json!("}");
+    assert_eq!(
+        call(&app, "POST", "/v1/completions", Some(false), body)
+            .await
+            .0,
+        400
+    );
+    for (key, value) in [
+        ("presence_penalty", json!(3)),
+        ("frequency_penalty", json!(-3)),
+        ("repetition_penalty", json!(0)),
+    ] {
+        let mut body = json!({"model":"tiny","prompt":"hello"});
+        body[key] = value;
+        assert_eq!(
+            call(&app, "POST", "/v1/completions", Some(false), body)
+                .await
+                .0,
+            400
+        );
+    }
+}
+#[tokio::test]
+async fn constrained_memory_is_admitted_before_queue_or_execution() {
+    let (_dir, service, app) = setup_limits(1, 1, 32 << 20);
+    loaded(&service).await;
+    let (status, error) = call(
+        &app,
+        "POST",
+        "/v1/completions",
+        Some(false),
+        constrained_request(false),
+    )
+    .await;
+    assert_eq!(status, 503, "{error}");
+    assert_eq!(error["error"]["code"], "RESOURCE_EXHAUSTED");
+    assert_eq!(service.scheduler.counters.snapshot().active, 0);
+    assert_eq!(service.scheduler.counters.snapshot().queued, 0);
+}
 fn setup(queue_capacity: usize) -> (tempfile::TempDir, Arc<Service>, Router) {
     setup_limits(queue_capacity, 1, 128 << 20)
 }

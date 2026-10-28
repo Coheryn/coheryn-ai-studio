@@ -34,26 +34,15 @@ impl EmbeddingHandle {
         })?
     }
 }
-type EmbeddingPermits = (OwnedSemaphorePermit, ExecutionPermits);
+type EmbeddingPermits = (OwnedSemaphorePermit, OwnedSemaphorePermit);
 impl Scheduler {
-    fn try_embedding_execution(&self, profile: Profile) -> Option<EmbeddingPermits> {
+    fn try_embedding_execution(&self, _profile: Profile) -> Option<EmbeddingPermits> {
         let embedding = self.embedding_active.clone().try_acquire_owned().ok()?;
-        Some((embedding, self.try_execution(profile)?))
+        Some((embedding, self.compute.clone().try_acquire_owned().ok()?))
     }
-    async fn acquire_embedding_execution(&self, profile: Profile) -> Option<EmbeddingPermits> {
+    async fn acquire_embedding_execution(&self, _profile: Profile) -> Option<EmbeddingPermits> {
         let embedding = self.embedding_active.clone().acquire_owned().await.ok()?;
-        let balanced = if profile == Profile::Balanced {
-            Some(self.balanced.clone().acquire_owned().await.ok()?)
-        } else {
-            None
-        };
-        let count = if profile == Profile::LowMemory {
-            self.config.max_concurrency as u32
-        } else {
-            1
-        };
-        let active = self.active.clone().acquire_many_owned(count).await.ok()?;
-        Some((embedding, (balanced, active)))
+        Some((embedding, self.compute.clone().acquire_owned().await.ok()?))
     }
     pub fn submit_embedding(
         &self,
@@ -187,6 +176,7 @@ impl Scheduler {
                     let stepped=wait_job(step,&mut sender,&compute_cancel,&scheduler.shutdown,deadline).await;
                     scheduler.counters.active.fetch_sub(1,Ordering::Relaxed);
                     job=stepped?;
+                    scheduler.counters.embedding_microbatches.fetch_add(1,Ordering::Relaxed);
                     if job.is_finished(){break;}
                     drop(permits);
                     scheduler.counters.queued.fetch_add(1,Ordering::Relaxed);
@@ -200,6 +190,8 @@ impl Scheduler {
                     scheduler.counters.queued.fetch_sub(1,Ordering::Relaxed);
                     permits=next.ok_or_else(||ApiError::from(Error::new(ErrorCode::Cancelled,"embedding cancelled while yielding to shared scheduler")))?;
                 }
+                let (_embedding_permit,compute_permit)=permits;
+                drop(compute_permit);
                 let engine=model.clone();let cancel=compute_cancel.clone();
                 scheduler.counters.active.fetch_add(1,Ordering::Relaxed);
                 let serialization_job=tokio::task::spawn_blocking(move||->Result<EmbeddingDelivery> {

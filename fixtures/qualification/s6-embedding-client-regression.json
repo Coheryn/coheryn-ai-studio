@@ -1,0 +1,810 @@
+{
+  "schema_version": 1,
+  "gate": "E2-CLI-API-RAG",
+  "executable_sha256": "bc8ab578871dd8392dedf0762edf48d1f7a40bd31f8c7cb8a830c1e5d9951fe5",
+  "rust_toolchain_pin": "[toolchain]\nchannel = \"1.99.1\"\nprofile = \"minimal\"\ncomponents = [\"rustfmt\", \"clippy\"]",
+  "cache_conditions": "uncontrolled; no cold-cache or performance advantage claim",
+  "packages": {
+    "openai": "3.40.0",
+    "langchain-openai": "1.7.3",
+    "qdrant-client": "1.20.0"
+  },
+  "scope": "Actual macOS ARM64 CPU execution; API/CLI correctness and interoperability, not comparative performance.",
+  "models": [
+    {
+      "id": "nomic-embed-text-v1.5.f16",
+      "sha256": "f7af6f66802f4df86eda10fe9bbcfc75c39562bed48ef6ace719a251cf1c2fdb",
+      "embedding_space": "coheryn-embedding-v1-e5e92338862943dd5d1a61ddba1f9a7159a0dd1d8524f0d5307bf6da08aa2f58",
+      "usage": {
+        "prompt_tokens": 88,
+        "total_tokens": 88
+      },
+      "selected_batch_size": 6,
+      "selected_batch_tokens": 2048,
+      "reference_comparisons": [
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.883519248315317e-08,
+          "normalized_l2": 1.883519247545281e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 1.9447424183896552e-08,
+          "normalized_l2": 1.9447424176699045e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.6000000064317916e-09,
+          "l2_distance": 1.8361599936168842e-08,
+          "normalized_l2": 1.8361599969891973e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.0000000117723644e-09,
+          "l2_distance": 2.0017831601966298e-08,
+          "normalized_l2": 2.001783161433429e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.927025751486196e-08,
+          "normalized_l2": 1.927025748716789e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.6000000064317916e-09,
+          "l2_distance": 1.806223379772793e-08,
+          "normalized_l2": 1.8062233723193552e-08,
+          "outside_tolerance": 0
+        }
+      ],
+      "multilingual_comparisons": [
+        {
+          "max_absolute": 3.599999992554004e-09,
+          "l2_distance": 1.8506935019579134e-08,
+          "normalized_l2": 1.8506934987781163e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 2.1272461474806567e-08,
+          "normalized_l2": 2.1272461442707105e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.850859351480244e-08,
+          "normalized_l2": 1.8508593547254143e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 1.8931482226691015e-08,
+          "normalized_l2": 1.893148221420263e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.831102509598106e-08,
+          "normalized_l2": 1.831102513968901e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.9319101533327282e-08,
+          "normalized_l2": 1.9319101612523033e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 2.030103101940472e-08,
+          "normalized_l2": 2.0301031039033913e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.8335823108614336e-08,
+          "normalized_l2": 1.8335823063827436e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.3999999898837174e-09,
+          "l2_distance": 1.8595728984505418e-08,
+          "normalized_l2": 1.85957289854463e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 2.015010675635051e-08,
+          "normalized_l2": 2.015010677446459e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.4000000037615052e-09,
+          "l2_distance": 1.876192586111524e-08,
+          "normalized_l2": 1.8761925841745353e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.4000000037615052e-09,
+          "l2_distance": 1.876192586111524e-08,
+          "normalized_l2": 1.8761925841745353e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.4000000037615052e-09,
+          "l2_distance": 1.876192586111524e-08,
+          "normalized_l2": 1.8761925841745353e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.4000000037615052e-09,
+          "l2_distance": 1.876192586111524e-08,
+          "normalized_l2": 1.8761925841745353e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.9948795200491845e-08,
+          "normalized_l2": 1.9948795212916276e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.4000000037615052e-09,
+          "l2_distance": 1.876192586111524e-08,
+          "normalized_l2": 1.8761925841745353e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.4000000037615052e-09,
+          "l2_distance": 1.876192586111524e-08,
+          "normalized_l2": 1.8761925841745353e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.858871521324709e-08,
+          "normalized_l2": 1.8588715148357057e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.858871521324709e-08,
+          "normalized_l2": 1.8588715148357057e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.858871521324709e-08,
+          "normalized_l2": 1.8588715148357057e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.699999986950253e-09,
+          "l2_distance": 1.8874807558135522e-08,
+          "normalized_l2": 1.8874807544744507e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.994371678353317e-08,
+          "normalized_l2": 1.9943716756821482e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 2.1495118028817546e-08,
+          "normalized_l2": 2.1495117965532244e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.6000000064317916e-09,
+          "l2_distance": 1.813613056880961e-08,
+          "normalized_l2": 1.8136130564132026e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.8828909529410974e-08,
+          "normalized_l2": 1.8828909553815512e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 1.9361928929101313e-08,
+          "normalized_l2": 1.9361928977933063e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.599999992554004e-09,
+          "l2_distance": 1.8050705780374134e-08,
+          "normalized_l2": 1.805070570987298e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 2.1352869716898618e-08,
+          "normalized_l2": 2.1352869677834537e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 2.0119602929775053e-08,
+          "normalized_l2": 2.0119602948844636e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 2.0776400138826065e-08,
+          "normalized_l2": 2.077640017495153e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.9951073981639884e-08,
+          "normalized_l2": 1.9951074001857194e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.8072591994922555e-08,
+          "normalized_l2": 1.8072592046312352e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.9728932919671865e-08,
+          "normalized_l2": 1.972893289029304e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.4000000037615052e-09,
+          "l2_distance": 1.876192586111524e-08,
+          "normalized_l2": 1.8761925841745353e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.4000000037615052e-09,
+          "l2_distance": 1.876192586111524e-08,
+          "normalized_l2": 1.8761925841745353e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.6000000064317916e-09,
+          "l2_distance": 1.7857420650123347e-08,
+          "normalized_l2": 1.785742062979668e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.4000000037615052e-09,
+          "l2_distance": 1.9275360942641326e-08,
+          "normalized_l2": 1.927536096994195e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.981006361182684e-08,
+          "normalized_l2": 1.9810063575140943e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 1.8625829799906578e-08,
+          "normalized_l2": 1.8625829790432557e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.895390229640445e-08,
+          "normalized_l2": 1.8953902309204676e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 1.914352307576172e-08,
+          "normalized_l2": 1.9143523067570173e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.6000000064317916e-09,
+          "l2_distance": 1.8308216008086624e-08,
+          "normalized_l2": 1.830821600429111e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.4000000037615052e-09,
+          "l2_distance": 1.876192586111524e-08,
+          "normalized_l2": 1.8761925841745353e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 6.999999996315509e-09,
+          "l2_distance": 1.944187456529836e-08,
+          "normalized_l2": 1.9441874538168222e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.7814247913495635e-08,
+          "normalized_l2": 1.781424789789656e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.6000000064317916e-09,
+          "l2_distance": 1.8448244851164376e-08,
+          "normalized_l2": 1.8448244869513105e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 2.0323969124312217e-08,
+          "normalized_l2": 2.0323969148761568e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.4000000037615052e-09,
+          "l2_distance": 1.7627830076393362e-08,
+          "normalized_l2": 1.7627830046631244e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.6000000064317916e-09,
+          "l2_distance": 1.9031950576610775e-08,
+          "normalized_l2": 1.903195060058893e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 6.999999996315509e-09,
+          "l2_distance": 2.1208460222932323e-08,
+          "normalized_l2": 2.1208460192231505e-08,
+          "outside_tolerance": 0
+        }
+      ],
+      "sdk_default_comparison": {
+        "max_absolute": 4.1625594637828556e-10,
+        "l2_distance": 9.139665286883315e-10,
+        "normalized_l2": 9.139665283146761e-10,
+        "outside_tolerance": 0
+      },
+      "float_base64_roundtrip": true,
+      "standalone_client_file_parity": true,
+      "rag": {
+        "embedding_space": "coheryn-embedding-v1-e5e92338862943dd5d1a61ddba1f9a7159a0dd1d8524f0d5307bf6da08aa2f58",
+        "dimension": 768,
+        "documents": 2,
+        "matches": [
+          {
+            "id": 0,
+            "score": 0.86596989494467,
+            "text": "search_document: Local inference runs models on your own computer."
+          },
+          {
+            "id": 1,
+            "score": 0.49349645864081937,
+            "text": "search_document: Bananas grow in tropical climates."
+          }
+        ]
+      },
+      "cleanup": {
+        "limit": 536870912,
+        "peak_reserved": 161950720,
+        "peak_session_buffer_capacity_bytes": 10198928,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      }
+    },
+    {
+      "id": "nomic-embed-text-v1.5.Q8_0",
+      "sha256": "3e24342164b3d94991ba9692fdc0dd08e3fd7362e0aacc396a9a5c54a544c3b7",
+      "embedding_space": "coheryn-embedding-v1-ded754d6ed3ba62ad7739577a0cc9772f01551df9f4b3c11eb1eca0eb0bb31e3",
+      "usage": {
+        "prompt_tokens": 88,
+        "total_tokens": 88
+      },
+      "selected_batch_size": 6,
+      "selected_batch_tokens": 2048,
+      "reference_comparisons": [
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.976396444770647e-08,
+          "normalized_l2": 1.9763964452824746e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 2.020908385386673e-08,
+          "normalized_l2": 2.0209083873265246e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.9853972080403902e-08,
+          "normalized_l2": 1.9853972070772244e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 2.0576967091724052e-08,
+          "normalized_l2": 2.0576967077798308e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 1.9456580735802852e-08,
+          "normalized_l2": 1.9456580734413877e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.9692591584573514e-08,
+          "normalized_l2": 1.969259156864468e-08,
+          "outside_tolerance": 0
+        }
+      ],
+      "multilingual_comparisons": [
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 2.0010828697336514e-08,
+          "normalized_l2": 2.001082871174081e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.0000000117723644e-09,
+          "l2_distance": 1.9378221379792796e-08,
+          "normalized_l2": 1.9378221357057717e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.927297950861445e-08,
+          "normalized_l2": 1.9272979501325297e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 2.01222967603382e-08,
+          "normalized_l2": 2.0122296727108184e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.699999986950253e-09,
+          "l2_distance": 1.9647215274266836e-08,
+          "normalized_l2": 1.9647215299111394e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.699999986950253e-09,
+          "l2_distance": 1.7586740212188355e-08,
+          "normalized_l2": 1.7586740194259016e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 6.999999996315509e-09,
+          "l2_distance": 2.0595437170178333e-08,
+          "normalized_l2": 2.059543716935319e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.6000000064317916e-09,
+          "l2_distance": 1.8648975220389392e-08,
+          "normalized_l2": 1.864897517190858e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.000000025650152e-09,
+          "l2_distance": 1.8394618650853457e-08,
+          "normalized_l2": 1.8394618661090323e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.895207136471345e-08,
+          "normalized_l2": 1.8952071293393647e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 5.000000025123796e-09,
+          "l2_distance": 2.1230385043814433e-08,
+          "normalized_l2": 2.1230384999711204e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 5.000000025123796e-09,
+          "l2_distance": 2.1230385043814433e-08,
+          "normalized_l2": 2.1230384999711204e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 5.000000025123796e-09,
+          "l2_distance": 2.1230385043814433e-08,
+          "normalized_l2": 2.1230384999711204e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 5.000000025123796e-09,
+          "l2_distance": 2.1230385043814433e-08,
+          "normalized_l2": 2.1230384999711204e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 1.959883279577386e-08,
+          "normalized_l2": 1.9598832807366783e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 5.000000025123796e-09,
+          "l2_distance": 2.1230385043814433e-08,
+          "normalized_l2": 2.1230384999711204e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 5.000000025123796e-09,
+          "l2_distance": 2.1230385043814433e-08,
+          "normalized_l2": 2.1230384999711204e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.599999992554004e-09,
+          "l2_distance": 1.8432469551311077e-08,
+          "normalized_l2": 1.8432469590536167e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.599999992554004e-09,
+          "l2_distance": 1.8432469551311077e-08,
+          "normalized_l2": 1.8432469590536167e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.599999992554004e-09,
+          "l2_distance": 1.8432469551311077e-08,
+          "normalized_l2": 1.8432469590536167e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.6000000064317916e-09,
+          "l2_distance": 1.9348811173488434e-08,
+          "normalized_l2": 1.9348811159610034e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.7625402544686135e-08,
+          "normalized_l2": 1.7625402558118618e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 2.0852494070094126e-08,
+          "normalized_l2": 2.0852494085053674e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.9024107109661134e-08,
+          "normalized_l2": 1.90241071493677e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.968810631110436e-08,
+          "normalized_l2": 1.968810631312368e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 5.999999996841865e-09,
+          "l2_distance": 2.024124320040247e-08,
+          "normalized_l2": 2.024124316794378e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.9540256898454005e-08,
+          "normalized_l2": 1.954025693538858e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 2.0165340013741364e-08,
+          "normalized_l2": 2.0165340052573315e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 5.000000025123796e-09,
+          "l2_distance": 2.019325994973641e-08,
+          "normalized_l2": 2.0193259954763915e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.4999999981577545e-09,
+          "l2_distance": 1.806994891433819e-08,
+          "normalized_l2": 1.8069948917540548e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 1.8780332680457503e-08,
+          "normalized_l2": 1.8780332645482553e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.7615847354676688e-08,
+          "normalized_l2": 1.7615847375224456e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 2.074081746373147e-08,
+          "normalized_l2": 2.0740817468062606e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 5.000000025123796e-09,
+          "l2_distance": 2.1230385043814433e-08,
+          "normalized_l2": 2.1230384999711204e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 5.000000025123796e-09,
+          "l2_distance": 2.1230385043814433e-08,
+          "normalized_l2": 2.1230384999711204e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.986665562208439e-08,
+          "normalized_l2": 1.986665558881115e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.599999992554004e-09,
+          "l2_distance": 1.697284259384263e-08,
+          "normalized_l2": 1.6972842596406862e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 1.906958087192043e-08,
+          "normalized_l2": 1.9069580867538397e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 2.0137310140101546e-08,
+          "normalized_l2": 2.0137310166622306e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.6000000064317916e-09,
+          "l2_distance": 1.9863497630292996e-08,
+          "normalized_l2": 1.986349769804338e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.7825234724226823e-08,
+          "normalized_l2": 1.7825234692473298e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 1.8610239009731058e-08,
+          "normalized_l2": 1.8610239032905783e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 5.000000025123796e-09,
+          "l2_distance": 2.1230385043814433e-08,
+          "normalized_l2": 2.1230384999711204e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 2.1113067181360186e-08,
+          "normalized_l2": 2.1113067143067e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 4.999999997368221e-09,
+          "l2_distance": 1.9708774562088535e-08,
+          "normalized_l2": 1.9708774603883642e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.700000000828041e-09,
+          "l2_distance": 1.9983981338092777e-08,
+          "normalized_l2": 1.9983981288131756e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.6000000064317916e-09,
+          "l2_distance": 1.734646024398175e-08,
+          "normalized_l2": 1.7346460236794816e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.9093752025991973e-08,
+          "normalized_l2": 1.909375197131858e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.6000000064317916e-09,
+          "l2_distance": 1.738182998965227e-08,
+          "normalized_l2": 1.7381830012689313e-08,
+          "outside_tolerance": 0
+        },
+        {
+          "max_absolute": 3.999999997894577e-09,
+          "l2_distance": 1.8920722845003564e-08,
+          "normalized_l2": 1.8920722807407398e-08,
+          "outside_tolerance": 0
+        }
+      ],
+      "sdk_default_comparison": {
+        "max_absolute": 4.767952005435561e-10,
+        "l2_distance": 9.024459006365675e-10,
+        "normalized_l2": 9.02445900870274e-10,
+        "outside_tolerance": 0
+      },
+      "float_base64_roundtrip": true,
+      "standalone_client_file_parity": true,
+      "rag": {
+        "embedding_space": "coheryn-embedding-v1-ded754d6ed3ba62ad7739577a0cc9772f01551df9f4b3c11eb1eca0eb0bb31e3",
+        "dimension": 768,
+        "documents": 2,
+        "matches": [
+          {
+            "id": 0,
+            "score": 0.8667377538727852,
+            "text": "search_document: Local inference runs models on your own computer."
+          },
+          {
+            "id": 1,
+            "score": 0.49027718667844283,
+            "text": "search_document: Bananas grow in tropical climates."
+          }
+        ]
+      },
+      "cleanup": {
+        "limit": 536870912,
+        "peak_reserved": 161951232,
+        "peak_session_buffer_capacity_bytes": 10198928,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      }
+    }
+  ],
+  "hardware": {
+    "architecture": "aarch64",
+    "cpu_features": [
+      "neon",
+      "fp16"
+    ],
+    "gpu_available_bytes": null,
+    "gpu_backend_qualified": false,
+    "logical_cpus": 8,
+    "observed_unix_ms": 1793124933014,
+    "os": "macos",
+    "ram_available_bytes": 3603480576,
+    "ram_total_bytes": 8589934592,
+    "swap_total_bytes": 3221225472,
+    "swap_used_bytes": 2732785664
+  },
+  "operator_limits": {
+    "batch_size": 8,
+    "batch_tokens": 2048,
+    "body_bytes": 1048576,
+    "concurrency": 2,
+    "input_bytes": 65536,
+    "input_tokens": 512,
+    "items": 256,
+    "request_bytes": 8388608,
+    "requests": 4,
+    "response_bytes": 16777216,
+    "total_tokens": 32768
+  }
+}

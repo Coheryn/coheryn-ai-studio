@@ -1,5 +1,6 @@
 //! Independent, portable reference CPU execution. No external inference runtime.
 pub mod compat;
+pub mod constraints;
 pub mod cpu;
 pub mod embedding;
 pub mod error;

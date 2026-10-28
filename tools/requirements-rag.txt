@@ -1,4 +1,4 @@
 # Optional interoperability tests only; never part of the Rust inference engine.
-openai==3.39.0
+openai==3.40.0
 langchain-openai==1.7.3
 qdrant-client==1.20.0

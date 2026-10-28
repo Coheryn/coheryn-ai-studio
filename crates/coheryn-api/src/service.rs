@@ -117,7 +117,7 @@ impl Service {
     }
     pub fn status(&self) -> Result<Value> {
         Ok(
-            json!({"stage":"experimental-G4-E2-S4","session_limits":self.config.sessions,"session_storage":if self.sessions.persistence_enabled(){"opt-in-embedded"}else{"ephemeral"},"persistence_limits":self.config.persistence,"session_kv_reuse":true,"tool_calling":true,"tool_profiles":["qwen-tools-v1"],"strict_tool_arguments":false,"cache":self.sessions.cache_stats()?,"embedding_limits":self.config.embeddings,"backend":"cpu-reference","scheduler":self.scheduler.counters.snapshot(),"memory":self.budget.stats(),"loaded_models":self.loaded()?,"queue_capacity":self.config.queue_capacity,"active_limit":self.scheduler.max_concurrency(),"configured_active_limit":self.config.max_concurrency,"shutting_down":self.shutdown.is_cancelled()}),
+            json!({"stage":"experimental-G4-E2-S6","continuous_batching":true,"batching_profile":"coheryn-cpu-batch-v1","compute_policy":"fifo-token-batch-and-embedding-microbatch","generation_resident_limit":self.scheduler.max_concurrency(),"placement":{"backend":"native-cpu","fallback":"disabled","reason":"CPU is the only qualified execution backend"},"session_limits":self.config.sessions,"session_storage":if self.sessions.persistence_enabled(){"opt-in-embedded"}else{"ephemeral"},"persistence_limits":self.config.persistence,"session_kv_reuse":true,"tool_calling":true,"tool_profiles":["qwen-tools-v1"],"strict_tool_arguments":true,"schema_constraints":true,"constraint_profile":"coheryn-json-v1","strict_tool_mode":"single-required-or-named-no-parallel","sampling_profile":"coheryn-sampling-v2","cache":self.sessions.cache_stats()?,"embedding_limits":self.config.embeddings,"backend":"cpu-reference","scheduler":self.scheduler.counters.snapshot(),"memory":self.budget.stats(),"loaded_models":self.loaded()?,"queue_capacity":self.config.queue_capacity,"active_limit":self.scheduler.max_concurrency()+self.config.embeddings.concurrency,"compute_unit_limit":1,"embedding_phase_limit":self.config.embeddings.concurrency,"configured_active_limit":self.config.max_concurrency,"shutting_down":self.shutdown.is_cancelled()}),
         )
     }
     pub fn unload(&self, id: &str) -> Result<()> {
@@ -274,8 +274,10 @@ impl Service {
         }
         let hardware = crate::hardware::probe();
         if request.task.as_deref() == Some("embedding") {
-            if request.images.is_some() {
-                return Err(ApiError::bad("embedding plans do not accept images"));
+            if request.images.is_some() || request.constraints {
+                return Err(ApiError::bad(
+                    "embedding plans do not accept images or generation constraints",
+                ));
             }
             let c = report.embedding_config.ok_or_else(|| {
                 ApiError::bad("model does not support qualified embedding inference")
@@ -389,6 +391,7 @@ impl Service {
                 .config
                 .ok_or_else(|| ApiError::bad("embedding model requires task=embedding"))?;
             let plan = planner::estimate(PlanInput {
+                constraints: request.constraints,
                 descriptor: d,
                 config: &c,
                 model: &request.model,

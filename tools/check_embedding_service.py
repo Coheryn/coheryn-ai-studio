@@ -24,6 +24,7 @@ from fetch_model import digest
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--executable', type=Path, default=ROOT / 'target/release/coheryn')
+    parser.add_argument('--report', type=Path, default=ROOT / 'fixtures/qualification/e2-service.json')
     args = parser.parse_args()
     import httpx
     from openai import OpenAI, BadRequestError
@@ -153,8 +154,7 @@ def main():
             except subprocess.TimeoutExpired:
                 server.kill()
                 server.wait()
-    target = ROOT / 'fixtures/qualification/e2-service.json'
-    target.write_text(json.dumps(report, indent=2)+'\n')
+    args.report.write_text(json.dumps(report, indent=2)+'\n')
 
 
 if __name__ == '__main__':

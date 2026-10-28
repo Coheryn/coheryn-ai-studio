@@ -152,7 +152,7 @@ pub async fn serve(cli: &Cli, args: &ServeArgs) -> Result<()> {
     let listener = tokio::net::TcpListener::bind((args.host, args.port)).await?;
     eprintln!(
         "{}",
-        json!({"event":"listening","address":listener.local_addr()?.to_string(),"credentials_file":auth::credential_path(&cli.data_dir),"stage":"experimental-G4-E2-S4"})
+        json!({"event":"listening","address":listener.local_addr()?.to_string(),"credentials_file":auth::credential_path(&cli.data_dir),"stage":"experimental-G4-E2-S6"})
     );
     let shutdown = service.shutdown.clone();
     let signal = tokio::spawn(async move {
@@ -224,15 +224,8 @@ pub fn client(cli: &Cli) -> Result<Client> {
 pub async fn run(cli: &Cli, args: &Run, cancel: &Cancellation) -> Result<()> {
     coheryn_engine::planner::Profile::parse(&args.profile)?;
     let options = GenerationOptions {
-        tool_markers: false,
         max_tokens: args.max_tokens,
-        stop: args.stop.clone(),
-        sampling: coheryn_engine::sampling::Sampling {
-            temperature: args.temperature,
-            top_k: args.top_k,
-            top_p: args.top_p,
-            seed: args.seed,
-        },
+        ..args.controls.options()?
     };
     let messages = match &args.messages {
         Some(p) => Some(crate::read_messages(p)?),
@@ -304,7 +297,7 @@ pub async fn run(cli: &Cli, args: &Run, cancel: &Cancellation) -> Result<()> {
 #[derive(Args)]
 pub struct ChatArgs {
     /// One headless chat request, including tools and prior tool results, as bounded JSON.
-    #[arg(long,conflicts_with_all=["session","resume","persist","system","overflow","context","profile","threads","max_tokens"])]
+    #[arg(long,conflicts_with_all=["session","resume","persist","system","overflow","context","profile","threads","max_tokens","temperature","top_p","top_k","seed","stop","stop_tokens","repetition_penalty","frequency_penalty","presence_penalty","response_format","schema","timeout_seconds"])]
     pub request: Option<PathBuf>,
     /// Emit native text/tool events as JSON Lines for a request file.
     #[arg(long, requires = "request")]
@@ -330,6 +323,8 @@ pub struct ChatArgs {
     pub max_tokens: usize,
     #[command(flatten)]
     pub resources: Resources,
+    #[command(flatten)]
+    pub controls: crate::Controls,
 }
 pub async fn chat(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<()> {
     if args.request.is_some() {
@@ -362,7 +357,7 @@ pub async fn chat(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<(
     }
     let options = GenerationOptions {
         max_tokens: args.max_tokens,
-        ..Default::default()
+        ..args.controls.options()?
     };
     // An ordinary dedicated reader avoids an uncancellable blocking stdin task
     // in Tokio's shutdown pool. The bounded channel prevents input read-ahead growth.
@@ -427,7 +422,7 @@ pub async fn chat(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<(
                     profile: args.profile.clone(),
                     threads: args.threads,
                     max_memory: Some(args.resources.max_memory),
-                    ..Default::default()
+                    ..args.controls.turn_settings(args.max_tokens)?
                 },
                 stream: true,
             };
@@ -480,6 +475,8 @@ pub async fn chat(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<(
 }
 #[derive(Args)]
 pub struct PlanArgs {
+    #[arg(long)]
+    pub constraints: bool,
     pub model: String,
     #[arg(long, default_value = "text-generation")]
     pub task: String,
@@ -504,7 +501,7 @@ pub async fn plan(cli: &Cli, args: &PlanArgs, cancel: &Cancellation) -> Result<(
     let context = args
         .context
         .unwrap_or(if args.task == "embedding" { 512 } else { 4096 });
-    crate::print_json(&client(cli)?.json("POST","/api/v1/plans/estimate",Some(json!({"model":args.model,"task":args.task,"context":context,"profile":args.profile,"concurrency":args.concurrency,"threads":args.threads,"input_bytes":args.input_bytes,"batch_size":args.batch_size,"max_input_tokens":args.max_input_tokens,"max_batch_tokens":args.max_batch_tokens})),true,cancel).await?)
+    crate::print_json(&client(cli)?.json("POST","/api/v1/plans/estimate",Some(json!({"model":args.model,"constraints":args.constraints,"task":args.task,"context":context,"profile":args.profile,"concurrency":args.concurrency,"threads":args.threads,"input_bytes":args.input_bytes,"batch_size":args.batch_size,"max_input_tokens":args.max_input_tokens,"max_batch_tokens":args.max_batch_tokens})),true,cancel).await?)
 }
 #[derive(Args)]
 pub struct BenchResources {
@@ -626,6 +623,7 @@ pub(crate) fn generate_local(
 ) -> Result<GenerationResult> {
     use coheryn_engine::planner::{self, PlanInput, Profile};
     let plan = planner::estimate(PlanInput {
+        constraints: options.response_format.enabled(),
         descriptor: &model.descriptor,
         config: &model.config,
         model: "standalone",
@@ -640,7 +638,7 @@ pub(crate) fn generate_local(
         threads: settings.1,
     })?;
     plan.require_admission()?;
-    let admission = model.reserve_session_with_execution(
+    let mut admission = model.reserve_session_with_execution(
         model.context_limit(),
         plan.additional_reserved_bytes - plan.session_reserved_bytes,
         plan.io_buffer_bytes,
@@ -649,5 +647,12 @@ pub(crate) fn generate_local(
             prefill_chunk_tokens: plan.prefill_chunk_tokens,
         },
     )?;
+    if plan.constraint_reserved_bytes > 0 {
+        admission.constraints = Some(
+            admission
+                .reservation
+                .split(plan.constraint_reserved_bytes)?,
+        );
+    }
     model.generate_admitted(prompt, options, admission, cancel, emit)
 }

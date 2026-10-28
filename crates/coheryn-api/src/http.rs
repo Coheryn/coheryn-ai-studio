@@ -455,7 +455,9 @@ fn response_value(
     } else {
         json!([{"index":0,"text":result.text,"logprobs":null,"finish_reason":reason(result.finish_reason)}])
     };
-    json!({"id":id,"object":if flavor==Flavor::Chat{"chat.completion"}else{"text_completion"},"created":created,"model":model,"choices":choices,"usage":usage(&result)})
+    let mut response = json!({"id":id,"object":if flavor==Flavor::Chat{"chat.completion"}else{"text_completion"},"created":created,"model":model,"choices":choices,"usage":usage(&result)});
+    response["coheryn"] = json!({"sampling_profile":coheryn_engine::sampling::PROFILE,"sampling":result.sampling_metadata,"constraint_validation":result.constraint_validation,"batching":result.batching});
+    response
 }
 fn chunk(flavor: Flavor, id: &str, model: &str, created: u64, choices: Value) -> Value {
     json!({"id":id,"object":if flavor==Flavor::Chat{"chat.completion.chunk"}else{"text_completion"},"created":created,"model":model,"choices":choices})
@@ -622,13 +624,14 @@ fn sse_stream(
                         } else {
                             json!([{"index":0,"text":"","logprobs":null,"finish_reason":reason(result.finish_reason)}])
                         };
-                        let finish = chunk(
+                        let mut finish = chunk(
                             state.flavor,
                             &state.id,
                             &state.model,
                             state.created,
                             choices,
                         );
+                        finish["coheryn"] = json!({"sampling_profile":coheryn_engine::sampling::PROFILE,"sampling":result.sampling_metadata,"constraint_validation":result.constraint_validation,"batching":result.batching});
                         if state.include_usage {
                             let mut u = chunk(
                                 state.flavor,

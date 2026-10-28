@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "release": "experimental-G4-E2-S4-CPU",
+  "release": "experimental-G4-E2-S6-CPU",
   "entries": [
     {
       "file": "qwen2.5-0.5b-instruct-fp16.gguf",
@@ -412,7 +412,8 @@
       2
     ],
     "store_schema_version": 2,
-    "tool_qualification": "exact file/profile in tool_calling section; broader combinations unqualified"
+    "tool_qualification": "exact file/profile in tool_calling section; broader combinations unqualified",
+    "constraint_qualification": "S5 managed-turn/replay evidence applies to the exact Q4_K_M file/profile in constraints; the original FP16 session qualification above does not include constraints"
   },
   "tool_calling": {
     "status": "initial-macos-arm64-native-cpu-preview",
@@ -427,7 +428,7 @@
     ],
     "multiple_calls": true,
     "tool_result_order": "all pending calls, in original order",
-    "strict_schema": false,
+    "strict_schema": true,
     "automatic_execution": false,
     "manifest": "fixtures/tools/manifest.json",
     "evidence": [
@@ -438,6 +439,102 @@
       "reference_body_sha256": "3fb38d82ef3d0bf6ace1100b836411ea866c707b434cbec7188206c677a1058d",
       "change": "Only a non-rendering modification/license comment was prepended. Native exact-prompt tests cover all five frozen reference cases. Existing service/binary records identify the prior file profile and are not rewritten.",
       "manifest": "fixtures/tools/manifest.json"
-    }
+    },
+    "strict_schema_scope": "S5 only: one strict function, required/named choice, parallel_tool_calls=false; original S4 capture manifest remains non-strict evidence",
+    "strict_evidence": "fixtures/qualification/s5-service.json"
+  },
+  "constraints": {
+    "status": "initial-macos-arm64-native-cpu-preview",
+    "schema_profile": "coheryn-json-v1",
+    "sampling_profile": "coheryn-sampling-v2",
+    "qualified_model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+    "qualified_file": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+    "backend": "native-cpu",
+    "cache_dtype": "f32",
+    "context": 512,
+    "qualified_threads": 1,
+    "response_formats": [
+      "text",
+      "json_object",
+      "json_schema"
+    ],
+    "strict_tools": {
+      "functions": 1,
+      "choices": [
+        "required",
+        "named"
+      ],
+      "parallel_tool_calls": false,
+      "native_model_smoke": "complete required and named choices; streamed required-choice fixed-function envelope"
+    },
+    "profile": "fixtures/constraints/profile-v1.json",
+    "sampling_reference": "fixtures/constraints/sampling-v2.json",
+    "evidence": [
+      "fixtures/qualification/s5-service.json",
+      "fixtures/qualification/s5-verification.json"
+    ],
+    "unqualified": [
+      "arbitrary schemas",
+      "strict auto/parallel/multiple-function combinations",
+      "vision-conditioned constraints",
+      "other model files/backends/platforms",
+      "cross-device bitwise sampling"
+    ],
+    "notes": "Ordinary native text remains available. Earlier fixture/binary records preserve their original scope and bytes."
+  },
+  "batching": {
+    "status": "initial-macos-arm64-native-cpu-checkpoint",
+    "profile": "coheryn-cpu-batch-v1",
+    "manifest": "fixtures/batching/profile-v1.json",
+    "qualified_model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+    "qualified_file": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+    "backend": "native-cpu",
+    "cache_dtype": "f32",
+    "qualified_groups": [
+      {
+        "context": 128,
+        "maximum_batch_width": 2,
+        "threads_per_sequence": 1,
+        "execution_profile": "reference",
+        "cases": "original graph parity, seeded penalties, dynamic arrivals/retirement, private Unicode grammar, failure/disconnect isolation"
+      },
+      {
+        "context": 512,
+        "maximum_batch_width": 1,
+        "threads_per_sequence": 1,
+        "execution_profile": "reference",
+        "cases": "S5 schema/tool/SDK/deadline/session regression on the S6 graph"
+      }
+    ],
+    "runtime_maximum_batch_width": 16,
+    "default_generation_resident_limit": 1,
+    "effective_prefill_quantum_tokens": 1,
+    "synthetic_kernel_parity_types": [
+      "F32",
+      "F16",
+      "Q4_0",
+      "Q5_0",
+      "Q8_0",
+      "Q4_K",
+      "Q6_K"
+    ],
+    "mixed_task_fairness": "FIFO shared compute units; native synthetic API tests cover both text-to-embedding and embedding-to-text progress",
+    "placement": "native CPU only; automatic backend/model fallback disabled",
+    "metrics": "private result batching metadata and aggregate admin unit/tile counters; no raw history/arguments/vectors",
+    "evidence": [
+      "fixtures/qualification/s6-service.json",
+      "fixtures/qualification/s6-constraints-regression.json",
+      "fixtures/qualification/s6-embedding-client-regression.json",
+      "fixtures/qualification/s6-verification.json"
+    ],
+    "unqualified": [
+      "other model files/backends/platforms for generation batching",
+      "vision and GPU batches",
+      "weighted per-principal guarantees",
+      "initial admission-queue latency and full allocator/stage instrumentation",
+      "sustained fairness/security/tail-latency/release campaigns",
+      "comparative end-to-end throughput advantage"
+    ],
+    "notes": "Earlier model/reference/binary records retain their exact original scope and bytes. Runtime capability limits do not imply exact-file qualification at every width/context."
   }
 }

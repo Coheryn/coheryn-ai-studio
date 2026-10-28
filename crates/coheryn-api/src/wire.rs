@@ -8,6 +8,9 @@ fn max_tokens() -> usize {
 fn top_p() -> f32 {
     1.
 }
+fn repetition_penalty() -> f32 {
+    1.
+}
 fn one() -> usize {
     1
 }
@@ -51,6 +54,18 @@ pub struct GenerationRequest {
     pub top_k: usize,
     #[serde(default)]
     pub seed: u64,
+    #[serde(default = "repetition_penalty")]
+    pub repetition_penalty: f32,
+    #[serde(default)]
+    pub frequency_penalty: f32,
+    #[serde(default)]
+    pub presence_penalty: f32,
+    #[serde(default)]
+    pub response_format: coheryn_engine::constraints::ResponseFormat,
+    #[serde(default, deserialize_with = "crate::bounded::sequence::<_,_,16>")]
+    pub stop_tokens: Vec<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub timeout_seconds: Option<u64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub stop: Option<Stops>,
     #[serde(default)]
@@ -89,6 +104,12 @@ impl GenerationRequest {
             top_p: options.sampling.top_p,
             top_k: options.sampling.top_k,
             seed: options.sampling.seed,
+            repetition_penalty: options.penalties.repetition_penalty,
+            frequency_penalty: options.penalties.frequency_penalty,
+            presence_penalty: options.penalties.presence_penalty,
+            response_format: options.response_format.clone(),
+            stop_tokens: options.stop_tokens.clone(),
+            timeout_seconds: options.timeout_seconds,
             stop: Some(Stops::Many(options.stop.clone())),
             stream,
             n: 1,
@@ -100,6 +121,7 @@ impl GenerationRequest {
         }
     }
     pub fn validate(&self) -> Result<()> {
+        coheryn_engine::Cancellation::default().with_timeout(self.timeout_seconds)?;
         crate::registry::validate_id(&self.model)?;
         coheryn_engine::planner::Profile::parse(&self.profile)?;
         if self.threads.is_some_and(|n| n == 0 || n > 16) {
@@ -136,14 +158,35 @@ impl GenerationRequest {
             return Err(ApiError::bad("tools require chat messages"));
         }
         let options = self.options();
-        if self.tool_config().enabled() && !options.stop.is_empty() {
+        if self.response_format.enabled() && self.tool_config().enabled() {
+            return Err(Error::new(
+                coheryn_engine::ErrorCode::UnsupportedFeature,
+                "response_format and tool generation are separate modes",
+            )
+            .into());
+        }
+        options.response_format.compile()?;
+        if options.response_format.enabled()
+            && ((options.tool_markers && !options.strict_tool)
+                || !options.stop.is_empty()
+                || !options.stop_tokens.is_empty())
+        {
+            return Err(coheryn_engine::Error::new(
+                coheryn_engine::ErrorCode::UnsupportedFeature,
+                "response_format cannot be combined with tools or custom stops",
+            )
+            .into());
+        }
+        if self.tool_config().enabled()
+            && (!options.stop.is_empty() || !options.stop_tokens.is_empty())
+        {
             return Err(Error::new(
                 coheryn_engine::ErrorCode::UnsupportedFeature,
                 "custom stop sequences are not qualified with tool generation",
             )
             .into());
         }
-        coheryn_engine::sampling::Sampler::new(options.sampling)?;
+        coheryn_engine::sampling::Sampler::with_penalties(options.sampling, options.penalties)?;
         if options.stop.len() > 16 || options.stop.iter().any(|s| s.is_empty() || s.len() > 4096) {
             return Err(ApiError::bad("invalid stop sequences"));
         }
@@ -157,7 +200,17 @@ impl GenerationRequest {
         }
     }
     pub fn options(&self) -> GenerationOptions {
+        let strict = self.tool_config().strict_format();
         GenerationOptions {
+            timeout_seconds: self.timeout_seconds,
+            strict_tool: strict.is_some(),
+            penalties: coheryn_engine::sampling::Penalties {
+                repetition_penalty: self.repetition_penalty,
+                frequency_penalty: self.frequency_penalty,
+                presence_penalty: self.presence_penalty,
+            },
+            response_format: strict.unwrap_or_else(|| self.response_format.clone()),
+            stop_tokens: self.stop_tokens.clone(),
             tool_markers: self.tool_config().enabled(),
             max_tokens: self.max_tokens,
             sampling: Sampling {
@@ -212,6 +265,8 @@ pub struct ImportQuery {
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct EstimateRequest {
+    #[serde(default)]
+    pub constraints: bool,
     #[serde(default)]
     pub task: Option<String>,
     #[serde(default)]

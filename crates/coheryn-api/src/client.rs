@@ -33,8 +33,11 @@ pub fn loopback_endpoint(endpoint: &str) -> bool {
                     .is_ok_and(|ip| ip.is_loopback())
         })
 }
-async fn cancelled(cancel: &Cancellation) {
-    while cancel.check().is_ok() {
+async fn cancelled(cancel: &Cancellation) -> Error {
+    loop {
+        if let Err(error) = cancel.check() {
+            return error;
+        }
         tokio::time::sleep(Duration::from_millis(25)).await;
     }
 }
@@ -134,14 +137,14 @@ impl Client {
         cancel: &Cancellation,
     ) -> Result<reqwest::Response> {
         cancel.check()?;
-        tokio::select! {result=request.send()=>result.map_err(transport),_=cancelled(cancel)=>Err(Error::new(ErrorCode::Cancelled,"client cancelled"))}
+        tokio::select! {result=request.send()=>result.map_err(transport),error=cancelled(cancel)=>Err(error)}
     }
     async fn decode(&self, response: reqwest::Response, cancel: &Cancellation) -> Result<Value> {
         let status = response.status();
         let mut chunks = response.bytes_stream();
         let mut bytes = Vec::new();
         loop {
-            let next = tokio::select! {next=chunks.next()=>next,_=cancelled(cancel)=>return Err(Error::new(ErrorCode::Cancelled,"client cancelled"))};
+            let next = tokio::select! {next=chunks.next()=>next,error=cancelled(cancel)=>return Err(error)};
             let Some(chunk) = next else { break };
             let chunk = chunk.map_err(transport)?;
             if bytes.len().saturating_add(chunk.len()) > 16 << 20 {
@@ -252,7 +255,7 @@ impl Client {
         let mut chunks = response.bytes_stream();
         let mut bytes = Vec::new();
         loop {
-            let next = tokio::select! {next=chunks.next()=>next,_=cancelled(cancel)=>return Err(Error::new(ErrorCode::Cancelled,"embedding client cancelled"))};
+            let next = tokio::select! {next=chunks.next()=>next,error=cancelled(cancel)=>return Err(error)};
             let Some(chunk) = next else { break };
             let chunk = chunk.map_err(transport)?;
             if bytes.len().saturating_add(chunk.len()) > 16 << 20 {
@@ -351,6 +354,8 @@ impl Client {
         emit: impl FnMut(TokenEvent) -> Result<()>,
         tool: impl FnMut(coheryn_engine::tools::ToolDelta) -> Result<()>,
     ) -> Result<GenerationResult> {
+        let deadline = cancel.with_timeout(request.timeout_seconds)?;
+        let cancel = &deadline;
         let response = self
             .send(
                 self.request("POST", "/api/v1/generate", false)?
@@ -379,6 +384,8 @@ impl Client {
         emit: impl FnMut(TokenEvent) -> Result<()>,
         tool: impl FnMut(coheryn_engine::tools::ToolDelta) -> Result<()>,
     ) -> Result<GenerationResult> {
+        let deadline = cancel.with_timeout(request.settings.timeout_seconds)?;
+        let cancel = &deadline;
         crate::registry::validate_id(session).map_err(|e| e.error)?;
         let response = self
             .send(
@@ -450,7 +457,7 @@ impl Client {
         let mut buffer = Vec::new();
         let mut result = None;
         loop {
-            let next = tokio::select! {next=chunks.next()=>next,_=cancelled(cancel)=>return Err(Error::new(ErrorCode::Cancelled,"client cancelled"))};
+            let next = tokio::select! {next=chunks.next()=>next,error=cancelled(cancel)=>return Err(error)};
             let Some(chunk) = next else {
                 return Err(Error::new(ErrorCode::Io, "SSE ended without [DONE]"));
             };

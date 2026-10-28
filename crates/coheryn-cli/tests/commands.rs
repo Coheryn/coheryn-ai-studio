@@ -1,5 +1,55 @@
 #[path = "../../coheryn-engine/tests/common/mod.rs"]
 mod common;
+#[test]
+fn schema_flags_constrain_native_output_and_reject_conflicts_before_loading() {
+    use serde_json::{Value, json};
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("model.gguf");
+    let schema = dir.path().join("schema.json");
+    std::fs::write(&path, common::tiny_model()).unwrap();
+    std::fs::write(&schema,serde_json::to_vec(&json!({"type":"object","properties":{"answer":{"type":"string","const":"ok"}},"required":["answer"],"additionalProperties":false})).unwrap()).unwrap();
+    let run = |extra: &[&str]| {
+        let mut command = Command::new(env!("CARGO_BIN_EXE_coheryn"));
+        command
+            .arg("--json")
+            .arg("run")
+            .arg(&path)
+            .args([
+                "--standalone",
+                "--prompt",
+                "json",
+                "--context",
+                "128",
+                "--max-tokens",
+                "64",
+                "--response-format",
+                "json_schema",
+                "--schema",
+            ])
+            .arg(&schema)
+            .args(extra);
+        command.output().unwrap()
+    };
+    let output = run(&[]);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let value: Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(
+        serde_json::from_str::<Value>(value["text"].as_str().unwrap()).unwrap(),
+        json!({"answer":"ok"})
+    );
+    assert_eq!(value["constraint_validation"]["valid"], true);
+    let output = run(&["--stop", "}"]);
+    assert!(!output.status.success());
+    assert!(String::from_utf8_lossy(&output.stderr).contains("custom stops"));
+    let output = run(&["--max-memory", "16777216"]);
+    assert_eq!(output.status.code(), Some(5));
+    let output = run(&["--presence-penalty", "3"]);
+    assert_eq!(output.status.code(), Some(2));
+}
 use std::{
     io::Write,
     process::{Command, Stdio},

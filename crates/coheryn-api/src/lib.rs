@@ -16,3 +16,7 @@ mod session_http;
 pub mod session_store;
 pub mod sessions;
 pub mod wire;
+
+#[cfg(test)]
+#[path = "../../coheryn-engine/tests/common/mod.rs"]
+pub(crate) mod test_model;

@@ -1,0 +1,14 @@
+{
+  "architecture": "aarch64",
+  "iterations": 384,
+  "native_linear_scan_ms": 301.27475,
+  "observed_ratio": 4.563840813078428,
+  "os": "macos",
+  "profile": "coheryn-sampling-v2",
+  "reference": "71ab977 native greedy full-vocabulary sort",
+  "reference_sort_ms": 1374.97,
+  "schema_version": 1,
+  "scope": "Unconstrained greedy sampler only; same fixed input and host, warmed CPU/file caches, uncontrolled host frequency. Not inference throughput or cross-platform evidence.",
+  "selected_token_id": 23861,
+  "vocabulary": 151936
+}

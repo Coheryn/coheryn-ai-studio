@@ -38,6 +38,9 @@ impl ApiError {
 impl From<Error> for ApiError {
     fn from(error: Error) -> Self {
         let status = match error.code {
+            ErrorCode::ConstraintDeadEnd
+            | ErrorCode::ConstraintIncomplete
+            | ErrorCode::ConstraintViolation => StatusCode::UNPROCESSABLE_ENTITY,
             ErrorCode::InvalidRequest
             | ErrorCode::InvalidGguf
             | ErrorCode::UnsupportedGgufVersion
@@ -57,7 +60,7 @@ impl From<Error> for ApiError {
             ErrorCode::Unauthorized => StatusCode::UNAUTHORIZED,
             ErrorCode::NotFound => StatusCode::NOT_FOUND,
             ErrorCode::Conflict | ErrorCode::ModelChanged => StatusCode::CONFLICT,
-            ErrorCode::Cancelled => StatusCode::REQUEST_TIMEOUT,
+            ErrorCode::Cancelled | ErrorCode::DeadlineExceeded => StatusCode::REQUEST_TIMEOUT,
             _ => StatusCode::INTERNAL_SERVER_ERROR,
         };
         Self {

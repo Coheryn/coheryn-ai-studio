@@ -189,10 +189,12 @@ impl ToolConfig {
                 return Err(Error::request("invalid or duplicate function declaration"));
             }
             if t.function.strict == Some(true) {
-                return Err(Error::new(
-                    ErrorCode::UnsupportedFeature,
-                    "strict tool schemas require the S5 constraint decoder",
-                ));
+                crate::constraints::Grammar::compile(&t.function.parameters).map_err(
+                    |mut error| {
+                        error.message = format!("strict tool schema: {}", error.message);
+                        error
+                    },
+                )?;
             }
             if !t.function.parameters.is_object()
                 || t.function.parameters.get("type").and_then(Value::as_str) != Some("object")
@@ -219,7 +221,32 @@ impl ToolConfig {
         if self.parallel_tool_calls.is_some() && names.is_empty() {
             return Err(Error::request("parallel_tool_calls requires declarations"));
         }
+        if self.tools.iter().any(|t| t.function.strict == Some(true))
+            && (self.tools.len() != 1
+                || self.parallel_tool_calls != Some(false)
+                || !matches!(
+                    self.tool_choice,
+                    Some(ToolChoice::Mode(ChoiceMode::Required) | ToolChoice::Named { .. })
+                ))
+        {
+            return Err(Error::new(
+                ErrorCode::UnsupportedFeature,
+                "strict tools require exactly one strict function, required/named choice, and parallel_tool_calls=false",
+            ));
+        }
         Ok(())
+    }
+    pub fn strict_format(&self) -> Option<crate::constraints::ResponseFormat> {
+        if self.tools.len() != 1 || self.tools[0].function.strict != Some(true) {
+            return None;
+        }
+        Some(crate::constraints::ResponseFormat::JsonSchema {
+            json_schema: crate::constraints::SchemaRequest {
+                name: "tool_call".into(),
+                strict: true,
+                schema: serde_json::json!({"type":"object","properties":{"name":{"type":"string","const":self.tools[0].function.name},"arguments":self.tools[0].function.parameters},"required":["name","arguments"],"additionalProperties":false}),
+            },
+        })
     }
     pub fn validate_output(&self, calls: &[ToolCall], reason: FinishReason) -> Result<()> {
         if calls.len() > MAX_CALLS || (self.parallel_tool_calls == Some(false) && calls.len() > 1) {
@@ -243,6 +270,12 @@ impl ToolConfig {
             let mut ids = BTreeSet::new();
             for call in calls {
                 validate_call(call)?;
+                if let Some(tool) = self.tools.iter().find(|t| {
+                    t.function.name == call.function.name && t.function.strict == Some(true)
+                }) {
+                    crate::constraints::Grammar::compile(&tool.function.parameters)?
+                        .validate_output(&call.function.arguments)?;
+                }
                 if !ids.insert(&call.id) || !self.accepts(&call.function.name) {
                     return Err(Error::request(
                         "invalid generated call identity or selection",
@@ -584,6 +617,14 @@ impl ToolParser {
         }
         let tail = std::mem::take(&mut self.pending);
         self.text.push_str(&tail);
+        self.config.validate_output(
+            &self.calls,
+            if self.calls.is_empty() {
+                reason
+            } else {
+                FinishReason::ToolCalls
+            },
+        )?;
         Ok((self.text, self.calls, tail))
     }
 }
@@ -603,6 +644,8 @@ pub struct ToolCapabilities {
     pub argument_depth: usize,
     pub argument_validation: &'static str,
     pub strict_schema: bool,
+    pub strict_schema_profile: &'static str,
+    pub strict_combinations: &'static str,
     pub result_order: &'static str,
     pub qualification: &'static str,
 }
@@ -634,7 +677,9 @@ pub fn capabilities(d: &crate::Descriptor) -> Option<ToolCapabilities> {
         argument_bytes: MAX_ARGUMENT_BYTES,
         argument_depth: 16,
         argument_validation: "JSON object and declared function membership; schemas are non-strict conditioning",
-        strict_schema: false,
+        strict_schema: true,
+        strict_schema_profile: crate::constraints::PROFILE,
+        strict_combinations: "exactly one strict function; required/named choice; parallel_tool_calls=false; no response_format or custom stops",
         result_order: "original assistant call order",
         qualification: "template/protocol adapter; exact model behavior requires its compatibility-matrix evidence",
     })

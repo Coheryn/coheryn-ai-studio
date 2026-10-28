@@ -1,10 +1,10 @@
 # Coheryn AI Studio
 
-[Website](https://coheryntech.com/projects/coheryn-ai-studio) · [Repository](https://github.com/Coheryn/coheryn-ai-studio)
+[Website](https://coheryntech.com/products/coheryn-ai-studio) · [Repository](https://github.com/Coheryn/coheryn-ai-studio)
 
 Coheryn-authored code is licensed under [Apache 2.0](LICENSE). Included third-party assets retain their own terms; see [third-party notices](THIRD_PARTY_NOTICES.md).
 
-An independent Rust-native GGUF inference engine. This repository provides an **experimental CPU CLI/API preview** with text generation, independent embeddings, managed text conversations, session-safe KV reuse and opt-in persistent histories. The [release checklist](docs/RELEASE_CHECKLIST.md) tracks the full mandatory scope. S0 provides automated source/dependency/artifact checks; S1–S4 have initial macOS ARM64 CPU evidence, including an exact-file tool profile. Schema constraints, continuous batching, native image/VLM execution, Metal and broader platform/release qualification remain open. Full RAG and vector storage remain optional. See [session commands and persistence](docs/SESSIONS.md) and [planner evidence and limits](docs/PLANNER.md).
+An independent Rust-native GGUF inference engine. This repository provides an **experimental CPU CLI/API preview** with text generation, independent embeddings, managed text conversations, session-safe KV reuse and opt-in persistent histories. The [release checklist](docs/RELEASE_CHECKLIST.md) tracks the full mandatory scope. S0 provides automated source/dependency/artifact checks; S1–S6 have initial macOS ARM64 CPU evidence, including an exact-file tool profile, native JSON/schema constraints and expanded sampling controls. Native compatible CPU continuous batching has an initial checkpoint. Native image/VLM execution, Metal and broader batching/platform/release qualification remain open. Full RAG and vector storage remain optional. See [session commands and persistence](docs/SESSIONS.md) and [planner evidence and limits](docs/PLANNER.md).
 
 Coheryn owns the Qwen2 generation graph, Nomic embedding graph, packed kernels and controlled CPU parallelism. Native build/test/runtime paths contain no external model executor. Tests consume frozen independent outputs; original capture source and provenance are retained as inert resource research.
 
@@ -35,7 +35,7 @@ target/release/coheryn run .cache/models/qwen2.5-0.5b-instruct-fp16.gguf \
   --prompt 'Hello' --max-tokens 16 --context 512 --standalone --stream
 ```
 
-For chat, provide `--messages conversation.json` instead of `--prompt`. The file is an array such as `[{"role":"user","content":"Hi"}]`. The pinned GGUF chat template supplies its own default system prompt. Tools and multimodal messages are unsupported.
+For chat, provide `--messages conversation.json` instead of `--prompt`. The file is an array such as `[{"role":"user","content":"Hi"}]`. The pinned GGUF chat template supplies its own default system prompt. For qualified tool requests use `chat --request`; image input remains unavailable.
 
 `--standalone` is explicit: it creates a separate process-local model instance. Default `run`/`chat` mode uses the daemon with a managed model ID. It never falls back to loading a second model. After acquisition, all inference works offline. There is no telemetry.
 
@@ -102,4 +102,12 @@ The engine independently executes the pinned Nomic v1.5 F16/Q8_0 GGUF encoders t
 
 ## Native function-call proposals
 
-The S4 CPU preview supports a pinned Qwen tool model and companion template, complete/streamed function proposals, matching tool results and persistent pending calls. Use `chat MODEL --request request.json` or `sessions submit SESSION --request turn.json`; the calling application executes authorized tools. See [tool contracts, examples and limits](docs/TOOL_CALLING.md). Strict schemas and broader model/backend/platform qualification remain open.
+The S4 CPU preview supports a pinned Qwen tool model and companion template, complete/streamed function proposals, matching tool results and persistent pending calls. Use `chat MODEL --request request.json` or `sessions submit SESSION --request turn.json`; the calling application executes authorized tools. See [tool contracts, examples and limits](docs/TOOL_CALLING.md). Single-function strict tool arguments and structured responses are documented in [the constraint and sampling guide](docs/CONSTRAINTS.md). Broader model/backend/platform qualification remains open.
+
+## Structured output and sampling
+
+The native CPU decoder supports bounded JSON-object/schema masks, qualified single strict tool calls, repetition/frequency/presence penalties, token stops and per-request deadlines. CLI, API and managed sessions share these controls. See [CONSTRAINTS.md](docs/CONSTRAINTS.md) for the exact schema subset, limits, streaming/error contracts, reproducibility scope and qualification commands.
+
+## Continuous CPU batching
+
+The daemon shares matrix weight tiles across compatible live requests and schedules generation token units fairly with embedding microbatches. Each request retains its own KV, positions, RNG, grammar, output and cancellation. Default generation concurrency remains one; use `serve --max-concurrency 2` to permit two resident generation requests. See [BATCHING.md](docs/BATCHING.md) for eligibility, memory, metrics and qualification limits.

@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "profile": "coheryn-json-v1",
+  "root": "non-nullable object",
+  "types": [
+    "object",
+    "array",
+    "string",
+    "number",
+    "integer",
+    "boolean",
+    "null"
+  ],
+  "nullable": "exactly [type, null] or [null, type]; root cannot be nullable",
+  "keywords": [
+    "type",
+    "properties",
+    "required",
+    "additionalProperties",
+    "items",
+    "enum",
+    "const",
+    "maxLength",
+    "maxItems"
+  ],
+  "annotations": [
+    "title",
+    "description",
+    "$schema"
+  ],
+  "schema_identifier": "https://json-schema.org/draft/2020-12/schema",
+  "object_policy": "properties required, additionalProperties=false, no duplicate keys; any property order; generated property names use canonical JSON spelling",
+  "string_policy": "Unicode scalar values; raw UTF-8 and JSON escapes with paired surrogates; canonical serialized spelling for primitive enum/const",
+  "number_policy": "unconstrained numeric spelling <=32 bytes with at most two exponent digits; integer spelling <=18 digits; enum/const use finite canonical JSON numeric spelling",
+  "limits": {
+    "schema_bytes": 16384,
+    "source_json_depth": 32,
+    "source_json_nodes": 4096,
+    "schema_nodes": 256,
+    "container_depth": 8,
+    "properties_per_object": 64,
+    "property_name_bytes": 256,
+    "enum_values": 32,
+    "enum_value_bytes": 4096,
+    "default_max_length": 256,
+    "maximum_max_length": 4096,
+    "default_max_items": 32,
+    "maximum_max_items": 128,
+    "output_bytes": 65536,
+    "vocabulary_tokens": 262144,
+    "token_piece_bytes": 128,
+    "trie_nodes": 1048576,
+    "transition_cache_entries": 0,
+    "reservation_bytes_per_request": 33554432,
+    "schema_depth": 8
+  },
+  "strict_tools": "one strict function, required/named choice, parallel_tool_calls=false; envelope shares schema/output/depth limits",
+  "termination": "auto-stop at complete validated object or complete strict tool frame; EOS masked; incomplete/dead-end/cancel/deadline/resource failure never reports conformant success",
+  "unqualified_combinations": [
+    "response_format with tools",
+    "custom stops with constraints or tools",
+    "strict auto/optional/parallel/multiple-function tools",
+    "image-conditioned constraints",
+    "non-CPU constraints"
+  ],
+  "json_object_mode": "syntax-only root object with the same finite depth/string/item/property/output/tokenizer limits; generic property names need not be unique"
+}

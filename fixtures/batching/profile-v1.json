@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "profile": "coheryn-cpu-batch-v1",
+  "backend": "native-cpu",
+  "cache_dtype": "f32",
+  "unit": "one model token per independent generation sequence",
+  "maximum_batch_width": 16,
+  "default_generation_resident_limit": 1,
+  "default_waiting_request_limit": 8,
+  "maximum_waiting_request_limit": 128,
+  "unit_queue_capacity": 16,
+  "compute_units_at_once": 1,
+  "compatibility": [
+    "same live model instance and validated graph/tokenizer/storage identity",
+    "same cache precision and native CPU kernel contract",
+    "same execution settings including worker count and configured prefill chunk ceiling",
+    "same admitted I/O tile size"
+  ],
+  "request_private": [
+    "context capacity and current position",
+    "KV, causal attention, scratch and token ledger",
+    "selected prompt, history, penalties, sampling options and RNG",
+    "grammar, token mask, stop state, tool parser and output",
+    "cancellation, deadline, usage, reservations and prefix cache ownership"
+  ],
+  "shared": "immutable model weights; each matrix tile read once per compatible scheduling unit",
+  "fairness": "oldest pending model group; bounded compatible packing; FIFO compute semaphore shared with embedding microbatches; output delivery outside shared compute",
+  "memory": "reuse admitted per-sequence workspaces, loan one lane's I/O/decode tile without a batch-sized input/output matrix or full-weight copy; reservation ownership moves with state",
+  "failure": "lane cancellation and numerical/constraint/output failures retire that lane; shared weight storage failures invalidate affected model participants",
+  "placement": "CPU only; no automatic backend/model fallback",
+  "unqualified": [
+    "vision and GPU batching",
+    "cross-device bitwise equivalence",
+    "cross-platform model execution",
+    "weighted per-principal service guarantees",
+    "sustained security, fairness/tail-latency and release soak campaigns"
+  ]
+}

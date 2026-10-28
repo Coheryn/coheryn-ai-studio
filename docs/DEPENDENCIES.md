@@ -71,3 +71,11 @@ All 24 direct Rust packages and stable Rust were rechecked against their officia
 ## S4 dependency verification — 2026-10-27
 
 Official registries were rechecked: all 24 directly managed Rust packages and Rust 1.99.1 remain current. No new production package is introduced. The existing Serde JSON pin enables `raw_value` to preserve tool argument numbers, whitespace and escaping. The separate fuzz harness reuses that same current package. OpenAI Python 3.39.0 remains current and is used only as an optional local protocol client, outside the Rust graph. See `fixtures/qualification/s4-dependency-versions.json`. Research captures stay pinned and separate from native checks.
+
+## S5 constraints and sampling
+
+Official registries were rechecked for all 24 directly managed Rust packages and the stable Rust toolchain; existing Rust pins remain current. S5 introduces no engine dependency. The optional standard Python protocol client is updated to OpenAI 3.40.0 after the official registry check; HTTPX 0.28.1 remains current. These clients stay outside the production Rust graph. See `fixtures/qualification/s5-dependency-versions.json`; source/model/reference licenses and immutable records retain their original bytes.
+
+## S6 dependency verification
+
+The official registry refresh again confirms Rust 1.99.1 and all 24 directly managed Rust packages are current; S6 adds no Rust dependency. `fixtures/qualification/s6-dependency-versions.json` preserves the check. Model/reference snapshots and their original legal bytes remain unchanged. Local debug/test verification disables debug symbols and incremental artifacts through Cargo environment overrides to limit rebuild storage after cleanup; production release settings are unchanged.

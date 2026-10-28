@@ -66,15 +66,19 @@ JSON requests require `Content-Type: application/json`. Unsupported fields fail 
 ## Supported completion fields
 
 - `model`: registered, explicitly loaded ID.
-- `prompt`: nonempty string on completions, or `messages`: 1–256 objects with string `role`/`content` on chat. Supported roles are `system`, `user`, `assistant`.
+- `prompt`: nonempty string on completions, or `messages`: 1–256 objects with string `role`/`content` on chat. Supported text roles are `system`, `user`, `assistant`; qualified tool exchanges add `tool`, assistant `tool_calls` and matching `tool_call_id` as documented in [TOOL_CALLING.md](TOOL_CALLING.md).
 - `max_tokens`: positive integer, default 128. `max_completion_tokens` is an alias; supplying both is rejected.
 - `temperature`: numeric 0–2, default 0 for reproducible greedy execution; `top_p`: numeric `(0,1]`, default 1; `top_k`: nonnegative integer, default 0; `seed`: unsigned integer, default 0.
-- `stop`: string or array of at most 16 nonempty strings of at most 4096 bytes.
+- `stop`: string or array of at most 16 nonempty strings of at most 4096 bytes. `stop_tokens` is a Coheryn extension accepting at most 16 valid token IDs.
+- `repetition_penalty`: finite 0.01–10, default 1; `frequency_penalty` and `presence_penalty`: finite −2–2, default 0. Counts cover the exact selected prompt and generated token IDs.
+- `response_format`: text, bounded JSON-object or qualified strict JSON Schema mode; see [CONSTRAINTS.md](CONSTRAINTS.md).
+- `timeout_seconds`: optional Coheryn extension, integer 1–86400, bounded by daemon policy.
+- Qualified `tools`, `tool_choice` and `parallel_tool_calls` are documented in [TOOL_CALLING.md](TOOL_CALLING.md).
 - `stream`: boolean, default false; `n`: only 1.
 - `stream_options.include_usage`: boolean, only with streaming.
-- Coheryn extensions: `context` cannot exceed loaded capacity; `max_memory` adds a conservative per-request cap over model metadata, session, transport allowance and profile headroom. `profile` accepts reference/performance/balanced/low-memory (default balanced). `threads` optionally selects a bounded compute worker count; each worker stack is included in admission. The daemon's global atomic budget also applies.
+- Coheryn extensions: `context` cannot exceed loaded capacity; `max_memory` adds a conservative per-request cap over model metadata, session, transport allowance, constraint reservation and profile headroom. `profile` accepts reference/performance/balanced/low-memory (default balanced). `threads` optionally selects a bounded compute worker count; each worker stack is included in admission. The daemon's global atomic budget also applies.
 
-Tools, function calls, multimodal content, multiple choices, log-probability requests and structured-output modes are unsupported. Sampling and required numeric fields reject JSON null; optional `context`, `max_memory` and `threads` treat null as omitted. No request changes a specified context or sampling setting to make it fit.
+Multimodal content, multiple choices, log-probability requests and undocumented schema/tool combinations are unsupported. Sampling and required numeric fields reject JSON null; optional `context`, `max_memory` and `threads` treat null as omitted. No request changes a specified context or sampling setting to make it fit.
 
 OpenAI-shaped responses include IDs, object type, creation epoch, model, one choice, finish reason and usage. Chat streaming uses assistant-role/content deltas and a finish chunk. When requested, usage is null on preceding chunks and reported in a separate chunk with empty choices before `data: [DONE]`, following the [official streaming schema](https://developers.openai.com/api/reference/resources/chat/subresources/completions/streaming-events) and [include-usage contract](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create). The legacy completion shape follows the [official completion reference](https://developers.openai.com/api/reference/resources/completions/methods/create).
 
@@ -112,4 +116,12 @@ The separate `/coheryn/v1/sessions` namespace provides owned ephemeral/opt-in du
 
 ## S4 function-call proposals
 
-`/v1/chat/completions` accepts bounded function declarations, `none`/`auto`/`required`/named choices, qualified multiple calls, assistant tool calls and ordered matching tool messages. Complete and SSE responses expose call IDs/indices/names/argument strings and `tool_calls` finish reasons. Exact-file qualification, the companion template, unsupported strict schemas/stops, complete-result validation and SDK evidence are described in [TOOL_CALLING.md](TOOL_CALLING.md). `tools` is a chat field; completion requests reject it. Ordinary text contracts and embedding interfaces remain available.
+`/v1/chat/completions` accepts bounded function declarations, `none`/`auto`/`required`/named choices, qualified multiple calls, assistant tool calls and ordered matching tool messages. Complete and SSE responses expose call IDs/indices/names/argument strings and `tool_calls` finish reasons. Exact-file qualification, the companion template, the S5 strict-schema subset, custom-stop restrictions, complete-result validation and SDK evidence are described in [TOOL_CALLING.md](TOOL_CALLING.md). `tools` is a chat field; completion requests reject it. Ordinary text contracts and embedding interfaces remain available.
+
+## S5 structured output and sampling
+
+[CONSTRAINTS.md](CONSTRAINTS.md) defines `coheryn-json-v1`, `coheryn-sampling-v2`, strict single-function tool constraints, field precedence and failure statuses. OpenAI responses and terminal chunks expose a `coheryn` extension with validation and sampling metadata. Incomplete constrained generations return HTTP 422 or an SSE error, without a successful conformant finish; deadlines return 408. Unknown fields and unsupported forms remain explicit errors. Native result timings distinguish tokenization, constraint compilation and masking.
+
+## S6 execution and metrics
+
+Compatible daemon requests may share native CPU weight tiles while retaining separate positions, KV, RNG, constraints and usage. Native results and the OpenAI `coheryn` extension expose a `batching` profile, strategy, per-request forward/group counts and token-unit queue wait. Admin metrics expose aggregate unit/tile/embedding counters without request content. `generation_resident_limit` is the effective generation ceiling; `active_limit` now bounds live generation workers plus active embedding phases, with `compute_unit_limit:1` separately identifying exclusive tensor execution. Exact eligibility, timing meanings, limits and CPU-only placement/fallback policy are in [BATCHING.md](BATCHING.md). API generation remains one choice per request.

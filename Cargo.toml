@@ -8,7 +8,7 @@ edition = "2024"
 rust-version = "1.99"
 license = "Apache-2.0"
 repository = "https://github.com/Coheryn/coheryn-ai-studio"
-homepage = "https://coheryntech.com/projects/coheryn-ai-studio"
+homepage = "https://coheryntech.com/products/coheryn-ai-studio"
 
 [workspace.dependencies]
 coheryn-engine = { path = "crates/coheryn-engine" }

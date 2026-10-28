@@ -5,7 +5,7 @@ edition = "2024"
 publish = false
 license = "Apache-2.0"
 repository = "https://github.com/Coheryn/coheryn-ai-studio"
-homepage = "https://coheryntech.com/projects/coheryn-ai-studio"
+homepage = "https://coheryntech.com/products/coheryn-ai-studio"
 
 [package.metadata]
 cargo-fuzz = true
@@ -31,3 +31,10 @@ bench = false
 
 [workspace]
 members = ["."]
+
+[[bin]]
+name = "constraints"
+path = "fuzz_targets/constraints.rs"
+test = false
+doc = false
+bench = false

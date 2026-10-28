@@ -45,6 +45,9 @@ fn create(s: &Sessions, name: &str, context: usize) {
 }
 fn proposal(budget: &Budget, text: &str, calls: Vec<ToolCall>) -> GenerationResult {
     GenerationResult {
+        batching: None,
+        sampling_metadata: None,
+        constraint_validation: None,
         text: text.into(),
         tool_calls: calls.clone(),
         token_ids: vec![0],

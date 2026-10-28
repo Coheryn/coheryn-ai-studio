@@ -196,6 +196,7 @@ fn constant_block(dtype: u32, value: f32) -> Vec<u8> {
     let one = 0x3c00u16.to_le_bytes();
     let scale = if value == 0. { [0, 0] } else { one };
     match dtype {
+        1 => scale.repeat(32),
         8 => {
             let mut b = scale.to_vec();
             b.extend([1; 32]);

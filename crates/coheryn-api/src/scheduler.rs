@@ -16,6 +16,7 @@ use std::sync::{
 };
 use tokio::sync::{OwnedSemaphorePermit, Semaphore, mpsc};
 
+mod batching;
 mod embedding;
 pub use embedding::{EmbeddingDelivery, EmbeddingHandle};
 
@@ -43,6 +44,24 @@ async fn finalize_turn(
 }
 
 type ExecutionPermits = (Option<OwnedSemaphorePermit>, OwnedSemaphorePermit);
+fn constraint_error(mut error: ApiError, constrained: bool) -> ApiError {
+    if constrained {
+        let status = match error.error.code {
+            ErrorCode::ConstraintDeadEnd => "dead_end",
+            ErrorCode::ConstraintViolation => "invalid",
+            ErrorCode::Cancelled => "cancelled",
+            ErrorCode::DeadlineExceeded => "deadline",
+            _ => "incomplete",
+        };
+        let mut details = error
+            .details
+            .take()
+            .unwrap_or_else(|| serde_json::json!({}));
+        details["constraint_validation"] = serde_json::json!({"profile":coheryn_engine::constraints::PROFILE,"valid":false,"status":status});
+        error.details = Some(details);
+    }
+    error
+}
 use tokio_util::sync::CancellationToken;
 
 pub enum GenerationEvent {
@@ -78,6 +97,14 @@ impl Drop for GenerationHandle {
 }
 #[derive(Default)]
 pub struct Counters {
+    waiting_generation_units: AtomicU64,
+    generation_units: AtomicU64,
+    batched_generation_units: AtomicU64,
+    forwarded_tokens: AtomicU64,
+    maximum_batch_width: AtomicU64,
+    matrix_tile_reads: AtomicU64,
+    matrix_read_bytes: AtomicU64,
+    embedding_microbatches: AtomicU64,
     active: AtomicU64,
     queued: AtomicU64,
     completed: AtomicU64,
@@ -87,6 +114,14 @@ pub struct Counters {
 }
 #[derive(Serialize)]
 pub struct SchedulerStats {
+    pub waiting_generation_units: u64,
+    pub generation_units: u64,
+    pub batched_generation_units: u64,
+    pub forwarded_tokens: u64,
+    pub maximum_batch_width: u64,
+    pub matrix_tile_reads: u64,
+    pub matrix_read_bytes: u64,
+    pub embedding_microbatches: u64,
     pub active: u64,
     pub queued: u64,
     pub completed: u64,
@@ -97,6 +132,14 @@ pub struct SchedulerStats {
 impl Counters {
     pub fn snapshot(&self) -> SchedulerStats {
         SchedulerStats {
+            waiting_generation_units: self.waiting_generation_units.load(Ordering::Relaxed),
+            generation_units: self.generation_units.load(Ordering::Relaxed),
+            batched_generation_units: self.batched_generation_units.load(Ordering::Relaxed),
+            forwarded_tokens: self.forwarded_tokens.load(Ordering::Relaxed),
+            maximum_batch_width: self.maximum_batch_width.load(Ordering::Relaxed),
+            matrix_tile_reads: self.matrix_tile_reads.load(Ordering::Relaxed),
+            matrix_read_bytes: self.matrix_read_bytes.load(Ordering::Relaxed),
+            embedding_microbatches: self.embedding_microbatches.load(Ordering::Relaxed),
             active: self.active.load(Ordering::Relaxed),
             queued: self.queued.load(Ordering::Relaxed),
             completed: self.completed.load(Ordering::Relaxed),
@@ -108,6 +151,8 @@ impl Counters {
 }
 #[derive(Clone)]
 pub struct Scheduler {
+    compute: Arc<Semaphore>,
+    batcher: batching::Batcher,
     sessions: Option<crate::sessions::Sessions>,
     slots: Arc<Semaphore>,
     active: Arc<Semaphore>,
@@ -127,7 +172,12 @@ impl Scheduler {
                 .map(|n| n.get())
                 .unwrap_or(1),
         );
+        let compute = Arc::new(Semaphore::new(1));
+        let counters = Arc::new(Counters::default());
+        let batcher = batching::Batcher::new(compute.clone(), counters.clone(), shutdown.clone());
         Self {
+            compute,
+            batcher,
             sessions: None,
             slots: Arc::new(Semaphore::new(
                 config.queue_capacity + config.max_concurrency,
@@ -139,7 +189,7 @@ impl Scheduler {
             embedding_active: Arc::new(Semaphore::new(
                 config.embeddings.concurrency.min(config.max_concurrency),
             )),
-            counters: Arc::new(Counters::default()),
+            counters,
             config,
             budget,
             shutdown,
@@ -192,6 +242,21 @@ impl Scheduler {
         let mut cache = turn.as_mut().and_then(|t| t.cache.take());
         let mut admit = || -> Result<_> {
             request.validate()?;
+            let constraint_bytes = if request.options().response_format.enabled() {
+                coheryn_engine::constraints::RESERVATION_BYTES
+            } else {
+                0
+            };
+            if request
+                .stop_tokens
+                .iter()
+                .any(|id| *id as usize >= model.tokenizer.vocabulary())
+                || request.top_k > model.tokenizer.vocabulary()
+            {
+                return Err(ApiError::bad(
+                    "stop token or top_k is outside the loaded vocabulary",
+                ));
+            }
             if (request.tool_config().enabled()
                 || request.messages.as_ref().is_some_and(|ms| {
                     ms.iter()
@@ -217,6 +282,7 @@ impl Scheduler {
             let profile = Profile::parse(&request.profile)?;
             let estimate = |credit: u64| {
                 planner::estimate(PlanInput {
+                    constraints: constraint_bytes > 0,
                     descriptor: &model.descriptor,
                     config: &model.config,
                     model: &request.model,
@@ -292,6 +358,11 @@ impl Scheduler {
                     ApiError::from(error)
                 })?;
             let session = SessionAdmission {
+                constraints: if constraint_bytes > 0 {
+                    Some(held.split(constraint_bytes)?)
+                } else {
+                    None
+                },
                 context,
                 reservation: held.split(
                     plan.session_reserved_bytes
@@ -329,8 +400,13 @@ impl Scheduler {
             }
         };
         // Sixteen token events plus a reserved terminal slot.
+        let constrained = request.options().response_format.enabled();
         let (sender, receiver) = mpsc::channel(17);
-        let cancel = Cancellation::default();
+        let timeout_seconds = request
+            .timeout_seconds
+            .unwrap_or(self.config.generation_timeout_seconds)
+            .min(self.config.generation_timeout_seconds);
+        let cancel = Cancellation::default().with_timeout(Some(timeout_seconds))?;
         let engine_cancel = cancel.clone();
         let scheduler = self.clone();
         if queued {
@@ -364,7 +440,7 @@ impl Scheduler {
                 tokio::select! {
                     _=sender.closed()=>None,
                     _=scheduler.shutdown.cancelled()=>None,
-                    result=tokio::time::timeout(scheduler.config.queue_timeout(),acquire)=>result.ok().flatten(),
+                    result=tokio::time::timeout(scheduler.config.queue_timeout().min(std::time::Duration::from_secs(timeout_seconds)),acquire)=>result.ok().flatten(),
                 }
             };
             if queued {
@@ -373,13 +449,19 @@ impl Scheduler {
             drop(waiting);
             let Some(_permits) = permit else {
                 scheduler.counters.cancelled.fetch_add(1, Ordering::Relaxed);
-                let event = GenerationEvent::Failed(
-                    Error::new(
-                        ErrorCode::Cancelled,
-                        "queued request cancelled or timed out",
-                    )
-                    .into(),
-                );
+                let event = GenerationEvent::Failed(constraint_error(
+                    engine_cancel
+                        .check()
+                        .err()
+                        .unwrap_or_else(|| {
+                            Error::new(
+                                ErrorCode::Cancelled,
+                                "queued request cancelled or timed out",
+                            )
+                        })
+                        .into(),
+                    constrained,
+                ));
                 let event = finalize_turn(turn, event).await;
                 let _ = sender.send(event).await;
                 return;
@@ -390,6 +472,7 @@ impl Scheduler {
             let output_limit = turn.as_ref().map(|t| t.output_limit());
             let consumer_timeout =
                 std::time::Duration::from_secs(scheduler.config.consumer_timeout_seconds);
+            let batcher = scheduler.batcher.clone();
             let mut job = tokio::task::spawn_blocking(move || -> Result<(GenerationResult, Option<coheryn_engine::inference::PrefixCache>)> {
                 compute_cancel.check()?;
                 let prompt = match &request.prompt {
@@ -451,8 +534,17 @@ impl Scheduler {
                         } Ok(())
                     } else {deliver(GenerationEvent::Token(event))}
                 };
-                let mut result = if managed { model.generate_cached_admitted(&prompt,&options,session,&compute_cancel,&mut cache,&mut sink) }
-                    else { model.generate_admitted(&prompt,&options,session,&compute_cancel,&mut sink) }?;
+                let mut state=model.begin_generation(&prompt,&options,session,&compute_cancel,cache.take())?;
+                while !state.is_finished() {
+                    compute_cancel.check()?;
+                    if state.needs_forward(){state=batcher.advance(model.clone(),state)?;}
+                    if let Some(event)=state.sample(&model)? {
+                        let start=std::time::Instant::now();sink(event)?;
+                        state.record_delivery(start.elapsed().as_secs_f64()*1000.);
+                    }
+                }
+                let (mut result,new_cache)=state.finish(&model,managed,&mut sink)?;
+                cache=new_cache;
                 drop(sink);
                 if let Some(parser)=parser {
                     let(text,calls,tail)=parser.finish(result.finish_reason)?;
@@ -463,14 +555,12 @@ impl Scheduler {
                 }
                 Ok((result,cache))
             });
-            let timeout = tokio::time::sleep(std::time::Duration::from_secs(
-                scheduler.config.generation_timeout_seconds,
-            ));
+            let timeout = tokio::time::sleep(std::time::Duration::from_secs(timeout_seconds));
             tokio::pin!(timeout);
             let result = tokio::select! {
                 result=&mut job=>result,
                 _=scheduler.shutdown.cancelled()=>{engine_cancel.cancel();job.await},
-                _=&mut timeout=>{engine_cancel.cancel();job.await},
+                _=&mut timeout=>job.await,
                 _=sender.closed()=>{engine_cancel.cancel();job.await},
             };
             let result = result.map(|r| {
@@ -494,12 +584,15 @@ impl Scheduler {
                     )
                 }
                 Ok(Err(error)) => {
-                    if error.error.code == ErrorCode::Cancelled {
+                    if matches!(
+                        error.error.code,
+                        ErrorCode::Cancelled | ErrorCode::DeadlineExceeded
+                    ) {
                         scheduler.counters.cancelled.fetch_add(1, Ordering::Relaxed);
                     } else {
                         scheduler.counters.failed.fetch_add(1, Ordering::Relaxed);
                     }
-                    GenerationEvent::Failed(error)
+                    GenerationEvent::Failed(constraint_error(error, constrained))
                 }
                 Err(error) => {
                     scheduler.counters.failed.fetch_add(1, Ordering::Relaxed);

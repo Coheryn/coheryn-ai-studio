@@ -496,3 +496,62 @@ async fn embedding_queue_ceiling_and_shutdown_release_queued_and_running_jobs() 
     s.scheduler.drained().await;
     assert_eq!(s.budget.stats().reserved, baseline);
 }
+
+#[tokio::test]
+async fn a_backpressured_generation_does_not_hold_compute_or_starve_embeddings() {
+    let (_dir, s, _app) = setup(|_| {});
+    encoder(&s, 1).await;
+    s.ingest(
+        "generation".into(),
+        None,
+        None,
+        futures_util::stream::iter([Ok::<_, std::io::Error>(Bytes::from(common::tiny_model()))]),
+    )
+    .await
+    .unwrap();
+    s.load("generation".into(), 128).await.unwrap();
+    let baseline = s.budget.stats().reserved;
+    let generation = GenerationRequest::completion(
+        "generation".into(),
+        "Hi".into(),
+        &GenerationOptions {
+            max_tokens: 100,
+            ..Default::default()
+        },
+        128,
+        true,
+    );
+    let text = s
+        .scheduler
+        .submit(s.model("generation").unwrap(), generation)
+        .unwrap();
+    wait_for(|| s.scheduler.counters.snapshot().forwarded_tokens >= 17).await;
+    let request = EmbeddingRequest::new(
+        "encoder".into(),
+        vec!["hello".into()],
+        &EmbeddingOptions::default(),
+    );
+    let mut embedding = s
+        .scheduler
+        .submit_embedding(
+            s.embedding("encoder").unwrap(),
+            request,
+            s.budget.reserve(0).unwrap(),
+        )
+        .unwrap();
+    let result = tokio::time::timeout(Duration::from_secs(5), embedding.receive())
+        .await
+        .unwrap()
+        .unwrap();
+    assert!(s.scheduler.counters.snapshot().embedding_microbatches > 0);
+    assert!(
+        s.unload("generation").is_err(),
+        "blocked text worker still owns its state"
+    );
+    drop(result);
+    drop(embedding);
+    drop(text);
+    s.scheduler.drained().await;
+    assert_eq!(s.budget.stats().reserved, baseline);
+    assert_eq!(s.budget.stats().session_buffer_capacity_bytes, 0);
+}

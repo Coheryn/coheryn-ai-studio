@@ -118,6 +118,7 @@ pub fn session_estimate_with_io(
 }
 
 pub struct PlanInput<'a> {
+    pub constraints: bool,
     pub descriptor: &'a Descriptor,
     pub config: &'a ModelConfig,
     pub model: &'a str,
@@ -133,6 +134,8 @@ pub struct PlanInput<'a> {
 }
 #[derive(Debug, Clone, Serialize)]
 pub struct ExecutionPlan {
+    /// Per-request grammar/trie reservation, separate from shared weights and KV.
+    pub constraint_reserved_bytes: u64,
     pub schema_version: u32,
     pub model: String,
     pub profile: Profile,
@@ -198,6 +201,7 @@ impl ExecutionPlan {
 }
 pub fn estimate(input: PlanInput<'_>) -> Result<ExecutionPlan> {
     let PlanInput {
+        constraints,
         descriptor: d,
         config: c,
         model,
@@ -281,7 +285,15 @@ pub fn estimate(input: PlanInput<'_>) -> Result<ExecutionPlan> {
     } else {
         memory::model_bytes(d, c)?
     };
-    let per_request = add(session.total_bytes, REQUEST_BYTES)?;
+    let constraint_reserved_bytes = if constraints {
+        crate::constraints::RESERVATION_BYTES
+    } else {
+        0
+    };
+    let per_request = add(
+        add(session.total_bytes, REQUEST_BYTES)?,
+        constraint_reserved_bytes,
+    )?;
     let per_request_headroom = mul(per_request, profile.headroom_percent())?.div_ceil(100);
     let headroom = mul(per_request_headroom, concurrency as u64)?;
     let additional = add(
@@ -335,6 +347,7 @@ pub fn estimate(input: PlanInput<'_>) -> Result<ExecutionPlan> {
         reasons.push("request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved".into());
     }
     Ok(ExecutionPlan {
+        constraint_reserved_bytes,
         schema_version: 1,
         model: model.into(),
         profile,

@@ -14,6 +14,7 @@ jobs:
           check-latest: true
       - run: python tools/check_embedding_fixtures.py
       - run: python tools/check_tool_fixtures.py
+      - run: python tools/check_constraint_fixtures.py
       - run: python tools/test_repository_policy.py
       - run: python tools/check_repository_policy.py
       - uses: dtolnay/rust-toolchain@1.99.1

@@ -82,6 +82,8 @@ enum SessionCommand {
         idempotency_key: Option<String>,
         #[arg(long, default_value_t = 128)]
         max_tokens: usize,
+        #[command(flatten)]
+        controls: crate::Controls,
     },
 }
 fn route(session: &str, suffix: &str) -> Result<String> {
@@ -263,6 +265,7 @@ pub async fn run(cli: &Cli, args: &SessionArgs, cancel: &Cancellation) -> Result
             expected_revision,
             idempotency_key,
             max_tokens,
+            controls,
         } => {
             let request = SubmitTurn {
                 expected_revision: *expected_revision,
@@ -271,7 +274,7 @@ pub async fn run(cli: &Cli, args: &SessionArgs, cancel: &Cancellation) -> Result
                 tool_results: vec![],
                 settings: TurnSettings {
                     max_tokens: *max_tokens,
-                    ..Default::default()
+                    ..controls.turn_settings(*max_tokens)?
                 },
                 stream: false,
             };
