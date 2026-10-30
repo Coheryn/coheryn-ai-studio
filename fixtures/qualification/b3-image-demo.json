@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "scope": "Additional native color-response smoke case with 16-token output allowance; first four tokens match frozen oracle, and final text identifies authored red image. One-case semantics check, not a broad vision benchmark.",
+  "model_manifest_sha256": "63d21bda846639d1967fdb3919c362839dc497961b663759960e3cd5227442b3",
+  "binary_sha256": "fc6813fa4d34ecea2c3d98482b07c49afc8a7a565cb544425eadced64a65817f",
+  "image_sha256": "becf0cf30d6978325d9ccdea315923e2dbbf7e591c2857b92b5f82e41957bb98",
+  "prompt": "What color is the picture?",
+  "max_tokens": 16,
+  "threads": 2,
+  "profile": "balanced",
+  "result": {
+    "vision": {
+      "profile": "qwen35-still-cpu-v1",
+      "language_sha256": "",
+      "vision_sha256": "",
+      "images": 1,
+      "vision_ms": 18649.280791999998,
+      "effective_positions": 28,
+      "peak_request_reserved_bytes": 93937751
+    },
+    "batching": {
+      "profile": "coheryn-qwen35-batch-v1",
+      "strategy": "continuous-weight-tiled",
+      "forward_units": 99,
+      "batched_forward_units": 0,
+      "maximum_batch_width": 1,
+      "prefilled_tokens": 84,
+      "scheduler_wait_ms": 0.0
+    },
+    "text": "The picture is **red**.\n\nIt appears to be a solid, uniform red",
+    "token_ids": [
+      760,
+      6588,
+      369,
+      2972,
+      1114,
+      159034,
+      271,
+      2064,
+      7701,
+      310,
+      381,
+      264,
+      6235,
+      11,
+      13398,
+      2438
+    ],
+    "prompt_tokens": 84,
+    "reused_prompt_tokens": 0,
+    "completion_tokens": 16,
+    "finish_reason": "length",
+    "prefill_ms": 199989.10604,
+    "tokenization_ms": 13.508083000000001,
+    "decode_ms": 52301.149836000004,
+    "output_delivery_ms": 0.0,
+    "first_token_ms": 200243.362708,
+    "memory": {
+      "reserved": 276824064,
+      "peak_reserved": 370761815,
+      "limit": 1073741824,
+      "session_buffer_capacity_bytes": 0,
+      "peak_session_buffer_capacity_bytes": 29137016
+    }
+  },
+  "cache_condition": "uncontrolled",
+  "external_executor_invoked": false
+}

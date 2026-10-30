@@ -153,9 +153,16 @@ pub(crate) fn matmul_cooperative(
     if chunk_rows == 0 || work.operand.len() < memory::product(&[width, work.tile_rows])? {
         return Err(Error::resource("matrix exceeds admitted tensor workspace"));
     }
+    // Dense source rows need no per-input quantization/rounding scratch. Reuse one
+    // decoded weight tile for every admitted input row instead of rereading it.
+    let input_rows = if matches!(tensor.dtype, 0 | 30) {
+        input.len() / width
+    } else {
+        work.tile_rows
+    };
     for (input, output) in input
-        .chunks(work.tile_rows * width)
-        .zip(output.chunks_mut(work.tile_rows * rows))
+        .chunks(input_rows * width)
+        .zip(output.chunks_mut(input_rows * rows))
     {
         cancel.check()?;
         storage.unchanged()?;
@@ -290,6 +297,15 @@ pub(crate) fn matmul_batch(
     tensor: &Tensor,
     vectors: &mut [BatchVector<'_>],
 ) -> Result<BatchIo> {
+    matmul_batch_cooperative(storage, data, tensor, vectors, &mut None)
+}
+pub(crate) fn matmul_batch_cooperative(
+    storage: &Storage,
+    data: u64,
+    tensor: &Tensor,
+    vectors: &mut [BatchVector<'_>],
+    cooperate: &mut Option<&mut crate::multimodal::WorkYield<'_>>,
+) -> Result<BatchIo> {
     if vectors.is_empty() || vectors.len() > 16 || tensor.dimensions.len() != 2 {
         return Err(Error::request("invalid native matrix batch"));
     }
@@ -407,6 +423,9 @@ pub(crate) fn matmul_batch(
                 if let Err(error) = result {
                     *vector.error = Some(error);
                 }
+            }
+            if let Some(yield_work) = cooperate.as_deref_mut() {
+                yield_work()?;
             }
         }
         Ok(stats)

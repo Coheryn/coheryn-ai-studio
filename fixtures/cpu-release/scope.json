@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "classification": "cpu-candidate",
+  "production_ready": false,
+  "targets": [
+    "aarch64-apple-darwin",
+    "x86_64-unknown-linux-gnu",
+    "x86_64-pc-windows-msvc"
+  ],
+  "compatibility_matrix": "fixtures/compatibility.json",
+  "profiles": [
+    "qwen2-gguf-text",
+    "nomic-bert-gguf-embedding",
+    "qwen2vl-gguf-paired-image",
+    "qwen35-safetensors-text-image"
+  ],
+  "requirements": [
+    {
+      "id": "native-checks",
+      "per_target": true,
+      "acceptance": "Formatting, strict Clippy, ordinary tests including process-kill recovery and release compilation from the same source."
+    },
+    {
+      "id": "model-matrix",
+      "per_target": true,
+      "acceptance": "Every advertised exact-file/encoding/task profile passes independent numerical, tokenizer, CLI/API/SSE and managed-history checks."
+    },
+    {
+      "id": "resource-soak",
+      "per_target": true,
+      "acceptance": "Reviewed sustained mixed-task memory, cancellation, backpressure, fairness, restart and exhaustion evidence with frozen acceptance thresholds."
+    },
+    {
+      "id": "offline-package",
+      "per_target": true,
+      "acceptance": "Verified native archive, complete legal payload, empty-PATH startup and actual offline model inference from extracted executables."
+    },
+    {
+      "id": "fuzz-security",
+      "per_target": false,
+      "acceptance": "Sanitizer/coverage campaigns, hostile-input and fault coverage, reviewed security findings and sustained campaign adequacy."
+    },
+    {
+      "id": "dependency-review",
+      "per_target": false,
+      "acceptance": "Current RustSec workspace/fuzz audits with database revision; all vulnerability, maintenance and license findings resolved or explicitly reviewed."
+    },
+    {
+      "id": "release-review",
+      "per_target": false,
+      "acceptance": "Clean stable release revision, supported OS baselines, trusted signing/provenance and independent numerical/security/operational review."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "native-checks",
+      "target": "aarch64-apple-darwin",
+      "path": "fixtures/qualification/cpu-model-native-checks-v4.json",
+      "sha256": "c9f04b252d3adcf95c81f42d7bbeb1afc37c60e7cae18f89764b0c839368369f"
+    }
+  ],
+  "notes": [
+    "This narrower CPU scope does not waive any mandatory full-release capability or GPU/platform/model requirement.",
+    "Configuration, candidate packaging and bounded local campaigns alone cannot qualify production."
+  ]
+}

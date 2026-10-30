@@ -1,6 +1,7 @@
 //! Headless service using the same native engine as standalone execution.
 pub mod auth;
 mod bounded;
+pub mod checkpoint;
 pub mod client;
 pub mod config;
 pub mod download;

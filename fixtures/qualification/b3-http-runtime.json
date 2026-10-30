@@ -1,0 +1,421 @@
+{
+  "cache_condition": "uncontrolled",
+  "cached_result": {
+    "context": {
+      "context": 256,
+      "excluded_message_ids": [],
+      "history_revision": 3,
+      "included_message_ids": [
+        "msg-4b4d9d38b5384179a7753920115ba609",
+        "msg-d926dabfb685460ab8810c7d0b8a7157",
+        "msg-abf354f5eea84f6a84237b53eae152ab"
+      ],
+      "policy": "reject",
+      "prompt_tokens": 34,
+      "reserved_output_tokens": 4
+    },
+    "epoch": 0,
+    "error": null,
+    "result": {
+      "batching": {
+        "batched_forward_units": 0,
+        "forward_units": 29,
+        "maximum_batch_width": 1,
+        "prefilled_tokens": 26,
+        "profile": "coheryn-qwen35-batch-v1",
+        "scheduler_wait_ms": 0.47616600000000014,
+        "strategy": "continuous-weight-tiled"
+      },
+      "completion_tokens": 4,
+      "decode_ms": 3438.938665999999,
+      "finish_reason": "length",
+      "first_token_ms": 20218.619959000003,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 536870912,
+        "peak_session_buffer_capacity_bytes": 57749744,
+        "reserved": 312261280,
+        "session_buffer_capacity_bytes": 26939392
+      },
+      "output_delivery_ms": 0.006584,
+      "prefill_ms": 20214.917041,
+      "prompt_tokens": 34,
+      "reused_prompt_tokens": 8,
+      "text": "হ্যালো!",
+      "token_ids": [
+        151318,
+        212488,
+        148885,
+        0
+      ],
+      "tokenization_ms": 0.06179199999999999
+    },
+    "revision": 4,
+    "session_id": "ses-bb2f5d1cc67c4fb5a2c832764408030e",
+    "status": "completed",
+    "turn_id": "turn-abe71b34d8e84778ad52af3bbbe0370d"
+  },
+  "concurrent_results": [
+    {
+      "batching": {
+        "batched_forward_units": 17,
+        "forward_units": 18,
+        "maximum_batch_width": 2,
+        "prefilled_tokens": 15,
+        "profile": "coheryn-qwen35-batch-v1",
+        "scheduler_wait_ms": 2372.007291,
+        "strategy": "continuous-weight-tiled"
+      },
+      "completion_tokens": 4,
+      "decode_ms": 4943.857375,
+      "finish_reason": "length",
+      "first_token_ms": 18329.961708,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 536870912,
+        "peak_session_buffer_capacity_bytes": 57749744,
+        "reserved": 330704896,
+        "session_buffer_capacity_bytes": 28874872
+      },
+      "output_delivery_ms": 0.011083,
+      "prefill_ms": 18324.957166,
+      "prompt_tokens": 15,
+      "reused_prompt_tokens": 0,
+      "text": "Hello! How can",
+      "token_ids": [
+        9419,
+        0,
+        2500,
+        628
+      ],
+      "tokenization_ms": 1.144333
+    },
+    {
+      "batching": {
+        "batched_forward_units": 17,
+        "forward_units": 28,
+        "maximum_batch_width": 2,
+        "prefilled_tokens": 25,
+        "profile": "coheryn-qwen35-batch-v1",
+        "scheduler_wait_ms": 766.3780399999998,
+        "strategy": "continuous-weight-tiled"
+      },
+      "completion_tokens": 4,
+      "decode_ms": 3437.862917,
+      "finish_reason": "length",
+      "first_token_ms": 29846.525416999997,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 536870912,
+        "peak_session_buffer_capacity_bytes": 57749744,
+        "reserved": 276824064,
+        "session_buffer_capacity_bytes": 0
+      },
+      "output_delivery_ms": 0.008583,
+      "prefill_ms": 29075.246874999997,
+      "prompt_tokens": 25,
+      "reused_prompt_tokens": 0,
+      "text": "হ্যালো!",
+      "token_ids": [
+        151318,
+        212488,
+        148885,
+        0
+      ],
+      "tokenization_ms": 1.159167
+    }
+  ],
+  "external_executor_invoked": false,
+  "final_memory": {
+    "limit": 1073741824,
+    "peak_reserved": 536870912,
+    "peak_session_buffer_capacity_bytes": 57749744,
+    "reserved": 0,
+    "session_buffer_capacity_bytes": 0
+  },
+  "fresh_result": {
+    "batching": {
+      "batched_forward_units": 0,
+      "forward_units": 37,
+      "maximum_batch_width": 1,
+      "prefilled_tokens": 34,
+      "profile": "coheryn-qwen35-batch-v1",
+      "scheduler_wait_ms": 0.6267069999999999,
+      "strategy": "continuous-weight-tiled"
+    },
+    "completion_tokens": 4,
+    "decode_ms": 3672.9477509999997,
+    "finish_reason": "length",
+    "first_token_ms": 26446.570208,
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 536870912,
+      "peak_session_buffer_capacity_bytes": 57749744,
+      "reserved": 303823672,
+      "session_buffer_capacity_bytes": 26939392
+    },
+    "output_delivery_ms": 0.010874,
+    "prefill_ms": 26444.280082,
+    "prompt_tokens": 34,
+    "reused_prompt_tokens": 0,
+    "text": "হ্যালো!",
+    "token_ids": [
+      151318,
+      212488,
+      148885,
+      0
+    ],
+    "tokenization_ms": 0.064
+  },
+  "image_reference_sha256": "6cc3f329d36cd7bc8c87d560420275163b9a389a9dd24e526041742bb65042fc",
+  "image_result": {
+    "batching": {
+      "batched_forward_units": 0,
+      "forward_units": 87,
+      "maximum_batch_width": 1,
+      "prefilled_tokens": 84,
+      "profile": "coheryn-qwen35-batch-v1",
+      "scheduler_wait_ms": 268.96371200000016,
+      "strategy": "continuous-weight-tiled"
+    },
+    "completion_tokens": 4,
+    "decode_ms": 20392.533584,
+    "finish_reason": "length",
+    "first_token_ms": 240300.26799999998,
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 536870912,
+      "peak_session_buffer_capacity_bytes": 57749744,
+      "reserved": 276824064,
+      "session_buffer_capacity_bytes": 0
+    },
+    "output_delivery_ms": 4.842874999999999,
+    "prefill_ms": 239673.864419,
+    "prompt_tokens": 84,
+    "reused_prompt_tokens": 0,
+    "text": "The picture is **",
+    "token_ids": [
+      760,
+      6588,
+      369,
+      2972
+    ],
+    "tokenization_ms": 15.702250000000001,
+    "vision": {
+      "effective_positions": 28,
+      "images": 1,
+      "language_sha256": "",
+      "peak_request_reserved_bytes": 86911267,
+      "profile": "qwen35-still-cpu-v1",
+      "vision_ms": 23133.698458000003,
+      "vision_sha256": ""
+    }
+  },
+  "managed_record": {
+    "bytes": 1759840787,
+    "checkpoint": {
+      "adapter": "qwen35-safetensors-cpu-v1",
+      "entrypoint": "model.safetensors.index.json",
+      "files": [
+        {
+          "bytes": 11544,
+          "name": "LICENSE",
+          "sha256": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a"
+        },
+        {
+          "bytes": 7755,
+          "name": "chat_template.jinja",
+          "sha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80"
+        },
+        {
+          "bytes": 2907,
+          "name": "config.json",
+          "sha256": "b90b86f35c8e6925ef74ee04d0e758f0a845c83a42089ad82bbaa948de9b4204"
+        },
+        {
+          "bytes": 1746942600,
+          "name": "model.safetensors-00001-of-00001.safetensors",
+          "sha256": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696"
+        },
+        {
+          "bytes": 50900,
+          "name": "model.safetensors.index.json",
+          "sha256": "d8a08838a613b025eb7952ed9db11696213e57e76a375661ef5c12f9dd5dcf4e"
+        },
+        {
+          "bytes": 390,
+          "name": "preprocessor_config.json",
+          "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516"
+        },
+        {
+          "bytes": 12807982,
+          "name": "tokenizer.json",
+          "sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42"
+        },
+        {
+          "bytes": 16709,
+          "name": "tokenizer_config.json",
+          "sha256": "49e2b6e395f959f077f1e992b338919c0d4a9732fc6e613995e06557f843500c"
+        }
+      ],
+      "schema_version": 1
+    },
+    "id": "q35",
+    "schema_version": 2,
+    "sha256": "495daabf542f604a33e55fc63cb7d1b5ec9d0a8c4d64bb1713634109d7313902",
+    "source": null
+  },
+  "model_manifest_sha256": "63d21bda846639d1967fdb3919c362839dc497961b663759960e3cd5227442b3",
+  "schema_version": 1,
+  "scope": "Native pinned checkpoint through authenticated in-process HTTP router; no sockets/network. Manifest import, hybrid cache parity, two-lane frozen-output batching, PNG API/SSE parity, resource/context/malformed/URL rejection, disconnect cleanup and healthy text survival. TCP/CLI client transport and broader image semantics remain separately gated.",
+  "status_before_unload": {
+    "active_limit": 5,
+    "backend": "cpu-reference",
+    "batching_profile": "coheryn-cpu-batch-v1",
+    "cache": {
+      "idle_caches": 0,
+      "limits": {
+        "global_bytes": 268435456,
+        "idle_seconds": 300,
+        "session_bytes": 67108864
+      },
+      "reserved_bytes": 0
+    },
+    "compute_policy": "fifo-text-token-batch-embedding-microbatch-vision-tile-layer",
+    "compute_unit_limit": 1,
+    "configured_active_limit": 2,
+    "constraint_profile": "coheryn-json-v1",
+    "continuous_batching": true,
+    "embedding_limits": {
+      "batch_size": 8,
+      "batch_tokens": 2048,
+      "body_bytes": 1048576,
+      "concurrency": 1,
+      "input_bytes": 65536,
+      "input_tokens": 512,
+      "items": 256,
+      "request_bytes": 8388608,
+      "requests": 4,
+      "response_bytes": 16777216,
+      "total_tokens": 32768
+    },
+    "embedding_phase_limit": 1,
+    "generation_resident_limit": 2,
+    "image_input": true,
+    "loaded_models": [
+      {
+        "context": 256,
+        "conversation": {
+          "execution": "bounded-hybrid-prefix-cache",
+          "histories": true,
+          "prefix_kv_reuse": true,
+          "recurrent_state_reuse": true
+        },
+        "embedding_space": null,
+        "id": "q35",
+        "pinned": false,
+        "task": "text-generation"
+      }
+    ],
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 536870912,
+      "peak_session_buffer_capacity_bytes": 57749744,
+      "reserved": 268435456,
+      "session_buffer_capacity_bytes": 0
+    },
+    "persistence_limits": {
+      "enabled": false,
+      "owner_bytes": 536870912,
+      "retention_seconds": 2592000,
+      "total_bytes": 1073741824
+    },
+    "placement": {
+      "backend": "native-cpu",
+      "fallback": "disabled",
+      "reason": "CPU is the only qualified execution backend"
+    },
+    "queue_capacity": 8,
+    "sampling_profile": "coheryn-sampling-v2",
+    "scheduler": {
+      "active": 0,
+      "batched_generation_units": 17,
+      "cancelled": 1,
+      "completed": 8,
+      "embedding_microbatches": 0,
+      "failed": 0,
+      "forwarded_tokens": 322,
+      "generation_units": 305,
+      "matrix_read_bytes": 319818956800,
+      "matrix_tile_reads": 1236940,
+      "maximum_batch_width": 2,
+      "queued": 0,
+      "rejected": 0,
+      "vision_backpressure_waits": 0,
+      "vision_max_unit_micros": 1229954,
+      "vision_units": 1921,
+      "vision_waiting_units": 0,
+      "vision_yields": 1918,
+      "waiting_generation_units": 0
+    },
+    "schema_constraints": true,
+    "session_image_assets": {
+      "assets": 0,
+      "decoded_pixel_cache": false,
+      "disk_bytes": 0,
+      "limits": {
+        "owner_bytes": 134217728,
+        "session_bytes": 67108864,
+        "session_items": 16,
+        "total_bytes": 536870912
+      },
+      "persisted_kv": false,
+      "referenced_bytes": 0,
+      "storage": "private-original-bytes"
+    },
+    "session_kv_reuse": true,
+    "session_limits": {
+      "history_bytes": 1048576,
+      "idle_seconds": 86400,
+      "images": {
+        "owner_bytes": 134217728,
+        "session_bytes": 67108864,
+        "session_items": 16,
+        "total_bytes": 536870912
+      },
+      "messages": 256,
+      "per_owner": 64,
+      "total": 128,
+      "turn_keys": 128
+    },
+    "session_storage": "ephemeral",
+    "shutting_down": false,
+    "stage": "experimental-G4-E2-S6",
+    "strict_tool_arguments": true,
+    "strict_tool_mode": "single-required-or-named-no-parallel",
+    "tool_calling": true,
+    "tool_profiles": [
+      "qwen-tools-v1"
+    ],
+    "vision_limits": {
+      "acquisition_timeout_seconds": 30,
+      "allow_urls": false,
+      "body_bytes": 50331648,
+      "images": {
+        "max_edge": 8192,
+        "max_encoded_bytes": 16777216,
+        "max_image_tokens": 1024,
+        "max_images": 4,
+        "max_processed_pixels": 1048576,
+        "max_source_pixels": 16777216,
+        "max_total_encoded_bytes": 33554432,
+        "max_total_image_tokens": 4096
+      },
+      "redirects": 3
+    },
+    "vision_phase_limit": 2,
+    "vision_profile": "qwen2vl-still-f16-cpu-greedy"
+  },
+  "stream_frames": 7,
+  "test_executable_sha256": "ce7bf2d041cebf7c7262f3bbe6576547c115adcf87aca4b9f6ea06eacd1cd15e"
+}

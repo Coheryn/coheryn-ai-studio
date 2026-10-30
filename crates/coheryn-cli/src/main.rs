@@ -7,7 +7,6 @@ use coheryn_engine::GenerationOptions;
 use coheryn_engine::{
     Cancellation, Error, ErrorCode, Model, ParseLimits, ResourceLimits, Result, inspect,
     tokenizer::{Message, TextTokenizer},
-    validate,
 };
 use std::{
     io::{self, Read, Write},
@@ -399,19 +398,24 @@ async fn execute(cli: &Cli) -> Result<()> {
                             .await?,
                     );
                 }
-                let d = inspect(model, ParseLimits::default())?;
-                let report = validate(&d);
+                let inspected =
+                    coheryn_engine::adapters::Registry::default().inspect(model, &cancel)?;
+                let Some((d, report)) = inspected.gguf() else {
+                    return print_json(inspected.descriptor());
+                };
                 #[derive(serde::Serialize)]
                 struct Inspection<'a> {
                     #[serde(flatten)]
                     descriptor: &'a coheryn_engine::Descriptor,
                     task: Option<coheryn_engine::ModelTask>,
-                    embedding_config: Option<coheryn_engine::embedding::EmbeddingConfig>,
+                    embedding_config: &'a Option<coheryn_engine::embedding::EmbeddingConfig>,
+                    model_descriptor: &'a coheryn_engine::catalog::ModelDescriptor,
                 }
                 print_json(&Inspection {
-                    descriptor: &d,
+                    descriptor: d,
                     task: report.task,
-                    embedding_config: report.embedding_config,
+                    embedding_config: &report.embedding_config,
+                    model_descriptor: inspected.descriptor(),
                 })
             }
             Models::Validate { model, deep } => {
@@ -428,32 +432,41 @@ async fn execute(cli: &Cli) -> Result<()> {
                             .await?,
                     );
                 }
-                let d = inspect(model, ParseLimits::default())?;
-                let mut report = validate(&d);
-                if *deep && report.executable {
-                    match coheryn_engine::validate_tokenizer(&d) {
-                        Ok(_) => (),
-                        Err(e) => {
-                            report.executable = false;
-                            report.diagnostics.push(e);
-                        }
-                    }
-                    if report.executable
-                        && let Err(e) = coheryn_engine::deep_validate(model, &d, &cancel)
-                    {
-                        report.executable = false;
-                        report.diagnostics.push(e);
+                let inspected =
+                    coheryn_engine::adapters::Registry::default().inspect(model, &cancel)?;
+                let result = if *deep {
+                    inspected.deep_validate(&cancel)
+                } else {
+                    inspected.require_compatible()
+                };
+                let mut report = if let Some((_, legacy)) = inspected.gguf() {
+                    let mut value =
+                        serde_json::to_value(legacy).map_err(|e| Error::request(e.to_string()))?;
+                    value["model_descriptor"] = serde_json::to_value(inspected.descriptor())
+                        .map_err(|e| Error::request(e.to_string()))?;
+                    value
+                } else {
+                    serde_json::to_value(inspected.descriptor())
+                        .map_err(|e| Error::request(e.to_string()))?
+                };
+                report["executable"] = serde_json::json!(result.is_ok());
+                report["validation_depth"] = serde_json::json!(if *deep {
+                    "tensor-payload-finiteness"
+                } else {
+                    "metadata"
+                });
+                report["payload_scan_completed"] = serde_json::json!(*deep && result.is_ok());
+                if let Err(error) = &result
+                    && let Some(array) = report["diagnostics"].as_array_mut()
+                {
+                    let value =
+                        serde_json::to_value(error).map_err(|e| Error::request(e.to_string()))?;
+                    if !array.contains(&value) {
+                        array.push(value);
                     }
                 }
                 print_json(&report)?;
-                if !report.executable {
-                    return Err(report
-                        .diagnostics
-                        .first()
-                        .cloned()
-                        .unwrap_or_else(|| Error::invalid("model not executable")));
-                }
-                Ok(())
+                result
             }
         },
         Command::Tokenize {

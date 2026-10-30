@@ -116,32 +116,58 @@ async fn create(State(s): State<Arc<Service>>, request: Request) -> Result<Respo
     let owner = s.auth.principal(request.headers())?;
     let _payload = s.budget.reserve(4 << 20)?;
     let body: CreateSession = json_body(request).await?;
-    let task = if s.is_vision(&body.model)? {
-        let model = s.vision(&body.model)?;
-        if body.context == 0
-            || body.context > model.context_limit()
-            || body.context > s.config.max_context
-        {
-            return Err(ApiError::bad(
-                "session context exceeds loaded model/server capacity",
-            ));
-        }
-        let mut messages = Vec::new();
-        if let Some(system) = &body.system {
-            messages.push(coheryn_engine::multimodal::qwen2vl::ChatMessage {
-                role: "system".into(),
-                content: coheryn_engine::multimodal::qwen2vl::ChatContent::Text(system.clone()),
-            });
-        }
-        messages.push(coheryn_engine::multimodal::qwen2vl::ChatMessage {
-            role: "user".into(),
-            content: coheryn_engine::multimodal::qwen2vl::ChatContent::Text(" ".into()),
-        });
-        coheryn_engine::multimodal::qwen2vl::render(&messages, 0)?;
+    let selected = body.task.unwrap_or(if s.is_vision(&body.model)? {
         crate::sessions::SessionTask::ImageToText
     } else {
-        let model = s.model(&body.model)?;
-        if !model.tokenizer.supports_conversations() {
+        crate::sessions::SessionTask::TextGeneration
+    });
+    let task = if selected == crate::sessions::SessionTask::ImageToText {
+        if body.context == 0 || body.context > 4096 || body.context > s.config.max_context {
+            return Err(ApiError::bad(
+                "managed image context exceeds model/server/profile capacity",
+            ));
+        }
+        if let Some(model) = s.hybrid_vision(&body.model)? {
+            if body.context > model.context_limit() {
+                return Err(ApiError::bad("image context exceeds loaded capacity"));
+            }
+            if let Some(system) = &body.system {
+                use crate::resident::TextConversation;
+                let prompt = model.render_instructions(system)?;
+                if model.count_tokens(&prompt)? >= body.context {
+                    return Err(ApiError::bad(
+                        "initial image instructions cannot fit context",
+                    ));
+                }
+            }
+        } else {
+            let model = s.vision(&body.model)?;
+            if body.context == 0
+                || body.context > model.context_limit()
+                || body.context > s.config.max_context
+            {
+                return Err(ApiError::bad(
+                    "session context exceeds loaded model/server capacity",
+                ));
+            }
+            let mut messages = Vec::new();
+            if let Some(system) = &body.system {
+                messages.push(coheryn_engine::multimodal::qwen2vl::ChatMessage {
+                    role: "system".into(),
+                    content: coheryn_engine::multimodal::qwen2vl::ChatContent::Text(system.clone()),
+                });
+            }
+            messages.push(coheryn_engine::multimodal::qwen2vl::ChatMessage {
+                role: "user".into(),
+                content: coheryn_engine::multimodal::qwen2vl::ChatContent::Text(" ".into()),
+            });
+            coheryn_engine::multimodal::qwen2vl::render(&messages, 0)?;
+        }
+        crate::sessions::SessionTask::ImageToText
+    } else {
+        let model = s.text_model(&body.model)?;
+        let model = model.conversation();
+        if !model.supports_history() {
             return Err(Error::new(
                 ErrorCode::UnsupportedChatTemplate,
                 "template is not qualified for managed multi-turn histories",
@@ -157,12 +183,8 @@ async fn create(State(s): State<Arc<Service>>, request: Request) -> Result<Respo
             ));
         }
         if let Some(system) = &body.system {
-            let prompt = model.render(&[coheryn_engine::tokenizer::Message {
-                role: "system".into(),
-                content: system.clone(),
-                ..Default::default()
-            }])?;
-            if model.tokenizer.encode(&prompt)?.len() >= body.context {
+            let prompt = model.render_instructions(system)?;
+            if model.token_count(&prompt)? >= body.context {
                 return Err(ApiError::bad(
                     "initial instructions cannot fit the session context",
                 ));
@@ -294,6 +316,16 @@ async fn messages(
         if !request.tool_results.is_empty() && view.pending_tool_calls.is_empty() {
             return Err(ApiError::bad("session has no pending tool calls"));
         }
+        if service.registry.get(&view.model)?.checkpoint.is_some() {
+            // Validate the registered checkpoint profile without requiring residency:
+            // completed idempotent receipts must remain replayable after unload/restart.
+            coheryn_engine::qwen35::Model::check_options(
+                &request
+                    .settings
+                    .request(view.model.clone(), view.context, String::new())
+                    .options(),
+            )?;
+        }
         service.require_tool_model(
             &view.model,
             &request.settings.tool_config(),
@@ -311,7 +343,7 @@ async fn messages(
         let handle = managed_vision(&s, turn, _payload).await?;
         return managed_response(s, handle, watch, streaming).await;
     }
-    let model = match s.model(turn.model_id()).and_then(|model| {
+    let model = match s.text_model(turn.model_id()).and_then(|model| {
         if s.registry.get(turn.model_id())?.sha256 != turn.model_hash() {
             return Err(ApiError::conflict(
                 "session model identity changed; reset does not rebind weights",
@@ -337,7 +369,7 @@ async fn messages(
         if shutdown.is_cancelled() {
             preflight_cancel.cancel();
         }
-        let prepared = turn.prepare(&model, &preflight_cancel);
+        let prepared = turn.prepare_conversation(model.conversation(), &preflight_cancel);
         (turn, prepared.map(|request| (model, request)))
     });
     let (turn, prepared) = tokio::select! {
@@ -355,7 +387,20 @@ async fn messages(
         }
     };
     let scheduler = s.scheduler.clone();
-    let handle = blocking(move || scheduler.submit_managed(model, request, turn)).await?;
+    let payload = if matches!(model, crate::resident::TextResident::Qwen35(_)) {
+        Some(_payload)
+    } else {
+        None
+    };
+    let handle = blocking(move || match model {
+        crate::resident::TextResident::Gguf(model) => {
+            scheduler.submit_managed(model, request, turn)
+        }
+        crate::resident::TextResident::Qwen35(model) => {
+            scheduler.submit_managed_qwen35(model, request, payload, turn)
+        }
+    })
+    .await?;
     managed_response(s, handle, watch, streaming).await
 }
 async fn managed_response(
@@ -506,12 +551,15 @@ async fn managed_vision(
         if s.registry.get(turn.model_id())?.sha256 != turn.model_hash() {
             return Err(ApiError::conflict("session model-pair identity changed"));
         }
+        if let Some(model) = s.hybrid_vision(turn.model_id())? {
+            return Ok((Some(model), None, turn.vision_request(), None));
+        }
         let model = s.vision(turn.model_id())?;
         let request = turn.vision_request();
         let options = s.scheduler.vision_options(&model, &request)?;
-        Ok((model, request, options))
+        Ok((None, Some(model), request, Some(options)))
     })();
-    let (model, request, options) = match preflight {
+    let (hybrid, model, request, options) = match preflight {
         Ok(v) => v,
         Err(e) => {
             let error = e.clone();
@@ -519,6 +567,11 @@ async fn managed_vision(
             return Err(e);
         }
     };
+    if let Some(model) = hybrid {
+        return managed_qwen35_images(s, turn, payload, model, request).await;
+    }
+    let model = model.expect("validated paired model");
+    let options = options.expect("paired options");
     let cancel = Cancellation::default().with_timeout(request.timeout_seconds)?;
     let guard = PrepareCancellation(cancel.clone());
     let engine = model.clone();
@@ -541,4 +594,54 @@ async fn managed_vision(
     };
     s.scheduler
         .submit_managed_vision(model, request, prepared, payload, turn)
+}
+
+async fn managed_qwen35_images(
+    s: &Arc<Service>,
+    mut turn: Box<crate::sessions::TurnLease>,
+    payload: Reservation,
+    model: Arc<coheryn_engine::qwen35::Model>,
+    request: crate::wire::GenerationRequest,
+) -> Result<crate::scheduler::GenerationHandle> {
+    let cancel = Cancellation::default().with_timeout(Some(
+        request
+            .timeout_seconds
+            .unwrap_or(s.config.generation_timeout_seconds)
+            .min(s.config.generation_timeout_seconds),
+    ))?;
+    let guard = PrepareCancellation(cancel.clone());
+    let engine = model.clone();
+    let limits = s.config.vision.images;
+    let concurrency = s.scheduler.max_concurrency();
+    let mut job = tokio::task::spawn_blocking(move || {
+        let hardware = crate::hardware::probe();
+        let prepared = (|| {
+            crate::vision::validate_controls(&request)?;
+            turn.prepare_qwen35_images(
+                &engine,
+                limits,
+                coheryn_engine::adapters::Execution {
+                    profile: coheryn_engine::planner::Profile::parse(&request.profile)?,
+                    threads: request.threads,
+                    hardware: &hardware,
+                },
+                concurrency,
+                &cancel,
+            )
+        })();
+        (turn, request, prepared)
+    });
+    let (mut turn, request, prepared) =
+        tokio::select! {r=&mut job=>r?,_=s.shutdown.cancelled()=>{guard.0.cancel();job.await?}};
+    drop(guard);
+    let prepared = match prepared {
+        Ok(p) => p,
+        Err(error) => {
+            let failure = error.clone();
+            blocking(move || turn.finish(&GenerationEvent::Failed(failure))).await?;
+            return Err(error);
+        }
+    };
+    s.scheduler
+        .submit_managed_qwen35_images(model, request, payload, prepared, turn)
 }

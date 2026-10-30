@@ -276,3 +276,124 @@ fn headless_chat_request_streams_json_offline_and_rejects_unsupported_tools() {
     assert_eq!(out.status.code(), Some(4));
     assert!(String::from_utf8_lossy(&out.stderr).contains("strict"));
 }
+
+#[test]
+fn local_inspection_validation_and_planning_share_metadata_without_a_daemon() {
+    use serde_json::Value;
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("tiny.gguf");
+    std::fs::write(&path, common::tiny_model()).unwrap();
+    let run = |args: &[&str]| {
+        Command::new(env!("CARGO_BIN_EXE_coheryn"))
+            .env("PATH", "")
+            .args(args)
+            .output()
+            .unwrap()
+    };
+    let p = path.to_str().unwrap();
+    let inspected = run(&["models", "inspect", p, "--json"]);
+    assert!(inspected.status.success());
+    let i: Value = serde_json::from_slice(&inspected.stdout).unwrap();
+    assert_eq!(i["version"], 3);
+    assert_eq!(i["model_descriptor"]["format"], "gguf");
+    assert_eq!(i["model_descriptor"]["weight_payloads"], "not-scanned");
+    let validated = run(&["models", "validate", p, "--json"]);
+    assert!(validated.status.success());
+    let v: Value = serde_json::from_slice(&validated.stdout).unwrap();
+    assert_eq!(v["executable"], true);
+    assert_eq!(v["payload_scan_completed"], false);
+    let plan = run(&[
+        "plan",
+        p,
+        "--standalone",
+        "--context",
+        "64",
+        "--profile",
+        "reference",
+        "--threads",
+        "1",
+        "--json",
+    ]);
+    assert!(
+        plan.status.success(),
+        "{}",
+        String::from_utf8_lossy(&plan.stderr)
+    );
+    let value: Value = serde_json::from_slice(&plan.stdout).unwrap();
+    assert_eq!(value["mode"], "standalone-metadata");
+    assert_eq!(value["plan"]["admissible"], true);
+    assert_eq!(
+        value["model_descriptor"]["metadata_identity"],
+        i["model_descriptor"]["metadata_identity"]
+    );
+    let rejected = run(&[
+        "plan",
+        p,
+        "--standalone",
+        "--context",
+        "64",
+        "--profile",
+        "reference",
+        "--max-memory",
+        "1",
+        "--json",
+    ]);
+    assert_eq!(rejected.status.code(), Some(5));
+    assert_eq!(
+        serde_json::from_slice::<Value>(&rejected.stdout).unwrap()["plan"]["admissible"],
+        false
+    );
+    let wrong_task = run(&["plan", p, "--standalone", "--task", "embedding", "--json"]);
+    assert_eq!(wrong_task.status.code(), Some(4));
+}
+#[test]
+fn unsupported_safetensors_are_inspectable_and_validation_fails_with_structured_details() {
+    use serde_json::{Value, json};
+    use std::io::Write;
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("model.safetensors");
+    let h = json!({"x":{"dtype":"F32","shape":[1],"data_offsets":[0,4]}}).to_string();
+    let mut f = std::fs::File::create(&path).unwrap();
+    f.write_all(&(h.len() as u64).to_le_bytes()).unwrap();
+    f.write_all(h.as_bytes()).unwrap();
+    f.write_all(&f32::NAN.to_le_bytes()).unwrap();
+    drop(f);
+    std::fs::write(dir.path().join("config.json"), r#"{"model_type":"future"}"#).unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_coheryn"))
+        .args(["models", "inspect", path.to_str().unwrap(), "--json"])
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    let report: Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(report["format"], "safetensors");
+    assert_eq!(report["container_valid"], true);
+    assert_eq!(report["structural_status"], "unsupported");
+    let output = Command::new(env!("CARGO_BIN_EXE_coheryn"))
+        .args(["models", "validate", path.to_str().unwrap(), "--json"])
+        .output()
+        .unwrap();
+    assert_eq!(output.status.code(), Some(4));
+    let report: Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(report["executable"], false);
+    assert_eq!(report["payload_scan_completed"], false);
+    assert!(String::from_utf8_lossy(&output.stderr).contains("UNSUPPORTED_MODEL_ARCHITECTURE"));
+}
+
+#[test]
+fn managed_plan_defaults_still_require_credentials_rather_than_standalone_flags() {
+    let dir = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_coheryn"))
+        .env_remove("COHERYN_API_TOKEN")
+        .env_remove("COHERYN_ADMIN_TOKEN")
+        .arg("--data-dir")
+        .arg(dir.path())
+        .args(["plan", "managed-model", "--json"])
+        .output()
+        .unwrap();
+    assert_eq!(
+        output.status.code(),
+        Some(6),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+}

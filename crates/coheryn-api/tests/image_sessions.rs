@@ -627,3 +627,48 @@ async fn image_only_turns_keep_valid_portable_histories_and_failed_imports_relea
     assert_eq!(status, 200, "{reuse}");
     assert_eq!(reuse["result"]["vision"]["images"], 1);
 }
+
+#[tokio::test]
+async fn explicit_image_session_tasks_validate_capabilities_and_context_before_publication() {
+    let dir = tempfile::tempdir().unwrap();
+    let service = open(config(dir.path(), false));
+    pair(&service).await;
+    let app = router(service.clone());
+    for task in ["text-generation", "embedding", "invalid"] {
+        let (status, _) = call(
+            &app,
+            "POST",
+            "/coheryn/v1/sessions",
+            json!({"model":"pair","context":512,"task":task}),
+        )
+        .await;
+        assert_eq!(status, 400);
+    }
+    let (status, _) = call(
+        &app,
+        "POST",
+        "/coheryn/v1/sessions",
+        json!({"model":"pair","context":4097,"task":"image-to-text"}),
+    )
+    .await;
+    assert_eq!(status, 400);
+    let (_, list) = call(&app, "GET", "/coheryn/v1/sessions", Value::Null).await;
+    assert_eq!(list["sessions"], json!([]));
+    let (status, view) = call(
+        &app,
+        "POST",
+        "/coheryn/v1/sessions",
+        json!({"model":"pair","context":512,"task":"image-to-text"}),
+    )
+    .await;
+    assert_eq!(status, 200, "{view}");
+    assert_eq!(view["task"], "image-to-text");
+    let (status, _) = call(
+        &app,
+        "DELETE",
+        &format!("/coheryn/v1/sessions/{}", view["id"].as_str().unwrap()),
+        json!({"expected_revision":0}),
+    )
+    .await;
+    assert_eq!(status, 200);
+}

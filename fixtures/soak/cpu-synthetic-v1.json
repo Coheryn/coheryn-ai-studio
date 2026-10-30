@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "name": "cpu-synthetic-operational-v1",
+  "cycles": 100,
+  "warmup_cycles": 2,
+  "restart_every": 25,
+  "fault_every": 10,
+  "concurrency": [1, 2],
+  "execution_profiles": ["balanced", "low-memory"],
+  "max_memory_bytes": 805306368,
+  "max_rss_bytes": 805306368,
+  "max_drained_rss_growth_bytes": 67108864,
+  "require_rss": true,
+  "sample_ms": 50,
+  "request_timeout_seconds": 15,
+  "cleanup_timeout_seconds": 5,
+  "consumer_timeout_seconds": 1
+}

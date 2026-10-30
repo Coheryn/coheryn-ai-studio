@@ -40,6 +40,19 @@ pub struct Storage {
     modified: Option<SystemTime>,
 }
 impl Storage {
+    /// Takes ownership of an already range-validated tensor file. The format loader
+    /// validates its header through this same handle before creating tensor views.
+    pub(crate) fn from_tensor_file(file: File) -> Result<Self> {
+        let meta = file.metadata()?;
+        if !meta.is_file() {
+            return Err(Error::invalid("tensor storage must be a regular file"));
+        }
+        Ok(Self {
+            file: Mutex::new(file),
+            bytes: meta.len(),
+            modified: meta.modified().ok(),
+        })
+    }
     pub fn open(path: &Path, descriptor: &Descriptor) -> Result<Self> {
         Self::open_with_limits(path, descriptor, crate::ParseLimits::default())
     }

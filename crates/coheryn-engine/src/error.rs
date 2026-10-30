@@ -6,6 +6,7 @@ use std::fmt;
 pub enum ErrorCode {
     Io,
     InvalidGguf,
+    InvalidSafetensors,
     UnsupportedGgufVersion,
     UnsupportedGgufTensorType,
     UnsupportedModelArchitecture,

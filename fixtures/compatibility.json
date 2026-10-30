@@ -718,5 +718,155 @@
       "comparative end-to-end throughput advantage"
     ],
     "notes": "Earlier model/reference/binary records retain their exact original scope and bytes. Runtime capability limits do not imply exact-file qualification at every width/context."
+  },
+  "development_adapters": [
+    {
+      "adapter": "qwen35-safetensors-cpu-v1",
+      "architecture": "qwen3_5",
+      "model": "Qwen/Qwen3.5-0.8B",
+      "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+      "format": "safetensors",
+      "layouts": [
+        "single-file",
+        "indexed-whole-tensor-shards"
+      ],
+      "weight_dtypes": [
+        "BF16",
+        "F32"
+      ],
+      "task": "text-generation",
+      "backend": "native-cpu",
+      "platform": "macos-arm64",
+      "status": "experimental-independent-array-reference",
+      "context_runtime_limit": 8192,
+      "context_qualified": 256,
+      "threads_qualified": [
+        1,
+        2
+      ],
+      "model_manifest": "fixtures/qwen35/model.json",
+      "evidence": "fixtures/qualification/q35-native-text.json",
+      "capabilities": {
+        "standalone": true,
+        "greedy": true,
+        "images": true,
+        "managed_api": true,
+        "continuous_batching": true,
+        "tools": false,
+        "constraints": false,
+        "metal": false,
+        "managed_sessions": true,
+        "prefix_kv_reuse": true,
+        "recurrent_state_reuse": true,
+        "managed_image_sessions": true,
+        "image_planning": true
+      },
+      "notes": "Pinned source text and validated still-image processor/encoder/merger on native CPU. MTP remains inactive. Independent array-equation precision is separate from publisher-framework parity; image qualification uses authored constant-color PNGs and short greedy continuations. One physical shard; real multi-shard, broad semantics, GPU and other-platform qualification remain open.",
+      "qualified_layouts": [
+        "single-file",
+        "indexed-one-shard"
+      ],
+      "managed_evidence": "fixtures/qualification/b1-managed-runtime.json",
+      "managed_session_evidence": "fixtures/qualification/b2-managed-sessions-runtime.json",
+      "image_profile": {
+        "profile": "qwen35-still-cpu-v1",
+        "processor": "qwen35-still-v1",
+        "requires_asset": "preprocessor_config.json",
+        "formats_accepted": [
+          "png",
+          "jpeg"
+        ],
+        "formats_numerically_qualified": [
+          "png"
+        ],
+        "maximum_images": 4,
+        "vision_patch_rows_maximum": 4096,
+        "image_histories": true,
+        "metadata_only_image_planning": true,
+        "evidence": "fixtures/qualification/b3-native-images.json",
+        "cli_evidence": "fixtures/qualification/b3-image-cli-final.json",
+        "managed_context_limit": 4096,
+        "session_evidence": "fixtures/qualification/b4-image-sessions-runtime.json"
+      },
+      "hybrid_runtime_evidence": "fixtures/qualification/b3-http-runtime.json",
+      "hybrid_text_evidence": "fixtures/qualification/b3-native-text.json"
+    }
+  ],
+  "local_metadata": {
+    "schema_version": 1,
+    "formats": [
+      "gguf",
+      "safetensors"
+    ],
+    "layouts": [
+      "single-file",
+      "indexed-whole-tensor-shards"
+    ],
+    "inspection": "bounded headers/index and selected source assets; no tensor payload scan or execution model/session construction",
+    "local_text_planning": [
+      "qwen2-gguf-cpu-v1",
+      "qwen35-safetensors-cpu-v1"
+    ],
+    "embedding_inspection": "existing Nomic GGUF task/configuration preserved; generic local embedding planning remains unsupported",
+    "metadata_identity": "header/selected-index/asset/profile fingerprint only; excludes payloads and cannot authorize model/cache/session identity reuse",
+    "qualification": "structural compatibility and candidate resource admission remain separate from full integrity/exact numerical evidence",
+    "evidence": "fixtures/qualification/a1-metadata-runtime.json",
+    "remaining": "task-wide executable adapter unification, real multi-shard and full model/backend/platform qualification",
+    "runtime_admission": {
+      "qwen35_standalone": "shared estimator; full request/session/profile-headroom reserved atomically before tokenization/session construction",
+      "evidence": "fixtures/qualification/a2-admission-runtime.json",
+      "scope": "Standalone/managed text and images; shared pure image-stage estimates, exact submission checks and atomic stage/session reservations. Optional exact-prefix hybrid snapshots apply only to text sessions.",
+      "managed_evidence": "fixtures/qualification/b1-managed-runtime.json",
+      "managed_session_evidence": "fixtures/qualification/b2-managed-sessions-runtime.json"
+    }
+  },
+  "managed_checkpoints": {
+    "schema_version": 1,
+    "registry_record_version": 2,
+    "manifest_version": 1,
+    "adapter": "qwen35-safetensors-cpu-v1",
+    "identity": "SHA-256 domain-separated canonical manifest binding complete per-file hashes and native profile; distinct from metadata fingerprint",
+    "transport": "application/vnd.coheryn.checkpoint.v1",
+    "max_files": 132,
+    "max_manifest_bytes": 49152,
+    "interfaces": [
+      "managed-import",
+      "inspect",
+      "validate",
+      "plan",
+      "load",
+      "unload",
+      "remove",
+      "stateless-cli",
+      "completions",
+      "chat-completions",
+      "native-generation",
+      "text-sse",
+      "managed-text-histories",
+      "persistent-history-restart",
+      "unloaded-receipt-replay",
+      "portable-text-history-import-export",
+      "hybrid-prefix-cache",
+      "continuous-text-batching",
+      "stateless-image-input",
+      "image-metadata-planning",
+      "managed-image-histories",
+      "persistent-image-restart",
+      "portable-original-image-export-import"
+    ],
+    "scope": "macos-arm64 native CPU greedy text and validated still images; pinned indexed source has one physical shard",
+    "unsupported": [
+      "tools",
+      "schema-constraints",
+      "custom-stops",
+      "non-greedy-sampling",
+      "checkpoint-url-pull",
+      "gpu"
+    ],
+    "evidence": "fixtures/qualification/b1-managed-runtime.json",
+    "session_execution": "optional full-attention KV/recurrent/convolution exact-prefix snapshot; model/context/thread/budget identity; bounded caps and explicit reuse metrics",
+    "session_evidence": "fixtures/qualification/b2-managed-sessions-runtime.json",
+    "hybrid_runtime_evidence": "fixtures/qualification/b3-http-runtime.json",
+    "image_session_evidence": "fixtures/qualification/b4-image-sessions-runtime.json"
   }
 }

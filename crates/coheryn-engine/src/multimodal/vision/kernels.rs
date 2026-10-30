@@ -1,7 +1,7 @@
 use crate::{Cancellation, Error, Result, cpu, memory, tensor::Workspace};
 use rayon::prelude::*;
 
-pub(super) struct AttentionScratch {
+pub(crate) struct AttentionScratch {
     pub scores: Vec<f32>,
     pub accumulator: Vec<f64>,
 }
@@ -19,7 +19,7 @@ impl AttentionScratch {
 /// Non-causal spatial attention retains one score row per worker, never an N×N matrix.
 #[cfg(test)]
 #[allow(clippy::too_many_arguments)]
-pub(super) fn attention(
+pub(crate) fn attention(
     q: &[f32],
     k: &[f32],
     v: &[f32],
@@ -35,7 +35,7 @@ pub(super) fn attention(
     )
 }
 #[allow(clippy::too_many_arguments)]
-pub(super) fn attention_cooperative(
+pub(crate) fn attention_cooperative(
     q: &[f32],
     k: &[f32],
     v: &[f32],
@@ -161,7 +161,7 @@ fn spatial_trig(angle: f32) -> (f32, f32) {
     angle.sin_cos()
 }
 /// Grouped raster order: four adjacent patch rows form each spatial merge group.
-pub(super) fn rope_cache(
+pub(crate) fn rope_cache(
     grid: [usize; 3],
     head_dim: usize,
     cache: &mut [f32],
@@ -203,7 +203,7 @@ pub(super) fn rope_cache(
     }
     Ok(())
 }
-pub(super) fn rotate(
+pub(crate) fn rotate(
     values: &mut [f32],
     hidden: usize,
     head_dim: usize,
@@ -235,7 +235,7 @@ pub(super) fn rotate(
     }
     Ok(())
 }
-pub(super) fn activation(values: &mut [f32], quick: bool, cancel: &Cancellation) -> Result<()> {
+pub(crate) fn activation(values: &mut [f32], quick: bool, cancel: &Cancellation) -> Result<()> {
     for chunk in values.chunks_mut(4096) {
         cancel.check()?;
         for x in chunk {
@@ -254,7 +254,7 @@ pub(super) fn activation(values: &mut [f32], quick: bool, cancel: &Cancellation)
 /// Match the frozen scalar F16 lookup-GELU contract without retaining a table:
 /// round input to binary16, evaluate tanh GELU, then round output to binary16.
 /// The qualified profile saturates inputs outside [-10,10] before conversion.
-pub(super) fn merger_activation(values: &mut [f32], cancel: &Cancellation) -> Result<()> {
+pub(crate) fn merger_activation(values: &mut [f32], cancel: &Cancellation) -> Result<()> {
     for chunk in values.chunks_mut(4096) {
         cancel.check()?;
         for value in chunk {
@@ -275,7 +275,7 @@ pub(super) fn merger_activation(values: &mut [f32], cancel: &Cancellation) -> Re
     }
     Ok(())
 }
-pub(super) fn residual(values: &mut [f32], delta: &[f32], cancel: &Cancellation) -> Result<()> {
+pub(crate) fn residual(values: &mut [f32], delta: &[f32], cancel: &Cancellation) -> Result<()> {
     if values.len() != delta.len() {
         return Err(Error::invalid("vision residual dimensions disagree"));
     }

@@ -1,4 +1,6 @@
 //! Independent, portable reference CPU execution. No external inference runtime.
+pub mod adapters;
+pub mod catalog;
 pub mod compat;
 pub mod constraints;
 pub mod cpu;
@@ -11,6 +13,8 @@ pub mod multimodal;
 mod parallel;
 pub mod planner;
 pub mod quant;
+pub mod qwen35;
+pub mod safetensors;
 pub mod sampling;
 pub mod storage;
 mod tensor;

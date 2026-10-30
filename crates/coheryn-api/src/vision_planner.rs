@@ -191,3 +191,103 @@ pub(crate) fn estimate(
         json!({"schema_version":1,"task":"image-to-text","model":request.model,"backend":"cpu-reference","profile":request.profile,"context":request.context,"threads":threads,"concurrency":request.concurrency,"image_feature_tokens":tokens,"images":stages,"decoder_reserved_bytes":decoder,"request_reserved_bytes":per_request,"ingress_reserved_bytes":ingress,"model_metadata_additional_bytes":metadata,"weight_file_bytes":record.bytes,"weight_storage":"bounded buffered reads; file bytes are not an equivalent heap reservation","additional_reserved_bytes":additional,"required_reserved_bytes":required,"admissible":admissible,"rejection_reasons":reasons,"temporary_inspection_reserved_bytes":128u64<<20,"hardware":crate::hardware::probe(),"note":"Conservative dimension-only estimate. Exact text tokens, attachment bytes, physical/rotary capacity and atomic admission are checked before enqueueing; no automatic resizing or context reduction."}),
     )
 }
+
+pub(crate) fn estimate_qwen35(
+    service: &Service,
+    request: EstimateRequest,
+    record: &ModelRecord,
+    loaded: Option<&crate::resident::Resident>,
+) -> Result<Value> {
+    use coheryn_engine::{catalog::PlanRequest, qwen35};
+    if request.task.as_deref() != Some("image-to-text")
+        || request.constraints
+        || request.input_bytes.is_some()
+        || request.batch_size.is_some()
+        || request.max_input_tokens.is_some()
+        || request.max_batch_tokens.is_some()
+    {
+        return Err(ApiError::bad(
+            "image planning requires image-to-text without text constraints or embedding fields",
+        ));
+    }
+    let workload = request
+        .images
+        .as_ref()
+        .ok_or_else(|| ApiError::bad("image plans require bounded dimension descriptors"))?;
+    let budget = service.budget.stats();
+    let hardware = crate::hardware::probe();
+    let input = PlanRequest {
+        context: request.context,
+        concurrency: request.concurrency,
+        max_memory: service.config.max_memory,
+        profile: Profile::parse(&request.profile)?,
+        threads: request.threads,
+        constraints: false,
+    };
+    let mut inspection_bytes = 0;
+    let mut plan = if let Some(crate::resident::Resident::Qwen35(model)) = loaded {
+        qwen35::image_plan::estimate_images(
+            model.configuration(),
+            model.vision_configuration()?,
+            model.weight_bytes()?,
+            &input,
+            &hardware,
+            budget,
+            true,
+            service.scheduler.max_concurrency(),
+            workload,
+            service.config.vision.images,
+        )?
+    } else {
+        inspection_bytes = qwen35::RESIDENT_METADATA_BYTES;
+        let _inspection = service.budget.reserve(inspection_bytes)?;
+        let mut inspection = record
+            .checkpoint
+            .as_ref()
+            .ok_or_else(|| ApiError::bad("missing checkpoint manifest"))?
+            .bind(
+                &service.registry.checkpoint_root(&record.id)?,
+                &Default::default(),
+            )?;
+        let vision = inspection.qwen35_vision_configuration(&Default::default())?;
+        let config = qwen35::Config::parse(
+            inspection
+                .source_configuration()
+                .expect("source configuration"),
+        )?;
+        qwen35::image_plan::estimate_images(
+            &config,
+            &vision,
+            inspection.descriptor().tensor_bytes,
+            &input,
+            &hardware,
+            budget,
+            false,
+            service.scheduler.max_concurrency(),
+            workload,
+            service.config.vision.images,
+        )?
+    };
+    let transport = (8u64 << 20)
+        .checked_mul(request.concurrency as u64)
+        .ok_or_else(|| Error::resource("image transport overflow"))?;
+    let ingress = service
+        .config
+        .vision
+        .ingress_bytes(service.config.vision.body_bytes)?
+        .checked_mul(request.concurrency as u64)
+        .ok_or_else(|| Error::resource("image ingress overflow"))?;
+    plan.add_capacity(
+        transport
+            .checked_add(ingress)
+            .ok_or_else(|| Error::resource("image delivery/ingress overflow"))?,
+    )?;
+    plan.execution.model = request.model;
+    let mut value = serde_json::to_value(plan).map_err(|e| Error::request(e.to_string()))?;
+    value["transport_reserved_bytes"] = json!(transport);
+    value["ingress_reserved_bytes"] = json!(ingress);
+    value["temporary_inspection_reserved_bytes"] = json!(inspection_bytes);
+    value["source_set_sha256"] = json!(record.sha256);
+    value["payload_integrity"] = json!("not-rehashed-by-plan");
+    Ok(value)
+}

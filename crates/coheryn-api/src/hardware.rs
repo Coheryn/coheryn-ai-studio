@@ -3,9 +3,16 @@ use coheryn_engine::planner::HardwareSnapshot;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 pub fn probe() -> HardwareSnapshot {
-    let mut system = sysinfo::System::new();
-    system.refresh_memory();
-    let total = system.total_memory();
+    let counters = sysinfo::System::new().ok().map(|mut system| {
+        system.refresh_memory();
+        (
+            system.total_memory(),
+            system.available_memory(),
+            system.total_swap(),
+            system.used_swap(),
+        )
+    });
+    let (total, available, swap_total, swap_used) = counters.unwrap_or_default();
     let mut features = Vec::new();
     #[cfg(target_arch = "x86_64")]
     {
@@ -40,9 +47,9 @@ pub fn probe() -> HardwareSnapshot {
         cpu_features: features,
         ram_total_bytes: (total > 0).then_some(total),
         // Some sandbox/platform probes return zero when unavailable. Preserve uncertainty.
-        ram_available_bytes: (system.available_memory() > 0).then_some(system.available_memory()),
-        swap_total_bytes: (total > 0).then_some(system.total_swap()),
-        swap_used_bytes: (total > 0).then_some(system.used_swap()),
+        ram_available_bytes: (available > 0).then_some(available),
+        swap_total_bytes: (total > 0).then_some(swap_total),
+        swap_used_bytes: (total > 0).then_some(swap_used),
         observed_unix_ms: SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .map(|d| d.as_millis().min(u64::MAX as u128) as u64)

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-10-30",
+  "scope": "New qualification tooling uses only Python standard library and existing native Rust packages. Existing same-day Rust/dependency verification retained; workflow action releases checked against official GitHub latest-release endpoints.",
+  "rust_packages_verification": {
+    "path": "fixtures/qualification/cpu-soak-dependency-versions.json",
+    "sha256": "ebffb9faae807321a9da9819ccd24961e11782a43cb343f72d17bd350906d30c"
+  },
+  "actions": [
+    {
+      "repository": "actions/checkout",
+      "latest_release": "v7.0.1",
+      "url": "https://github.com/actions/checkout/releases/tag/v7.0.1"
+    },
+    {
+      "repository": "actions/setup-python",
+      "latest_release": "v7.1.0",
+      "url": "https://github.com/actions/setup-python/releases/tag/v7.1.0"
+    },
+    {
+      "repository": "actions/upload-artifact",
+      "latest_release": "v7.0.2",
+      "url": "https://github.com/actions/upload-artifact/releases/tag/v7.0.2"
+    }
+  ]
+}

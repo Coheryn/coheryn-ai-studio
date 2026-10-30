@@ -1,0 +1,826 @@
+{
+  "binary_sha256": "a92af6ba02bfc5e0c0da0d0bd4fc7b3e3c08f6dab920f5da0564d010adcbf342",
+  "cache_condition": "uncontrolled",
+  "external_executor_invoked": false,
+  "final_memory": {
+    "limit": 1073741824,
+    "peak_reserved": 422579139,
+    "peak_session_buffer_capacity_bytes": 29137016,
+    "reserved": 16777216,
+    "session_buffer_capacity_bytes": 0
+  },
+  "followup_receipt": {
+    "context": {
+      "context": 256,
+      "excluded_message_ids": [],
+      "history_revision": 4,
+      "included_message_ids": [
+        "msg-8d2a720d52ba4eb1bd7a4ecd56f6aac5",
+        "msg-73f88b94fb7a4dd9abf4b3c1e9447cfd",
+        "msg-eb7a79751cdb43e58ad9bc36c092d707"
+      ],
+      "policy": "reject",
+      "prompt_tokens": 103,
+      "reserved_output_tokens": 4
+    },
+    "epoch": 0,
+    "error": null,
+    "result": {
+      "batching": {
+        "batched_forward_units": 0,
+        "forward_units": 106,
+        "maximum_batch_width": 1,
+        "prefilled_tokens": 103,
+        "profile": "coheryn-qwen35-batch-v1",
+        "scheduler_wait_ms": 1.903956,
+        "strategy": "continuous-weight-tiled"
+      },
+      "completion_tokens": 4,
+      "decode_ms": 3448.56875,
+      "finish_reason": "length",
+      "first_token_ms": 80224.109,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 389071940,
+        "peak_session_buffer_capacity_bytes": 29137016,
+        "reserved": 302160576,
+        "session_buffer_capacity_bytes": 0
+      },
+      "output_delivery_ms": 0.13724999999999998,
+      "prefill_ms": 80215.39737100001,
+      "prompt_tokens": 103,
+      "reused_prompt_tokens": 0,
+      "text": "The picture is **",
+      "token_ids": [
+        760,
+        6588,
+        369,
+        2972
+      ],
+      "tokenization_ms": 0.34600000000000003,
+      "vision": {
+        "effective_positions": 47,
+        "images": 1,
+        "language_sha256": "",
+        "peak_request_reserved_bytes": 86911267,
+        "profile": "qwen35-still-cpu-v1",
+        "vision_ms": 20040.645375,
+        "vision_sha256": ""
+      }
+    },
+    "revision": 5,
+    "session_id": "ses-6387aae81a1341dcaba3d9301697e29a",
+    "status": "completed",
+    "turn_id": "turn-7c1bb57ed50c4683a5ca1193710f9730"
+  },
+  "fresh_result": {
+    "batching": {
+      "batched_forward_units": 0,
+      "forward_units": 106,
+      "maximum_batch_width": 1,
+      "prefilled_tokens": 103,
+      "profile": "coheryn-qwen35-batch-v1",
+      "scheduler_wait_ms": 2.0737149999999995,
+      "strategy": "continuous-weight-tiled"
+    },
+    "completion_tokens": 4,
+    "decode_ms": 3621.6678749999996,
+    "finish_reason": "length",
+    "first_token_ms": 79427.861292,
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 422579139,
+      "peak_session_buffer_capacity_bytes": 29137016,
+      "reserved": 293722952,
+      "session_buffer_capacity_bytes": 0
+    },
+    "output_delivery_ms": 0.013042000000000002,
+    "prefill_ms": 79422.049043,
+    "prompt_tokens": 103,
+    "reused_prompt_tokens": 0,
+    "text": "The picture is **",
+    "token_ids": [
+      760,
+      6588,
+      369,
+      2972
+    ],
+    "tokenization_ms": 0.33458400000000005,
+    "vision": {
+      "effective_positions": 47,
+      "images": 1,
+      "language_sha256": "",
+      "peak_request_reserved_bytes": 86911267,
+      "profile": "qwen35-still-cpu-v1",
+      "vision_ms": 20052.868375,
+      "vision_sha256": ""
+    }
+  },
+  "initial_result": {
+    "batching": {
+      "batched_forward_units": 0,
+      "forward_units": 87,
+      "maximum_batch_width": 1,
+      "prefilled_tokens": 84,
+      "profile": "coheryn-qwen35-batch-v1",
+      "scheduler_wait_ms": 1.9079610000000007,
+      "strategy": "continuous-weight-tiled"
+    },
+    "completion_tokens": 4,
+    "decode_ms": 3463.113624,
+    "finish_reason": "length",
+    "first_token_ms": 67444.66304099999,
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 553648128,
+      "peak_session_buffer_capacity_bytes": 29137016,
+      "reserved": 310535832,
+      "session_buffer_capacity_bytes": 0
+    },
+    "output_delivery_ms": 0.010249999999999999,
+    "prefill_ms": 67438.24116100001,
+    "prompt_tokens": 84,
+    "reused_prompt_tokens": 0,
+    "text": "The picture is **",
+    "token_ids": [
+      760,
+      6588,
+      369,
+      2972
+    ],
+    "tokenization_ms": 0.38095799999999996,
+    "vision": {
+      "effective_positions": 28,
+      "images": 1,
+      "language_sha256": "",
+      "peak_request_reserved_bytes": 86911267,
+      "profile": "qwen35-still-cpu-v1",
+      "vision_ms": 20696.22725,
+      "vision_sha256": ""
+    }
+  },
+  "loaded_plan": {
+    "additional_reserved_bytes": 397294592,
+    "admissible": true,
+    "backend": "cpu-reference",
+    "cache_dtype": "f32",
+    "concurrency": 1,
+    "concurrency_limit": 1,
+    "conservative_host_working_set_additional_bytes": 2144177344,
+    "constraint_reserved_bytes": 0,
+    "context": 256,
+    "cpu_gpu_transfer_bytes": 0,
+    "encoded_bytes_upper_bound": 16777216,
+    "gpu_allocation_bytes": 0,
+    "hardware": {
+      "architecture": "aarch64",
+      "cpu_features": [
+        "neon",
+        "fp16"
+      ],
+      "gpu_available_bytes": null,
+      "gpu_backend_qualified": false,
+      "logical_cpus": 8,
+      "observed_unix_ms": 1793322739069,
+      "os": "macos",
+      "ram_available_bytes": 3496083456,
+      "ram_total_bytes": 8589934592,
+      "swap_total_bytes": 2147483648,
+      "swap_used_bytes": 1218707456
+    },
+    "host_allocation_feasible": true,
+    "host_memory_feasible": true,
+    "image_extra_reserved_bytes": 91755520,
+    "image_feature_tokens": 64,
+    "image_stages": {
+      "acquisition_bytes": 16777216,
+      "decoded_bytes": 51400704,
+      "effective_image_positions": 64,
+      "embedding_bytes": 262144,
+      "image_count": 1,
+      "preprocessing_bytes": 51404800,
+      "processor_profile": "qwen35-still-v1",
+      "qualified": true,
+      "vision_workspace_bytes": 31962112
+    },
+    "images": [
+      {
+        "encoder_reserved_bytes": 31962112,
+        "feature_embedding_bytes": 262144,
+        "preprocessor": {
+          "decoder_stage_bytes": 51400704,
+          "grid": [
+            1,
+            16,
+            16
+          ],
+          "height": 256,
+          "image_feature_tokens": 64,
+          "info": {
+            "channels": 4,
+            "encoded_bytes": 16777216,
+            "format": "png",
+            "height": 32,
+            "orientation": 1,
+            "width": 32
+          },
+          "normalization_stage_bytes": 17760256,
+          "output_reserved_bytes": 790528,
+          "patch_features": 1536,
+          "patch_rows": 256,
+          "peak_reserved_bytes": 51404800,
+          "profile": "qwen35-still-v1",
+          "resample_stage_bytes": 17008176,
+          "resized_height": 256,
+          "resized_width": 256,
+          "width": 256
+        }
+      }
+    ],
+    "ingress_reserved_bytes": 251658240,
+    "io_buffer_bytes": 262144,
+    "limitations": [
+      "Validated native CPU still-image profile; exact-file numerical evidence remains separate from structural compatibility",
+      "Dimension-only estimates bound encoded input; exact text/output/physical context is checked at submission without resizing or context reduction",
+      "All processor, encoder, feature, decoder and worker reservations are held before queueing; no image prefix cache",
+      "Resident metadata and host working set are estimates, distinct from observed allocation/RSS; plans hold no reservation"
+    ],
+    "mapped_weight_bytes": 0,
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 322316288,
+      "peak_session_buffer_capacity_bytes": 0,
+      "reserved": 285212672,
+      "session_buffer_capacity_bytes": 0
+    },
+    "model": "q35",
+    "model_metadata_additional": 0,
+    "payload_integrity": "not-rehashed-by-plan",
+    "prefill_chunk_tokens": 1,
+    "profile": "reference",
+    "reasons": [
+      "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+    ],
+    "request_reserved_bytes": 100144128,
+    "required_reserved_bytes": 682507264,
+    "safety_headroom_bytes": 0,
+    "schema_version": 1,
+    "session": {
+      "kv_capacity_bytes": 6291456,
+      "total_bytes": 37103616,
+      "workspace_bytes": 30812160
+    },
+    "session_reserved_bytes": 37103616,
+    "shared_weight_bytes": 1746882752,
+    "source_set_sha256": "495daabf542f604a33e55fc63cb7d1b5ec9d0a8c4d64bb1713634109d7313902",
+    "task": "image-to-text",
+    "temporary_inspection_reserved_bytes": 0,
+    "threads_per_session": 1,
+    "transport_reserved_bytes": 8388608,
+    "warnings": [],
+    "weight_storage": "read-only-buffered"
+  },
+  "managed_cli_plan": {
+    "additional_reserved_bytes": 397294592,
+    "admissible": true,
+    "backend": "cpu-reference",
+    "cache_dtype": "f32",
+    "concurrency": 1,
+    "concurrency_limit": 1,
+    "conservative_host_working_set_additional_bytes": 2144177344,
+    "constraint_reserved_bytes": 0,
+    "context": 256,
+    "cpu_gpu_transfer_bytes": 0,
+    "encoded_bytes_upper_bound": 16777216,
+    "gpu_allocation_bytes": 0,
+    "hardware": {
+      "architecture": "aarch64",
+      "cpu_features": [
+        "neon",
+        "fp16"
+      ],
+      "gpu_available_bytes": null,
+      "gpu_backend_qualified": false,
+      "logical_cpus": 8,
+      "observed_unix_ms": 1793322739094,
+      "os": "macos",
+      "ram_available_bytes": 3496181760,
+      "ram_total_bytes": 8589934592,
+      "swap_total_bytes": 2147483648,
+      "swap_used_bytes": 1218707456
+    },
+    "host_allocation_feasible": true,
+    "host_memory_feasible": true,
+    "image_extra_reserved_bytes": 91755520,
+    "image_feature_tokens": 64,
+    "image_stages": {
+      "acquisition_bytes": 16777216,
+      "decoded_bytes": 51400704,
+      "effective_image_positions": 64,
+      "embedding_bytes": 262144,
+      "image_count": 1,
+      "preprocessing_bytes": 51404800,
+      "processor_profile": "qwen35-still-v1",
+      "qualified": true,
+      "vision_workspace_bytes": 31962112
+    },
+    "images": [
+      {
+        "encoder_reserved_bytes": 31962112,
+        "feature_embedding_bytes": 262144,
+        "preprocessor": {
+          "decoder_stage_bytes": 51400704,
+          "grid": [
+            1,
+            16,
+            16
+          ],
+          "height": 256,
+          "image_feature_tokens": 64,
+          "info": {
+            "channels": 4,
+            "encoded_bytes": 16777216,
+            "format": "png",
+            "height": 32,
+            "orientation": 1,
+            "width": 32
+          },
+          "normalization_stage_bytes": 17760256,
+          "output_reserved_bytes": 790528,
+          "patch_features": 1536,
+          "patch_rows": 256,
+          "peak_reserved_bytes": 51404800,
+          "profile": "qwen35-still-v1",
+          "resample_stage_bytes": 17008176,
+          "resized_height": 256,
+          "resized_width": 256,
+          "width": 256
+        }
+      }
+    ],
+    "ingress_reserved_bytes": 251658240,
+    "io_buffer_bytes": 262144,
+    "limitations": [
+      "Validated native CPU still-image profile; exact-file numerical evidence remains separate from structural compatibility",
+      "Dimension-only estimates bound encoded input; exact text/output/physical context is checked at submission without resizing or context reduction",
+      "All processor, encoder, feature, decoder and worker reservations are held before queueing; no image prefix cache",
+      "Resident metadata and host working set are estimates, distinct from observed allocation/RSS; plans hold no reservation"
+    ],
+    "mapped_weight_bytes": 0,
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 553648128,
+      "peak_session_buffer_capacity_bytes": 0,
+      "reserved": 285212672,
+      "session_buffer_capacity_bytes": 0
+    },
+    "model": "q35",
+    "model_metadata_additional": 0,
+    "payload_integrity": "not-rehashed-by-plan",
+    "prefill_chunk_tokens": 1,
+    "profile": "reference",
+    "reasons": [
+      "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+    ],
+    "request_reserved_bytes": 100144128,
+    "required_reserved_bytes": 682507264,
+    "safety_headroom_bytes": 0,
+    "schema_version": 1,
+    "session": {
+      "kv_capacity_bytes": 6291456,
+      "total_bytes": 37103616,
+      "workspace_bytes": 30812160
+    },
+    "session_reserved_bytes": 37103616,
+    "shared_weight_bytes": 1746882752,
+    "source_set_sha256": "495daabf542f604a33e55fc63cb7d1b5ec9d0a8c4d64bb1713634109d7313902",
+    "task": "image-to-text",
+    "temporary_inspection_reserved_bytes": 0,
+    "threads_per_session": 1,
+    "transport_reserved_bytes": 8388608,
+    "warnings": [],
+    "weight_storage": "read-only-buffered"
+  },
+  "managed_record": {
+    "bytes": 1759840787,
+    "checkpoint": {
+      "adapter": "qwen35-safetensors-cpu-v1",
+      "entrypoint": "model.safetensors.index.json",
+      "files": [
+        {
+          "bytes": 11544,
+          "name": "LICENSE",
+          "sha256": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a"
+        },
+        {
+          "bytes": 7755,
+          "name": "chat_template.jinja",
+          "sha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80"
+        },
+        {
+          "bytes": 2907,
+          "name": "config.json",
+          "sha256": "b90b86f35c8e6925ef74ee04d0e758f0a845c83a42089ad82bbaa948de9b4204"
+        },
+        {
+          "bytes": 1746942600,
+          "name": "model.safetensors-00001-of-00001.safetensors",
+          "sha256": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696"
+        },
+        {
+          "bytes": 50900,
+          "name": "model.safetensors.index.json",
+          "sha256": "d8a08838a613b025eb7952ed9db11696213e57e76a375661ef5c12f9dd5dcf4e"
+        },
+        {
+          "bytes": 390,
+          "name": "preprocessor_config.json",
+          "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516"
+        },
+        {
+          "bytes": 12807982,
+          "name": "tokenizer.json",
+          "sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42"
+        },
+        {
+          "bytes": 16709,
+          "name": "tokenizer_config.json",
+          "sha256": "49e2b6e395f959f077f1e992b338919c0d4a9732fc6e613995e06557f843500c"
+        }
+      ],
+      "schema_version": 1
+    },
+    "id": "q35",
+    "schema_version": 2,
+    "sha256": "495daabf542f604a33e55fc63cb7d1b5ec9d0a8c4d64bb1713634109d7313902",
+    "source": null
+  },
+  "model_manifest_sha256": "63d21bda846639d1967fdb3919c362839dc497961b663759960e3cd5227442b3",
+  "schema_version": 1,
+  "scope": "Pinned native Qwen3.5 source; real authenticated loopback HTTP and empty-PATH release CLI. Shared metadata-only image planning, image chat/SSE, durable no-resend followup, unloaded replay, stateless parity, portable original bytes, cancellation/reset/delete and final store-only reservation. Current host; broader semantic/backend/platform qualification remains open.",
+  "standalone_plan": {
+    "mode": "standalone-metadata",
+    "model_descriptor": {
+      "admission_status": "not-evaluated",
+      "architecture": "qwen3_5",
+      "configuration": {
+        "context": 262144,
+        "conv_kernel": 4,
+        "eos": 248044,
+        "epsilon": 9.999999974752427e-7,
+        "head_dim": 256,
+        "heads": 8,
+        "hidden": 1024,
+        "intermediate": 3584,
+        "key_dim": 128,
+        "kv_heads": 2,
+        "layers": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true
+        ],
+        "linear_key_heads": 16,
+        "linear_value_heads": 16,
+        "rope_base": 10000000.0,
+        "rotary_dim": 64,
+        "tied": true,
+        "value_dim": 128,
+        "vocabulary": 248320
+      },
+      "container_valid": true,
+      "declared_context": 262144,
+      "diagnostics": [],
+      "encodings": {
+        "BF16": 452,
+        "F32": 36
+      },
+      "executable": true,
+      "format": "safetensors",
+      "identity_scope": "container headers, selected index/assets, architecture profile; excludes weight payload bytes; not a model/cache identity",
+      "layout": "indexed",
+      "metadata_identity": "1d2340ded8d07be5439d507901f2da1b6d8108ae162885248d99199c7b08fcb9",
+      "qualification_status": "unqualified-payload-identities-not-verified",
+      "runtime_context_limit": 8192,
+      "schema_version": 1,
+      "source_files": [
+        {
+          "bytes": 7755,
+          "hash_scope": "complete-file",
+          "metadata_sha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+          "name": "chat_template.jinja",
+          "role": "asset"
+        },
+        {
+          "bytes": 2907,
+          "hash_scope": "complete-file",
+          "metadata_sha256": "b90b86f35c8e6925ef74ee04d0e758f0a845c83a42089ad82bbaa948de9b4204",
+          "name": "config.json",
+          "role": "asset"
+        },
+        {
+          "bytes": 390,
+          "hash_scope": "complete-file",
+          "metadata_sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+          "name": "preprocessor_config.json",
+          "role": "asset"
+        },
+        {
+          "bytes": 12807982,
+          "hash_scope": "complete-file",
+          "metadata_sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+          "name": "tokenizer.json",
+          "role": "asset"
+        },
+        {
+          "bytes": 50900,
+          "hash_scope": "complete-file",
+          "metadata_sha256": "d8a08838a613b025eb7952ed9db11696213e57e76a375661ef5c12f9dd5dcf4e",
+          "name": "model.safetensors.index.json",
+          "role": "index"
+        },
+        {
+          "bytes": 1746942600,
+          "hash_scope": "safetensors-header-prefix-and-json",
+          "metadata_sha256": "b30e0e919db8a7d195d077a74673d1075e43bc55aece77656e075d95b5dcdf0d",
+          "name": "model.safetensors-00001-of-00001.safetensors",
+          "role": "weights"
+        }
+      ],
+      "structural_status": "compatible",
+      "task": "text-generation",
+      "tensor_bytes": 1746882752,
+      "tensor_count": 488,
+      "text_adapter": {
+        "adapter": "qwen35-safetensors-cpu-v1",
+        "architecture": "qwen3_5",
+        "continuous_batching": true,
+        "format": "safetensors",
+        "images": true,
+        "managed_api": true,
+        "qualification": "experimental-cpu-text-and-still-image",
+        "text_generation": true
+      },
+      "weight_payloads": "not-scanned"
+    },
+    "plan": {
+      "additional_reserved_bytes": 405683200,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 1,
+      "conservative_host_working_set_additional_bytes": 2152565952,
+      "constraint_reserved_bytes": 0,
+      "context": 256,
+      "cpu_gpu_transfer_bytes": 0,
+      "encoded_bytes_upper_bound": 16777216,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1793322737616,
+        "os": "macos",
+        "ram_available_bytes": 3520872448,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 2147483648,
+        "swap_used_bytes": 1218707456
+      },
+      "host_allocation_feasible": true,
+      "host_memory_feasible": true,
+      "image_extra_reserved_bytes": 91755520,
+      "image_feature_tokens": 64,
+      "image_stages": {
+        "acquisition_bytes": 16777216,
+        "decoded_bytes": 51400704,
+        "effective_image_positions": 64,
+        "embedding_bytes": 262144,
+        "image_count": 1,
+        "preprocessing_bytes": 51404800,
+        "processor_profile": "qwen35-still-v1",
+        "qualified": true,
+        "vision_workspace_bytes": 31962112
+      },
+      "images": [
+        {
+          "encoder_reserved_bytes": 31962112,
+          "feature_embedding_bytes": 262144,
+          "preprocessor": {
+            "decoder_stage_bytes": 51400704,
+            "grid": [
+              1,
+              16,
+              16
+            ],
+            "height": 256,
+            "image_feature_tokens": 64,
+            "info": {
+              "channels": 4,
+              "encoded_bytes": 16777216,
+              "format": "png",
+              "height": 32,
+              "orientation": 1,
+              "width": 32
+            },
+            "normalization_stage_bytes": 17760256,
+            "output_reserved_bytes": 790528,
+            "patch_features": 1536,
+            "patch_rows": 256,
+            "peak_reserved_bytes": 51404800,
+            "profile": "qwen35-still-v1",
+            "resample_stage_bytes": 17008176,
+            "resized_height": 256,
+            "resized_width": 256,
+            "width": 256
+          }
+        }
+      ],
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Validated native CPU still-image profile; exact-file numerical evidence remains separate from structural compatibility",
+        "Dimension-only estimates bound encoded input; exact text/output/physical context is checked at submission without resizing or context reduction",
+        "All processor, encoder, feature, decoder and worker reservations are held before queueing; no image prefix cache",
+        "Resident metadata and host working set are estimates, distinct from observed allocation/RSS; plans hold no reservation"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 1073741824,
+        "peak_reserved": 0,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "local",
+      "model_metadata_additional": 268435456,
+      "prefill_chunk_tokens": 1,
+      "profile": "reference",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 100144128,
+      "required_reserved_bytes": 405683200,
+      "safety_headroom_bytes": 0,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 6291456,
+        "total_bytes": 37103616,
+        "workspace_bytes": 30812160
+      },
+      "session_reserved_bytes": 37103616,
+      "shared_weight_bytes": 1746882752,
+      "task": "image-to-text",
+      "threads_per_session": 1,
+      "warnings": [],
+      "weight_storage": "read-only-buffered"
+    },
+    "schema_version": 1
+  },
+  "test_binary_sha256": "951132e5826d9050521859f4551380ea0dddd8636d04ffe54108c0c1d59b3aa3",
+  "unloaded_plan": {
+    "additional_reserved_bytes": 665730048,
+    "admissible": true,
+    "backend": "cpu-reference",
+    "cache_dtype": "f32",
+    "concurrency": 1,
+    "concurrency_limit": 1,
+    "conservative_host_working_set_additional_bytes": 2412612800,
+    "constraint_reserved_bytes": 0,
+    "context": 256,
+    "cpu_gpu_transfer_bytes": 0,
+    "encoded_bytes_upper_bound": 16777216,
+    "gpu_allocation_bytes": 0,
+    "hardware": {
+      "architecture": "aarch64",
+      "cpu_features": [
+        "neon",
+        "fp16"
+      ],
+      "gpu_available_bytes": null,
+      "gpu_backend_qualified": false,
+      "logical_cpus": 8,
+      "observed_unix_ms": 1793322736946,
+      "os": "macos",
+      "ram_available_bytes": 3534782464,
+      "ram_total_bytes": 8589934592,
+      "swap_total_bytes": 2147483648,
+      "swap_used_bytes": 1218707456
+    },
+    "host_allocation_feasible": true,
+    "host_memory_feasible": true,
+    "image_extra_reserved_bytes": 91755520,
+    "image_feature_tokens": 64,
+    "image_stages": {
+      "acquisition_bytes": 16777216,
+      "decoded_bytes": 51400704,
+      "effective_image_positions": 64,
+      "embedding_bytes": 262144,
+      "image_count": 1,
+      "preprocessing_bytes": 51404800,
+      "processor_profile": "qwen35-still-v1",
+      "qualified": true,
+      "vision_workspace_bytes": 31962112
+    },
+    "images": [
+      {
+        "encoder_reserved_bytes": 31962112,
+        "feature_embedding_bytes": 262144,
+        "preprocessor": {
+          "decoder_stage_bytes": 51400704,
+          "grid": [
+            1,
+            16,
+            16
+          ],
+          "height": 256,
+          "image_feature_tokens": 64,
+          "info": {
+            "channels": 4,
+            "encoded_bytes": 16777216,
+            "format": "png",
+            "height": 32,
+            "orientation": 1,
+            "width": 32
+          },
+          "normalization_stage_bytes": 17760256,
+          "output_reserved_bytes": 790528,
+          "patch_features": 1536,
+          "patch_rows": 256,
+          "peak_reserved_bytes": 51404800,
+          "profile": "qwen35-still-v1",
+          "resample_stage_bytes": 17008176,
+          "resized_height": 256,
+          "resized_width": 256,
+          "width": 256
+        }
+      }
+    ],
+    "ingress_reserved_bytes": 251658240,
+    "io_buffer_bytes": 262144,
+    "limitations": [
+      "Validated native CPU still-image profile; exact-file numerical evidence remains separate from structural compatibility",
+      "Dimension-only estimates bound encoded input; exact text/output/physical context is checked at submission without resizing or context reduction",
+      "All processor, encoder, feature, decoder and worker reservations are held before queueing; no image prefix cache",
+      "Resident metadata and host working set are estimates, distinct from observed allocation/RSS; plans hold no reservation"
+    ],
+    "mapped_weight_bytes": 0,
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 285835264,
+      "peak_session_buffer_capacity_bytes": 0,
+      "reserved": 16777216,
+      "session_buffer_capacity_bytes": 0
+    },
+    "model": "q35",
+    "model_metadata_additional": 268435456,
+    "payload_integrity": "not-rehashed-by-plan",
+    "prefill_chunk_tokens": 1,
+    "profile": "reference",
+    "reasons": [
+      "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+    ],
+    "request_reserved_bytes": 100144128,
+    "required_reserved_bytes": 682507264,
+    "safety_headroom_bytes": 0,
+    "schema_version": 1,
+    "session": {
+      "kv_capacity_bytes": 6291456,
+      "total_bytes": 37103616,
+      "workspace_bytes": 30812160
+    },
+    "session_reserved_bytes": 37103616,
+    "shared_weight_bytes": 1746882752,
+    "source_set_sha256": "495daabf542f604a33e55fc63cb7d1b5ec9d0a8c4d64bb1713634109d7313902",
+    "task": "image-to-text",
+    "temporary_inspection_reserved_bytes": 268435456,
+    "threads_per_session": 1,
+    "transport_reserved_bytes": 8388608,
+    "warnings": [],
+    "weight_storage": "read-only-buffered"
+  }
+}

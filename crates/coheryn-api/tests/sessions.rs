@@ -556,6 +556,7 @@ async fn finite_session_and_history_quotas_reclaim_budget_after_delete_and_expir
         budget.clone(),
     );
     let create = || CreateSession {
+        task: None,
         persist: false,
         model: "chat".into(),
         alias: Some("owned".into()),

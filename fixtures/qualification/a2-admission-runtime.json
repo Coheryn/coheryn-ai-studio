@@ -1,0 +1,682 @@
+{
+  "schema_version": 1,
+  "scope": "Local macOS ARM64 metadata/CLI planning and native smoke; not managed/API, broader format/backend/platform or publisher-framework qualification. No admission reservations held by inspection/planning.",
+  "binary_sha256": "c17a5be50755c5816bb2ee8ecdbc1e44514c4324bdc56fe009c8d28d0dadb6e0",
+  "model_manifest_sha256": "63d21bda846639d1967fdb3919c362839dc497961b663759960e3cd5227442b3",
+  "descriptor": {
+    "schema_version": 1,
+    "format": "safetensors",
+    "layout": "indexed",
+    "architecture": "qwen3_5",
+    "container_valid": true,
+    "structural_status": "compatible",
+    "executable": true,
+    "task": "text-generation",
+    "text_adapter": {
+      "adapter": "qwen35-safetensors-cpu-v1",
+      "architecture": "qwen3_5",
+      "format": "safetensors",
+      "text_generation": true,
+      "images": false,
+      "managed_api": false,
+      "continuous_batching": false,
+      "qualification": "experimental-cpu-text"
+    },
+    "configuration": {
+      "context": 262144,
+      "conv_kernel": 4,
+      "eos": 248044,
+      "epsilon": 9.999999974752427e-07,
+      "head_dim": 256,
+      "heads": 8,
+      "hidden": 1024,
+      "intermediate": 3584,
+      "key_dim": 128,
+      "kv_heads": 2,
+      "layers": [
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true
+      ],
+      "linear_key_heads": 16,
+      "linear_value_heads": 16,
+      "rope_base": 10000000.0,
+      "rotary_dim": 64,
+      "tied": true,
+      "value_dim": 128,
+      "vocabulary": 248320
+    },
+    "declared_context": 262144,
+    "runtime_context_limit": 8192,
+    "tensor_count": 488,
+    "tensor_bytes": 1746882752,
+    "encodings": {
+      "BF16": 452,
+      "F32": 36
+    },
+    "source_files": [
+      {
+        "name": "chat_template.jinja",
+        "role": "asset",
+        "bytes": 7755,
+        "metadata_sha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+        "hash_scope": "complete-file"
+      },
+      {
+        "name": "config.json",
+        "role": "asset",
+        "bytes": 2907,
+        "metadata_sha256": "b90b86f35c8e6925ef74ee04d0e758f0a845c83a42089ad82bbaa948de9b4204",
+        "hash_scope": "complete-file"
+      },
+      {
+        "name": "tokenizer.json",
+        "role": "asset",
+        "bytes": 12807982,
+        "metadata_sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+        "hash_scope": "complete-file"
+      },
+      {
+        "name": "model.safetensors.index.json",
+        "role": "index",
+        "bytes": 50900,
+        "metadata_sha256": "d8a08838a613b025eb7952ed9db11696213e57e76a375661ef5c12f9dd5dcf4e",
+        "hash_scope": "complete-file"
+      },
+      {
+        "name": "model.safetensors-00001-of-00001.safetensors",
+        "role": "weights",
+        "bytes": 1746942600,
+        "metadata_sha256": "b30e0e919db8a7d195d077a74673d1075e43bc55aece77656e075d95b5dcdf0d",
+        "hash_scope": "safetensors-header-prefix-and-json"
+      }
+    ],
+    "metadata_identity": "be690f06ab2d0bb0e6478ef911f4b41e4e5d53d74589e22bbf3631961d4bf9ae",
+    "identity_scope": "container headers, selected index/assets, architecture profile; excludes weight payload bytes; not a model/cache identity",
+    "weight_payloads": "not-scanned",
+    "qualification_status": "unqualified-payload-identities-not-verified",
+    "admission_status": "not-evaluated",
+    "diagnostics": []
+  },
+  "plans": [
+    {
+      "additional_reserved_bytes": 310781952,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 1,
+      "conservative_host_working_set_additional_bytes": 2057664704,
+      "constraint_reserved_bytes": 0,
+      "context": 128,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1793292057793,
+        "os": "macos",
+        "ram_available_bytes": 5179211776,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 0,
+        "swap_used_bytes": 0
+      },
+      "host_allocation_feasible": true,
+      "host_memory_feasible": true,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Development CPU text profile; managed/API execution remains unavailable",
+        "Workspace includes bounded recurrent/convolution state, scratch, and worker allowances",
+        "Resident metadata/tokenizer bytes are an estimate, not observed library allocation/RSS",
+        "Source weight bytes include inactive vision/MTP tensors as an advisory file-cache upper bound; buffered weights are not copied",
+        "Concurrency projects independent sessions; continuous batching and coordinated scheduling remain unavailable",
+        "Plans hold no reservation; execution must atomically reserve the full candidate request including profile headroom"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 805306368,
+        "peak_reserved": 0,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "local",
+      "model_metadata_additional": 268435456,
+      "prefill_chunk_tokens": 1,
+      "profile": "reference",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 310781952,
+      "safety_headroom_bytes": 0,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 3145728,
+        "total_bytes": 33957888,
+        "workspace_bytes": 30812160
+      },
+      "session_reserved_bytes": 33957888,
+      "shared_weight_bytes": 1746882752,
+      "threads_per_session": 1,
+      "warnings": [],
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 313927680,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 1,
+      "conservative_host_working_set_additional_bytes": 2060810432,
+      "constraint_reserved_bytes": 0,
+      "context": 256,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1793292057822,
+        "os": "macos",
+        "ram_available_bytes": 5178785792,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 0,
+        "swap_used_bytes": 0
+      },
+      "host_allocation_feasible": true,
+      "host_memory_feasible": true,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Development CPU text profile; managed/API execution remains unavailable",
+        "Workspace includes bounded recurrent/convolution state, scratch, and worker allowances",
+        "Resident metadata/tokenizer bytes are an estimate, not observed library allocation/RSS",
+        "Source weight bytes include inactive vision/MTP tensors as an advisory file-cache upper bound; buffered weights are not copied",
+        "Concurrency projects independent sessions; continuous batching and coordinated scheduling remain unavailable",
+        "Plans hold no reservation; execution must atomically reserve the full candidate request including profile headroom"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 805306368,
+        "peak_reserved": 0,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "local",
+      "model_metadata_additional": 268435456,
+      "prefill_chunk_tokens": 1,
+      "profile": "reference",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 313927680,
+      "safety_headroom_bytes": 0,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 6291456,
+        "total_bytes": 37103616,
+        "workspace_bytes": 30812160
+      },
+      "session_reserved_bytes": 37103616,
+      "shared_weight_bytes": 1746882752,
+      "threads_per_session": 1,
+      "warnings": [],
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 320219136,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 1,
+      "conservative_host_working_set_additional_bytes": 2067101888,
+      "constraint_reserved_bytes": 0,
+      "context": 512,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1793292057853,
+        "os": "macos",
+        "ram_available_bytes": 5176721408,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 0,
+        "swap_used_bytes": 0
+      },
+      "host_allocation_feasible": true,
+      "host_memory_feasible": true,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Development CPU text profile; managed/API execution remains unavailable",
+        "Workspace includes bounded recurrent/convolution state, scratch, and worker allowances",
+        "Resident metadata/tokenizer bytes are an estimate, not observed library allocation/RSS",
+        "Source weight bytes include inactive vision/MTP tensors as an advisory file-cache upper bound; buffered weights are not copied",
+        "Concurrency projects independent sessions; continuous batching and coordinated scheduling remain unavailable",
+        "Plans hold no reservation; execution must atomically reserve the full candidate request including profile headroom"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 805306368,
+        "peak_reserved": 0,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "local",
+      "model_metadata_additional": 268435456,
+      "prefill_chunk_tokens": 1,
+      "profile": "reference",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 320219136,
+      "safety_headroom_bytes": 0,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 12582912,
+        "total_bytes": 43395072,
+        "workspace_bytes": 30812160
+      },
+      "session_reserved_bytes": 43395072,
+      "shared_weight_bytes": 1746882752,
+      "threads_per_session": 1,
+      "warnings": [],
+      "weight_storage": "read-only-buffered"
+    },
+    {
+      "additional_reserved_bytes": 408299520,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 1,
+      "conservative_host_working_set_additional_bytes": 2155182272,
+      "constraint_reserved_bytes": 0,
+      "context": 4096,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1793292057885,
+        "os": "macos",
+        "ram_available_bytes": 5158010880,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 0,
+        "swap_used_bytes": 0
+      },
+      "host_allocation_feasible": true,
+      "host_memory_feasible": true,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Development CPU text profile; managed/API execution remains unavailable",
+        "Workspace includes bounded recurrent/convolution state, scratch, and worker allowances",
+        "Resident metadata/tokenizer bytes are an estimate, not observed library allocation/RSS",
+        "Source weight bytes include inactive vision/MTP tensors as an advisory file-cache upper bound; buffered weights are not copied",
+        "Concurrency projects independent sessions; continuous batching and coordinated scheduling remain unavailable",
+        "Plans hold no reservation; execution must atomically reserve the full candidate request including profile headroom"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 805306368,
+        "peak_reserved": 0,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "local",
+      "model_metadata_additional": 268435456,
+      "prefill_chunk_tokens": 1,
+      "profile": "reference",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 408299520,
+      "safety_headroom_bytes": 0,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 100663296,
+        "total_bytes": 131475456,
+        "workspace_bytes": 30812160
+      },
+      "session_reserved_bytes": 131475456,
+      "shared_weight_bytes": 1746882752,
+      "threads_per_session": 1,
+      "warnings": [],
+      "weight_storage": "read-only-buffered"
+    }
+  ],
+  "qwen35_generation": {
+    "text": "Hello! How can",
+    "token_ids": [
+      9419,
+      0,
+      2500,
+      628
+    ],
+    "prompt_tokens": 15,
+    "reused_prompt_tokens": 0,
+    "completion_tokens": 4,
+    "finish_reason": "length",
+    "prefill_ms": 12373.575667000001,
+    "tokenization_ms": 1.221458,
+    "decode_ms": 3596.2097500000004,
+    "output_delivery_ms": 0.001625,
+    "first_token_ms": 12375.491791,
+    "memory": {
+      "reserved": 268435456,
+      "peak_reserved": 313927680,
+      "limit": 805306368,
+      "session_buffer_capacity_bytes": 0,
+      "peak_session_buffer_capacity_bytes": 28874872
+    }
+  },
+  "legacy_generation": {
+    "batching": {
+      "profile": "coheryn-cpu-batch-v1",
+      "strategy": "single-sequence",
+      "forward_units": 1,
+      "batched_forward_units": 0,
+      "maximum_batch_width": 1,
+      "prefilled_tokens": 1,
+      "scheduler_wait_ms": 0.0
+    },
+    "sampling_metadata": {
+      "sampling_ms": 0.755666,
+      "profile": "coheryn-sampling-v2",
+      "settings": {
+        "temperature": 0.0,
+        "top_k": 0,
+        "top_p": 1.0,
+        "seed": 0
+      },
+      "penalties": {
+        "repetition_penalty": 1.0,
+        "frequency_penalty": 0.0,
+        "presence_penalty": 0.0
+      },
+      "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+      "tokenizer_fingerprint": "1bdb17cd46489fd1bde410073ce0e405974b88831fcc5d24e2dba8c3a9a0a306",
+      "backend": "native-cpu",
+      "cache_dtype": "f32",
+      "threads": 1,
+      "prefill_chunk_tokens": 1,
+      "engine_version": "0.1.0-dev"
+    },
+    "text": "\n\n",
+    "token_ids": [
+      271
+    ],
+    "prompt_tokens": 1,
+    "reused_prompt_tokens": 0,
+    "completion_tokens": 1,
+    "finish_reason": "length",
+    "prefill_ms": 758.548584,
+    "tokenization_ms": 1.0522909999999999,
+    "decode_ms": 0.763333,
+    "output_delivery_ms": 0.0006670000000000001,
+    "first_token_ms": 760.3829589999999,
+    "memory": {
+      "reserved": 250746368,
+      "peak_reserved": 270171052,
+      "limit": 1073741824,
+      "session_buffer_capacity_bytes": 0,
+      "peak_session_buffer_capacity_bytes": 3059756
+    }
+  },
+  "cases": [
+    {
+      "case": "inspect",
+      "exit": 0,
+      "stdout_sha256": "75be40770360e9cf2fb1b3bff93a257d9981ec9dd10c35f58529ddcca57f4771"
+    },
+    {
+      "case": "explicit-index",
+      "exit": 0,
+      "stdout_sha256": "75be40770360e9cf2fb1b3bff93a257d9981ec9dd10c35f58529ddcca57f4771"
+    },
+    {
+      "case": "relative-single",
+      "exit": 0,
+      "stdout_sha256": "fec2011899f742d3adaf71bf3e9f3453d929b49310b0fd38e497ccc39785b813"
+    },
+    {
+      "case": "validate",
+      "exit": 0,
+      "stdout_sha256": "7ffea331bcee8ea1f9dd7411e5a8af30eb07d8f778e183ba9e0b2fa26a3b827d"
+    },
+    {
+      "case": "deep",
+      "exit": 0,
+      "stdout_sha256": "5a9da785035952f858d947588a7b640d9a4bf96430a43e7d98b5bc977f818df8"
+    },
+    {
+      "case": "plan-128",
+      "exit": 0,
+      "stdout_sha256": "7d5db21954e71325e9aade96c66772fc12ac0beb3b30606c626d7cfbcf8eb1db"
+    },
+    {
+      "case": "plan-256",
+      "exit": 0,
+      "stdout_sha256": "a630568b2912bfae90432e40c41e1b710ad09ddd08f778240c7882c7944292cd"
+    },
+    {
+      "case": "plan-512",
+      "exit": 0,
+      "stdout_sha256": "3f409aef4e4a04cd78b7155ae9eac550d364938a14fc06aa4614f379bb600703"
+    },
+    {
+      "case": "plan-4096",
+      "exit": 0,
+      "stdout_sha256": "6e4c913c0464cf2821d8a5a9e16ebe1e4893423ec244a51d96ac1f1229577980"
+    },
+    {
+      "case": "rejected-memory",
+      "exit": 5,
+      "stdout_sha256": "802e58115bb688de391db4defb8411d141d85b136fd699268da86f62002c4118"
+    },
+    {
+      "case": "rejected-context",
+      "exit": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "unsupported-constraints",
+      "exit": 4,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "qwen35-generation",
+      "exit": 0,
+      "stdout_sha256": "ec5e335b5616ee464e088c84cf4c4d636c73294ec7bedad905a453e30cf86ea5"
+    },
+    {
+      "case": "gguf-inspect",
+      "exit": 0,
+      "stdout_sha256": "23cc53aa2898a8b368dbf36400b8c9bef0e2526c88bb6c271ca73b4a98b1f775"
+    },
+    {
+      "case": "gguf-plan",
+      "exit": 0,
+      "stdout_sha256": "d3d0a9c416e3f17189667e68880036742f25c1f11ffd2590171cfac12531928b"
+    },
+    {
+      "case": "gguf-generation",
+      "exit": 0,
+      "stdout_sha256": "e1bef09d2ed836dca9f347d29dd91b755a955115807dc18cc7ca4ec8fcc52a61"
+    },
+    {
+      "case": "balanced-plan",
+      "exit": 0,
+      "stdout_sha256": "ac45a698992c94aff567eb3a480d83c861e41acddec2b8f22ae219aa3b9beaa6"
+    },
+    {
+      "case": "balanced-generation",
+      "exit": 0,
+      "stdout_sha256": "d00bb522a48fcdf3820e12d0480be392cb13b09e396d2027595ad18724e15402"
+    },
+    {
+      "case": "balanced-reject-without-headroom",
+      "exit": 5,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "environment": "Empty executable search path and no credentials, unreachable endpoint; all commands explicitly local",
+  "runtime_admission": {
+    "balanced_plan": {
+      "additional_reserved_bytes": 319774516,
+      "admissible": true,
+      "backend": "cpu-reference",
+      "cache_dtype": "f32",
+      "concurrency": 1,
+      "concurrency_limit": 1,
+      "conservative_host_working_set_additional_bytes": 2066657268,
+      "constraint_reserved_bytes": 0,
+      "context": 256,
+      "cpu_gpu_transfer_bytes": 0,
+      "gpu_allocation_bytes": 0,
+      "hardware": {
+        "architecture": "aarch64",
+        "cpu_features": [
+          "neon",
+          "fp16"
+        ],
+        "gpu_available_bytes": null,
+        "gpu_backend_qualified": false,
+        "logical_cpus": 8,
+        "observed_unix_ms": 1793292076418,
+        "os": "macos",
+        "ram_available_bytes": 5064310784,
+        "ram_total_bytes": 8589934592,
+        "swap_total_bytes": 0,
+        "swap_used_bytes": 0
+      },
+      "host_allocation_feasible": true,
+      "host_memory_feasible": true,
+      "image_stages": null,
+      "io_buffer_bytes": 262144,
+      "limitations": [
+        "Development CPU text profile; managed/API execution remains unavailable",
+        "Workspace includes bounded recurrent/convolution state, scratch, and worker allowances",
+        "Resident metadata/tokenizer bytes are an estimate, not observed library allocation/RSS",
+        "Source weight bytes include inactive vision/MTP tensors as an advisory file-cache upper bound; buffered weights are not copied",
+        "Concurrency projects independent sessions; continuous batching and coordinated scheduling remain unavailable",
+        "Plans hold no reservation; execution must atomically reserve the full candidate request including profile headroom"
+      ],
+      "mapped_weight_bytes": 0,
+      "memory": {
+        "limit": 805306368,
+        "peak_reserved": 0,
+        "peak_session_buffer_capacity_bytes": 0,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      },
+      "model": "local",
+      "model_metadata_additional": 268435456,
+      "prefill_chunk_tokens": 1,
+      "profile": "balanced",
+      "reasons": [
+        "request fits the atomic engine reservation budget and configured concurrency; context and sampling semantics are preserved"
+      ],
+      "request_reserved_bytes": 8388608,
+      "required_reserved_bytes": 319774516,
+      "safety_headroom_bytes": 4667188,
+      "schema_version": 1,
+      "session": {
+        "kv_capacity_bytes": 6291456,
+        "total_bytes": 38283264,
+        "workspace_bytes": 31991808
+      },
+      "session_reserved_bytes": 38283264,
+      "shared_weight_bytes": 1746882752,
+      "threads_per_session": 2,
+      "warnings": [],
+      "weight_storage": "read-only-buffered"
+    },
+    "balanced_generation": {
+      "text": "Hello! How can",
+      "token_ids": [
+        9419,
+        0,
+        2500,
+        628
+      ],
+      "prompt_tokens": 15,
+      "reused_prompt_tokens": 0,
+      "completion_tokens": 4,
+      "finish_reason": "length",
+      "prefill_ms": 10657.513916999998,
+      "tokenization_ms": 1.0068329999999999,
+      "decode_ms": 2962.11975,
+      "output_delivery_ms": 0.0019160000000000002,
+      "first_token_ms": 10659.210540999999,
+      "memory": {
+        "reserved": 268435456,
+        "peak_reserved": 319774516,
+        "limit": 319774516,
+        "session_buffer_capacity_bytes": 0,
+        "peak_session_buffer_capacity_bytes": 28874872
+      }
+    },
+    "without_headroom_rejected": true,
+    "failure_cleanup": "Separately acquired-model native Rust opt-in covers consumer failure, in-compute cancellation, budget/buffer reclamation and model drop."
+  },
+  "cache_condition": "uncontrolled",
+  "os_rss": null,
+  "observed_session_buffers": "reported by generation separately from conservative reservations"
+}

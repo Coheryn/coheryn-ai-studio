@@ -17,7 +17,9 @@ use std::sync::{
 use tokio::sync::{OwnedSemaphorePermit, Semaphore, mpsc};
 
 mod batching;
+mod compute;
 mod embedding;
+mod qwen35;
 mod vision;
 pub use embedding::{EmbeddingDelivery, EmbeddingHandle};
 
@@ -45,6 +47,8 @@ async fn finalize_turn(
 }
 
 type ExecutionPermits = (Option<OwnedSemaphorePermit>, OwnedSemaphorePermit);
+const TOKEN_EVENT_SLOTS: usize = 16;
+const DELIVERY_CHANNEL_SLOTS: usize = TOKEN_EVENT_SLOTS + 1;
 fn constraint_error(mut error: ApiError, constrained: bool) -> ApiError {
     if constrained {
         let status = match error.error.code {
@@ -73,6 +77,7 @@ pub enum GenerationEvent {
 }
 pub struct GenerationHandle {
     _vision: Option<vision::VisionOwner>,
+    _qwen35: Option<qwen35::TextOwner>,
     receiver: mpsc::Receiver<GenerationEvent>,
     cancel: Cancellation,
 }
@@ -85,6 +90,7 @@ pub(crate) fn protocol_fixture(events: Vec<GenerationEvent>) -> GenerationHandle
     GenerationHandle {
         receiver,
         _vision: None,
+        _qwen35: None,
         cancel: Cancellation::default(),
     }
 }
@@ -171,6 +177,7 @@ impl Counters {
 pub struct Scheduler {
     compute: Arc<Semaphore>,
     batcher: batching::Batcher,
+    hybrid_batcher: batching::Batcher<coheryn_engine::qwen35::Model>,
     sessions: Option<crate::sessions::Sessions>,
     slots: Arc<Semaphore>,
     active: Arc<Semaphore>,
@@ -195,6 +202,11 @@ impl Scheduler {
         let counters = Arc::new(Counters::default());
         let batcher = batching::Batcher::new(compute.clone(), counters.clone(), shutdown.clone());
         Self {
+            hybrid_batcher: batching::Batcher::new(
+                compute.clone(),
+                counters.clone(),
+                shutdown.clone(),
+            ),
             compute,
             batcher,
             sessions: None,
@@ -259,7 +271,13 @@ impl Scheduler {
     ) -> Result<GenerationHandle> {
         let managed_overhead = turn.as_ref().map_or(0, |t| t.reserved_bytes());
         let managed = turn.is_some();
-        let mut cache = turn.as_mut().and_then(|t| t.cache.take());
+        let mut cache = turn
+            .as_mut()
+            .and_then(|t| t.cache.take())
+            .and_then(|c| match c {
+                crate::sessions::TextCache::Gguf(c) => Some(c),
+                _ => None,
+            });
         let mut admit = || -> Result<_> {
             request.validate()?;
             let constraint_bytes = if request.options().response_format.enabled() {
@@ -421,7 +439,7 @@ impl Scheduler {
         };
         // Sixteen token events plus a reserved terminal slot.
         let constrained = request.options().response_format.enabled();
-        let (sender, receiver) = mpsc::channel(17);
+        let (sender, receiver) = mpsc::channel(DELIVERY_CHANNEL_SLOTS);
         let timeout_seconds = request
             .timeout_seconds
             .unwrap_or(self.config.generation_timeout_seconds)
@@ -586,7 +604,7 @@ impl Scheduler {
             let result = result.map(|r| {
                 r.map(|(result, cache)| {
                     if let Some(turn) = &mut turn {
-                        turn.cache = cache;
+                        turn.cache = cache.map(crate::sessions::TextCache::Gguf);
                     }
                     result
                 })
@@ -632,6 +650,7 @@ impl Scheduler {
             receiver,
             cancel,
             _vision: None,
+            _qwen35: None,
         })
     }
     pub async fn drained(&self) {

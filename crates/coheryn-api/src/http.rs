@@ -38,6 +38,7 @@ pub fn router(service: Arc<Service>) -> Router {
         .route("/api/v1/models", get(models))
         .route("/api/v1/models/validate", post(validate_model))
         .route("/api/v1/models/import", post(import_model))
+        .route("/api/v1/models/import-checkpoint", post(import_checkpoint))
         .route("/api/v1/models/pull", post(pull))
         .route("/api/v1/models/load", post(load))
         .route("/api/v1/models/register-pair", post(register_pair))
@@ -373,6 +374,48 @@ async fn import_model(State(s): State<Arc<Service>>, request: Request) -> Result
     .map_err(|_| ApiError::bad("model import timeout"))??;
     Ok(Json(json!(result)))
 }
+async fn import_checkpoint(State(s): State<Arc<Service>>, request: Request) -> Result<Json<Value>> {
+    let query: Query<ImportQuery> =
+        Query::try_from_uri(request.uri()).map_err(|e| ApiError::bad(e.to_string()))?;
+    if request
+        .headers()
+        .get(header::CONTENT_TYPE)
+        .and_then(|v| v.to_str().ok())
+        != Some("application/vnd.coheryn.checkpoint.v1")
+    {
+        return Err(ApiError::new(
+            StatusCode::UNSUPPORTED_MEDIA_TYPE,
+            ErrorCode::InvalidRequest,
+            "checkpoint import requires application/vnd.coheryn.checkpoint.v1",
+        ));
+    }
+    if request
+        .headers()
+        .get(header::CONTENT_LENGTH)
+        .and_then(|v| v.to_str().ok())
+        .and_then(|v| v.parse::<u64>().ok())
+        .is_some_and(|n| {
+            n > s
+                .registry
+                .max_model_bytes
+                .saturating_add(crate::checkpoint::MANIFEST_LIMIT as u64 + 16)
+        })
+    {
+        return Err(Error::resource("checkpoint transport exceeds maximum model size").into());
+    }
+    let _admin = s.admin.lock().await;
+    let result = tokio::time::timeout(
+        Duration::from_secs(600),
+        s.ingest_checkpoint(
+            query.0.name,
+            query.0.sha256,
+            request.into_body().into_data_stream(),
+        ),
+    )
+    .await
+    .map_err(|_| ApiError::bad("checkpoint import timeout"))??;
+    Ok(Json(json!(result)))
+}
 async fn pull(State(s): State<Arc<Service>>, request: Request) -> Result<Json<Value>> {
     let body: PullRequest = json_body(request).await?;
     crate::registry::validate_hash(&body.sha256)?;
@@ -410,8 +453,14 @@ enum Flavor {
     Native,
 }
 async fn completions(State(s): State<Arc<Service>>, request: Request) -> Result<Response> {
-    let _ingress = s.budget.reserve(coheryn_engine::planner::REQUEST_BYTES)?;
-    generation(s, json_body(request).await?, Flavor::Completion).await
+    let ingress = s.budget.reserve(coheryn_engine::planner::REQUEST_BYTES)?;
+    generation(
+        s,
+        json_body(request).await?,
+        Flavor::Completion,
+        Some(ingress),
+    )
+    .await
 }
 async fn chat(State(s): State<Arc<Service>>, request: Request) -> Result<Response> {
     chat_or_native(s, request, Flavor::Chat).await
@@ -429,7 +478,12 @@ async fn chat_or_native(s: Arc<Service>, request: Request, flavor: Flavor) -> Re
     let vision = s.is_vision(&model).unwrap_or(false);
     if vision || crate::vision::has_parts(&value) {
         let request = crate::vision::VisionRequest::from_value(value)?;
-        let engine = s.vision(&model)?; // Reject unsupported models before any image acquisition.
+        let hybrid = s.hybrid_vision(&model)?;
+        let engine = if hybrid.is_none() {
+            Some(s.vision(&model)?)
+        } else {
+            None
+        }; // Reject before image acquisition.
         ingress.extend(s.config.vision.images.max_total_encoded_bytes)?;
         let streaming = request.controls.stream;
         let include_usage = request
@@ -441,14 +495,32 @@ async fn chat_or_native(s: Arc<Service>, request: Request, flavor: Flavor) -> Re
             .with_timeout(request.controls.timeout_seconds)?;
         let (controls, messages, images) = tokio::time::timeout(
             Duration::from_secs(s.config.vision.acquisition_timeout_seconds),
-            request.acquire(&s.config.vision, &cancel),
+            request.acquire_with_processor(
+                &s.config.vision,
+                &cancel,
+                if hybrid.is_some() {
+                    coheryn_engine::multimodal::image::Processor::Qwen35Still
+                } else {
+                    coheryn_engine::multimodal::image::Processor::Qwen2VlStill
+                },
+            ),
         )
         .await
         .map_err(|_| ApiError::bad("image request acquisition timeout"))??;
-        let handle = s
-            .scheduler
-            .submit_vision(engine, controls, messages, images, ingress)
-            .await?;
+        let handle = if let Some(hybrid) = hybrid {
+            s.scheduler
+                .submit_qwen35_images(hybrid, controls, messages, images, ingress)?
+        } else {
+            s.scheduler
+                .submit_vision(
+                    engine.expect("vision component"),
+                    controls,
+                    messages,
+                    images,
+                    ingress,
+                )
+                .await?
+        };
         generation_response(handle, model, streaming, include_usage, false, flavor).await
     } else {
         // Preserve the ordinary text request ceiling even though this endpoint accepts images.
@@ -457,7 +529,7 @@ async fn chat_or_native(s: Arc<Service>, request: Request, flavor: Flavor) -> Re
         }
         let request = serde_json::from_value(value)
             .map_err(|e| ApiError::bad(format!("invalid request JSON: {e}")))?;
-        generation(s, request, flavor).await
+        generation(s, request, flavor, Some(ingress)).await
     }
 }
 #[derive(serde::Deserialize)]
@@ -511,7 +583,7 @@ fn response_value(
         json!([{"index":0,"text":result.text,"logprobs":null,"finish_reason":reason(result.finish_reason)}])
     };
     let mut response = json!({"id":id,"object":if flavor==Flavor::Chat{"chat.completion"}else{"text_completion"},"created":created,"model":model,"choices":choices,"usage":usage(&result)});
-    response["coheryn"] = json!({"vision":result.vision,"sampling_profile":if result.vision.is_some(){None}else{Some(coheryn_engine::sampling::PROFILE)},"sampling":result.sampling_metadata,"constraint_validation":result.constraint_validation,"batching":result.batching});
+    response["coheryn"] = json!({"vision":result.vision,"sampling_profile":result.sampling_metadata.as_ref().map(|_|coheryn_engine::sampling::PROFILE),"sampling":result.sampling_metadata,"constraint_validation":result.constraint_validation,"batching":result.batching});
     response
 }
 fn chunk(flavor: Flavor, id: &str, model: &str, created: u64, choices: Value) -> Value {
@@ -524,6 +596,7 @@ async fn generation(
     s: Arc<Service>,
     request: GenerationRequest,
     flavor: Flavor,
+    mut ingress: Option<coheryn_engine::memory::Reservation>,
 ) -> Result<Response> {
     request.validate()?;
     if (flavor == Flavor::Completion && request.messages.is_some())
@@ -548,7 +621,7 @@ async fn generation(
         .stream_options
         .as_ref()
         .is_some_and(|v| v.include_usage);
-    let handle = s.scheduler.submit(s.model(&model)?, request)?;
+    let handle = s.submit_generation(request, &mut ingress)?;
     generation_response(handle, model, streaming, include_usage, tool_mode, flavor).await
 }
 async fn generation_response(
@@ -696,7 +769,7 @@ fn sse_stream(
                             state.created,
                             choices,
                         );
-                        finish["coheryn"] = json!({"vision":result.vision,"sampling_profile":if result.vision.is_some(){None}else{Some(coheryn_engine::sampling::PROFILE)},"sampling":result.sampling_metadata,"constraint_validation":result.constraint_validation,"batching":result.batching});
+                        finish["coheryn"] = json!({"vision":result.vision,"sampling_profile":result.sampling_metadata.as_ref().map(|_|coheryn_engine::sampling::PROFILE),"sampling":result.sampling_metadata,"constraint_validation":result.constraint_validation,"batching":result.batching});
                         if state.include_usage {
                             let mut u = chunk(
                                 state.flavor,

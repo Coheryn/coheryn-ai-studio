@@ -2,8 +2,8 @@
   "schema_version": 1,
   "scope": "Conservative all-feature/all-target workspace and fuzz graph; includes build/test dependencies. SPDX expressions are retained verbatim, not rewritten as blanket permission.",
   "lockfiles": {
-    "Cargo.lock": "5756078adb7ea7b7f36c8753a29606a62230246017f51d79fdc3f9fa1f968d85",
-    "fuzz/Cargo.lock": "fc6b0cd244a3a3958470d73c4bc6ad6fbc5dbcddf008034e7fac0b776f82911c"
+    "Cargo.lock": "83d8bc511536f9a5aa1ae7865ba6e6dc51fff1a9b107dcaac564a5281f7a66c8",
+    "fuzz/Cargo.lock": "6749db7a7763be0837acd8b5036a2e971b94b93bed89e25a3c8481cfd59d55ba"
   },
   "packages": [
     {
@@ -2923,9 +2923,9 @@
     },
     {
       "name": "minijinja",
-      "version": "3.0.4",
+      "version": "3.0.5",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
-      "package_checksum": "f384a3e3726ee69716c351e921b72138104afd1e5362561733c8a656fc8c6a9a",
+      "package_checksum": "00f5a04892e86ddb4fc254e9160835370b63a0d44042d3ab4725bc2dbcbab136",
       "license": "Apache-2.0",
       "authors": [
         "Armin Ronacher <armin.ronacher@active-4.com>"
@@ -4119,9 +4119,9 @@
     },
     {
       "name": "rusqlite",
-      "version": "0.41.0",
+      "version": "0.41.1",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
-      "package_checksum": "9c026b4444579e8d754556c6c75d040d69c4a44283cdb648ab8a8d5965c2cfa8",
+      "package_checksum": "da9bba6f3506135e120a6586df05be18b48d18896600646a4bec8f993d91a594",
       "license": "MIT",
       "authors": [
         "The rusqlite developers"
@@ -5056,9 +5056,9 @@
     },
     {
       "name": "sysinfo",
-      "version": "0.39.6",
+      "version": "0.40.0",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
-      "package_checksum": "d2071df9448915b71c4fe6d25deaf1c22f12bd234f01540b77312bb8e41361e6",
+      "package_checksum": "110e37d98880fd804cd47509b90a8444f7aaaab655ae625e83cd442a8bc2ebf2",
       "license": "MIT",
       "authors": [
         "Guillaume Gomez <guillaume1.gomez@gmail.com>"

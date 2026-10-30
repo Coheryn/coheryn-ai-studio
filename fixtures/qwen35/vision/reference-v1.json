@@ -1,0 +1,1353 @@
+{
+  "schema_version": 1,
+  "contract_sha256": "a242855e3715c17155a81be5f401ae58c53a8c8e78b551033ee67a00cde45e23",
+  "script_sha256": "8c364c36063ea20665111b862d93176676b6cdb3335ca1c5ba6ade6eabbf8b76",
+  "model_manifest_sha256": "63d21bda846639d1967fdb3919c362839dc497961b663759960e3cd5227442b3",
+  "profile": "Independent array equations, F32 activations/products, wide reductions, BF16 weights; not publisher framework parity",
+  "numpy": "2.5.4",
+  "encoder_checkpoints": [
+    {
+      "name": "red-patches",
+      "shape": [
+        256,
+        1536
+      ],
+      "sha256": "e6ce79140a5d45a5fda806e2e1d555f1db4d3b66dabb828325079455fa5281a7",
+      "bytes": 1572864
+    },
+    {
+      "name": "red-embedding",
+      "shape": [
+        256,
+        768
+      ],
+      "sha256": "affc1b3d9b3b76b01b805b685ffd87263b178a9b5aeead64761099df16d41646",
+      "bytes": 786432
+    },
+    {
+      "name": "red-layer.0",
+      "shape": [
+        256,
+        768
+      ],
+      "sha256": "2e2428bced94956642b6547c599efa813168ce537a2e2f3542b79e5fcfed405c",
+      "bytes": 786432
+    },
+    {
+      "name": "red-layer.1",
+      "shape": [
+        256,
+        768
+      ],
+      "sha256": "f89013d528d93c6850724d7fd04670e003892a89a4f66b813fdae329000f42b5",
+      "bytes": 786432
+    },
+    {
+      "name": "red-layer.2",
+      "shape": [
+        256,
+        768
+      ],
+      "sha256": "3e4246c3d2bb12d11fac3895ffe1e2706dd802721709775ba646e33404a74f5d",
+      "bytes": 786432
+    },
+    {
+      "name": "red-layer.3",
+      "shape": [
+        256,
+        768
+      ],
+      "sha256": "c149a50d580c18a7cb570fd8a4ce60db66e81baa676e301adbda36edbf3501b3",
+      "bytes": 786432
+    },
+    {
+      "name": "red-layer.4",
+      "shape": [
+        256,
+        768
+      ],
+      "sha256": "7be74b03ee5a166f546014731f72d1d9f7e508a2fa2dae827148bceb4f08e5ca",
+      "bytes": 786432
+    },
+    {
+      "name": "red-layer.5",
+      "shape": [
+        256,
+        768
+      ],
+      "sha256": "7c20ff331fbbf6705790ab6a6100dcf57f9b66a37c8c17f534cc5c64188f189a",
+      "bytes": 786432
+    },
+    {
+      "name": "red-layer.6",
+      "shape": [
+        256,
+        768
+      ],
+      "sha256": "bca00490defb21a4406521a0db4a71a745ae713dd11cdce557b0dc5159ae7201",
+      "bytes": 786432
+    },
+    {
+      "name": "red-layer.7",
+      "shape": [
+        256,
+        768
+      ],
+      "sha256": "c03d7498e150ba519fb0fa2a55d9f12f166383e4182cc61b9cd00b5858e85c49",
+      "bytes": 786432
+    },
+    {
+      "name": "red-layer.8",
+      "shape": [
+        256,
+        768
+      ],
+      "sha256": "0bd32e9795903c3b24251f5c0453f5406a858b8001d4135861a241987f7ee4c9",
+      "bytes": 786432
+    },
+    {
+      "name": "red-layer.9",
+      "shape": [
+        256,
+        768
+      ],
+      "sha256": "0b8fac5b71aea5c7c6f70e57615eb164211a1354236f67622019737d701f50be",
+      "bytes": 786432
+    },
+    {
+      "name": "red-layer.10",
+      "shape": [
+        256,
+        768
+      ],
+      "sha256": "8efd167f7649395117b360dbe3438cb49153ae4c58d25f6d802abca73b194f34",
+      "bytes": 786432
+    },
+    {
+      "name": "red-layer.11",
+      "shape": [
+        256,
+        768
+      ],
+      "sha256": "6dc6d3dfcfd2afa87d0cfe9fac4783df88a7cea024caf7c739371707dc6fe8a3",
+      "bytes": 786432
+    },
+    {
+      "name": "red-merged",
+      "shape": [
+        64,
+        1024
+      ],
+      "sha256": "0c20fd2a38883630f7c381585a38628ee332a83192c57cb6c509147af060e9db",
+      "bytes": 262144
+    },
+    {
+      "name": "blue-patches",
+      "shape": [
+        288,
+        1536
+      ],
+      "sha256": "5ca47426c8c6ae336d136bd922111163c698e7d6a7c56effff269f18a262b1dd",
+      "bytes": 1769472
+    },
+    {
+      "name": "blue-embedding",
+      "shape": [
+        288,
+        768
+      ],
+      "sha256": "1132b1078e468ea4b6cdeedfb6896f0ed267a5ddfae384ec317d7e19d449fd8d",
+      "bytes": 884736
+    },
+    {
+      "name": "blue-layer.0",
+      "shape": [
+        288,
+        768
+      ],
+      "sha256": "ac3ec8f735c1e5acfeda2cdbddb56d6d27b72adc279509363e1afe4e6163dee9",
+      "bytes": 884736
+    },
+    {
+      "name": "blue-layer.1",
+      "shape": [
+        288,
+        768
+      ],
+      "sha256": "2da99669c2e1c20ba00bd5ba478d07df9587c49c451219eb0aad3ea7d5161100",
+      "bytes": 884736
+    },
+    {
+      "name": "blue-layer.2",
+      "shape": [
+        288,
+        768
+      ],
+      "sha256": "3b901279eb24a5487c2f581f24a6724b4bb5fde2b6c084860b1ccab40f5f6d62",
+      "bytes": 884736
+    },
+    {
+      "name": "blue-layer.3",
+      "shape": [
+        288,
+        768
+      ],
+      "sha256": "2a5bd19169bd79e302c1517c88fda17ef65075ddc98191e2ab243ad4cb51805d",
+      "bytes": 884736
+    },
+    {
+      "name": "blue-layer.4",
+      "shape": [
+        288,
+        768
+      ],
+      "sha256": "e3a3ff6a59b985b80e3f3764e78a602f502a7c261eb6986ceae09b28676a0361",
+      "bytes": 884736
+    },
+    {
+      "name": "blue-layer.5",
+      "shape": [
+        288,
+        768
+      ],
+      "sha256": "0cdf5969505b3ecc54231302690cbca80e74ea61f2dae43ae0efe6586b46aea5",
+      "bytes": 884736
+    },
+    {
+      "name": "blue-layer.6",
+      "shape": [
+        288,
+        768
+      ],
+      "sha256": "26aa8d5f8af177f6ddd137292c6750fc5a83055af208085133acc5407db0ac88",
+      "bytes": 884736
+    },
+    {
+      "name": "blue-layer.7",
+      "shape": [
+        288,
+        768
+      ],
+      "sha256": "f6e8008d3cc31cecd2bd3159531d98da91e69403664093a32019dfe27687787d",
+      "bytes": 884736
+    },
+    {
+      "name": "blue-layer.8",
+      "shape": [
+        288,
+        768
+      ],
+      "sha256": "84b744ce1bc179d566dc9b74c93a93d88c6be3a8d0ebae8482790efd792e9d17",
+      "bytes": 884736
+    },
+    {
+      "name": "blue-layer.9",
+      "shape": [
+        288,
+        768
+      ],
+      "sha256": "dea0e05813465459ec9ac789b65f72d9af781be1a99c6bd22e6643c3becc7d6d",
+      "bytes": 884736
+    },
+    {
+      "name": "blue-layer.10",
+      "shape": [
+        288,
+        768
+      ],
+      "sha256": "092c9c831dfe41ec6cbb7a8a74dc32798bda2db4e3e1e9671930c2a740d5d6bd",
+      "bytes": 884736
+    },
+    {
+      "name": "blue-layer.11",
+      "shape": [
+        288,
+        768
+      ],
+      "sha256": "3aae185c77a43df55fe3b92de74b3aa1b04f01e235238e17b990cbb219b13531",
+      "bytes": 884736
+    },
+    {
+      "name": "blue-merged",
+      "shape": [
+        72,
+        1024
+      ],
+      "sha256": "3dd11301fd78881ef177109bb50f83edff44306807426d6694ebfa877315fdd8",
+      "bytes": 294912
+    }
+  ],
+  "cases": [
+    {
+      "id": "red-question",
+      "images": [
+        "red"
+      ],
+      "text": "What color is the picture?",
+      "prompt": "<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|>What color is the picture?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "prompt_token_ids": [
+        248045,
+        846,
+        198,
+        248053,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248054,
+        3710,
+        1829,
+        369,
+        279,
+        6588,
+        30,
+        248046,
+        198,
+        248045,
+        74455,
+        198,
+        248068,
+        271,
+        248069,
+        271
+      ],
+      "checkpoints": [
+        {
+          "name": "red-question-language.0",
+          "shape": [
+            1024
+          ],
+          "sha256": "f76788848cf1dec28cac613059385af5ab4ecc9f41988a942ea4f9e383645e15",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.1",
+          "shape": [
+            1024
+          ],
+          "sha256": "a4c7386027caf9ec2bdf0395dac5f74c93b250ea7fd7e6ba4d65825003528476",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.2",
+          "shape": [
+            1024
+          ],
+          "sha256": "342aac46370d7139c0bfe62b92717fd2df183db3f515fa2bdff5a614d41ba896",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.3",
+          "shape": [
+            1024
+          ],
+          "sha256": "4ce05da92d52bbd8dbfc71d79c01b677e081dc5d119a35016a94d2e2d7f5cc4c",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.4",
+          "shape": [
+            1024
+          ],
+          "sha256": "a9ab42d0ab894f7f437998a0a55620e659d149c12c4c5687ec715c93b76cbc07",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.5",
+          "shape": [
+            1024
+          ],
+          "sha256": "359e3598040f078dc85e4311cd4b11f7394e48200526f3e2f37fc27f2807a747",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.6",
+          "shape": [
+            1024
+          ],
+          "sha256": "6166f32cdb3dc8d48a86a74f7c92f8c4c5a5ed2db5644d47ba2adde31fcb32ab",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.7",
+          "shape": [
+            1024
+          ],
+          "sha256": "86aca07d486c7bebb170c314735f37cf117428e73d5aa06e2d24d8d0854e463a",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.8",
+          "shape": [
+            1024
+          ],
+          "sha256": "f41448f66786e3754d3279213bf3cb0dda3d7167497f96d68a0e3579654c34be",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.9",
+          "shape": [
+            1024
+          ],
+          "sha256": "94beaff08a4baa090a0a54ca0b4bfd01f24a09ec6acebe902dde15918297ca28",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.10",
+          "shape": [
+            1024
+          ],
+          "sha256": "1845a8c4443f8441fea5cc7f70c29d97231315275e836af55f29bfc7e48c732c",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.11",
+          "shape": [
+            1024
+          ],
+          "sha256": "31c3957b6599978a69310e07113e160ca05b0fda2036d4ec80f415af993e6ca4",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.12",
+          "shape": [
+            1024
+          ],
+          "sha256": "735ff6adcf31eeaa0843e454b4cab5194bbacd0479346b21abcab9be66a8b719",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.13",
+          "shape": [
+            1024
+          ],
+          "sha256": "ffe117bb7786b48fb2bbcbc13bdce9381cb540bfd18ae5045dace8b6724b970b",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.14",
+          "shape": [
+            1024
+          ],
+          "sha256": "83317435000d97968705f4f6e6685dc4bd305504c7ca92c9ffee55f0c2b0f6c6",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.15",
+          "shape": [
+            1024
+          ],
+          "sha256": "32277c96ad60caabd2235cd5791c5d2221f84d59b050aaec4808e6412a342482",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.16",
+          "shape": [
+            1024
+          ],
+          "sha256": "cf167b9a4dded23d8a503f781592ad8c3ab7b28abb660e5ae10c45354b35993c",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.17",
+          "shape": [
+            1024
+          ],
+          "sha256": "fb39cffa3e1f24a03921b6d3a24a62b5d4f712ad68ac46369a02c82db8bb49ab",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.18",
+          "shape": [
+            1024
+          ],
+          "sha256": "0cc8977ed5aa2152b11289e19b9a025112a8910a2c0f55aa60fa319ce0f320c5",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.19",
+          "shape": [
+            1024
+          ],
+          "sha256": "32d886d3adb64792ad1335deb0a9235ae8068acc816723064229d6d2ffc6a435",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.20",
+          "shape": [
+            1024
+          ],
+          "sha256": "23ac4f8ea894148eb3b37863b4d83399f86ac08ef1e518ebf3890c4d7e6d5e49",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.21",
+          "shape": [
+            1024
+          ],
+          "sha256": "3caaa6a4fe0a0a458e1db77fc7937ce4c81faef1286fb98c593faf9f01065190",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.22",
+          "shape": [
+            1024
+          ],
+          "sha256": "0586970087d3eec8924056b830d79045a68c449895fc1d3ae09e26b5edc2e010",
+          "bytes": 4096
+        },
+        {
+          "name": "red-question-language.23",
+          "shape": [
+            1024
+          ],
+          "sha256": "a3862b2139b25836093b64fd567898114c1eccc52aa85cce680fb0d6b15aeace",
+          "bytes": 4096
+        }
+      ],
+      "teacher_forced": [
+        {
+          "name": "red-question-logits.0",
+          "shape": [
+            248320
+          ],
+          "sha256": "ece1f0c389b5fac951b7f5825c3dba1a66f47ea3328db51d8977a5dafd084c28",
+          "bytes": 993280
+        },
+        {
+          "name": "red-question-logits.1",
+          "shape": [
+            248320
+          ],
+          "sha256": "61a506daa1f9941879b2f6db72100c2864485259014aa05947d585bc3d618570",
+          "bytes": 993280
+        },
+        {
+          "name": "red-question-logits.2",
+          "shape": [
+            248320
+          ],
+          "sha256": "a423d89633f5451a6f76eed9258fd1b5d5543a286136a3dd3c613c4df3be98b1",
+          "bytes": 993280
+        },
+        {
+          "name": "red-question-logits.3",
+          "shape": [
+            248320
+          ],
+          "sha256": "71f5bea1658fa648002f4f4c12b44909d0283b2eab56045914e48b86f2909aef",
+          "bytes": 993280
+        }
+      ],
+      "greedy_token_ids": [
+        760,
+        6588,
+        369,
+        2972
+      ],
+      "greedy_text": "The picture is **"
+    },
+    {
+      "id": "blue-question",
+      "images": [
+        "blue"
+      ],
+      "text": "What color is the picture?",
+      "prompt": "<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|>What color is the picture?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "prompt_token_ids": [
+        248045,
+        846,
+        198,
+        248053,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248054,
+        3710,
+        1829,
+        369,
+        279,
+        6588,
+        30,
+        248046,
+        198,
+        248045,
+        74455,
+        198,
+        248068,
+        271,
+        248069,
+        271
+      ],
+      "checkpoints": [
+        {
+          "name": "blue-question-language.0",
+          "shape": [
+            1024
+          ],
+          "sha256": "757b004cb06e014664763dbfdf04440382210aca6eb6877b562e3e8943f934a5",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.1",
+          "shape": [
+            1024
+          ],
+          "sha256": "e0955abaf3442084d05621aa279e55fa7343fa69be5089b71b6acb052e4f2a42",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.2",
+          "shape": [
+            1024
+          ],
+          "sha256": "d91134583795d1c8b0dc21e66cc132369a21631a2b650a1c4c03e7860b502449",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.3",
+          "shape": [
+            1024
+          ],
+          "sha256": "d676f843b3f338f37c588bc911ca5d1572165cb95a36a42ab5094576c330b351",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.4",
+          "shape": [
+            1024
+          ],
+          "sha256": "3b9a23a76a4326ba2286eb01e02c1757d074f01276fb0db8c61fca534602814e",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.5",
+          "shape": [
+            1024
+          ],
+          "sha256": "52b23b572df48e6c9523afd1e316181e1afa52c5cfe92bd4da238adb64a55570",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.6",
+          "shape": [
+            1024
+          ],
+          "sha256": "4880d6e862928a8ab99d6964f8d862dcdc9c083f9e7ea3a3d1711a9e3853c772",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.7",
+          "shape": [
+            1024
+          ],
+          "sha256": "b7d6885bdd7506cb6a889105d3599b08bf613b73f0314137d9b089f9a4864295",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.8",
+          "shape": [
+            1024
+          ],
+          "sha256": "f178860c20abc6cb4a332cb0c04192ce6f93c2b527da6d702dc463e27226b0f6",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.9",
+          "shape": [
+            1024
+          ],
+          "sha256": "948a0184340ca3c0bec61e595dc5947ac55e1a0d8464f08f73cbf9dfd2ead4c0",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.10",
+          "shape": [
+            1024
+          ],
+          "sha256": "4c1b19a36f90106e365bb7c0e0650c044253c92e1906b99b55b590ece70f0f28",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.11",
+          "shape": [
+            1024
+          ],
+          "sha256": "61b0082a0bb9017c9f5371b9a0714283889268ade237d4adb7b5c84090d013e5",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.12",
+          "shape": [
+            1024
+          ],
+          "sha256": "54e8de9b0ec394a955434db580279faa13477f16e26b27f6d44412e13b728444",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.13",
+          "shape": [
+            1024
+          ],
+          "sha256": "3e65e3c732999aadef01d797cc2f1704836c5a002aacb891e7f48d358d0dc8eb",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.14",
+          "shape": [
+            1024
+          ],
+          "sha256": "c1135336a44bfdabc3f30a1e84a47b53b91e021df937632aad27d4048201d75c",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.15",
+          "shape": [
+            1024
+          ],
+          "sha256": "842ba5cb8df22bd5ffd12b0741cc536de95f75177cb96c88210ca09e59f05386",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.16",
+          "shape": [
+            1024
+          ],
+          "sha256": "10be8537abdcf9f19860dbe9c9e941435f3612ad949d226fe71e0854634bfd4b",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.17",
+          "shape": [
+            1024
+          ],
+          "sha256": "9d17c090fdd162f4665a48d716b5d6f8d68d007662d6d880c933c1fe26e70144",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.18",
+          "shape": [
+            1024
+          ],
+          "sha256": "01b24bd4aceadec5022c64ca5a71e6e7db2354e191e4d3bd3a9215a069ce7d7c",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.19",
+          "shape": [
+            1024
+          ],
+          "sha256": "49e463e29b6e3f4e1bf7018508a8efa9f1787f3cf97e86e5869fdf7503a80c7a",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.20",
+          "shape": [
+            1024
+          ],
+          "sha256": "4e58f182da7ce88544368ba19c68853ebe8d683e0c7caf1a45fc65322215471c",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.21",
+          "shape": [
+            1024
+          ],
+          "sha256": "eb774bcf12f69460323dd3793590aacde86cef06d783e0837014909f4b62e833",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.22",
+          "shape": [
+            1024
+          ],
+          "sha256": "0fe575d16d2c7f85f9fac30f659e7deb57e9277dd3dbbd49e198a94d27024e85",
+          "bytes": 4096
+        },
+        {
+          "name": "blue-question-language.23",
+          "shape": [
+            1024
+          ],
+          "sha256": "73e9116caed7841f99e1744ff34ade6eb7aff802b09c81f833db043e8ff818a2",
+          "bytes": 4096
+        }
+      ],
+      "teacher_forced": [
+        {
+          "name": "blue-question-logits.0",
+          "shape": [
+            248320
+          ],
+          "sha256": "ff0d33998bd2ab8a267a8e0f7c179b47524015b237eea92ab65ee4b91be8cb19",
+          "bytes": 993280
+        },
+        {
+          "name": "blue-question-logits.1",
+          "shape": [
+            248320
+          ],
+          "sha256": "b59275a73f7801a99eab294eef25f22ba9127552e5d96206a4bbf25445cd9633",
+          "bytes": 993280
+        },
+        {
+          "name": "blue-question-logits.2",
+          "shape": [
+            248320
+          ],
+          "sha256": "4f044ff9247607760d4b6dbfb402e074a984e170a877ed8c1c936e74204b01b2",
+          "bytes": 993280
+        },
+        {
+          "name": "blue-question-logits.3",
+          "shape": [
+            248320
+          ],
+          "sha256": "f2ef5a6e4bb00e5cab60662ff8b7432c20391ac26d0094f36919fa3e35446b06",
+          "bytes": 993280
+        }
+      ],
+      "greedy_token_ids": [
+        760,
+        6588,
+        369,
+        6105
+      ],
+      "greedy_text": "The picture is blue"
+    },
+    {
+      "id": "two-order",
+      "images": [
+        "red",
+        "blue"
+      ],
+      "text": "Name the two colors in order.",
+      "prompt": "<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Name the two colors in order.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "prompt_token_ids": [
+        248045,
+        846,
+        198,
+        248053,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248054,
+        248053,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248056,
+        248054,
+        657,
+        279,
+        1330,
+        7736,
+        303,
+        1906,
+        13,
+        248046,
+        198,
+        248045,
+        74455,
+        198,
+        248068,
+        271,
+        248069,
+        271
+      ],
+      "checkpoints": [
+        {
+          "name": "two-order-language.0",
+          "shape": [
+            1024
+          ],
+          "sha256": "f5daf96d8f7e36712058ca74eb0a7de3666d0a61e6d2f411034f86a983b55878",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.1",
+          "shape": [
+            1024
+          ],
+          "sha256": "cb48f4f96f9ce84a44a1ea221973d00afab5c1392d50e311e09161921e6f5adb",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.2",
+          "shape": [
+            1024
+          ],
+          "sha256": "0686dc61a801178b2e17c7d39283ae3a2ed664e1a8ce01fc6a906c02aa881117",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.3",
+          "shape": [
+            1024
+          ],
+          "sha256": "06c0c2336f946d764910e3456848152b141258de67eccda2808169ca4841d8b8",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.4",
+          "shape": [
+            1024
+          ],
+          "sha256": "ec35ec21a9bbe37d77da11c281e675fc2991b7c91b01679de2db16aa99f8b4bc",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.5",
+          "shape": [
+            1024
+          ],
+          "sha256": "03770dbc29bbf8a346635b3bc0d6247b2edb976ab9160d823c4d5ac6c95c71a7",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.6",
+          "shape": [
+            1024
+          ],
+          "sha256": "22632e3ae00429bffc9f8607f4b960968a6e5f871ee429c25878adf9750d8c50",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.7",
+          "shape": [
+            1024
+          ],
+          "sha256": "1e6c602032415a15afae9596a4a584364b62363d4c2bc6259f4463d2dc2c460f",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.8",
+          "shape": [
+            1024
+          ],
+          "sha256": "eb9d863900853502861b878539668b2386203ff403e9a101dffee8c674edf5ae",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.9",
+          "shape": [
+            1024
+          ],
+          "sha256": "4e1f8fe58611ea9b354496d383f89d9c45a83fa647354c0680f6b7157b90fc63",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.10",
+          "shape": [
+            1024
+          ],
+          "sha256": "655d8c92484b8e71d0d07854ef4bd27fe2df340b101053a6090d29cff7fae302",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.11",
+          "shape": [
+            1024
+          ],
+          "sha256": "352da376c3a57f7e034e658ea9663f024773675ce064386d8c485df54fe31811",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.12",
+          "shape": [
+            1024
+          ],
+          "sha256": "3ca125e24753d14d440f605d26abc606f2422ac4a073be8e0a51e29ee27123a1",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.13",
+          "shape": [
+            1024
+          ],
+          "sha256": "0753ea1e4ed4cf3d17ae4b6240cb8a72d85aff915a5d6e3294daf83fbd9fe9bd",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.14",
+          "shape": [
+            1024
+          ],
+          "sha256": "54c8ff20099ddfcf4fb1f4ac464f42aa47c4b62309f9e97bd9c4ee6ee0c14269",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.15",
+          "shape": [
+            1024
+          ],
+          "sha256": "e342702f8a76d5cb77610a875e3dc9963e391d303de9a74af5e428910eda29a0",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.16",
+          "shape": [
+            1024
+          ],
+          "sha256": "0da39ddd3a865dc35224926d923b573ddf2f4f1a011222c2e63942d0d43f73c1",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.17",
+          "shape": [
+            1024
+          ],
+          "sha256": "4b3e3db2884a0a3ae05c71a1630f16398aab4cb1c241718c1b233374b567987f",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.18",
+          "shape": [
+            1024
+          ],
+          "sha256": "b5706fd0bfec26f7fdf7b1947e7d3d9eeebeae57845c06ddfe73d0431a443864",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.19",
+          "shape": [
+            1024
+          ],
+          "sha256": "d6fbfeb96069d63f91010d9e7fcad415de373b901b74ffcddb6c1a9fd56de3c4",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.20",
+          "shape": [
+            1024
+          ],
+          "sha256": "979a5c645b6b7fcdd498250b56136e8a1f8bbf99415079d51848a0537e350719",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.21",
+          "shape": [
+            1024
+          ],
+          "sha256": "109ebeb2299644b512e1079ee17acbbbb83d157b43aaf6570966547f4bee1c37",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.22",
+          "shape": [
+            1024
+          ],
+          "sha256": "2bf68ee9e4bf5cb3d66555ef933d3467e33abbfcbe9fd008c967b520c8fe7a70",
+          "bytes": 4096
+        },
+        {
+          "name": "two-order-language.23",
+          "shape": [
+            1024
+          ],
+          "sha256": "fc54e918d306b5c81f605e0082dec55fd0826132bb10a14fe548757ad3d3e89d",
+          "bytes": 4096
+        }
+      ],
+      "teacher_forced": [
+        {
+          "name": "two-order-logits.0",
+          "shape": [
+            248320
+          ],
+          "sha256": "3139231ab4abe1217dd1e8c36b69624a8440854a1bac17bd34ff6649f52f0994",
+          "bytes": 993280
+        },
+        {
+          "name": "two-order-logits.1",
+          "shape": [
+            248320
+          ],
+          "sha256": "805ad0e09be32b1a754a00ec9c2c3a850aad4b42c5e6f1cd4c8b31f21ca3240a",
+          "bytes": 993280
+        },
+        {
+          "name": "two-order-logits.2",
+          "shape": [
+            248320
+          ],
+          "sha256": "00a6cb57894772bdba0a69e112ae80d3faafe059d04a6b89414c105f759c007f",
+          "bytes": 993280
+        },
+        {
+          "name": "two-order-logits.3",
+          "shape": [
+            248320
+          ],
+          "sha256": "52a116ccc1bd053ea8f88b2db7a0cea0dedcf5cb2ffb969a7021a5278c2e88ca",
+          "bytes": 993280
+        }
+      ],
+      "greedy_token_ids": [
+        760,
+        1330,
+        7736,
+        303
+      ],
+      "greedy_text": "The two colors in"
+    }
+  ]
+}

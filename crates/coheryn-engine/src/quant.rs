@@ -13,7 +13,7 @@ pub fn is_packed(dtype: u32) -> bool {
 pub fn row_bytes(dtype: u32, width: usize) -> Result<usize> {
     let (block, bytes) = match dtype {
         0 => (1, 4),
-        1 => (1, 2),
+        1 | 30 => (1, 2),
         2 => (32, 18),
         6 => (32, 22),
         8 => (32, 34),

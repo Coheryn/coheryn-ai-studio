@@ -1,6 +1,6 @@
 # Native image CLI and API
 
-The product accepts image-to-text requests through `coheryn chat`, `/v1/chat/completions` and the native `/api/v1/generate` transport. The supported execution profile is `qwen2vl-still-f16-cpu-greedy`: the exact Qwen2-VL 2B language/vision pair in [MULTIMODAL.md](MULTIMODAL.md), F32 KV, native CPU, greedy text output. PNG/JPEG decoding follows the bounded subset in [IMAGES.md](IMAGES.md). Numerical qualification covers the canonical PNG cases on macOS ARM64; decoder support alone does not qualify another model, format, resolution or platform.
+The product accepts image-to-text requests through `coheryn chat`, `/v1/chat/completions` and the native `/api/v1/generate` transport. The established GGUF execution profile is `qwen2vl-still-f16-cpu-greedy`: the exact Qwen2-VL 2B language/vision pair in [MULTIMODAL.md](MULTIMODAL.md), F32 KV, native CPU, greedy text output. PNG/JPEG decoding follows the bounded subset in [IMAGES.md](IMAGES.md). Numerical qualification covers the canonical PNG cases on macOS ARM64; decoder support alone does not qualify another model, format, resolution or platform.
 
 ## Register and run a pair
 
@@ -82,3 +82,9 @@ Images share the CPU FIFO gate with text token batches and embedding microbatche
 Workspace tests cover small independent model pairs, header-only estimates, component mutation/deletion, native/OpenAI/CLI/standalone parity, multiple images, Unicode, malformed and oversized inputs, authentication, URL restrictions, memory admission, queue saturation, disconnection and slow-consumer cleanup. `python3 tools/check_image_service.py` reproduces the pinned-pair product check from cached components and the release CLI, runs native execution with an empty executable search path, and writes `fixtures/qualification/m3-image-service.json`. It reads frozen independent outputs and never runs an external executor.
 
 Managed persistent image histories, private original assets and cooperative CPU scheduling are now documented in [IMAGE_SESSIONS.md](IMAGE_SESSIONS.md). Broad successful-public-HTTPS/failure campaigns, sustained fuzzing, LLaVA execution, Metal and other-platform release qualification remain open. The complete mandatory release remains subject to [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
+
+## Qwen3.5 source checkpoints
+
+`qwen35-still-cpu-v1` uses the complete pinned Safetensors source, its validated processor and native encoder/merger/decoder. It accepts the same stateless message parts, transports, acquisition limits and streaming text output. Import the complete source directory under a new managed identity, then load it; a separate vision pair is unnecessary. Standalone uses `chat CHECKPOINT --standalone --image FILE --prompt TEXT`. Repeat `--image` for ordered attachments, within image/context/resource limits.
+
+The current qualification is square/portrait constant-color PNG input and ordered two-image integration, independently frozen F32/wide-reduction arrays, native CPU on macOS ARM64. It does not establish universal image/model compatibility or publisher-framework precision parity. Qwen3.5 session-owned image attachments and metadata-only image planning are now supported through [IMAGE_SESSIONS.md](IMAGE_SESSIONS.md). GPU qualification remains open. Missing/unsupported processor assets preserve compatible text execution but explicitly reject image input. See [QWEN35.md](QWEN35.md).

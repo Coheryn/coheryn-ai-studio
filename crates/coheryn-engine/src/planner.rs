@@ -297,6 +297,69 @@ pub fn estimate(input: PlanInput<'_>) -> Result<ExecutionPlan> {
     } else {
         memory::model_bytes(d, c)?
     };
+    estimate_prepared(PreparedPlan {
+        model,
+        profile,
+        context,
+        concurrency,
+        max_concurrency,
+        budget,
+        hardware,
+        images,
+        constraints,
+        shared_weight_bytes,
+        metadata,
+        session,
+        threads_per_session,
+        prefill_chunk_tokens,
+        io_buffer_bytes,
+    })
+}
+/// Validated architecture-specific costs feed one shared admission calculation.
+pub(crate) struct PreparedPlan<'a> {
+    pub model: &'a str,
+    pub profile: Profile,
+    pub context: usize,
+    pub concurrency: usize,
+    pub max_concurrency: usize,
+    pub budget: MemoryStats,
+    pub hardware: HardwareSnapshot,
+    pub images: Option<&'a ImageWorkload>,
+    pub constraints: bool,
+    pub shared_weight_bytes: u64,
+    pub metadata: u64,
+    pub session: SessionEstimate,
+    pub threads_per_session: usize,
+    pub prefill_chunk_tokens: usize,
+    pub io_buffer_bytes: usize,
+}
+pub(crate) fn estimate_prepared(input: PreparedPlan<'_>) -> Result<ExecutionPlan> {
+    let PreparedPlan {
+        model,
+        profile,
+        context,
+        concurrency,
+        max_concurrency,
+        budget,
+        hardware,
+        images,
+        constraints,
+        shared_weight_bytes,
+        metadata,
+        session,
+        threads_per_session,
+        prefill_chunk_tokens,
+        io_buffer_bytes,
+    } = input;
+    if context == 0
+        || concurrency == 0
+        || concurrency > 16
+        || max_concurrency == 0
+        || max_concurrency > 16
+        || hardware.logical_cpus == 0
+    {
+        return Err(Error::request("invalid prepared planning bounds"));
+    }
     let constraint_reserved_bytes = if constraints {
         crate::constraints::RESERVATION_BYTES
     } else {

@@ -32,6 +32,7 @@ fn create(s: &Sessions, name: &str, context: usize) {
     s.create(
         owner(),
         CreateSession {
+            task: None,
             model: "chat".into(),
             persist: true,
             alias: Some(name.into()),

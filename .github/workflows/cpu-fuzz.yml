@@ -1,0 +1,30 @@
+name: Bounded instrumented CPU fuzz campaigns
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fuzz:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.x'
+          check-latest: true
+      - uses: dtolnay/rust-toolchain@1.99.1
+      - run: rustup toolchain install nightly-2026-10-30 --profile minimal
+      - run: cargo install cargo-fuzz --version 0.13.2 --locked
+      - run: cargo fetch --manifest-path fuzz/Cargo.toml --locked
+      - run: python tools/run_cpu_fuzz.py --toolchain nightly-2026-10-30 --runs 100000 --report .cache/cpu-fuzz-evidence.json
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: cpu-instrumented-fuzz
+          path: |
+            .cache/cpu-fuzz-evidence.json
+            .cache/cpu-fuzz/**
+            fuzz/corpus/**
+            fuzz/artifacts/**
+          include-hidden-files: true
+          if-no-files-found: error

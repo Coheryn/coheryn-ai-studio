@@ -111,3 +111,22 @@ Workspace coverage includes no-resend follow-ups, CLI save/restart/resume, image
 `python3 tools/check_image_sessions.py` qualifies the cached pinned pair through the release CLI/API, including a frozen image response, text progress with one generation slot, durable restart, a CLI follow-up without image bytes, equivalent stateless history, portable originals and cleanup. `python3 tools/check_cooperative_vlm.py` compares actual cooperative image embeddings, decoder layers and logits against the unchanged frozen full-array reference. Both execute native binaries with an empty executable search path. Their reports are `fixtures/qualification/m4-image-sessions.json` and `m4-cooperative-numerics.json`.
 
 The current scope remains the exact Qwen2-VL FP16 CPU pair and tested settings on macOS ARM64. Broader image counts/resolutions/model configurations, LLaVA, Metal, other CPU platforms, sustained fairness/tail-latency/security/fuzz/crash campaigns and complete mandatory release qualification remain open.
+
+## Qwen3.5 source image sessions
+
+The pinned complete Qwen3.5 source now uses this asset/history/store/receipt contract through a model-specific preparation binding. Qwen3.5 keeps text sessions as its default. Select `task: image-to-text` when creating an image session, or start `chat q35 --session photos --image FILE --prompt TEXT`; that CLI form selects the image task automatically. Resume and text-only follow-ups preserve the stored task and original attachments. Existing text sessions do not implicitly change task.
+
+Metadata-only `plan ... --task image-to-text --image FILE` supports both local source paths with `--standalone` and managed Qwen3.5 IDs. The CLI selects the validated model's processor automatically. Image sessions use the selected processor's physical feature count rather than assuming the paired GGUF model's patch size. Their context limit is 4096, additionally bounded by the loaded/server capacity. Explicit `oldest-complete-turns` excludes whole older turns; protected instructions/current input are preserved. A history with no selected images can still execute a text turn within the image session.
+
+Stored assets validate source geometry and integrity independently of a model's resize profile. Processor, feature and context limits are applied during actual history preparation. One shared selection path provides missing-asset errors, bounded reads, included/excluded IDs and failure cleanup for both models. Save/restart/resume and portable format-3 exports store original bytes; pixels, projected embeddings and KV/recurrent state are not persisted or cached. Full source-set identity includes the processor asset, so a package change cannot silently rebind an existing session.
+
+
+The real-model reproduction target requires the already verified source cache, a current release CLI, temporary disk space for one managed copy, and localhost access:
+
+```sh
+./tools/cargo build --release --workspace --locked
+COHERYN_Q35_IMAGE_SESSION_REPORT="$PWD/fixtures/qualification/NEW-image-sessions-runtime.json" \
+  ./tools/cargo test --release -p coheryn-api --test qwen35_image_sessions -- --ignored
+```
+
+Reports refuse overwrite. `fixtures/qualification/b4-image-sessions-runtime.json` records local/managed planning, native CLI/SSE, persisted no-resend history/replay, equivalent stateless outputs, portable original bytes and complete cleanup on the current CPU host. This remains scoped development evidence, with uncontrolled file-cache conditions and no universal VLM or production readiness claim.

@@ -1,0 +1,6792 @@
+{
+  "schema_version": 1,
+  "scope": "All-feature workspace dependency graph, controlled source/path policy, archived evidence integrity. Synthetic native CLI tests separately exercise an empty executable search path. Not a signed release, legal audit, or proof about arbitrary remote deployments.",
+  "lockfile_sha256": "8f4103583ea16f230362959db42a485e0c87e7dda729d986777ae60b24708fa2",
+  "policy_sha256": "f911a30794aaf6d8f0aff16320b0c26271e8456b436b81df7cb45bc2976f9471",
+  "fuzz_lockfile_sha256": "fc6b0cd244a3a3958470d73c4bc6ad6fbc5dbcddf008034e7fac0b776f82911c",
+  "graphs": [
+    {
+      "manifest": "Cargo.toml",
+      "nodes": [
+        {
+          "package": "adler2@2.0.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "ahash@0.8.12",
+          "features": [
+            "default",
+            "getrandom",
+            "runtime-rng",
+            "serde",
+            "std"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "getrandom@0.3.4",
+            "once_cell@1.21.4",
+            "serde@1.0.229",
+            "version_check@0.9.5",
+            "zerocopy@0.8.63"
+          ]
+        },
+        {
+          "package": "aho-corasick@1.1.5",
+          "features": [
+            "perf-literal",
+            "std"
+          ],
+          "dependencies": [
+            "memchr@2.8.3"
+          ]
+        },
+        {
+          "package": "anstream@1.0.0",
+          "features": [
+            "auto",
+            "default",
+            "wincon"
+          ],
+          "dependencies": [
+            "anstyle-parse@1.0.0",
+            "anstyle-query@1.1.5",
+            "anstyle-wincon@3.0.11",
+            "anstyle@1.0.14",
+            "colorchoice@1.0.5",
+            "is_terminal_polyfill@1.70.2",
+            "utf8parse@0.2.2"
+          ]
+        },
+        {
+          "package": "anstyle@1.0.14",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "anstyle-parse@1.0.0",
+          "features": [
+            "default",
+            "utf8"
+          ],
+          "dependencies": [
+            "utf8parse@0.2.2"
+          ]
+        },
+        {
+          "package": "anstyle-query@1.1.5",
+          "features": [],
+          "dependencies": [
+            "windows-sys@0.61.2"
+          ]
+        },
+        {
+          "package": "anstyle-wincon@3.0.11",
+          "features": [],
+          "dependencies": [
+            "anstyle@1.0.14",
+            "once_cell_polyfill@1.70.2",
+            "windows-sys@0.61.2"
+          ]
+        },
+        {
+          "package": "atomic-waker@1.1.2",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "autocfg@1.5.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "aws-lc-rs@1.18.2",
+          "features": [
+            "aws-lc-sys",
+            "prebuilt-nasm"
+          ],
+          "dependencies": [
+            "aws-lc-sys@0.46.0",
+            "zeroize@1.9.1"
+          ]
+        },
+        {
+          "package": "aws-lc-sys@0.46.0",
+          "features": [
+            "prebuilt-nasm"
+          ],
+          "dependencies": [
+            "cc@1.10.0",
+            "cmake@0.1.58",
+            "dunce@1.0.5",
+            "fs_extra@1.3.0",
+            "pkg-config@0.3.34"
+          ]
+        },
+        {
+          "package": "axum@0.8.9",
+          "features": [
+            "default",
+            "form",
+            "http1",
+            "json",
+            "matched-path",
+            "original-uri",
+            "query",
+            "tokio",
+            "tower-log",
+            "tracing"
+          ],
+          "dependencies": [
+            "axum-core@0.5.6",
+            "bytes@1.12.1",
+            "form_urlencoded@1.2.2",
+            "futures-util@0.3.34",
+            "http-body-util@0.1.5",
+            "http-body@1.1.0",
+            "http@1.5.0",
+            "hyper-util@0.1.21",
+            "hyper@1.12.0",
+            "itoa@1.0.18",
+            "matchit@0.8.4",
+            "memchr@2.8.3",
+            "mime@0.3.17",
+            "percent-encoding@2.3.2",
+            "pin-project-lite@0.2.17",
+            "serde_core@1.0.229",
+            "serde_json@1.0.154",
+            "serde_path_to_error@0.1.20",
+            "serde_urlencoded@0.7.1",
+            "sync_wrapper@1.0.2",
+            "tokio@1.54.1",
+            "tower-layer@0.3.3",
+            "tower-service@0.3.3",
+            "tower@0.5.3",
+            "tracing@0.1.44"
+          ]
+        },
+        {
+          "package": "axum-core@0.5.6",
+          "features": [
+            "tracing"
+          ],
+          "dependencies": [
+            "bytes@1.12.1",
+            "futures-core@0.3.34",
+            "http-body-util@0.1.5",
+            "http-body@1.1.0",
+            "http@1.5.0",
+            "mime@0.3.17",
+            "pin-project-lite@0.2.17",
+            "sync_wrapper@1.0.2",
+            "tower-layer@0.3.3",
+            "tower-service@0.3.3",
+            "tracing@0.1.44"
+          ]
+        },
+        {
+          "package": "base64@0.13.1",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "base64@0.23.1",
+          "features": [
+            "alloc",
+            "default",
+            "simd-unsafe",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "bit-set@0.8.0",
+          "features": [
+            "std"
+          ],
+          "dependencies": [
+            "bit-vec@0.8.0"
+          ]
+        },
+        {
+          "package": "bit-vec@0.8.0",
+          "features": [
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "bitflags@2.13.2",
+          "features": [
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "block-buffer@0.12.1",
+          "features": [],
+          "dependencies": [
+            "hybrid-array@0.4.15"
+          ]
+        },
+        {
+          "package": "block2@0.6.2",
+          "features": [
+            "alloc"
+          ],
+          "dependencies": [
+            "objc2@0.6.5"
+          ]
+        },
+        {
+          "package": "bumpalo@3.20.3",
+          "features": [
+            "default"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "bytemuck@1.25.2",
+          "features": [
+            "extern_crate_alloc"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "byteorder-lite@0.1.0",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "bytes@1.12.1",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "castaway@0.2.4",
+          "features": [
+            "alloc"
+          ],
+          "dependencies": [
+            "rustversion@1.0.23"
+          ]
+        },
+        {
+          "package": "cc@1.10.0",
+          "features": [
+            "parallel"
+          ],
+          "dependencies": [
+            "find-msvc-tools@0.1.15",
+            "jobserver@0.1.35",
+            "libc@0.2.191",
+            "shlex@2.0.1"
+          ]
+        },
+        {
+          "package": "cfg-if@1.0.5",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "cfg_aliases@0.2.2",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "chacha20@0.10.2",
+          "features": [
+            "rng"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "cpufeatures@0.3.1",
+            "rand_core@0.10.1"
+          ]
+        },
+        {
+          "package": "clap@4.6.7",
+          "features": [
+            "color",
+            "default",
+            "derive",
+            "error-context",
+            "help",
+            "std",
+            "suggestions",
+            "usage"
+          ],
+          "dependencies": [
+            "clap_builder@4.6.7",
+            "clap_derive@4.6.7"
+          ]
+        },
+        {
+          "package": "clap_builder@4.6.7",
+          "features": [
+            "color",
+            "error-context",
+            "help",
+            "std",
+            "suggestions",
+            "usage"
+          ],
+          "dependencies": [
+            "anstream@1.0.0",
+            "anstyle@1.0.14",
+            "clap_lex@1.1.1",
+            "strsim@0.11.1"
+          ]
+        },
+        {
+          "package": "clap_derive@4.6.7",
+          "features": [
+            "default"
+          ],
+          "dependencies": [
+            "heck@0.5.0",
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@3.0.9"
+          ]
+        },
+        {
+          "package": "clap_lex@1.1.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "cmake@0.1.58",
+          "features": [],
+          "dependencies": [
+            "cc@1.10.0"
+          ]
+        },
+        {
+          "package": "coheryn-api@0.1.0-dev",
+          "features": [],
+          "dependencies": [
+            "axum@0.8.9",
+            "base64@0.23.1",
+            "coheryn-engine@0.1.0-dev",
+            "fs2@0.4.3",
+            "futures-util@0.3.34",
+            "half@2.7.1",
+            "reqwest@0.13.5",
+            "rusqlite@0.41.1",
+            "serde@1.0.229",
+            "serde_json@1.0.154",
+            "sha2@0.11.1",
+            "subtle@2.6.1",
+            "sysinfo@0.40.0",
+            "tempfile@3.27.0",
+            "tokio-util@0.7.20",
+            "tokio@1.54.1",
+            "tower@0.5.3",
+            "uuid@1.29.0"
+          ]
+        },
+        {
+          "package": "coheryn-bench@0.1.0-dev",
+          "features": [],
+          "dependencies": [
+            "clap@4.6.7",
+            "coheryn-engine@0.1.0-dev",
+            "serde_json@1.0.154"
+          ]
+        },
+        {
+          "package": "coheryn-cli@0.1.0-dev",
+          "features": [],
+          "dependencies": [
+            "clap@4.6.7",
+            "coheryn-api@0.1.0-dev",
+            "coheryn-engine@0.1.0-dev",
+            "ctrlc@3.5.2",
+            "half@2.7.1",
+            "serde@1.0.229",
+            "serde_json@1.0.154",
+            "tempfile@3.27.0",
+            "tokio@1.54.1"
+          ]
+        },
+        {
+          "package": "coheryn-engine@0.1.0-dev",
+          "features": [],
+          "dependencies": [
+            "half@2.7.1",
+            "image@0.25.10",
+            "minijinja@3.0.4",
+            "rayon@1.12.0",
+            "serde@1.0.229",
+            "serde_json@1.0.154",
+            "sha2@0.11.1",
+            "tempfile@3.27.0",
+            "tokenizers@0.23.2",
+            "unicode-normalization@0.1.26"
+          ]
+        },
+        {
+          "package": "colorchoice@1.0.5",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "combine@4.6.9",
+          "features": [
+            "alloc",
+            "bytes",
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "bytes@1.12.1",
+            "memchr@2.8.3"
+          ]
+        },
+        {
+          "package": "compact_str@0.9.1",
+          "features": [
+            "default",
+            "serde",
+            "std"
+          ],
+          "dependencies": [
+            "castaway@0.2.4",
+            "cfg-if@1.0.5",
+            "itoa@1.0.18",
+            "rustversion@1.0.23",
+            "ryu@1.0.23",
+            "serde@1.0.229",
+            "static_assertions@1.1.0"
+          ]
+        },
+        {
+          "package": "const-oid@0.10.2",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "core-foundation@0.10.1",
+          "features": [
+            "default",
+            "link"
+          ],
+          "dependencies": [
+            "core-foundation-sys@0.8.7",
+            "libc@0.2.191"
+          ]
+        },
+        {
+          "package": "core-foundation-sys@0.8.7",
+          "features": [
+            "default",
+            "link"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "cpufeatures@0.3.1",
+          "features": [],
+          "dependencies": [
+            "libc@0.2.191"
+          ]
+        },
+        {
+          "package": "crc32fast@1.5.3",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5"
+          ]
+        },
+        {
+          "package": "crossbeam-deque@0.8.8",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "crossbeam-epoch@0.9.21",
+            "crossbeam-utils@0.8.23"
+          ]
+        },
+        {
+          "package": "crossbeam-epoch@0.9.21",
+          "features": [
+            "alloc",
+            "std"
+          ],
+          "dependencies": [
+            "crossbeam-utils@0.8.23"
+          ]
+        },
+        {
+          "package": "crossbeam-utils@0.8.23",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "crunchy@0.2.4",
+          "features": [
+            "default",
+            "limit_128"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "crypto-common@0.2.2",
+          "features": [],
+          "dependencies": [
+            "hybrid-array@0.4.15"
+          ]
+        },
+        {
+          "package": "ctrlc@3.5.2",
+          "features": [],
+          "dependencies": [
+            "dispatch2@0.3.1",
+            "nix@0.31.3",
+            "windows-sys@0.61.2"
+          ]
+        },
+        {
+          "package": "daachorse@3.0.3",
+          "features": [
+            "alloc",
+            "default"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "darling@0.20.11",
+          "features": [
+            "default",
+            "suggestions"
+          ],
+          "dependencies": [
+            "darling_core@0.20.11",
+            "darling_macro@0.20.11"
+          ]
+        },
+        {
+          "package": "darling_core@0.20.11",
+          "features": [
+            "strsim",
+            "suggestions"
+          ],
+          "dependencies": [
+            "fnv@1.0.7",
+            "ident_case@1.0.1",
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "strsim@0.11.1",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "darling_macro@0.20.11",
+          "features": [],
+          "dependencies": [
+            "darling_core@0.20.11",
+            "quote@1.0.47",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "dary_heap@0.3.9",
+          "features": [
+            "serde"
+          ],
+          "dependencies": [
+            "serde@1.0.229"
+          ]
+        },
+        {
+          "package": "derive_builder@0.20.2",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "derive_builder_macro@0.20.2"
+          ]
+        },
+        {
+          "package": "derive_builder_core@0.20.2",
+          "features": [
+            "lib_has_std"
+          ],
+          "dependencies": [
+            "darling@0.20.11",
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "derive_builder_macro@0.20.2",
+          "features": [
+            "lib_has_std"
+          ],
+          "dependencies": [
+            "derive_builder_core@0.20.2",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "digest@0.11.3",
+          "features": [
+            "alloc",
+            "block-api",
+            "default",
+            "oid"
+          ],
+          "dependencies": [
+            "block-buffer@0.12.1",
+            "const-oid@0.10.2",
+            "crypto-common@0.2.2"
+          ]
+        },
+        {
+          "package": "dispatch2@0.3.1",
+          "features": [
+            "alloc",
+            "block2",
+            "default",
+            "libc",
+            "objc2",
+            "std"
+          ],
+          "dependencies": [
+            "bitflags@2.13.2",
+            "block2@0.6.2",
+            "libc@0.2.191",
+            "objc2@0.6.5"
+          ]
+        },
+        {
+          "package": "displaydoc@0.2.7",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@3.0.9"
+          ]
+        },
+        {
+          "package": "dunce@1.0.5",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "either@1.19.0",
+          "features": [
+            "default",
+            "std",
+            "use_std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "errno@0.3.14",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "libc@0.2.191",
+            "windows-sys@0.61.2"
+          ]
+        },
+        {
+          "package": "esaxx-rs@0.1.10",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "fallible-iterator@0.3.0",
+          "features": [
+            "alloc",
+            "default"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "fallible-streaming-iterator@0.1.9",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "fancy-regex@0.17.0",
+          "features": [
+            "default",
+            "perf",
+            "std",
+            "unicode",
+            "variable-lookbehinds"
+          ],
+          "dependencies": [
+            "bit-set@0.8.0",
+            "regex-automata@0.4.18",
+            "regex-syntax@0.8.11"
+          ]
+        },
+        {
+          "package": "fastrand@2.5.0",
+          "features": [
+            "alloc",
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "fdeflate@0.3.7",
+          "features": [],
+          "dependencies": [
+            "simd-adler32@0.3.10"
+          ]
+        },
+        {
+          "package": "find-msvc-tools@0.1.15",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "flate2@1.1.10",
+          "features": [
+            "any_impl",
+            "default",
+            "miniz_oxide",
+            "runtime_detection",
+            "rust_backend"
+          ],
+          "dependencies": [
+            "crc32fast@1.5.3",
+            "miniz_oxide@0.9.1",
+            "zlib-rs@0.6.8"
+          ]
+        },
+        {
+          "package": "fnv@1.0.7",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "foldhash@0.2.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "form_urlencoded@1.2.2",
+          "features": [
+            "alloc",
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "percent-encoding@2.3.2"
+          ]
+        },
+        {
+          "package": "fs2@0.4.3",
+          "features": [],
+          "dependencies": [
+            "libc@0.2.191",
+            "winapi@0.3.9"
+          ]
+        },
+        {
+          "package": "fs_extra@1.3.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "futures-channel@0.3.34",
+          "features": [
+            "alloc",
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "futures-core@0.3.34"
+          ]
+        },
+        {
+          "package": "futures-core@0.3.34",
+          "features": [
+            "alloc",
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "futures-io@0.3.34",
+          "features": [
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "futures-macro@0.3.34",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@3.0.9"
+          ]
+        },
+        {
+          "package": "futures-sink@0.3.34",
+          "features": [
+            "alloc",
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "futures-task@0.3.34",
+          "features": [
+            "alloc",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "futures-util@0.3.34",
+          "features": [
+            "alloc",
+            "async-await",
+            "async-await-macro",
+            "default",
+            "futures-io",
+            "futures-macro",
+            "futures-sink",
+            "io",
+            "memchr",
+            "sink",
+            "slab",
+            "std"
+          ],
+          "dependencies": [
+            "futures-core@0.3.34",
+            "futures-io@0.3.34",
+            "futures-macro@0.3.34",
+            "futures-sink@0.3.34",
+            "futures-task@0.3.34",
+            "memchr@2.8.3",
+            "pin-project-lite@0.2.17",
+            "slab@0.4.12"
+          ]
+        },
+        {
+          "package": "getrandom@0.2.17",
+          "features": [
+            "js",
+            "js-sys",
+            "wasm-bindgen"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "js-sys@0.3.106",
+            "libc@0.2.191",
+            "wasi@0.11.1+wasi-snapshot-preview1",
+            "wasm-bindgen@0.2.129"
+          ]
+        },
+        {
+          "package": "getrandom@0.3.4",
+          "features": [
+            "std"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "libc@0.2.191",
+            "r-efi@5.3.0",
+            "wasip2@1.0.4+wasi-0.2.12"
+          ]
+        },
+        {
+          "package": "getrandom@0.4.3",
+          "features": [
+            "std",
+            "sys_rng",
+            "wasm_js"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "js-sys@0.3.106",
+            "libc@0.2.191",
+            "r-efi@6.0.0",
+            "rand_core@0.10.1",
+            "wasm-bindgen@0.2.129"
+          ]
+        },
+        {
+          "package": "half@2.7.1",
+          "features": [
+            "alloc",
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "crunchy@0.2.4",
+            "zerocopy@0.8.63"
+          ]
+        },
+        {
+          "package": "hashbrown@0.17.1",
+          "features": [
+            "default-hasher"
+          ],
+          "dependencies": [
+            "foldhash@0.2.0"
+          ]
+        },
+        {
+          "package": "hashlink@0.12.2",
+          "features": [],
+          "dependencies": [
+            "hashbrown@0.17.1"
+          ]
+        },
+        {
+          "package": "heck@0.5.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "http@1.5.0",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "bytes@1.12.1",
+            "itoa@1.0.18"
+          ]
+        },
+        {
+          "package": "http-body@1.1.0",
+          "features": [],
+          "dependencies": [
+            "bytes@1.12.1",
+            "http@1.5.0"
+          ]
+        },
+        {
+          "package": "http-body-util@0.1.5",
+          "features": [
+            "default"
+          ],
+          "dependencies": [
+            "bytes@1.12.1",
+            "futures-core@0.3.34",
+            "http-body@1.1.0",
+            "http@1.5.0",
+            "pin-project-lite@0.2.17"
+          ]
+        },
+        {
+          "package": "httparse@1.10.1",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "httpdate@1.0.3",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "hybrid-array@0.4.15",
+          "features": [],
+          "dependencies": [
+            "typenum@1.20.1"
+          ]
+        },
+        {
+          "package": "hyper@1.12.0",
+          "features": [
+            "client",
+            "default",
+            "http1",
+            "server"
+          ],
+          "dependencies": [
+            "atomic-waker@1.1.2",
+            "bytes@1.12.1",
+            "futures-core@0.3.34",
+            "http-body@1.1.0",
+            "http@1.5.0",
+            "httparse@1.10.1",
+            "httpdate@1.0.3",
+            "itoa@1.0.18",
+            "pin-project-lite@0.2.17",
+            "smallvec@1.16.4",
+            "tokio@1.54.1",
+            "want@0.3.2"
+          ]
+        },
+        {
+          "package": "hyper-rustls@0.27.10",
+          "features": [
+            "aws-lc-rs",
+            "http1",
+            "tls12"
+          ],
+          "dependencies": [
+            "http@1.5.0",
+            "hyper-util@0.1.21",
+            "hyper@1.12.0",
+            "rustls@0.23.46",
+            "tokio-rustls@0.26.6",
+            "tokio@1.54.1",
+            "tower-service@0.3.3"
+          ]
+        },
+        {
+          "package": "hyper-util@0.1.21",
+          "features": [
+            "client",
+            "client-legacy",
+            "client-proxy",
+            "default",
+            "http1",
+            "server",
+            "service",
+            "tokio"
+          ],
+          "dependencies": [
+            "base64@0.23.1",
+            "bytes@1.12.1",
+            "futures-channel@0.3.34",
+            "futures-util@0.3.34",
+            "http-body@1.1.0",
+            "http@1.5.0",
+            "httparse@1.10.1",
+            "hyper@1.12.0",
+            "ipnet@2.12.2",
+            "libc@0.2.191",
+            "percent-encoding@2.3.2",
+            "pin-project-lite@0.2.17",
+            "socket2@0.6.5",
+            "tokio@1.54.1",
+            "tower-service@0.3.3",
+            "tracing@0.1.44"
+          ]
+        },
+        {
+          "package": "icu_collections@2.4.0",
+          "features": [],
+          "dependencies": [
+            "displaydoc@0.2.7",
+            "potential_utf@0.1.6",
+            "utf8_iter@1.0.4",
+            "yoke@0.8.4",
+            "zerofrom@0.1.8",
+            "zerovec@0.11.9"
+          ]
+        },
+        {
+          "package": "icu_locale_core@2.4.0",
+          "features": [
+            "zerovec"
+          ],
+          "dependencies": [
+            "displaydoc@0.2.7",
+            "litemap@0.8.3",
+            "tinystr@0.8.5",
+            "writeable@0.6.4",
+            "zerovec@0.11.9"
+          ]
+        },
+        {
+          "package": "icu_normalizer@2.4.0",
+          "features": [
+            "compiled_data"
+          ],
+          "dependencies": [
+            "icu_collections@2.4.0",
+            "icu_normalizer_data@2.4.0",
+            "icu_properties@2.4.0",
+            "icu_provider@2.4.0",
+            "smallvec@1.16.4",
+            "zerovec@0.11.9"
+          ]
+        },
+        {
+          "package": "icu_normalizer_data@2.4.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "icu_properties@2.4.0",
+          "features": [
+            "compiled_data"
+          ],
+          "dependencies": [
+            "displaydoc@0.2.7",
+            "icu_collections@2.4.0",
+            "icu_locale_core@2.4.0",
+            "icu_properties_data@2.4.0",
+            "icu_provider@2.4.0",
+            "zerotrie@0.2.5",
+            "zerovec@0.11.9"
+          ]
+        },
+        {
+          "package": "icu_properties_data@2.4.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "icu_provider@2.4.0",
+          "features": [
+            "baked"
+          ],
+          "dependencies": [
+            "displaydoc@0.2.7",
+            "icu_locale_core@2.4.0",
+            "writeable@0.6.4",
+            "yoke@0.8.4",
+            "zerofrom@0.1.8",
+            "zerotrie@0.2.5",
+            "zerovec@0.11.9"
+          ]
+        },
+        {
+          "package": "ident_case@1.0.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "idna@1.1.0",
+          "features": [
+            "alloc",
+            "compiled_data",
+            "std"
+          ],
+          "dependencies": [
+            "idna_adapter@1.2.2",
+            "smallvec@1.16.4",
+            "utf8_iter@1.0.4"
+          ]
+        },
+        {
+          "package": "idna_adapter@1.2.2",
+          "features": [
+            "compiled_data"
+          ],
+          "dependencies": [
+            "icu_normalizer@2.4.0",
+            "icu_properties@2.4.0"
+          ]
+        },
+        {
+          "package": "image@0.25.10",
+          "features": [
+            "jpeg",
+            "png"
+          ],
+          "dependencies": [
+            "bytemuck@1.25.2",
+            "byteorder-lite@0.1.0",
+            "moxcms@0.8.1",
+            "num-traits@0.2.19",
+            "png@0.18.1",
+            "zune-core@0.5.3",
+            "zune-jpeg@0.5.15"
+          ]
+        },
+        {
+          "package": "ipnet@2.12.2",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "is_terminal_polyfill@1.70.2",
+          "features": [
+            "default"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "itertools@0.14.0",
+          "features": [
+            "default",
+            "use_alloc",
+            "use_std"
+          ],
+          "dependencies": [
+            "either@1.19.0"
+          ]
+        },
+        {
+          "package": "itoa@1.0.18",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "jni@0.22.4",
+          "features": [],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "combine@4.6.9",
+            "jni-macros@0.22.4",
+            "jni-sys@0.4.1",
+            "log@0.4.34",
+            "simd_cesu8@1.2.0",
+            "thiserror@2.0.21",
+            "walkdir@2.5.0",
+            "windows-link@0.2.1"
+          ]
+        },
+        {
+          "package": "jni-macros@0.22.4",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "rustc_version@0.4.1",
+            "simd_cesu8@1.2.0",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "jni-sys@0.4.1",
+          "features": [],
+          "dependencies": [
+            "jni-sys-macros@0.4.1"
+          ]
+        },
+        {
+          "package": "jni-sys-macros@0.4.1",
+          "features": [],
+          "dependencies": [
+            "quote@1.0.47",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "jobserver@0.1.35",
+          "features": [],
+          "dependencies": [
+            "getrandom@0.4.3",
+            "libc@0.2.191"
+          ]
+        },
+        {
+          "package": "js-sys@0.3.106",
+          "features": [
+            "default",
+            "std",
+            "unsafe-eval"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "futures-util@0.3.34",
+            "wasm-bindgen@0.2.129"
+          ]
+        },
+        {
+          "package": "libc@0.2.191",
+          "features": [
+            "default",
+            "extra_traits",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "libsqlite3-sys@0.39.1",
+          "features": [
+            "bundled",
+            "bundled_bindings",
+            "cc",
+            "default",
+            "min_sqlite_version_3_45_3",
+            "pkg-config",
+            "vcpkg"
+          ],
+          "dependencies": [
+            "cc@1.10.0",
+            "pkg-config@0.3.34",
+            "vcpkg@0.2.15"
+          ]
+        },
+        {
+          "package": "linux-raw-sys@0.12.1",
+          "features": [
+            "auxvec",
+            "elf",
+            "errno",
+            "general",
+            "ioctl",
+            "no_std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "litemap@0.8.3",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "log@0.4.34",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "lru-slab@0.1.3",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "macro_rules_attribute@0.2.3",
+          "features": [
+            "default"
+          ],
+          "dependencies": [
+            "macro_rules_attribute-proc_macro@0.2.3",
+            "pastey@0.2.3"
+          ]
+        },
+        {
+          "package": "macro_rules_attribute-proc_macro@0.2.3",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "matchit@0.8.4",
+          "features": [
+            "default"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "memchr@2.8.3",
+          "features": [
+            "alloc",
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "mime@0.3.17",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "minijinja@3.0.4",
+          "features": [
+            "adjacent_loop_items",
+            "builtins",
+            "debug",
+            "default",
+            "fuel",
+            "json",
+            "macros",
+            "multi_template",
+            "serde",
+            "std_collections"
+          ],
+          "dependencies": [
+            "serde@1.0.229"
+          ]
+        },
+        {
+          "package": "minimal-lexical@0.2.1",
+          "features": [
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "miniz_oxide@0.8.9",
+          "features": [
+            "default",
+            "simd",
+            "simd-adler32",
+            "with-alloc"
+          ],
+          "dependencies": [
+            "adler2@2.0.1",
+            "simd-adler32@0.3.10"
+          ]
+        },
+        {
+          "package": "miniz_oxide@0.9.1",
+          "features": [
+            "default",
+            "simd",
+            "simd-adler32",
+            "with-alloc"
+          ],
+          "dependencies": [
+            "adler2@2.0.1",
+            "simd-adler32@0.3.10"
+          ]
+        },
+        {
+          "package": "mio@1.2.4",
+          "features": [
+            "net",
+            "os-ext",
+            "os-poll"
+          ],
+          "dependencies": [
+            "libc@0.2.191",
+            "wasi@0.11.1+wasi-snapshot-preview1",
+            "windows-sys@0.61.2"
+          ]
+        },
+        {
+          "package": "monostate@0.1.18",
+          "features": [],
+          "dependencies": [
+            "monostate-impl@0.1.18",
+            "serde@1.0.229",
+            "serde_core@1.0.229"
+          ]
+        },
+        {
+          "package": "monostate-impl@0.1.18",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "moxcms@0.8.1",
+          "features": [
+            "avx",
+            "avx_luts",
+            "avx_shaper_fixed_point_paths",
+            "avx_shaper_paths",
+            "default",
+            "lut",
+            "neon",
+            "neon_luts",
+            "neon_shaper_fixed_point_paths",
+            "neon_shaper_paths",
+            "sse",
+            "sse_luts",
+            "sse_shaper_fixed_point_paths",
+            "sse_shaper_paths"
+          ],
+          "dependencies": [
+            "num-traits@0.2.19",
+            "pxfm@0.1.30"
+          ]
+        },
+        {
+          "package": "nix@0.31.3",
+          "features": [
+            "process",
+            "signal"
+          ],
+          "dependencies": [
+            "bitflags@2.13.2",
+            "cfg-if@1.0.5",
+            "cfg_aliases@0.2.2",
+            "libc@0.2.191"
+          ]
+        },
+        {
+          "package": "nom@7.1.3",
+          "features": [
+            "alloc",
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "memchr@2.8.3",
+            "minimal-lexical@0.2.1"
+          ]
+        },
+        {
+          "package": "ntapi@0.4.3",
+          "features": [
+            "default",
+            "user"
+          ],
+          "dependencies": [
+            "winapi@0.3.9"
+          ]
+        },
+        {
+          "package": "num-traits@0.2.19",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "autocfg@1.5.1"
+          ]
+        },
+        {
+          "package": "objc2@0.6.5",
+          "features": [
+            "alloc",
+            "std"
+          ],
+          "dependencies": [
+            "objc2-encode@4.1.0"
+          ]
+        },
+        {
+          "package": "objc2-core-foundation@0.3.2",
+          "features": [
+            "CFArray",
+            "CFBase",
+            "CFData",
+            "CFDictionary",
+            "CFPlugInCOM",
+            "CFRunLoop",
+            "CFString",
+            "CFURL",
+            "CFUUID",
+            "alloc",
+            "bitflags",
+            "std"
+          ],
+          "dependencies": [
+            "bitflags@2.13.2"
+          ]
+        },
+        {
+          "package": "objc2-encode@4.1.0",
+          "features": [
+            "alloc",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "objc2-io-kit@0.3.2",
+          "features": [
+            "alloc",
+            "libc",
+            "std"
+          ],
+          "dependencies": [
+            "libc@0.2.191",
+            "objc2-core-foundation@0.3.2"
+          ]
+        },
+        {
+          "package": "once_cell@1.21.4",
+          "features": [
+            "alloc",
+            "default",
+            "race",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "once_cell_polyfill@1.70.2",
+          "features": [
+            "default"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "openssl-probe@0.2.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "paste@1.0.15",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "pastey@0.2.3",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "percent-encoding@2.3.2",
+          "features": [
+            "alloc",
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "pin-project-lite@0.2.17",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "pkg-config@0.3.34",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "png@0.18.1",
+          "features": [],
+          "dependencies": [
+            "bitflags@2.13.2",
+            "crc32fast@1.5.3",
+            "fdeflate@0.3.7",
+            "flate2@1.1.10",
+            "miniz_oxide@0.8.9"
+          ]
+        },
+        {
+          "package": "potential_utf@0.1.6",
+          "features": [
+            "zerovec"
+          ],
+          "dependencies": [
+            "zerovec@0.11.9"
+          ]
+        },
+        {
+          "package": "ppv-lite86@0.2.21",
+          "features": [
+            "simd",
+            "std"
+          ],
+          "dependencies": [
+            "zerocopy@0.8.63"
+          ]
+        },
+        {
+          "package": "proc-macro2@1.0.107",
+          "features": [
+            "default",
+            "proc-macro"
+          ],
+          "dependencies": [
+            "unicode-ident@1.0.27"
+          ]
+        },
+        {
+          "package": "pxfm@0.1.30",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "quinn@0.11.12",
+          "features": [
+            "aws-lc-rs",
+            "runtime-tokio",
+            "rustls-aws-lc-rs"
+          ],
+          "dependencies": [
+            "bytes@1.12.1",
+            "cfg_aliases@0.2.2",
+            "pin-project-lite@0.2.17",
+            "quinn-proto@0.11.19",
+            "quinn-udp@0.5.16",
+            "rustc-hash@2.1.3",
+            "rustls@0.23.46",
+            "socket2@0.6.5",
+            "thiserror@2.0.21",
+            "tokio@1.54.1",
+            "tracing@0.1.44",
+            "web-time@1.1.0"
+          ]
+        },
+        {
+          "package": "quinn-proto@0.11.19",
+          "features": [
+            "aws-lc-rs",
+            "rustls-aws-lc-rs"
+          ],
+          "dependencies": [
+            "aws-lc-rs@1.18.2",
+            "bytes@1.12.1",
+            "getrandom@0.4.3",
+            "lru-slab@0.1.3",
+            "rand@0.10.3",
+            "rand_pcg@0.10.2",
+            "ring@0.17.14",
+            "rustc-hash@2.1.3",
+            "rustls-pki-types@1.15.1",
+            "rustls@0.23.46",
+            "slab@0.4.12",
+            "thiserror@2.0.21",
+            "tinyvec@1.13.3",
+            "tracing@0.1.44",
+            "web-time@1.1.0"
+          ]
+        },
+        {
+          "package": "quinn-udp@0.5.16",
+          "features": [
+            "tracing"
+          ],
+          "dependencies": [
+            "cfg_aliases@0.2.2",
+            "libc@0.2.191",
+            "once_cell@1.21.4",
+            "socket2@0.6.5",
+            "tracing@0.1.44",
+            "windows-sys@0.61.2"
+          ]
+        },
+        {
+          "package": "quote@1.0.47",
+          "features": [
+            "default",
+            "proc-macro"
+          ],
+          "dependencies": [
+            "proc-macro2@1.0.107"
+          ]
+        },
+        {
+          "package": "r-efi@5.3.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "r-efi@6.0.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "rand@0.9.5",
+          "features": [
+            "alloc",
+            "default",
+            "os_rng",
+            "small_rng",
+            "std",
+            "std_rng",
+            "thread_rng"
+          ],
+          "dependencies": [
+            "rand_chacha@0.9.0",
+            "rand_core@0.9.5"
+          ]
+        },
+        {
+          "package": "rand@0.10.3",
+          "features": [
+            "alloc",
+            "default",
+            "std",
+            "std_rng",
+            "sys_rng",
+            "thread_rng"
+          ],
+          "dependencies": [
+            "chacha20@0.10.2",
+            "getrandom@0.4.3",
+            "rand_core@0.10.1"
+          ]
+        },
+        {
+          "package": "rand_chacha@0.9.0",
+          "features": [
+            "std"
+          ],
+          "dependencies": [
+            "ppv-lite86@0.2.21",
+            "rand_core@0.9.5"
+          ]
+        },
+        {
+          "package": "rand_core@0.9.5",
+          "features": [
+            "os_rng",
+            "std"
+          ],
+          "dependencies": [
+            "getrandom@0.3.4"
+          ]
+        },
+        {
+          "package": "rand_core@0.10.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "rand_pcg@0.10.2",
+          "features": [],
+          "dependencies": [
+            "rand_core@0.10.1"
+          ]
+        },
+        {
+          "package": "rayon@1.12.0",
+          "features": [],
+          "dependencies": [
+            "either@1.19.0",
+            "rayon-core@1.13.0"
+          ]
+        },
+        {
+          "package": "rayon-cond@0.4.0",
+          "features": [],
+          "dependencies": [
+            "either@1.19.0",
+            "itertools@0.14.0",
+            "rayon@1.12.0"
+          ]
+        },
+        {
+          "package": "rayon-core@1.13.0",
+          "features": [],
+          "dependencies": [
+            "crossbeam-deque@0.8.8",
+            "crossbeam-utils@0.8.23"
+          ]
+        },
+        {
+          "package": "regex@1.13.1",
+          "features": [
+            "default",
+            "perf",
+            "perf-backtrack",
+            "perf-cache",
+            "perf-dfa",
+            "perf-inline",
+            "perf-literal",
+            "perf-onepass",
+            "std",
+            "unicode",
+            "unicode-age",
+            "unicode-bool",
+            "unicode-case",
+            "unicode-gencat",
+            "unicode-perl",
+            "unicode-script",
+            "unicode-segment"
+          ],
+          "dependencies": [
+            "aho-corasick@1.1.5",
+            "memchr@2.8.3",
+            "regex-automata@0.4.18",
+            "regex-syntax@0.8.11"
+          ]
+        },
+        {
+          "package": "regex-automata@0.4.18",
+          "features": [
+            "alloc",
+            "dfa",
+            "dfa-build",
+            "dfa-onepass",
+            "dfa-search",
+            "hybrid",
+            "meta",
+            "nfa",
+            "nfa-backtrack",
+            "nfa-pikevm",
+            "nfa-thompson",
+            "perf",
+            "perf-inline",
+            "perf-literal",
+            "perf-literal-multisubstring",
+            "perf-literal-substring",
+            "std",
+            "syntax",
+            "unicode",
+            "unicode-age",
+            "unicode-bool",
+            "unicode-case",
+            "unicode-gencat",
+            "unicode-perl",
+            "unicode-script",
+            "unicode-segment",
+            "unicode-word-boundary"
+          ],
+          "dependencies": [
+            "aho-corasick@1.1.5",
+            "memchr@2.8.3",
+            "regex-syntax@0.8.11"
+          ]
+        },
+        {
+          "package": "regex-syntax@0.8.11",
+          "features": [
+            "default",
+            "std",
+            "unicode",
+            "unicode-age",
+            "unicode-bool",
+            "unicode-case",
+            "unicode-gencat",
+            "unicode-perl",
+            "unicode-script",
+            "unicode-segment"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "reqwest@0.13.5",
+          "features": [
+            "__rustls",
+            "__rustls-aws-lc-rs",
+            "__tls",
+            "json",
+            "query",
+            "rustls",
+            "stream"
+          ],
+          "dependencies": [
+            "base64@0.23.1",
+            "bytes@1.12.1",
+            "futures-core@0.3.34",
+            "futures-util@0.3.34",
+            "http-body-util@0.1.5",
+            "http-body@1.1.0",
+            "http@1.5.0",
+            "hyper-rustls@0.27.10",
+            "hyper-util@0.1.21",
+            "hyper@1.12.0",
+            "js-sys@0.3.106",
+            "log@0.4.34",
+            "percent-encoding@2.3.2",
+            "pin-project-lite@0.2.17",
+            "quinn@0.11.12",
+            "rustls-pki-types@1.15.1",
+            "rustls-platform-verifier@0.7.1",
+            "rustls@0.23.46",
+            "serde@1.0.229",
+            "serde_json@1.0.154",
+            "serde_urlencoded@0.7.1",
+            "sync_wrapper@1.0.2",
+            "tokio-rustls@0.26.6",
+            "tokio-util@0.7.20",
+            "tokio@1.54.1",
+            "tower-http@0.6.11",
+            "tower-service@0.3.3",
+            "tower@0.5.3",
+            "url@2.5.8",
+            "wasm-bindgen-futures@0.4.79",
+            "wasm-bindgen@0.2.129",
+            "wasm-streams@0.5.0",
+            "web-sys@0.3.106"
+          ]
+        },
+        {
+          "package": "ring@0.17.14",
+          "features": [
+            "alloc",
+            "default",
+            "dev_urandom_fallback",
+            "wasm32_unknown_unknown_js"
+          ],
+          "dependencies": [
+            "cc@1.10.0",
+            "cfg-if@1.0.5",
+            "getrandom@0.2.17",
+            "libc@0.2.191",
+            "untrusted@0.9.0",
+            "windows-sys@0.52.0"
+          ]
+        },
+        {
+          "package": "rsqlite-vfs@0.2.0",
+          "features": [],
+          "dependencies": [
+            "thiserror@2.0.21"
+          ]
+        },
+        {
+          "package": "rusqlite@0.41.1",
+          "features": [
+            "bundled",
+            "cache",
+            "default",
+            "ffi-sqlite-wasm-rs",
+            "hashlink",
+            "limits",
+            "modern_sqlite"
+          ],
+          "dependencies": [
+            "bitflags@2.13.2",
+            "fallible-iterator@0.3.0",
+            "fallible-streaming-iterator@0.1.9",
+            "hashlink@0.12.2",
+            "libsqlite3-sys@0.39.1",
+            "smallvec@1.16.4",
+            "sqlite-wasm-rs@0.6.2"
+          ]
+        },
+        {
+          "package": "rustc-hash@2.1.3",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "rustc_version@0.4.1",
+          "features": [],
+          "dependencies": [
+            "semver@1.0.28"
+          ]
+        },
+        {
+          "package": "rustix@1.1.5",
+          "features": [
+            "alloc",
+            "default",
+            "fs",
+            "std"
+          ],
+          "dependencies": [
+            "bitflags@2.13.2",
+            "errno@0.3.14",
+            "libc@0.2.191",
+            "linux-raw-sys@0.12.1",
+            "windows-sys@0.61.2"
+          ]
+        },
+        {
+          "package": "rustls@0.23.46",
+          "features": [
+            "aws-lc-rs",
+            "aws_lc_rs",
+            "std",
+            "tls12"
+          ],
+          "dependencies": [
+            "aws-lc-rs@1.18.2",
+            "once_cell@1.21.4",
+            "rustls-pki-types@1.15.1",
+            "rustls-webpki@0.103.16",
+            "subtle@2.6.1",
+            "zeroize@1.9.1"
+          ]
+        },
+        {
+          "package": "rustls-native-certs@0.8.5",
+          "features": [],
+          "dependencies": [
+            "openssl-probe@0.2.1",
+            "rustls-pki-types@1.15.1",
+            "schannel@0.1.30",
+            "security-framework@3.7.0"
+          ]
+        },
+        {
+          "package": "rustls-pki-types@1.15.1",
+          "features": [
+            "alloc",
+            "default",
+            "std",
+            "web",
+            "web-time"
+          ],
+          "dependencies": [
+            "web-time@1.1.0",
+            "zeroize@1.9.1"
+          ]
+        },
+        {
+          "package": "rustls-platform-verifier@0.7.1",
+          "features": [],
+          "dependencies": [
+            "core-foundation-sys@0.8.7",
+            "core-foundation@0.10.1",
+            "jni@0.22.4",
+            "log@0.4.34",
+            "once_cell@1.21.4",
+            "rustls-native-certs@0.8.5",
+            "rustls-platform-verifier-android@0.2.0",
+            "rustls-webpki@0.103.16",
+            "rustls@0.23.46",
+            "security-framework-sys@2.17.0",
+            "security-framework@3.7.0",
+            "webpki-root-certs@1.0.11",
+            "windows-sys@0.61.2"
+          ]
+        },
+        {
+          "package": "rustls-platform-verifier-android@0.2.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "rustls-webpki@0.103.16",
+          "features": [
+            "alloc",
+            "aws-lc-rs",
+            "std"
+          ],
+          "dependencies": [
+            "aws-lc-rs@1.18.2",
+            "ring@0.17.14",
+            "rustls-pki-types@1.15.1",
+            "untrusted@0.9.0"
+          ]
+        },
+        {
+          "package": "rustversion@1.0.23",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "ryu@1.0.23",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "same-file@1.0.6",
+          "features": [],
+          "dependencies": [
+            "winapi-util@0.1.11"
+          ]
+        },
+        {
+          "package": "schannel@0.1.30",
+          "features": [],
+          "dependencies": [
+            "windows-sys@0.61.2"
+          ]
+        },
+        {
+          "package": "security-framework@3.7.0",
+          "features": [
+            "OSX_10_14",
+            "alpn",
+            "default",
+            "session-tickets"
+          ],
+          "dependencies": [
+            "bitflags@2.13.2",
+            "core-foundation-sys@0.8.7",
+            "core-foundation@0.10.1",
+            "libc@0.2.191",
+            "security-framework-sys@2.17.0"
+          ]
+        },
+        {
+          "package": "security-framework-sys@2.17.0",
+          "features": [
+            "OSX_10_13",
+            "default"
+          ],
+          "dependencies": [
+            "core-foundation-sys@0.8.7",
+            "libc@0.2.191"
+          ]
+        },
+        {
+          "package": "semver@1.0.28",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "serde@1.0.229",
+          "features": [
+            "alloc",
+            "default",
+            "derive",
+            "serde_derive",
+            "std"
+          ],
+          "dependencies": [
+            "serde_core@1.0.229",
+            "serde_derive@1.0.229"
+          ]
+        },
+        {
+          "package": "serde_core@1.0.229",
+          "features": [
+            "alloc",
+            "default",
+            "result",
+            "std"
+          ],
+          "dependencies": [
+            "serde_derive@1.0.229"
+          ]
+        },
+        {
+          "package": "serde_derive@1.0.229",
+          "features": [
+            "default"
+          ],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@3.0.9"
+          ]
+        },
+        {
+          "package": "serde_json@1.0.154",
+          "features": [
+            "default",
+            "raw_value",
+            "std"
+          ],
+          "dependencies": [
+            "itoa@1.0.18",
+            "memchr@2.8.3",
+            "serde@1.0.229",
+            "serde_core@1.0.229",
+            "zmij@1.0.23"
+          ]
+        },
+        {
+          "package": "serde_path_to_error@0.1.20",
+          "features": [],
+          "dependencies": [
+            "itoa@1.0.18",
+            "serde@1.0.229",
+            "serde_core@1.0.229"
+          ]
+        },
+        {
+          "package": "serde_urlencoded@0.7.1",
+          "features": [],
+          "dependencies": [
+            "form_urlencoded@1.2.2",
+            "itoa@1.0.18",
+            "ryu@1.0.23",
+            "serde@1.0.229"
+          ]
+        },
+        {
+          "package": "sha2@0.11.1",
+          "features": [
+            "alloc",
+            "default",
+            "oid"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "cpufeatures@0.3.1",
+            "digest@0.11.3"
+          ]
+        },
+        {
+          "package": "shlex@2.0.1",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "signal-hook-registry@1.4.8",
+          "features": [],
+          "dependencies": [
+            "errno@0.3.14",
+            "libc@0.2.191"
+          ]
+        },
+        {
+          "package": "simd-adler32@0.3.10",
+          "features": [
+            "const-generics",
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "simd_cesu8@1.2.0",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "rustc_version@0.4.1",
+            "simdutf8@0.1.5"
+          ]
+        },
+        {
+          "package": "simdutf8@0.1.5",
+          "features": [
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "slab@0.4.12",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "smallvec@1.16.4",
+          "features": [
+            "const_generics",
+            "const_new"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "socket2@0.6.5",
+          "features": [
+            "all"
+          ],
+          "dependencies": [
+            "libc@0.2.191",
+            "windows-sys@0.61.2"
+          ]
+        },
+        {
+          "package": "spm_precompiled@0.1.4",
+          "features": [],
+          "dependencies": [
+            "base64@0.13.1",
+            "nom@7.1.3",
+            "serde@1.0.229",
+            "unicode-segmentation@1.13.3"
+          ]
+        },
+        {
+          "package": "sqlite-wasm-rs@0.6.2",
+          "features": [],
+          "dependencies": [
+            "cc@1.10.0",
+            "rsqlite-vfs@0.2.0"
+          ]
+        },
+        {
+          "package": "stable_deref_trait@1.2.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "static_assertions@1.1.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "strsim@0.11.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "subtle@2.6.1",
+          "features": [
+            "default",
+            "i128",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "syn@2.0.119",
+          "features": [
+            "clone-impls",
+            "default",
+            "derive",
+            "extra-traits",
+            "full",
+            "parsing",
+            "printing",
+            "proc-macro"
+          ],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "unicode-ident@1.0.27"
+          ]
+        },
+        {
+          "package": "syn@3.0.9",
+          "features": [
+            "clone-impls",
+            "default",
+            "derive",
+            "extra-traits",
+            "fold",
+            "full",
+            "parsing",
+            "printing",
+            "proc-macro",
+            "visit",
+            "visit-mut"
+          ],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "unicode-ident@1.0.27"
+          ]
+        },
+        {
+          "package": "sync_wrapper@1.0.2",
+          "features": [
+            "futures",
+            "futures-core"
+          ],
+          "dependencies": [
+            "futures-core@0.3.34"
+          ]
+        },
+        {
+          "package": "synstructure@0.14.0",
+          "features": [
+            "default",
+            "proc-macro"
+          ],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@3.0.9"
+          ]
+        },
+        {
+          "package": "sysinfo@0.40.0",
+          "features": [
+            "system"
+          ],
+          "dependencies": [
+            "libc@0.2.191",
+            "memchr@2.8.3",
+            "ntapi@0.4.3",
+            "objc2-core-foundation@0.3.2",
+            "objc2-io-kit@0.3.2",
+            "windows@0.62.2"
+          ]
+        },
+        {
+          "package": "tempfile@3.27.0",
+          "features": [
+            "default",
+            "getrandom"
+          ],
+          "dependencies": [
+            "fastrand@2.5.0",
+            "getrandom@0.4.3",
+            "once_cell@1.21.4",
+            "rustix@1.1.5",
+            "windows-sys@0.61.2"
+          ]
+        },
+        {
+          "package": "thiserror@2.0.21",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "thiserror-impl@2.0.21"
+          ]
+        },
+        {
+          "package": "thiserror-impl@2.0.21",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@3.0.9"
+          ]
+        },
+        {
+          "package": "tinystr@0.8.5",
+          "features": [
+            "zerovec"
+          ],
+          "dependencies": [
+            "displaydoc@0.2.7",
+            "zerovec@0.11.9"
+          ]
+        },
+        {
+          "package": "tinyvec@1.13.3",
+          "features": [
+            "alloc",
+            "default"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "tokenizers@0.23.2",
+          "features": [
+            "fancy-regex"
+          ],
+          "dependencies": [
+            "ahash@0.8.12",
+            "compact_str@0.9.1",
+            "daachorse@3.0.3",
+            "dary_heap@0.3.9",
+            "derive_builder@0.20.2",
+            "esaxx-rs@0.1.10",
+            "fancy-regex@0.17.0",
+            "getrandom@0.3.4",
+            "itertools@0.14.0",
+            "log@0.4.34",
+            "macro_rules_attribute@0.2.3",
+            "monostate@0.1.18",
+            "paste@1.0.15",
+            "rand@0.9.5",
+            "rayon-cond@0.4.0",
+            "rayon@1.12.0",
+            "regex-syntax@0.8.11",
+            "regex@1.13.1",
+            "serde@1.0.229",
+            "serde_json@1.0.154",
+            "spm_precompiled@0.1.4",
+            "thiserror@2.0.21",
+            "unicode-normalization-alignments@0.1.12",
+            "unicode-segmentation@1.13.3",
+            "unicode_categories@0.1.1"
+          ]
+        },
+        {
+          "package": "tokio@1.54.1",
+          "features": [
+            "bytes",
+            "default",
+            "fs",
+            "io-util",
+            "libc",
+            "macros",
+            "mio",
+            "net",
+            "rt",
+            "rt-multi-thread",
+            "signal",
+            "signal-hook-registry",
+            "socket2",
+            "sync",
+            "time",
+            "tokio-macros",
+            "windows-sys"
+          ],
+          "dependencies": [
+            "bytes@1.12.1",
+            "libc@0.2.191",
+            "mio@1.2.4",
+            "pin-project-lite@0.2.17",
+            "signal-hook-registry@1.4.8",
+            "socket2@0.6.5",
+            "tokio-macros@2.7.2",
+            "windows-sys@0.61.2"
+          ]
+        },
+        {
+          "package": "tokio-macros@2.7.2",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@3.0.9"
+          ]
+        },
+        {
+          "package": "tokio-rustls@0.26.6",
+          "features": [
+            "aws-lc-rs",
+            "aws_lc_rs",
+            "tls12"
+          ],
+          "dependencies": [
+            "rustls@0.23.46",
+            "tokio@1.54.1"
+          ]
+        },
+        {
+          "package": "tokio-util@0.7.20",
+          "features": [
+            "default",
+            "futures-util",
+            "io",
+            "rt"
+          ],
+          "dependencies": [
+            "bytes@1.12.1",
+            "futures-core@0.3.34",
+            "futures-sink@0.3.34",
+            "futures-util@0.3.34",
+            "pin-project-lite@0.2.17",
+            "tokio@1.54.1"
+          ]
+        },
+        {
+          "package": "tower@0.5.3",
+          "features": [
+            "futures-core",
+            "futures-util",
+            "log",
+            "make",
+            "pin-project-lite",
+            "retry",
+            "sync_wrapper",
+            "timeout",
+            "tokio",
+            "tracing",
+            "util"
+          ],
+          "dependencies": [
+            "futures-core@0.3.34",
+            "futures-util@0.3.34",
+            "pin-project-lite@0.2.17",
+            "sync_wrapper@1.0.2",
+            "tokio@1.54.1",
+            "tower-layer@0.3.3",
+            "tower-service@0.3.3",
+            "tracing@0.1.44"
+          ]
+        },
+        {
+          "package": "tower-http@0.6.11",
+          "features": [
+            "follow-redirect",
+            "futures-util",
+            "tower"
+          ],
+          "dependencies": [
+            "bitflags@2.13.2",
+            "bytes@1.12.1",
+            "futures-util@0.3.34",
+            "http-body@1.1.0",
+            "http@1.5.0",
+            "pin-project-lite@0.2.17",
+            "tower-layer@0.3.3",
+            "tower-service@0.3.3",
+            "tower@0.5.3",
+            "url@2.5.8"
+          ]
+        },
+        {
+          "package": "tower-layer@0.3.3",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "tower-service@0.3.3",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "tracing@0.1.44",
+          "features": [
+            "log",
+            "std"
+          ],
+          "dependencies": [
+            "log@0.4.34",
+            "pin-project-lite@0.2.17",
+            "tracing-core@0.1.36"
+          ]
+        },
+        {
+          "package": "tracing-core@0.1.36",
+          "features": [
+            "once_cell",
+            "std"
+          ],
+          "dependencies": [
+            "once_cell@1.21.4"
+          ]
+        },
+        {
+          "package": "try-lock@0.2.5",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "typenum@1.20.1",
+          "features": [
+            "const-generics"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "unicode-ident@1.0.27",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "unicode-normalization@0.1.26",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "tinyvec@1.13.3"
+          ]
+        },
+        {
+          "package": "unicode-normalization-alignments@0.1.12",
+          "features": [],
+          "dependencies": [
+            "smallvec@1.16.4"
+          ]
+        },
+        {
+          "package": "unicode-segmentation@1.13.3",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "unicode_categories@0.1.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "untrusted@0.9.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "url@2.5.8",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "form_urlencoded@1.2.2",
+            "idna@1.1.0",
+            "percent-encoding@2.3.2",
+            "serde@1.0.229"
+          ]
+        },
+        {
+          "package": "utf8_iter@1.0.4",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "utf8parse@0.2.2",
+          "features": [
+            "default"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "uuid@1.29.0",
+          "features": [
+            "default",
+            "rng",
+            "std",
+            "v4"
+          ],
+          "dependencies": [
+            "getrandom@0.4.3",
+            "js-sys@0.3.106",
+            "wasm-bindgen@0.2.129"
+          ]
+        },
+        {
+          "package": "vcpkg@0.2.15",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "version_check@0.9.5",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "walkdir@2.5.0",
+          "features": [],
+          "dependencies": [
+            "same-file@1.0.6",
+            "winapi-util@0.1.11"
+          ]
+        },
+        {
+          "package": "want@0.3.2",
+          "features": [],
+          "dependencies": [
+            "try-lock@0.2.5"
+          ]
+        },
+        {
+          "package": "wasi@0.11.1+wasi-snapshot-preview1",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "wasip2@1.0.4+wasi-0.2.12",
+          "features": [],
+          "dependencies": [
+            "wit-bindgen@0.57.1"
+          ]
+        },
+        {
+          "package": "wasm-bindgen@0.2.129",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "once_cell@1.21.4",
+            "rustversion@1.0.23",
+            "wasm-bindgen-macro@0.2.129",
+            "wasm-bindgen-shared@0.2.129"
+          ]
+        },
+        {
+          "package": "wasm-bindgen-futures@0.4.79",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "js-sys@0.3.106",
+            "tokio@1.54.1",
+            "wasm-bindgen@0.2.129"
+          ]
+        },
+        {
+          "package": "wasm-bindgen-macro@0.2.129",
+          "features": [],
+          "dependencies": [
+            "quote@1.0.47",
+            "wasm-bindgen-macro-support@0.2.129"
+          ]
+        },
+        {
+          "package": "wasm-bindgen-macro-support@0.2.129",
+          "features": [],
+          "dependencies": [
+            "bumpalo@3.20.3",
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@3.0.9",
+            "wasm-bindgen-shared@0.2.129"
+          ]
+        },
+        {
+          "package": "wasm-bindgen-shared@0.2.129",
+          "features": [],
+          "dependencies": [
+            "unicode-ident@1.0.27"
+          ]
+        },
+        {
+          "package": "wasm-streams@0.5.0",
+          "features": [],
+          "dependencies": [
+            "futures-util@0.3.34",
+            "js-sys@0.3.106",
+            "wasm-bindgen-futures@0.4.79",
+            "wasm-bindgen@0.2.129",
+            "web-sys@0.3.106"
+          ]
+        },
+        {
+          "package": "web-sys@0.3.106",
+          "features": [
+            "AbortController",
+            "AbortSignal",
+            "Blob",
+            "BlobPropertyBag",
+            "EventTarget",
+            "File",
+            "FormData",
+            "Headers",
+            "QueuingStrategy",
+            "ReadableByteStreamController",
+            "ReadableStream",
+            "ReadableStreamByobReader",
+            "ReadableStreamByobRequest",
+            "ReadableStreamDefaultController",
+            "ReadableStreamDefaultReader",
+            "ReadableStreamGetReaderOptions",
+            "ReadableStreamReadResult",
+            "ReadableStreamReaderMode",
+            "ReadableStreamType",
+            "ReadableWritablePair",
+            "ReferrerPolicy",
+            "Request",
+            "RequestCache",
+            "RequestCredentials",
+            "RequestInit",
+            "RequestMode",
+            "Response",
+            "ServiceWorkerGlobalScope",
+            "StreamPipeOptions",
+            "TransformStream",
+            "TransformStreamDefaultController",
+            "Transformer",
+            "UnderlyingSink",
+            "UnderlyingSource",
+            "Window",
+            "WorkerGlobalScope",
+            "WritableStream",
+            "WritableStreamDefaultController",
+            "WritableStreamDefaultWriter",
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "js-sys@0.3.106",
+            "wasm-bindgen@0.2.129"
+          ]
+        },
+        {
+          "package": "web-time@1.1.0",
+          "features": [],
+          "dependencies": [
+            "js-sys@0.3.106",
+            "wasm-bindgen@0.2.129"
+          ]
+        },
+        {
+          "package": "webpki-root-certs@1.0.11",
+          "features": [],
+          "dependencies": [
+            "rustls-pki-types@1.15.1"
+          ]
+        },
+        {
+          "package": "winapi@0.3.9",
+          "features": [
+            "cfg",
+            "evntrace",
+            "fileapi",
+            "handleapi",
+            "in6addr",
+            "inaddr",
+            "minwinbase",
+            "ntsecapi",
+            "processthreadsapi",
+            "std",
+            "winbase",
+            "windef",
+            "winerror",
+            "winioctl"
+          ],
+          "dependencies": [
+            "winapi-i686-pc-windows-gnu@0.4.0",
+            "winapi-x86_64-pc-windows-gnu@0.4.0"
+          ]
+        },
+        {
+          "package": "winapi-i686-pc-windows-gnu@0.4.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "winapi-util@0.1.11",
+          "features": [],
+          "dependencies": [
+            "windows-sys@0.61.2"
+          ]
+        },
+        {
+          "package": "winapi-x86_64-pc-windows-gnu@0.4.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "windows@0.62.2",
+          "features": [
+            "Wdk",
+            "Wdk_System",
+            "Wdk_System_SystemInformation",
+            "Wdk_System_SystemServices",
+            "Wdk_System_Threading",
+            "Win32",
+            "Win32_Foundation",
+            "Win32_Security",
+            "Win32_Security_Authorization",
+            "Win32_System",
+            "Win32_System_Diagnostics",
+            "Win32_System_Diagnostics_Debug",
+            "Win32_System_Diagnostics_ToolHelp",
+            "Win32_System_Kernel",
+            "Win32_System_Memory",
+            "Win32_System_Performance",
+            "Win32_System_Power",
+            "Win32_System_ProcessStatus",
+            "Win32_System_Registry",
+            "Win32_System_RemoteDesktop",
+            "Win32_System_SystemInformation",
+            "Win32_System_SystemServices",
+            "Win32_System_Threading",
+            "Win32_UI",
+            "Win32_UI_Shell",
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "windows-collections@0.3.2",
+            "windows-core@0.62.2",
+            "windows-future@0.3.2",
+            "windows-numerics@0.3.1"
+          ]
+        },
+        {
+          "package": "windows-collections@0.3.2",
+          "features": [
+            "std"
+          ],
+          "dependencies": [
+            "windows-core@0.62.2"
+          ]
+        },
+        {
+          "package": "windows-core@0.62.2",
+          "features": [
+            "std"
+          ],
+          "dependencies": [
+            "windows-implement@0.60.2",
+            "windows-interface@0.59.3",
+            "windows-link@0.2.1",
+            "windows-result@0.4.1",
+            "windows-strings@0.5.1"
+          ]
+        },
+        {
+          "package": "windows-future@0.3.2",
+          "features": [
+            "std"
+          ],
+          "dependencies": [
+            "windows-core@0.62.2",
+            "windows-link@0.2.1",
+            "windows-threading@0.2.1"
+          ]
+        },
+        {
+          "package": "windows-implement@0.60.2",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "windows-interface@0.59.3",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "windows-link@0.2.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "windows-numerics@0.3.1",
+          "features": [
+            "std"
+          ],
+          "dependencies": [
+            "windows-core@0.62.2",
+            "windows-link@0.2.1"
+          ]
+        },
+        {
+          "package": "windows-result@0.4.1",
+          "features": [
+            "std"
+          ],
+          "dependencies": [
+            "windows-link@0.2.1"
+          ]
+        },
+        {
+          "package": "windows-strings@0.5.1",
+          "features": [
+            "std"
+          ],
+          "dependencies": [
+            "windows-link@0.2.1"
+          ]
+        },
+        {
+          "package": "windows-sys@0.52.0",
+          "features": [
+            "Win32",
+            "Win32_Foundation",
+            "Win32_System",
+            "Win32_System_Threading",
+            "default"
+          ],
+          "dependencies": [
+            "windows-targets@0.52.6"
+          ]
+        },
+        {
+          "package": "windows-sys@0.61.2",
+          "features": [
+            "Wdk",
+            "Wdk_Foundation",
+            "Wdk_Storage",
+            "Wdk_Storage_FileSystem",
+            "Wdk_System",
+            "Wdk_System_IO",
+            "Win32",
+            "Win32_Foundation",
+            "Win32_Networking",
+            "Win32_Networking_WinSock",
+            "Win32_Security",
+            "Win32_Security_Authentication",
+            "Win32_Security_Authentication_Identity",
+            "Win32_Security_Credentials",
+            "Win32_Security_Cryptography",
+            "Win32_Storage",
+            "Win32_Storage_FileSystem",
+            "Win32_System",
+            "Win32_System_Console",
+            "Win32_System_Diagnostics",
+            "Win32_System_Diagnostics_Debug",
+            "Win32_System_IO",
+            "Win32_System_LibraryLoader",
+            "Win32_System_Memory",
+            "Win32_System_Pipes",
+            "Win32_System_SystemInformation",
+            "Win32_System_SystemServices",
+            "Win32_System_Threading",
+            "Win32_System_WindowsProgramming",
+            "default"
+          ],
+          "dependencies": [
+            "windows-link@0.2.1"
+          ]
+        },
+        {
+          "package": "windows-targets@0.52.6",
+          "features": [],
+          "dependencies": [
+            "windows_aarch64_gnullvm@0.52.6",
+            "windows_aarch64_msvc@0.52.6",
+            "windows_i686_gnu@0.52.6",
+            "windows_i686_gnullvm@0.52.6",
+            "windows_i686_msvc@0.52.6",
+            "windows_x86_64_gnu@0.52.6",
+            "windows_x86_64_gnullvm@0.52.6",
+            "windows_x86_64_msvc@0.52.6"
+          ]
+        },
+        {
+          "package": "windows-threading@0.2.1",
+          "features": [],
+          "dependencies": [
+            "windows-link@0.2.1"
+          ]
+        },
+        {
+          "package": "windows_aarch64_gnullvm@0.52.6",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "windows_aarch64_msvc@0.52.6",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "windows_i686_gnu@0.52.6",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "windows_i686_gnullvm@0.52.6",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "windows_i686_msvc@0.52.6",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "windows_x86_64_gnu@0.52.6",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "windows_x86_64_gnullvm@0.52.6",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "windows_x86_64_msvc@0.52.6",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "wit-bindgen@0.57.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "writeable@0.6.4",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "yoke@0.8.4",
+          "features": [
+            "derive",
+            "zerofrom"
+          ],
+          "dependencies": [
+            "stable_deref_trait@1.2.1",
+            "yoke-derive@0.8.4",
+            "zerofrom@0.1.8"
+          ]
+        },
+        {
+          "package": "yoke-derive@0.8.4",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@3.0.9",
+            "synstructure@0.14.0"
+          ]
+        },
+        {
+          "package": "zerocopy@0.8.63",
+          "features": [
+            "derive",
+            "simd",
+            "zerocopy-derive"
+          ],
+          "dependencies": [
+            "zerocopy-derive@0.8.63"
+          ]
+        },
+        {
+          "package": "zerocopy-derive@0.8.63",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "zerofrom@0.1.8",
+          "features": [
+            "derive"
+          ],
+          "dependencies": [
+            "zerofrom-derive@0.1.8"
+          ]
+        },
+        {
+          "package": "zerofrom-derive@0.1.8",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@3.0.9",
+            "synstructure@0.14.0"
+          ]
+        },
+        {
+          "package": "zeroize@1.9.1",
+          "features": [
+            "alloc",
+            "default"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "zerotrie@0.2.5",
+          "features": [
+            "yoke",
+            "zerofrom"
+          ],
+          "dependencies": [
+            "displaydoc@0.2.7",
+            "yoke@0.8.4",
+            "zerofrom@0.1.8"
+          ]
+        },
+        {
+          "package": "zerovec@0.11.9",
+          "features": [
+            "derive",
+            "yoke"
+          ],
+          "dependencies": [
+            "yoke@0.8.4",
+            "zerofrom@0.1.8",
+            "zerovec-derive@0.11.7"
+          ]
+        },
+        {
+          "package": "zerovec-derive@0.11.7",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@3.0.9"
+          ]
+        },
+        {
+          "package": "zlib-rs@0.6.8",
+          "features": [
+            "rust-allocator",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "zmij@1.0.23",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "zune-core@0.5.3",
+          "features": [
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "zune-jpeg@0.5.15",
+          "features": [
+            "default",
+            "neon",
+            "std",
+            "x86"
+          ],
+          "dependencies": [
+            "zune-core@0.5.3"
+          ]
+        }
+      ]
+    },
+    {
+      "manifest": "fuzz/Cargo.toml",
+      "nodes": [
+        {
+          "package": "adler2@2.0.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "ahash@0.8.12",
+          "features": [
+            "default",
+            "getrandom",
+            "runtime-rng",
+            "serde",
+            "std"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "getrandom@0.3.4",
+            "once_cell@1.21.4",
+            "serde@1.0.229",
+            "version_check@0.9.5",
+            "zerocopy@0.8.63"
+          ]
+        },
+        {
+          "package": "aho-corasick@1.1.5",
+          "features": [
+            "perf-literal",
+            "std"
+          ],
+          "dependencies": [
+            "memchr@2.8.3"
+          ]
+        },
+        {
+          "package": "arbitrary@1.5.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "autocfg@1.5.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "base64@0.13.1",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "bit-set@0.8.0",
+          "features": [
+            "std"
+          ],
+          "dependencies": [
+            "bit-vec@0.8.0"
+          ]
+        },
+        {
+          "package": "bit-vec@0.8.0",
+          "features": [
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "bitflags@2.13.2",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "block-buffer@0.12.1",
+          "features": [],
+          "dependencies": [
+            "hybrid-array@0.4.15"
+          ]
+        },
+        {
+          "package": "bytemuck@1.25.2",
+          "features": [
+            "extern_crate_alloc"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "byteorder-lite@0.1.0",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "castaway@0.2.4",
+          "features": [
+            "alloc"
+          ],
+          "dependencies": [
+            "rustversion@1.0.23"
+          ]
+        },
+        {
+          "package": "cc@1.10.0",
+          "features": [
+            "parallel"
+          ],
+          "dependencies": [
+            "find-msvc-tools@0.1.15",
+            "jobserver@0.1.35",
+            "libc@0.2.191",
+            "shlex@2.0.1"
+          ]
+        },
+        {
+          "package": "cfg-if@1.0.5",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "coheryn-engine@0.1.0-dev",
+          "features": [],
+          "dependencies": [
+            "half@2.7.1",
+            "image@0.25.10",
+            "minijinja@3.0.4",
+            "rayon@1.12.0",
+            "serde@1.0.229",
+            "serde_json@1.0.154",
+            "sha2@0.11.1",
+            "tokenizers@0.23.2",
+            "unicode-normalization@0.1.26"
+          ]
+        },
+        {
+          "package": "coheryn-fuzz@0.0.0",
+          "features": [],
+          "dependencies": [
+            "coheryn-engine@0.1.0-dev",
+            "libfuzzer-sys@0.4.13",
+            "serde_json@1.0.154"
+          ]
+        },
+        {
+          "package": "compact_str@0.9.1",
+          "features": [
+            "default",
+            "serde",
+            "std"
+          ],
+          "dependencies": [
+            "castaway@0.2.4",
+            "cfg-if@1.0.5",
+            "itoa@1.0.18",
+            "rustversion@1.0.23",
+            "ryu@1.0.23",
+            "serde@1.0.229",
+            "static_assertions@1.1.0"
+          ]
+        },
+        {
+          "package": "const-oid@0.10.2",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "cpufeatures@0.3.1",
+          "features": [],
+          "dependencies": [
+            "libc@0.2.191"
+          ]
+        },
+        {
+          "package": "crc32fast@1.5.3",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5"
+          ]
+        },
+        {
+          "package": "crossbeam-deque@0.8.8",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "crossbeam-epoch@0.9.21",
+            "crossbeam-utils@0.8.23"
+          ]
+        },
+        {
+          "package": "crossbeam-epoch@0.9.21",
+          "features": [
+            "alloc",
+            "std"
+          ],
+          "dependencies": [
+            "crossbeam-utils@0.8.23"
+          ]
+        },
+        {
+          "package": "crossbeam-utils@0.8.23",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "crunchy@0.2.4",
+          "features": [
+            "default",
+            "limit_128"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "crypto-common@0.2.2",
+          "features": [],
+          "dependencies": [
+            "hybrid-array@0.4.15"
+          ]
+        },
+        {
+          "package": "daachorse@3.0.3",
+          "features": [
+            "alloc",
+            "default"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "darling@0.20.11",
+          "features": [
+            "default",
+            "suggestions"
+          ],
+          "dependencies": [
+            "darling_core@0.20.11",
+            "darling_macro@0.20.11"
+          ]
+        },
+        {
+          "package": "darling_core@0.20.11",
+          "features": [
+            "strsim",
+            "suggestions"
+          ],
+          "dependencies": [
+            "fnv@1.0.7",
+            "ident_case@1.0.1",
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "strsim@0.11.1",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "darling_macro@0.20.11",
+          "features": [],
+          "dependencies": [
+            "darling_core@0.20.11",
+            "quote@1.0.47",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "dary_heap@0.3.9",
+          "features": [
+            "serde"
+          ],
+          "dependencies": [
+            "serde@1.0.229"
+          ]
+        },
+        {
+          "package": "derive_builder@0.20.2",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "derive_builder_macro@0.20.2"
+          ]
+        },
+        {
+          "package": "derive_builder_core@0.20.2",
+          "features": [
+            "lib_has_std"
+          ],
+          "dependencies": [
+            "darling@0.20.11",
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "derive_builder_macro@0.20.2",
+          "features": [
+            "lib_has_std"
+          ],
+          "dependencies": [
+            "derive_builder_core@0.20.2",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "digest@0.11.3",
+          "features": [
+            "alloc",
+            "block-api",
+            "default",
+            "oid"
+          ],
+          "dependencies": [
+            "block-buffer@0.12.1",
+            "const-oid@0.10.2",
+            "crypto-common@0.2.2"
+          ]
+        },
+        {
+          "package": "either@1.19.0",
+          "features": [
+            "default",
+            "std",
+            "use_std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "esaxx-rs@0.1.10",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "fancy-regex@0.17.0",
+          "features": [
+            "default",
+            "perf",
+            "std",
+            "unicode",
+            "variable-lookbehinds"
+          ],
+          "dependencies": [
+            "bit-set@0.8.0",
+            "regex-automata@0.4.18",
+            "regex-syntax@0.8.11"
+          ]
+        },
+        {
+          "package": "fdeflate@0.3.7",
+          "features": [],
+          "dependencies": [
+            "simd-adler32@0.3.10"
+          ]
+        },
+        {
+          "package": "find-msvc-tools@0.1.15",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "flate2@1.1.10",
+          "features": [
+            "any_impl",
+            "default",
+            "miniz_oxide",
+            "runtime_detection",
+            "rust_backend"
+          ],
+          "dependencies": [
+            "crc32fast@1.5.3",
+            "miniz_oxide@0.9.1",
+            "zlib-rs@0.6.8"
+          ]
+        },
+        {
+          "package": "fnv@1.0.7",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "getrandom@0.3.4",
+          "features": [
+            "std"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "libc@0.2.191",
+            "r-efi@5.3.0",
+            "wasip2@1.0.4+wasi-0.2.12"
+          ]
+        },
+        {
+          "package": "getrandom@0.4.3",
+          "features": [
+            "std"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "libc@0.2.191",
+            "r-efi@6.0.0"
+          ]
+        },
+        {
+          "package": "half@2.7.1",
+          "features": [
+            "alloc",
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "crunchy@0.2.4",
+            "zerocopy@0.8.63"
+          ]
+        },
+        {
+          "package": "hybrid-array@0.4.15",
+          "features": [],
+          "dependencies": [
+            "typenum@1.20.1"
+          ]
+        },
+        {
+          "package": "ident_case@1.0.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "image@0.25.10",
+          "features": [
+            "jpeg",
+            "png"
+          ],
+          "dependencies": [
+            "bytemuck@1.25.2",
+            "byteorder-lite@0.1.0",
+            "moxcms@0.8.1",
+            "num-traits@0.2.19",
+            "png@0.18.1",
+            "zune-core@0.5.3",
+            "zune-jpeg@0.5.15"
+          ]
+        },
+        {
+          "package": "itertools@0.14.0",
+          "features": [
+            "default",
+            "use_alloc",
+            "use_std"
+          ],
+          "dependencies": [
+            "either@1.19.0"
+          ]
+        },
+        {
+          "package": "itoa@1.0.18",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "jobserver@0.1.35",
+          "features": [],
+          "dependencies": [
+            "getrandom@0.4.3",
+            "libc@0.2.191"
+          ]
+        },
+        {
+          "package": "libc@0.2.191",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "libfuzzer-sys@0.4.13",
+          "features": [
+            "default",
+            "link_libfuzzer"
+          ],
+          "dependencies": [
+            "arbitrary@1.5.0",
+            "cc@1.10.0"
+          ]
+        },
+        {
+          "package": "log@0.4.34",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "macro_rules_attribute@0.2.3",
+          "features": [
+            "default"
+          ],
+          "dependencies": [
+            "macro_rules_attribute-proc_macro@0.2.3",
+            "pastey@0.2.3"
+          ]
+        },
+        {
+          "package": "macro_rules_attribute-proc_macro@0.2.3",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "memchr@2.8.3",
+          "features": [
+            "alloc",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "minijinja@3.0.4",
+          "features": [
+            "adjacent_loop_items",
+            "builtins",
+            "debug",
+            "default",
+            "fuel",
+            "json",
+            "macros",
+            "multi_template",
+            "serde",
+            "std_collections"
+          ],
+          "dependencies": [
+            "serde@1.0.229"
+          ]
+        },
+        {
+          "package": "minimal-lexical@0.2.1",
+          "features": [
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "miniz_oxide@0.8.9",
+          "features": [
+            "default",
+            "simd",
+            "simd-adler32",
+            "with-alloc"
+          ],
+          "dependencies": [
+            "adler2@2.0.1",
+            "simd-adler32@0.3.10"
+          ]
+        },
+        {
+          "package": "miniz_oxide@0.9.1",
+          "features": [
+            "default",
+            "simd",
+            "simd-adler32",
+            "with-alloc"
+          ],
+          "dependencies": [
+            "adler2@2.0.1",
+            "simd-adler32@0.3.10"
+          ]
+        },
+        {
+          "package": "monostate@0.1.18",
+          "features": [],
+          "dependencies": [
+            "monostate-impl@0.1.18",
+            "serde@1.0.229",
+            "serde_core@1.0.229"
+          ]
+        },
+        {
+          "package": "monostate-impl@0.1.18",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "moxcms@0.8.1",
+          "features": [
+            "avx",
+            "avx_luts",
+            "avx_shaper_fixed_point_paths",
+            "avx_shaper_paths",
+            "default",
+            "lut",
+            "neon",
+            "neon_luts",
+            "neon_shaper_fixed_point_paths",
+            "neon_shaper_paths",
+            "sse",
+            "sse_luts",
+            "sse_shaper_fixed_point_paths",
+            "sse_shaper_paths"
+          ],
+          "dependencies": [
+            "num-traits@0.2.19",
+            "pxfm@0.1.30"
+          ]
+        },
+        {
+          "package": "nom@7.1.3",
+          "features": [
+            "alloc",
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "memchr@2.8.3",
+            "minimal-lexical@0.2.1"
+          ]
+        },
+        {
+          "package": "num-traits@0.2.19",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "autocfg@1.5.1"
+          ]
+        },
+        {
+          "package": "once_cell@1.21.4",
+          "features": [
+            "alloc",
+            "race"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "paste@1.0.15",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "pastey@0.2.3",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "png@0.18.1",
+          "features": [],
+          "dependencies": [
+            "bitflags@2.13.2",
+            "crc32fast@1.5.3",
+            "fdeflate@0.3.7",
+            "flate2@1.1.10",
+            "miniz_oxide@0.8.9"
+          ]
+        },
+        {
+          "package": "ppv-lite86@0.2.21",
+          "features": [
+            "simd",
+            "std"
+          ],
+          "dependencies": [
+            "zerocopy@0.8.63"
+          ]
+        },
+        {
+          "package": "proc-macro2@1.0.107",
+          "features": [
+            "default",
+            "proc-macro"
+          ],
+          "dependencies": [
+            "unicode-ident@1.0.27"
+          ]
+        },
+        {
+          "package": "pxfm@0.1.30",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "quote@1.0.47",
+          "features": [
+            "default",
+            "proc-macro"
+          ],
+          "dependencies": [
+            "proc-macro2@1.0.107"
+          ]
+        },
+        {
+          "package": "r-efi@5.3.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "r-efi@6.0.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "rand@0.9.5",
+          "features": [
+            "alloc",
+            "default",
+            "os_rng",
+            "small_rng",
+            "std",
+            "std_rng",
+            "thread_rng"
+          ],
+          "dependencies": [
+            "rand_chacha@0.9.0",
+            "rand_core@0.9.5"
+          ]
+        },
+        {
+          "package": "rand_chacha@0.9.0",
+          "features": [
+            "std"
+          ],
+          "dependencies": [
+            "ppv-lite86@0.2.21",
+            "rand_core@0.9.5"
+          ]
+        },
+        {
+          "package": "rand_core@0.9.5",
+          "features": [
+            "os_rng",
+            "std"
+          ],
+          "dependencies": [
+            "getrandom@0.3.4"
+          ]
+        },
+        {
+          "package": "rayon@1.12.0",
+          "features": [],
+          "dependencies": [
+            "either@1.19.0",
+            "rayon-core@1.13.0"
+          ]
+        },
+        {
+          "package": "rayon-cond@0.4.0",
+          "features": [],
+          "dependencies": [
+            "either@1.19.0",
+            "itertools@0.14.0",
+            "rayon@1.12.0"
+          ]
+        },
+        {
+          "package": "rayon-core@1.13.0",
+          "features": [],
+          "dependencies": [
+            "crossbeam-deque@0.8.8",
+            "crossbeam-utils@0.8.23"
+          ]
+        },
+        {
+          "package": "regex@1.13.1",
+          "features": [
+            "default",
+            "perf",
+            "perf-backtrack",
+            "perf-cache",
+            "perf-dfa",
+            "perf-inline",
+            "perf-literal",
+            "perf-onepass",
+            "std",
+            "unicode",
+            "unicode-age",
+            "unicode-bool",
+            "unicode-case",
+            "unicode-gencat",
+            "unicode-perl",
+            "unicode-script",
+            "unicode-segment"
+          ],
+          "dependencies": [
+            "aho-corasick@1.1.5",
+            "memchr@2.8.3",
+            "regex-automata@0.4.18",
+            "regex-syntax@0.8.11"
+          ]
+        },
+        {
+          "package": "regex-automata@0.4.18",
+          "features": [
+            "alloc",
+            "dfa",
+            "dfa-build",
+            "dfa-onepass",
+            "dfa-search",
+            "hybrid",
+            "meta",
+            "nfa",
+            "nfa-backtrack",
+            "nfa-pikevm",
+            "nfa-thompson",
+            "perf",
+            "perf-inline",
+            "perf-literal",
+            "perf-literal-multisubstring",
+            "perf-literal-substring",
+            "std",
+            "syntax",
+            "unicode",
+            "unicode-age",
+            "unicode-bool",
+            "unicode-case",
+            "unicode-gencat",
+            "unicode-perl",
+            "unicode-script",
+            "unicode-segment",
+            "unicode-word-boundary"
+          ],
+          "dependencies": [
+            "aho-corasick@1.1.5",
+            "memchr@2.8.3",
+            "regex-syntax@0.8.11"
+          ]
+        },
+        {
+          "package": "regex-syntax@0.8.11",
+          "features": [
+            "default",
+            "std",
+            "unicode",
+            "unicode-age",
+            "unicode-bool",
+            "unicode-case",
+            "unicode-gencat",
+            "unicode-perl",
+            "unicode-script",
+            "unicode-segment"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "rustversion@1.0.23",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "ryu@1.0.23",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "serde@1.0.229",
+          "features": [
+            "alloc",
+            "default",
+            "derive",
+            "serde_derive",
+            "std"
+          ],
+          "dependencies": [
+            "serde_core@1.0.229",
+            "serde_derive@1.0.229"
+          ]
+        },
+        {
+          "package": "serde_core@1.0.229",
+          "features": [
+            "alloc",
+            "result",
+            "std"
+          ],
+          "dependencies": [
+            "serde_derive@1.0.229"
+          ]
+        },
+        {
+          "package": "serde_derive@1.0.229",
+          "features": [
+            "default"
+          ],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@3.0.9"
+          ]
+        },
+        {
+          "package": "serde_json@1.0.154",
+          "features": [
+            "default",
+            "raw_value",
+            "std"
+          ],
+          "dependencies": [
+            "itoa@1.0.18",
+            "memchr@2.8.3",
+            "serde@1.0.229",
+            "serde_core@1.0.229",
+            "zmij@1.0.23"
+          ]
+        },
+        {
+          "package": "sha2@0.11.1",
+          "features": [
+            "alloc",
+            "default",
+            "oid"
+          ],
+          "dependencies": [
+            "cfg-if@1.0.5",
+            "cpufeatures@0.3.1",
+            "digest@0.11.3"
+          ]
+        },
+        {
+          "package": "shlex@2.0.1",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "simd-adler32@0.3.10",
+          "features": [
+            "const-generics",
+            "default",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "smallvec@1.16.4",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "spm_precompiled@0.1.4",
+          "features": [],
+          "dependencies": [
+            "base64@0.13.1",
+            "nom@7.1.3",
+            "serde@1.0.229",
+            "unicode-segmentation@1.13.3"
+          ]
+        },
+        {
+          "package": "static_assertions@1.1.0",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "strsim@0.11.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "syn@2.0.119",
+          "features": [
+            "clone-impls",
+            "default",
+            "derive",
+            "extra-traits",
+            "full",
+            "parsing",
+            "printing",
+            "proc-macro"
+          ],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "unicode-ident@1.0.27"
+          ]
+        },
+        {
+          "package": "syn@3.0.9",
+          "features": [
+            "clone-impls",
+            "default",
+            "derive",
+            "parsing",
+            "printing",
+            "proc-macro"
+          ],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "unicode-ident@1.0.27"
+          ]
+        },
+        {
+          "package": "thiserror@2.0.21",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "thiserror-impl@2.0.21"
+          ]
+        },
+        {
+          "package": "thiserror-impl@2.0.21",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@3.0.9"
+          ]
+        },
+        {
+          "package": "tinyvec@1.13.3",
+          "features": [
+            "alloc",
+            "default"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "tokenizers@0.23.2",
+          "features": [
+            "fancy-regex"
+          ],
+          "dependencies": [
+            "ahash@0.8.12",
+            "compact_str@0.9.1",
+            "daachorse@3.0.3",
+            "dary_heap@0.3.9",
+            "derive_builder@0.20.2",
+            "esaxx-rs@0.1.10",
+            "fancy-regex@0.17.0",
+            "getrandom@0.3.4",
+            "itertools@0.14.0",
+            "log@0.4.34",
+            "macro_rules_attribute@0.2.3",
+            "monostate@0.1.18",
+            "paste@1.0.15",
+            "rand@0.9.5",
+            "rayon-cond@0.4.0",
+            "rayon@1.12.0",
+            "regex-syntax@0.8.11",
+            "regex@1.13.1",
+            "serde@1.0.229",
+            "serde_json@1.0.154",
+            "spm_precompiled@0.1.4",
+            "thiserror@2.0.21",
+            "unicode-normalization-alignments@0.1.12",
+            "unicode-segmentation@1.13.3",
+            "unicode_categories@0.1.1"
+          ]
+        },
+        {
+          "package": "typenum@1.20.1",
+          "features": [
+            "const-generics"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "unicode-ident@1.0.27",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "unicode-normalization@0.1.26",
+          "features": [
+            "default",
+            "std"
+          ],
+          "dependencies": [
+            "tinyvec@1.13.3"
+          ]
+        },
+        {
+          "package": "unicode-normalization-alignments@0.1.12",
+          "features": [],
+          "dependencies": [
+            "smallvec@1.16.4"
+          ]
+        },
+        {
+          "package": "unicode-segmentation@1.13.3",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "unicode_categories@0.1.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "version_check@0.9.5",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "wasip2@1.0.4+wasi-0.2.12",
+          "features": [],
+          "dependencies": [
+            "wit-bindgen@0.57.1"
+          ]
+        },
+        {
+          "package": "wit-bindgen@0.57.1",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "zerocopy@0.8.63",
+          "features": [
+            "derive",
+            "simd",
+            "zerocopy-derive"
+          ],
+          "dependencies": [
+            "zerocopy-derive@0.8.63"
+          ]
+        },
+        {
+          "package": "zerocopy-derive@0.8.63",
+          "features": [],
+          "dependencies": [
+            "proc-macro2@1.0.107",
+            "quote@1.0.47",
+            "syn@2.0.119"
+          ]
+        },
+        {
+          "package": "zlib-rs@0.6.8",
+          "features": [
+            "rust-allocator",
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "zmij@1.0.23",
+          "features": [],
+          "dependencies": []
+        },
+        {
+          "package": "zune-core@0.5.3",
+          "features": [
+            "std"
+          ],
+          "dependencies": []
+        },
+        {
+          "package": "zune-jpeg@0.5.15",
+          "features": [
+            "default",
+            "neon",
+            "std",
+            "x86"
+          ],
+          "dependencies": [
+            "zune-core@0.5.3"
+          ]
+        }
+      ]
+    }
+  ],
+  "source_files_checked": 391,
+  "forbidden_dependency_count": 0,
+  "archive_records_verified": 30,
+  "packages": [
+    {
+      "name": "adler2",
+      "version": "2.0.1",
+      "license": "0BSD OR MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "ahash",
+      "version": "0.8.12",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "aho-corasick",
+      "version": "1.1.5",
+      "license": "Unlicense OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "anstream",
+      "version": "1.0.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "anstyle",
+      "version": "1.0.14",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "anstyle-parse",
+      "version": "1.0.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "anstyle-query",
+      "version": "1.1.5",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "anstyle-wincon",
+      "version": "3.0.11",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "arbitrary",
+      "version": "1.5.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "atomic-waker",
+      "version": "1.1.2",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "autocfg",
+      "version": "1.5.1",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "aws-lc-rs",
+      "version": "1.18.2",
+      "license": "ISC AND (Apache-2.0 OR ISC)",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "aws-lc-sys",
+      "version": "0.46.0",
+      "license": "ISC AND (Apache-2.0 OR ISC) AND Apache-2.0 AND MIT AND BSD-3-Clause AND (Apache-2.0 OR ISC OR MIT) AND (Apache-2.0 OR ISC OR MIT-0)",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "axum",
+      "version": "0.8.9",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "axum-core",
+      "version": "0.5.6",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "base64",
+      "version": "0.13.1",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "base64",
+      "version": "0.23.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "bit-set",
+      "version": "0.8.0",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "bit-vec",
+      "version": "0.8.0",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "bitflags",
+      "version": "2.13.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "block-buffer",
+      "version": "0.12.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "block2",
+      "version": "0.6.2",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "bumpalo",
+      "version": "3.20.3",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "bytemuck",
+      "version": "1.25.2",
+      "license": "Zlib OR Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "byteorder-lite",
+      "version": "0.1.0",
+      "license": "Unlicense OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "bytes",
+      "version": "1.12.1",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "castaway",
+      "version": "0.2.4",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "cc",
+      "version": "1.10.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "cfg-if",
+      "version": "1.0.5",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "cfg_aliases",
+      "version": "0.2.2",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "chacha20",
+      "version": "0.10.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "clap",
+      "version": "4.6.7",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "clap_builder",
+      "version": "4.6.7",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "clap_derive",
+      "version": "4.6.7",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "clap_lex",
+      "version": "1.1.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "cmake",
+      "version": "0.1.58",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "coheryn-api",
+      "version": "0.1.0-dev",
+      "license": "Apache-2.0",
+      "source": null,
+      "checksum": null
+    },
+    {
+      "name": "coheryn-bench",
+      "version": "0.1.0-dev",
+      "license": "Apache-2.0",
+      "source": null,
+      "checksum": null
+    },
+    {
+      "name": "coheryn-cli",
+      "version": "0.1.0-dev",
+      "license": "Apache-2.0",
+      "source": null,
+      "checksum": null
+    },
+    {
+      "name": "coheryn-engine",
+      "version": "0.1.0-dev",
+      "license": "Apache-2.0",
+      "source": null,
+      "checksum": null
+    },
+    {
+      "name": "coheryn-fuzz",
+      "version": "0.0.0",
+      "license": "Apache-2.0",
+      "source": null,
+      "checksum": null
+    },
+    {
+      "name": "colorchoice",
+      "version": "1.0.5",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "combine",
+      "version": "4.6.9",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "compact_str",
+      "version": "0.9.1",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "const-oid",
+      "version": "0.10.2",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "core-foundation",
+      "version": "0.10.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "core-foundation-sys",
+      "version": "0.8.7",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "cpufeatures",
+      "version": "0.3.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "crc32fast",
+      "version": "1.5.3",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "crossbeam-deque",
+      "version": "0.8.8",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "crossbeam-epoch",
+      "version": "0.9.21",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "crossbeam-utils",
+      "version": "0.8.23",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "crunchy",
+      "version": "0.2.4",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "crypto-common",
+      "version": "0.2.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "ctrlc",
+      "version": "3.5.2",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "daachorse",
+      "version": "3.0.3",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "darling",
+      "version": "0.20.11",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "darling_core",
+      "version": "0.20.11",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "darling_macro",
+      "version": "0.20.11",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "dary_heap",
+      "version": "0.3.9",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "derive_builder",
+      "version": "0.20.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "derive_builder_core",
+      "version": "0.20.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "derive_builder_macro",
+      "version": "0.20.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "digest",
+      "version": "0.11.3",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "dispatch2",
+      "version": "0.3.1",
+      "license": "Zlib OR Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "displaydoc",
+      "version": "0.2.7",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "dunce",
+      "version": "1.0.5",
+      "license": "CC0-1.0 OR MIT-0 OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "either",
+      "version": "1.19.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "errno",
+      "version": "0.3.14",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "esaxx-rs",
+      "version": "0.1.10",
+      "license": "Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "fallible-iterator",
+      "version": "0.3.0",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "fallible-streaming-iterator",
+      "version": "0.1.9",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "fancy-regex",
+      "version": "0.17.0",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "fastrand",
+      "version": "2.5.0",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "fdeflate",
+      "version": "0.3.7",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "find-msvc-tools",
+      "version": "0.1.15",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "flate2",
+      "version": "1.1.10",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "fnv",
+      "version": "1.0.7",
+      "license": "Apache-2.0 / MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "foldhash",
+      "version": "0.2.0",
+      "license": "Zlib",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "form_urlencoded",
+      "version": "1.2.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "fs2",
+      "version": "0.4.3",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "fs_extra",
+      "version": "1.3.0",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "futures-channel",
+      "version": "0.3.34",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "futures-core",
+      "version": "0.3.34",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "futures-io",
+      "version": "0.3.34",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "futures-macro",
+      "version": "0.3.34",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "futures-sink",
+      "version": "0.3.34",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "futures-task",
+      "version": "0.3.34",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "futures-util",
+      "version": "0.3.34",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "getrandom",
+      "version": "0.2.17",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "getrandom",
+      "version": "0.3.4",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "getrandom",
+      "version": "0.4.3",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "half",
+      "version": "2.7.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "hashbrown",
+      "version": "0.17.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "hashlink",
+      "version": "0.12.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "heck",
+      "version": "0.5.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "http",
+      "version": "1.5.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "http-body",
+      "version": "1.1.0",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "http-body-util",
+      "version": "0.1.5",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "httparse",
+      "version": "1.10.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "httpdate",
+      "version": "1.0.3",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "hybrid-array",
+      "version": "0.4.15",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "hyper",
+      "version": "1.12.0",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "hyper-rustls",
+      "version": "0.27.10",
+      "license": "Apache-2.0 OR ISC OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "hyper-util",
+      "version": "0.1.21",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "icu_collections",
+      "version": "2.4.0",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "icu_locale_core",
+      "version": "2.4.0",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "icu_normalizer",
+      "version": "2.4.0",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "icu_normalizer_data",
+      "version": "2.4.0",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "icu_properties",
+      "version": "2.4.0",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "icu_properties_data",
+      "version": "2.4.0",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "icu_provider",
+      "version": "2.4.0",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "ident_case",
+      "version": "1.0.1",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "idna",
+      "version": "1.1.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "idna_adapter",
+      "version": "1.2.2",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "image",
+      "version": "0.25.10",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "ipnet",
+      "version": "2.12.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "is_terminal_polyfill",
+      "version": "1.70.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "itertools",
+      "version": "0.14.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "itoa",
+      "version": "1.0.18",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "jni",
+      "version": "0.22.4",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "jni-macros",
+      "version": "0.22.4",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "jni-sys",
+      "version": "0.4.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "jni-sys-macros",
+      "version": "0.4.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "jobserver",
+      "version": "0.1.35",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "js-sys",
+      "version": "0.3.106",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "libc",
+      "version": "0.2.191",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "libfuzzer-sys",
+      "version": "0.4.13",
+      "license": "(MIT OR Apache-2.0) AND NCSA",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "libsqlite3-sys",
+      "version": "0.39.1",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "linux-raw-sys",
+      "version": "0.12.1",
+      "license": "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "litemap",
+      "version": "0.8.3",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "log",
+      "version": "0.4.34",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "lru-slab",
+      "version": "0.1.3",
+      "license": "MIT OR Apache-2.0 OR Zlib",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "macro_rules_attribute",
+      "version": "0.2.3",
+      "license": "Apache-2.0 OR MIT OR Zlib",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "macro_rules_attribute-proc_macro",
+      "version": "0.2.3",
+      "license": "Apache-2.0 OR MIT OR Zlib",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "matchit",
+      "version": "0.8.4",
+      "license": "MIT AND BSD-3-Clause",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "memchr",
+      "version": "2.8.3",
+      "license": "Unlicense OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "mime",
+      "version": "0.3.17",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "minijinja",
+      "version": "3.0.4",
+      "license": "Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "minimal-lexical",
+      "version": "0.2.1",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "miniz_oxide",
+      "version": "0.8.9",
+      "license": "MIT OR Zlib OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "miniz_oxide",
+      "version": "0.9.1",
+      "license": "MIT OR Zlib OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "mio",
+      "version": "1.2.4",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "monostate",
+      "version": "0.1.18",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "monostate-impl",
+      "version": "0.1.18",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "moxcms",
+      "version": "0.8.1",
+      "license": "BSD-3-Clause OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "nix",
+      "version": "0.31.3",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "nom",
+      "version": "7.1.3",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "ntapi",
+      "version": "0.4.3",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "num-traits",
+      "version": "0.2.19",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "objc2",
+      "version": "0.6.5",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "objc2-core-foundation",
+      "version": "0.3.2",
+      "license": "Zlib OR Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "objc2-encode",
+      "version": "4.1.0",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "objc2-io-kit",
+      "version": "0.3.2",
+      "license": "Zlib OR Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "once_cell",
+      "version": "1.21.4",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "once_cell_polyfill",
+      "version": "1.70.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "openssl-probe",
+      "version": "0.2.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "paste",
+      "version": "1.0.15",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "pastey",
+      "version": "0.2.3",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "percent-encoding",
+      "version": "2.3.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "pin-project-lite",
+      "version": "0.2.17",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "pkg-config",
+      "version": "0.3.34",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "png",
+      "version": "0.18.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "potential_utf",
+      "version": "0.1.6",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "ppv-lite86",
+      "version": "0.2.21",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "proc-macro2",
+      "version": "1.0.107",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "pxfm",
+      "version": "0.1.30",
+      "license": "BSD-3-Clause OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "quinn",
+      "version": "0.11.12",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "quinn-proto",
+      "version": "0.11.19",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "quinn-udp",
+      "version": "0.5.16",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "quote",
+      "version": "1.0.47",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "r-efi",
+      "version": "5.3.0",
+      "license": "MIT OR Apache-2.0 OR LGPL-2.1-or-later",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "r-efi",
+      "version": "6.0.0",
+      "license": "MIT OR Apache-2.0 OR LGPL-2.1-or-later",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rand",
+      "version": "0.10.3",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rand",
+      "version": "0.9.5",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rand_chacha",
+      "version": "0.9.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rand_core",
+      "version": "0.10.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rand_core",
+      "version": "0.9.5",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rand_pcg",
+      "version": "0.10.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rayon",
+      "version": "1.12.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rayon-cond",
+      "version": "0.4.0",
+      "license": "Apache-2.0/MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rayon-core",
+      "version": "1.13.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "regex",
+      "version": "1.13.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "regex-automata",
+      "version": "0.4.18",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "regex-syntax",
+      "version": "0.8.11",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "reqwest",
+      "version": "0.13.5",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "ring",
+      "version": "0.17.14",
+      "license": "Apache-2.0 AND ISC",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rsqlite-vfs",
+      "version": "0.2.0",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rusqlite",
+      "version": "0.41.1",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rustc-hash",
+      "version": "2.1.3",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rustc_version",
+      "version": "0.4.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rustix",
+      "version": "1.1.5",
+      "license": "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rustls",
+      "version": "0.23.46",
+      "license": "Apache-2.0 OR ISC OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rustls-native-certs",
+      "version": "0.8.5",
+      "license": "Apache-2.0 OR ISC OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rustls-pki-types",
+      "version": "1.15.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rustls-platform-verifier",
+      "version": "0.7.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rustls-platform-verifier-android",
+      "version": "0.2.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rustls-webpki",
+      "version": "0.103.16",
+      "license": "ISC",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "rustversion",
+      "version": "1.0.23",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "ryu",
+      "version": "1.0.23",
+      "license": "Apache-2.0 OR BSL-1.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "same-file",
+      "version": "1.0.6",
+      "license": "Unlicense/MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "schannel",
+      "version": "0.1.30",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "security-framework",
+      "version": "3.7.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "security-framework-sys",
+      "version": "2.17.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "semver",
+      "version": "1.0.28",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "serde",
+      "version": "1.0.229",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "serde_core",
+      "version": "1.0.229",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "serde_derive",
+      "version": "1.0.229",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "serde_json",
+      "version": "1.0.154",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "serde_path_to_error",
+      "version": "0.1.20",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "serde_urlencoded",
+      "version": "0.7.1",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "sha2",
+      "version": "0.11.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "shlex",
+      "version": "2.0.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "signal-hook-registry",
+      "version": "1.4.8",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "simd-adler32",
+      "version": "0.3.10",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "simd_cesu8",
+      "version": "1.2.0",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "simdutf8",
+      "version": "0.1.5",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "slab",
+      "version": "0.4.12",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "smallvec",
+      "version": "1.16.4",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "socket2",
+      "version": "0.6.5",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "spm_precompiled",
+      "version": "0.1.4",
+      "license": "Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "sqlite-wasm-rs",
+      "version": "0.6.2",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "stable_deref_trait",
+      "version": "1.2.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "static_assertions",
+      "version": "1.1.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "strsim",
+      "version": "0.11.1",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "subtle",
+      "version": "2.6.1",
+      "license": "BSD-3-Clause",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "syn",
+      "version": "2.0.119",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "syn",
+      "version": "3.0.9",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "sync_wrapper",
+      "version": "1.0.2",
+      "license": "Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "synstructure",
+      "version": "0.14.0",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "sysinfo",
+      "version": "0.40.0",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tempfile",
+      "version": "3.27.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "thiserror",
+      "version": "2.0.21",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "thiserror-impl",
+      "version": "2.0.21",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tinystr",
+      "version": "0.8.5",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tinyvec",
+      "version": "1.13.3",
+      "license": "Zlib OR Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tokenizers",
+      "version": "0.23.2",
+      "license": "Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tokio",
+      "version": "1.54.1",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tokio-macros",
+      "version": "2.7.2",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tokio-rustls",
+      "version": "0.26.6",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tokio-util",
+      "version": "0.7.20",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tower",
+      "version": "0.5.3",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tower-http",
+      "version": "0.6.11",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tower-layer",
+      "version": "0.3.3",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tower-service",
+      "version": "0.3.3",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tracing",
+      "version": "0.1.44",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "tracing-core",
+      "version": "0.1.36",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "try-lock",
+      "version": "0.2.5",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "typenum",
+      "version": "1.20.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "unicode-ident",
+      "version": "1.0.27",
+      "license": "(MIT OR Apache-2.0) AND Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "unicode-normalization",
+      "version": "0.1.26",
+      "license": "(MIT OR Apache-2.0) AND Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "unicode-normalization-alignments",
+      "version": "0.1.12",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "unicode-segmentation",
+      "version": "1.13.3",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "unicode_categories",
+      "version": "0.1.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "untrusted",
+      "version": "0.9.0",
+      "license": "ISC",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "url",
+      "version": "2.5.8",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "utf8_iter",
+      "version": "1.0.4",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "utf8parse",
+      "version": "0.2.2",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "uuid",
+      "version": "1.29.0",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "vcpkg",
+      "version": "0.2.15",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "version_check",
+      "version": "0.9.5",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "walkdir",
+      "version": "2.5.0",
+      "license": "Unlicense/MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "want",
+      "version": "0.3.2",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "wasi",
+      "version": "0.11.1+wasi-snapshot-preview1",
+      "license": "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "wasip2",
+      "version": "1.0.4+wasi-0.2.12",
+      "license": "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "wasm-bindgen",
+      "version": "0.2.129",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "wasm-bindgen-futures",
+      "version": "0.4.79",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "wasm-bindgen-macro",
+      "version": "0.2.129",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "wasm-bindgen-macro-support",
+      "version": "0.2.129",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "wasm-bindgen-shared",
+      "version": "0.2.129",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "wasm-streams",
+      "version": "0.5.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "web-sys",
+      "version": "0.3.106",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "web-time",
+      "version": "1.1.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "webpki-root-certs",
+      "version": "1.0.11",
+      "license": "CDLA-Permissive-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "winapi",
+      "version": "0.3.9",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "winapi-i686-pc-windows-gnu",
+      "version": "0.4.0",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "winapi-util",
+      "version": "0.1.11",
+      "license": "Unlicense OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "winapi-x86_64-pc-windows-gnu",
+      "version": "0.4.0",
+      "license": "MIT/Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows",
+      "version": "0.62.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows-collections",
+      "version": "0.3.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows-core",
+      "version": "0.62.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows-future",
+      "version": "0.3.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows-implement",
+      "version": "0.60.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows-interface",
+      "version": "0.59.3",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows-link",
+      "version": "0.2.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows-numerics",
+      "version": "0.3.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows-result",
+      "version": "0.4.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows-strings",
+      "version": "0.5.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows-sys",
+      "version": "0.52.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows-sys",
+      "version": "0.61.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows-targets",
+      "version": "0.52.6",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows-threading",
+      "version": "0.2.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows_aarch64_gnullvm",
+      "version": "0.52.6",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows_aarch64_msvc",
+      "version": "0.52.6",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows_i686_gnu",
+      "version": "0.52.6",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows_i686_gnullvm",
+      "version": "0.52.6",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows_i686_msvc",
+      "version": "0.52.6",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows_x86_64_gnu",
+      "version": "0.52.6",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows_x86_64_gnullvm",
+      "version": "0.52.6",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "windows_x86_64_msvc",
+      "version": "0.52.6",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "wit-bindgen",
+      "version": "0.57.1",
+      "license": "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "writeable",
+      "version": "0.6.4",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "yoke",
+      "version": "0.8.4",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "yoke-derive",
+      "version": "0.8.4",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "zerocopy",
+      "version": "0.8.63",
+      "license": "BSD-2-Clause OR Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "zerocopy-derive",
+      "version": "0.8.63",
+      "license": "BSD-2-Clause OR Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "zerofrom",
+      "version": "0.1.8",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "zerofrom-derive",
+      "version": "0.1.8",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "zeroize",
+      "version": "1.9.1",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "zerotrie",
+      "version": "0.2.5",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "zerovec",
+      "version": "0.11.9",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "zerovec-derive",
+      "version": "0.11.7",
+      "license": "Unicode-3.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "zlib-rs",
+      "version": "0.6.8",
+      "license": "Zlib",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "zmij",
+      "version": "1.0.23",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "zune-core",
+      "version": "0.5.3",
+      "license": "MIT OR Apache-2.0 OR Zlib",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    },
+    {
+      "name": "zune-jpeg",
+      "version": "0.5.15",
+      "license": "MIT OR Apache-2.0 OR Zlib",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": null
+    }
+  ],
+  "release_artifact_qualification": "pending",
+  "license_review": "declared SPDX metadata inventoried; full review remains a release gate"
+}

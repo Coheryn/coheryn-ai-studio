@@ -46,6 +46,7 @@ impl From<Error> for ApiError {
             | ErrorCode::UnsupportedImageFormat
             | ErrorCode::UnsupportedImageProcessor
             | ErrorCode::InvalidGguf
+            | ErrorCode::InvalidSafetensors
             | ErrorCode::UnsupportedGgufVersion
             | ErrorCode::UnsupportedGgufTensorType
             | ErrorCode::UnsupportedModelArchitecture

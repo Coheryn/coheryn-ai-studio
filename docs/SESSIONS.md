@@ -28,6 +28,8 @@ Reset preserves system instructions by default and starts a new epoch. Clearing 
 
 ## Text prefix KV reuse
 
+This section applies to qualified Qwen2 GGUF text execution. The [Qwen3.5 managed text profile](QWEN35_SESSIONS.md) rebuilds request-local KV/recurrent state and reports zero reused/cached tokens; history persistence does not imply execution-state reuse.
+
 Each session owns an isolated cache. Reuse requires the same loaded model instance, validated model/header and tokenizer identity, context capacity, execution settings and an exact token prefix. The final prompt token is recomputed to obtain logits. Generation results expose `reused_prompt_tokens`; session views expose `cached_tokens` and `cache_reserved_bytes`. These fields report cache state, not a performance guarantee.
 
 The cache retains KV rows and a bounded token ledger; it holds neither model weights nor execution scratch/workers. Its reservation transfers atomically between idle and active execution, avoiding duplicate admission charges. A weak identity prevents cached state from keeping unloaded weights alive. Model unload/reload, incompatible settings, reset/delete, cancellation, errors, idle expiry and memory pressure invalidate or evict it. Prefix edits reuse only the identical leading tokens. Eviction changes compute cost, not authoritative history. No cache is shared between conversations or persisted to disk.

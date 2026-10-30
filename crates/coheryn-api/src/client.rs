@@ -1,6 +1,6 @@
 use crate::{auth::Credentials, wire::GenerationRequest};
 use coheryn_engine::{Cancellation, Error, ErrorCode, GenerationResult, Result, TokenEvent};
-use futures_util::StreamExt;
+use futures_util::{StreamExt, TryStreamExt};
 use serde_json::Value;
 use std::{path::Path, time::Duration};
 use tokio_util::io::ReaderStream;
@@ -322,6 +322,14 @@ impl Client {
         cancel: &Cancellation,
     ) -> Result<Value> {
         crate::registry::validate_id(name).map_err(|e| e.error)?;
+        if path.is_dir()
+            || path.extension().is_some_and(|e| e == "safetensors")
+            || path
+                .file_name()
+                .is_some_and(|n| n == "model.safetensors.index.json")
+        {
+            return self.import_checkpoint(path, name, sha256, cancel).await;
+        }
         let file = tokio::fs::File::open(path).await?;
         let bytes = file.metadata().await?.len();
         let mut query = vec![("name", name)];
@@ -335,6 +343,58 @@ impl Client {
             .header(reqwest::header::CONTENT_TYPE, "application/octet-stream")
             .header(reqwest::header::CONTENT_LENGTH, bytes)
             .body(reqwest::Body::wrap_stream(ReaderStream::new(file)));
+        let response = self.send(request, cancel).await?;
+        self.decode(response, cancel).await
+    }
+    async fn import_checkpoint(
+        &self,
+        path: &Path,
+        name: &str,
+        expected: Option<&str>,
+        cancel: &Cancellation,
+    ) -> Result<Value> {
+        use crate::checkpoint::{CheckpointManifest, MAGIC};
+        if let Some(hash) = expected {
+            crate::registry::validate_hash(hash).map_err(|e| e.error)?;
+        }
+        let source = path.to_owned();
+        let token = cancel.clone();
+        let (manifest, root) =
+            tokio::task::spawn_blocking(move || CheckpointManifest::from_local(&source, &token))
+                .await
+                .map_err(|e| Error::request(e.to_string()))?
+                .map_err(|e| e.error)?;
+        cancel.check()?;
+        let identity = manifest.identity().map_err(|e| e.error)?;
+        if expected.is_some_and(|v| !v.eq_ignore_ascii_case(&identity)) {
+            return Err(Error::request("checkpoint source-set SHA-256 mismatch"));
+        }
+        let json = serde_json::to_vec(&manifest).map_err(|e| Error::request(e.to_string()))?;
+        let total = manifest
+            .validate()
+            .map_err(|e| e.error)?
+            .checked_add(16 + json.len() as u64)
+            .ok_or_else(|| Error::resource("checkpoint transport byte overflow"))?;
+        let mut prefix = MAGIC.to_vec();
+        prefix.extend_from_slice(&(json.len() as u32).to_le_bytes());
+        prefix.extend_from_slice(&json);
+        let paths = manifest.files.into_iter().map(move |f| root.join(f.name));
+        // Files open on demand; neither the model payload nor the bundle is buffered in full.
+        let files = futures_util::stream::iter(paths)
+            .then(|path| async move { tokio::fs::File::open(path).await.map(ReaderStream::new) })
+            .try_flatten();
+        let first = futures_util::stream::once(async move {
+            Ok::<_, std::io::Error>(axum::body::Bytes::from(prefix))
+        });
+        let request = self
+            .request("POST", "/api/v1/models/import-checkpoint", true)?
+            .query(&[("name", name), ("sha256", identity.as_str())])
+            .header(
+                reqwest::header::CONTENT_TYPE,
+                "application/vnd.coheryn.checkpoint.v1",
+            )
+            .header(reqwest::header::CONTENT_LENGTH, total)
+            .body(reqwest::Body::wrap_stream(first.chain(files)));
         let response = self.send(request, cancel).await?;
         self.decode(response, cancel).await
     }

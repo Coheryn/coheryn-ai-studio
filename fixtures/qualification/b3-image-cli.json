@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "scope": "Native standalone Qwen3.5 PNG CLI with balanced profile and two workers; streaming reconstruction and frozen four-token continuation. No daemon/socket transport claim.",
+  "binary_sha256": "0bdb46b6b44c3e0988c4ce4edf775f3894ffc16477d656d72008f6bcbedf41dc",
+  "reference_sha256": "6cc3f329d36cd7bc8c87d560420275163b9a389a9dd24e526041742bb65042fc",
+  "result": {
+    "batching": {
+      "batched_forward_units": 0,
+      "forward_units": 87,
+      "maximum_batch_width": 1,
+      "prefilled_tokens": 84,
+      "profile": "coheryn-qwen35-batch-v1",
+      "scheduler_wait_ms": 0.0,
+      "strategy": "continuous-weight-tiled"
+    },
+    "completion_tokens": 4,
+    "decode_ms": 3056.150541,
+    "finish_reason": "length",
+    "first_token_ms": 59734.649666000005,
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 370256983,
+      "peak_session_buffer_capacity_bytes": 29137016,
+      "reserved": 276824064,
+      "session_buffer_capacity_bytes": 0
+    },
+    "output_delivery_ms": 0.0,
+    "prefill_ms": 59729.439162999995,
+    "prompt_tokens": 84,
+    "reused_prompt_tokens": 0,
+    "text": "The picture is **",
+    "token_ids": [
+      760,
+      6588,
+      369,
+      2972
+    ],
+    "tokenization_ms": 0.068458,
+    "vision": {
+      "effective_positions": 28,
+      "images": 1,
+      "language_sha256": "",
+      "peak_request_reserved_bytes": 93432919,
+      "profile": "qwen35-still-cpu-v1",
+      "vision_ms": 11164.167334,
+      "vision_sha256": ""
+    }
+  },
+  "events": [
+    {
+      "token": {
+        "text": "The",
+        "token_id": 760
+      }
+    },
+    {
+      "token": {
+        "text": " picture",
+        "token_id": 6588
+      }
+    },
+    {
+      "token": {
+        "text": " is",
+        "token_id": 369
+      }
+    },
+    {
+      "token": {
+        "text": " **",
+        "token_id": 2972
+      }
+    }
+  ],
+  "external_executor_invoked": false,
+  "cache_condition": "uncontrolled"
+}

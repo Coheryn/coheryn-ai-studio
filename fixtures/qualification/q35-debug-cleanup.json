@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "removed": [
+    "target/debug",
+    "fuzz/target/debug"
+  ],
+  "removed_unique_inode_allocated_bytes": 2369101824,
+  "filesystem_free_before": 8847360000,
+  "filesystem_free_after": 11059200000,
+  "preserved_release_sha256": {
+    "target/release/coheryn": "e4767059752921f4cbf1c22a125a8bd583424e7353843c9759f6056d4c2c9632",
+    "target/release/coheryn-bench": "0ed7dcaf38d874f5147012316300d6fcac540d36ff76289c0f1f627de986aa78",
+    "target/release/examples/qwen35_probe": "3cc482aaff7786636769c86d8c6fba875d0a41a864bc5ab380bc0caa64d1a2a6"
+  },
+  "scope": "Only generated debug directories, retired atomically after nonblocking Cargo locks; no active Rust/Coheryn process observed. Model caches, reference data, sources and release binaries retained."
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "kind": "cpu-model-qualification-verification",
+  "outcome": "pass",
+  "production_ready": false,
+  "actual_targets": [
+    "aarch64-apple-darwin"
+  ],
+  "current_source_snapshot_sha256": "69f0f9c16ade3976f7c945eba45d500750f9d1d25bc32c11076151f39f221562",
+  "evidence": {
+    "native_checks": {
+      "path": "fixtures/qualification/cpu-model-native-checks-v4.json",
+      "sha256": "c9f04b252d3adcf95c81f42d7bbeb1afc37c60e7cae18f89764b0c839368369f"
+    },
+    "numerical_and_cli": {
+      "path": "fixtures/qualification/cpu-model-runtime-v1.json",
+      "sha256": "4ebbcf1458ab1a685c66b8814eb10def2094bb6498c169615c432db4ffd19de9"
+    },
+    "corrected_image_http": {
+      "path": "fixtures/qualification/cpu-model-image-http-v2.json",
+      "sha256": "77d233a6be9e4221925732f3e368fa5c7682b0125a9d254030d14c54329545b4"
+    },
+    "package": {
+      "path": "fixtures/qualification/cpu-model-package-v2.json",
+      "sha256": "f7a8a8c9ae21dd1c04365ed06a0d9154580ca54fc9e554c0c98d82f420341e83"
+    },
+    "reference_reproduction": {
+      "path": "fixtures/qualification/cpu-model-reference-reproduction.json",
+      "sha256": "1f7e9b4094427d4daffa7e234cf3daf612b5b13281887d6e9b2d0cd14b4746ab"
+    },
+    "tool_versions": {
+      "path": "fixtures/qualification/cpu-model-tool-versions.json",
+      "sha256": "ca2e3f34d14bb70f29ac7a9257db71441d4eb7e13009b1513f9a9a60485d85d6"
+    },
+    "stale_source_rejection": {
+      "path": "fixtures/qualification/cpu-model-stale-source-rejection.json",
+      "sha256": "ba6510d95e76c172adf6503ed03681c61cd987f5bd74b9d636bc6a8aada565cc"
+    },
+    "readiness": {
+      "path": "fixtures/qualification/cpu-model-readiness-final.json",
+      "sha256": "9885811c449557fe48f841f698b47cac97b630d582ec06982f1b9b0df763c5bb"
+    }
+  },
+  "full_numerical_arrays": 277,
+  "suites": [
+    "gguf-text",
+    "embedding-f16",
+    "embedding-q8",
+    "qwen35-text",
+    "qwen35-image"
+  ],
+  "rust_ordinary_tests": 255,
+  "rust_ignored_entrypoints": 9,
+  "qualification_regression_tests": 13,
+  "optimized_python_regression": {
+    "command": "python3 -O tools/test_cpu_qualification.py",
+    "outcome": "pass",
+    "tests": 13,
+    "interpreter": "3.12.0 (v3.12.0:0fb18b02c8, Oct  2 2023, 09:45:56) [Clang 13.0.0 (clang-1300.0.29.30)]"
+  },
+  "compiled_inputs_and_executables_unchanged": true,
+  "image_http_correction": "The full v1 run is retained unchanged. Its image HTTP fixture used text-before-image; that image HTTP evidence is superseded by the v2 recheck using the frozen image-first order. Numerical/CLI fixtures, probes, compiled Rust sources, lockfiles and inference executable are byte-identical. Other numerical and transport cases are retained; no full rerun of unchanged numerical work is claimed.",
+  "references_unchanged": true,
+  "reference_archive_reproduced_byte_for_byte": true,
+  "private_model_copies_and_credentials_removed": true,
+  "scope": "Initial pinned fixture subset and actual local native execution only. No remote jobs triggered or production promotion.",
+  "pending": [
+    "Reviewed hosting of the exact pinned reference bundle before remote dispatch.",
+    "Actual Linux x86-64 and Windows x86-64 native execution.",
+    "Complete advertised model/encoding/size/paired-GGUF/real-multi-shard/image-semantic/context coverage.",
+    "Remaining resource/security/dependency/signing/release-review gates and mandatory full-release GPU capabilities."
+  ]
+}

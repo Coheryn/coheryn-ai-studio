@@ -460,3 +460,49 @@ fn malformed_codec_streams_release_admission_and_jpeg_variants_are_explicit() {
     );
     assert_eq!(budget.stats().reserved, 0);
 }
+
+#[test]
+fn qwen35_geometry_patch_order_normalization_and_finite_limits() {
+    use coheryn_engine::multimodal::image::{self, ImageLimits, Processor};
+    let budget = coheryn_engine::memory::Budget::new(32 << 20);
+    let cancel = Default::default();
+    let limits = ImageLimits::default();
+    for (bytes, width, height, color) in [
+        (
+            include_bytes!("../../../fixtures/qwen35/vision/red.png").as_slice(),
+            256,
+            256,
+            [1., -1., -1.],
+        ),
+        (
+            include_bytes!("../../../fixtures/qwen35/vision/blue.png").as_slice(),
+            192,
+            384,
+            [-1., -1., 1.],
+        ),
+    ] {
+        let prepared =
+            image::prepare(bytes, Processor::Qwen35Still, limits, &budget, &cancel).unwrap();
+        let plan = prepared.plan();
+        assert_eq!((plan.width, plan.height), (width, height));
+        assert_eq!(plan.patch_features, 1536);
+        assert_eq!(plan.patch_rows, ((width / 16) * (height / 16)) as usize);
+        let patch: Vec<_> = prepared.patch_values(0).unwrap().collect();
+        for channel in 0..3 {
+            assert!(
+                patch[channel * 512..(channel + 1) * 512]
+                    .iter()
+                    .all(|v| *v == color[channel])
+            );
+        }
+        let mut constrained = limits;
+        constrained.max_image_tokens = 1;
+        let info = image::inspect(bytes, limits, &cancel).unwrap();
+        assert!(image::plan(info, Processor::Qwen35Still, constrained).is_err());
+        constrained = limits;
+        constrained.max_processed_pixels = 4096;
+        assert!(image::plan(info, Processor::Qwen35Still, constrained).is_err());
+    }
+    assert_eq!(budget.stats().reserved, 0);
+    assert!(Processor::parse("unqualified-processor").is_err());
+}

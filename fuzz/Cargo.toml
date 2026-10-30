@@ -45,3 +45,10 @@ path = "fuzz_targets/images.rs"
 test = false
 doc = false
 bench = false
+
+[[bin]]
+name = "safetensors"
+path = "fuzz_targets/safetensors.rs"
+test = false
+doc = false
+bench = false

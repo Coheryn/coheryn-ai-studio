@@ -103,3 +103,17 @@ The runtime reuses existing current Rust libraries for HTTP, canonical Base64 an
 ## Managed image histories and cooperative scheduling
 
 This checkpoint adds no dependency. Private original assets, canonical portable encoding, history persistence and FIFO checkpoints reuse current workspace libraries and Coheryn numeric/storage code. `fixtures/qualification/m4-session-dependency-versions.json` verifies Rust 1.99.1 and all 25 direct Rust package releases against the official registries. Existing immutable model/reference/license bytes and thresholds are preserved.
+
+## Qwen3.5 adapter dependency verification — 2026-10-29
+
+All 25 direct Rust package pins and stable Rust were checked against their official registries. Rust remains **1.99.1**; Rusqlite updates to **0.41.1**, and Sysinfo updates to **0.40.0**. The hardware probe now handles fallible system initialization and preserves unavailable counters as null. The lockfile and complete legal inventory are refreshed. `fixtures/qualification/q35-dependency-versions.json` records current upstream versions. The new native adapter adds no Rust inference dependency; independent assessment-only arrays remain separate from native builds/tests/runtime.
+
+## Shared metadata dependency verification — 2026-10-29
+
+The metadata/descriptor implementation adds no dependency. Official registries reconfirm all 25 direct Rust packages and Rust 1.99.1 as current in `fixtures/qualification/a1-metadata-dependency-versions.json`. Existing lockfiles and preserved legal/reference inputs remain unchanged by this checkpoint.
+
+Managed checkpoint transport, integrity and stateless Qwen3.5 scheduling reuse the existing serialization, hashing, filesystem, async I/O and HTTP packages. They introduce no new inference runtime or package dependency. The current official package/toolchain verification is recorded in `fixtures/qualification/b1-dependency-versions.json`.
+
+Managed text-history preparation and Qwen3.5 scheduling reuse existing packages. Serde JSON now enables `float_roundtrip` so persisted timing/receipt floats deserialize bit-exactly; this adds no dependency or package-version change. Official registry checks for the same 25 direct packages and Rust toolchain are recorded in `fixtures/qualification/b2-dependency-versions.json`.
+
+The image-planning/session continuation updates MiniJinja from 3.0.4 to the verified stable 3.0.5 patch in both locked graphs. Its existing bounded templating API needs no source API changes. Full workspace regressions and frozen Qwen text/image prompt and token checks qualify the upgrade; immutable source templates and numerical references remain unchanged. `b4-final-dependency-versions.json` records the official version audit, and the legal inventory retains the new checksum-verified crate archive attribution.

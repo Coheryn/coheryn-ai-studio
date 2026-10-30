@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-10-30",
+  "scope": "Direct Rust packages and stable Rust toolchain. Hybrid cache, batching and vision development use the existing Rust packages; no new dependency is introduced. Immutable reference inputs are not upgraded.",
+  "rust": {
+    "pinned": "1.99.1",
+    "latest_stable": "1.99.1",
+    "current": true
+  },
+  "packages": [
+    {
+      "name": "axum",
+      "pinned": "0.8.9",
+      "latest_stable_non_yanked": "0.8.9",
+      "current": true
+    },
+    {
+      "name": "base64",
+      "pinned": "0.23.1",
+      "latest_stable_non_yanked": "0.23.1",
+      "current": true
+    },
+    {
+      "name": "clap",
+      "pinned": "4.6.7",
+      "latest_stable_non_yanked": "4.6.7",
+      "current": true
+    },
+    {
+      "name": "ctrlc",
+      "pinned": "3.5.2",
+      "latest_stable_non_yanked": "3.5.2",
+      "current": true
+    },
+    {
+      "name": "fs2",
+      "pinned": "0.4.3",
+      "latest_stable_non_yanked": "0.4.3",
+      "current": true
+    },
+    {
+      "name": "futures-util",
+      "pinned": "0.3.34",
+      "latest_stable_non_yanked": "0.3.34",
+      "current": true
+    },
+    {
+      "name": "half",
+      "pinned": "2.7.1",
+      "latest_stable_non_yanked": "2.7.1",
+      "current": true
+    },
+    {
+      "name": "image",
+      "pinned": "0.25.10",
+      "latest_stable_non_yanked": "0.25.10",
+      "current": true
+    },
+    {
+      "name": "libfuzzer-sys",
+      "pinned": "0.4.13",
+      "latest_stable_non_yanked": "0.4.13",
+      "current": true
+    },
+    {
+      "name": "minijinja",
+      "pinned": "3.0.4",
+      "latest_stable_non_yanked": "3.0.4",
+      "current": true
+    },
+    {
+      "name": "rayon",
+      "pinned": "1.12.0",
+      "latest_stable_non_yanked": "1.12.0",
+      "current": true
+    },
+    {
+      "name": "reqwest",
+      "pinned": "0.13.5",
+      "latest_stable_non_yanked": "0.13.5",
+      "current": true
+    },
+    {
+      "name": "rusqlite",
+      "pinned": "0.41.1",
+      "latest_stable_non_yanked": "0.41.1",
+      "current": true
+    },
+    {
+      "name": "serde",
+      "pinned": "1.0.229",
+      "latest_stable_non_yanked": "1.0.229",
+      "current": true
+    },
+    {
+      "name": "serde_json",
+      "pinned": "1.0.154",
+      "latest_stable_non_yanked": "1.0.154",
+      "current": true
+    },
+    {
+      "name": "sha2",
+      "pinned": "0.11.1",
+      "latest_stable_non_yanked": "0.11.1",
+      "current": true
+    },
+    {
+      "name": "subtle",
+      "pinned": "2.6.1",
+      "latest_stable_non_yanked": "2.6.1",
+      "current": true
+    },
+    {
+      "name": "sysinfo",
+      "pinned": "0.40.0",
+      "latest_stable_non_yanked": "0.40.0",
+      "current": true
+    },
+    {
+      "name": "tempfile",
+      "pinned": "3.27.0",
+      "latest_stable_non_yanked": "3.27.0",
+      "current": true
+    },
+    {
+      "name": "tokenizers",
+      "pinned": "0.23.2",
+      "latest_stable_non_yanked": "0.23.2",
+      "current": true
+    },
+    {
+      "name": "tokio",
+      "pinned": "1.54.1",
+      "latest_stable_non_yanked": "1.54.1",
+      "current": true
+    },
+    {
+      "name": "tokio-util",
+      "pinned": "0.7.20",
+      "latest_stable_non_yanked": "0.7.20",
+      "current": true
+    },
+    {
+      "name": "tower",
+      "pinned": "0.5.3",
+      "latest_stable_non_yanked": "0.5.3",
+      "current": true
+    },
+    {
+      "name": "unicode-normalization",
+      "pinned": "0.1.26",
+      "latest_stable_non_yanked": "0.1.26",
+      "current": true
+    },
+    {
+      "name": "uuid",
+      "pinned": "1.29.0",
+      "latest_stable_non_yanked": "1.29.0",
+      "current": true
+    }
+  ],
+  "sources": [
+    "https://crates.io/api/v1/crates/{name}",
+    "https://static.rust-lang.org/dist/channel-rust-stable.toml"
+  ]
+}

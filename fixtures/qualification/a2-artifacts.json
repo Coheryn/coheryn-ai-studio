@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "scope": "Current-host release executables: UTF-8 and UTF-16 controlled strings. Not an installer/signature/notice or other-platform qualification.",
+  "policy_sha256": "f911a30794aaf6d8f0aff16320b0c26271e8456b436b81df7cb45bc2976f9471",
+  "files": [
+    {
+      "file": "coheryn",
+      "bytes": 18403648,
+      "sha256": "c17a5be50755c5816bb2ee8ecdbc1e44514c4324bdc56fe009c8d28d0dadb6e0"
+    },
+    {
+      "file": "coheryn-bench",
+      "bytes": 4236720,
+      "sha256": "212e6faf1582ceb1c2cfbd10a90cbca3fdb85cadb36e05c657fcbecb8043e62b"
+    }
+  ],
+  "finding_count": 0
+}

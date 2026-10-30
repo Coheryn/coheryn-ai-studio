@@ -30,9 +30,11 @@ target/release/coheryn models unload qwen05
 target/release/coheryn models remove qwen05
 ```
 
-`models register` aliases `models import`: it copies a local file into managed storage through an authenticated upload. Imports can include `--sha256 HASH`. `models pull URL --name ID --sha256 HASH` downloads a public HTTPS file with a mandatory expected checksum. IDs contain at most 64 lowercase letters, digits, dots, underscores or hyphens, beginning with a letter/digit.
+`models register` aliases `models import`: it copies a local GGUF file or supported Safetensors checkpoint set into managed storage through an authenticated upload. Checkpoint imports bind every file plus native profile; see [MANAGED_CHECKPOINTS.md](MANAGED_CHECKPOINTS.md). Imports can include `--sha256 HASH`. `models pull URL --name ID --sha256 HASH` downloads a public HTTPS file with a mandatory expected checksum. IDs contain at most 64 lowercase letters, digits, dots, underscores or hyphens, beginning with a letter/digit.
 
-`run` and `chat` use the daemon by default. They never silently start a separate engine. `--standalone` explicitly loads a separate process-local model from a GGUF path. Local existing paths and explicit paths remain valid for `models inspect` and `models validate`; a managed ID uses the daemon. Interactive chat uses `/exit`, `/quit` or EOF to exit. For machine-readable chat, use `run --messages messages.json --json`.
+`run` and `chat` use the daemon by default. They never silently start a separate engine. `--standalone` explicitly loads a separate process-local model from a supported GGUF or Safetensors checkpoint path. Local existing paths and explicit paths remain valid for `models inspect` and `models validate`; a managed ID uses the daemon. Interactive chat uses `/exit`, `/quit` or EOF to exit. For machine-readable chat, use `run --messages messages.json --json`.
+
+Local `models inspect/validate` and `plan LOCAL_SOURCE --standalone` now use the [shared metadata contract](MODEL_METADATA.md). Supported Safetensors source sets also use managed import/load and native Qwen3.5 HTTP inference; see [MANAGED_CHECKPOINTS.md](MANAGED_CHECKPOINTS.md).
 
 `bench --model ID --context 512 --profile balanced` benchmarks through the daemon; `--standalone` uses a local path. `plan ID --context 512 --profile balanced --concurrency 2` estimates without loading weights. `reference`, `performance`, `balanced` and `low-memory` are supported by plan/run/chat/bench; balanced is the generation/planning default. The portable CPU backend, selected worker count, prefill chunk size and F32 cache remain explicit in each plan. CLI plan/run/chat/bench accept `--threads`; estimate and generation JSON accept optional `threads` (1–16, bounded by the configured CPU share). Reference/low-memory require one.
 
@@ -52,6 +54,7 @@ All protected routes require `Authorization: Bearer TOKEN`. Administrative crede
 | `GET /api/v1/models/{id}/inspect` | Admin | Descriptor and compatibility report |
 | `POST /api/v1/models/validate` | Admin | `{"model":"ID","deep":true}`; no remote filesystem paths |
 | `POST /api/v1/models/import?name=ID&sha256=HASH` | Admin | Bounded `application/octet-stream` upload; hash optional |
+| `POST /api/v1/models/import-checkpoint?name=ID&sha256=HASH` | Admin | Bounded manifest-first native checkpoint stream; [contract](MANAGED_CHECKPOINTS.md) |
 | `POST /api/v1/models/pull` | Admin | `{"name":"ID","url":"https://...","sha256":"HASH"}` |
 | `POST /api/v1/models/register-pair` | Admin | `{"model":"ID","language":"LANGUAGE_ID","vision":"VISION_ID"}` |
 | `POST /api/v1/models/load` | Admin | `{"model":"ID","context":4096}` |
@@ -126,3 +129,21 @@ The separate `/coheryn/v1/sessions` namespace provides owned ephemeral/opt-in du
 ## S6 execution and metrics
 
 Compatible daemon requests may share native CPU weight tiles while retaining separate positions, KV, RNG, constraints and usage. Native results and the OpenAI `coheryn` extension expose a `batching` profile, strategy, per-request forward/group counts and token-unit queue wait. Admin metrics expose aggregate unit/tile/embedding counters without request content. `generation_resident_limit` is the effective generation ceiling; `active_limit` now bounds live generation workers plus active embedding phases, with `compute_unit_limit:1` separately identifying exclusive tensor execution. Exact eligibility, timing meanings, limits and CPU-only placement/fallback policy are in [BATCHING.md](BATCHING.md). API generation remains one choice per request.
+
+## Qwen3.5 hybrid CPU profile
+
+The pinned source accepts greedy text requests, bounded text histories with optional exact-prefix KV/recurrent/convolution snapshots, and continuous text batching. A complete source set with a validated processor asset also accepts stateless image messages through `/v1/chat/completions` and `/api/v1/generate`. The same body, Base64/URL, authentication, context, memory, SSE and disconnect controls apply. Source-set identity includes optional processor bytes. No separate component pair is needed for this checkpoint. Unsupported assets/configurations fail before image acquisition. Tools, non-greedy sampling and constraints remain unsupported. Managed Qwen3.5 image histories require explicit image-task creation. See [QWEN35.md](QWEN35.md) for numerical scope and bounded CPU execution.
+
+Qwen3.5 metadata-only image estimates now share complete-request stage calculations; actual preparation enforces exact attachment/text/output limits. Ordinary text plans do not include optional idle caches or an image workload. Discovery distinguishes executable capabilities from exact-file qualification. Single-component hash strings in image result metadata are empty when the engine lacks a verified full-payload digest; the managed source-set SHA-256 remains authoritative for package identity.
+
+## Image planning and session fields
+
+`POST /api/v1/plans/estimate` accepts `task: "image-to-text"` for the validated Qwen3.5 source and this bounded workload:
+
+```json
+{"model":"q35","task":"image-to-text","context":256,"concurrency":1,"profile":"reference","threads":1,"images":{"processor_profile":"qwen35-still-v1","images":[{"width":32,"height":32}]}}
+```
+
+Dimensions describe oriented source geometry. Responses include an `images` stage array, `image_feature_tokens`, `image_extra_reserved_bytes`, encoded-byte upper bound, generic decoder/session/profile/weight accounting and managed ingress/delivery totals. Loaded estimates reuse resident metadata; unloaded inspection is temporary and separately reported. No weight payload scan, execution session or lasting reservation is created by planning. Structural compatibility and a candidate estimate do not establish full payload integrity or exact-file numerical qualification.
+
+`POST /coheryn/v1/sessions` accepts optional `task` (`text-generation` or `image-to-text`). Existing defaults are preserved: registered pairs use image sessions and Qwen3.5 uses text sessions. Explicit Qwen3.5 image sessions require a validated resident processor/component and a context of 1–4096 within loaded/server capacity. Upload, submit, replay, export/import, reset, save, delete and streaming use the existing image-session routes and portable format. Unsupported model/task combinations fail before session publication. See [IMAGE_SESSIONS.md](IMAGE_SESSIONS.md).

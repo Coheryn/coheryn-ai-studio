@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "id": "qwen3.5-0.8b",
+  "repository": "Qwen/Qwen3.5-0.8B",
+  "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+  "license": "Apache-2.0",
+  "files": [
+    {
+      "file": "LICENSE",
+      "bytes": 11544,
+      "sha256": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a",
+      "license": "Apache-2.0"
+    },
+    {
+      "file": "chat_template.jinja",
+      "bytes": 7755,
+      "sha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+      "license": "Apache-2.0"
+    },
+    {
+      "file": "config.json",
+      "bytes": 2907,
+      "sha256": "b90b86f35c8e6925ef74ee04d0e758f0a845c83a42089ad82bbaa948de9b4204",
+      "license": "Apache-2.0"
+    },
+    {
+      "file": "merges.txt",
+      "bytes": 3353259,
+      "sha256": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d",
+      "license": "Apache-2.0"
+    },
+    {
+      "file": "model.safetensors-00001-of-00001.safetensors",
+      "bytes": 1746942600,
+      "sha256": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696",
+      "license": "Apache-2.0"
+    },
+    {
+      "file": "model.safetensors.index.json",
+      "bytes": 50900,
+      "sha256": "d8a08838a613b025eb7952ed9db11696213e57e76a375661ef5c12f9dd5dcf4e",
+      "license": "Apache-2.0"
+    },
+    {
+      "file": "preprocessor_config.json",
+      "bytes": 390,
+      "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+      "license": "Apache-2.0"
+    },
+    {
+      "file": "tokenizer.json",
+      "bytes": 12807982,
+      "sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+      "license": "Apache-2.0"
+    },
+    {
+      "file": "tokenizer_config.json",
+      "bytes": 16709,
+      "sha256": "49e2b6e395f959f077f1e992b338919c0d4a9732fc6e613995e06557f843500c",
+      "license": "Apache-2.0"
+    },
+    {
+      "file": "video_preprocessor_config.json",
+      "bytes": 385,
+      "sha256": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13",
+      "license": "Apache-2.0"
+    },
+    {
+      "file": "vocab.json",
+      "bytes": 6722759,
+      "sha256": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003",
+      "license": "Apache-2.0"
+    }
+  ],
+  "architecture": "qwen3_5",
+  "tasks": {
+    "text_generation": "experimental-native-cpu-text",
+    "image_to_text": "unsupported",
+    "multi_token_prediction": "unsupported"
+  },
+  "tensor_inventory": {
+    "total": 488,
+    "dtypes": [
+      "BF16",
+      "F32"
+    ],
+    "language_layers": 24,
+    "full_attention_layers": 6,
+    "linear_attention_layers": 18
+  },
+  "qualification": "development-array-reference",
+  "source_verification": "All listed downloaded bytes hashed; weight/tokenizer SHA-256 also checked against publisher LFS metadata.",
+  "oracle": {
+    "status": "Independent array-equation reference frozen; publisher framework qualification pending",
+    "tolerances": {
+      "logits_absolute": 0.003,
+      "logits_relative": 0.001,
+      "normalized_l2": 0.0005,
+      "greedy_tokens_exact": true
+    },
+    "precision_profile": "source BF16 weights promoted to F32 activations, scalar F32 products and wide reductions; quantization quality separate"
+  },
+  "cache_directory": ".cache/qwen3.5-0.8b-source"
+}

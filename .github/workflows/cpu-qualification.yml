@@ -1,0 +1,63 @@
+name: Opt-in pinned CPU model qualification
+on:
+  workflow_dispatch:
+    inputs:
+      reference_bundle_url:
+        description: HTTPS URL of the exact data-only bundle pinned in reference-bundle-v1.json
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  native-models:
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            target: aarch64-apple-darwin
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+          - os: windows-2022
+            target: x86_64-pc-windows-msvc
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.x'
+          check-latest: true
+      - uses: dtolnay/rust-toolchain@1.99.1
+        with:
+          components: rustfmt, clippy
+      - name: Verify native runner identity
+        env:
+          EXPECTED_TARGET: ${{ matrix.target }}
+        run: python -c "import os,sys; sys.path.insert(0,'tools'); from verify_cpu_package import native_target; from cpu_qualification.common import require; require(native_target()==os.environ['EXPECTED_TARGET'],'unexpected native runner')"
+      - run: cargo fetch --locked --manifest-path fuzz/Cargo.toml
+      - run: python tools/test_cpu_qualification.py
+      - name: Acquire frozen independent reference data
+        env:
+          REFERENCE_URL: ${{ inputs.reference_bundle_url }}
+        run: python -c "import os,subprocess,sys; subprocess.run([sys.executable,'tools/fetch_cpu_references.py','--url',os.environ['REFERENCE_URL'],'--output','.cache/cpu-reference-data-v1.tar.gz'],check=True)"
+      - run: python tools/run_cpu_checks.py --report .cache/cpu-qualification-native.json
+      - name: Package the checked native candidate
+        env:
+          NATIVE_TARGET: ${{ matrix.target }}
+        run: python -c "import os,subprocess,sys; subprocess.run([sys.executable,'tools/package_cpu_release.py','--target',os.environ['NATIVE_TARGET'],'--build-record','.cache/cpu-qualification-native.json','--report','target/cpu-qualification-package.json'],check=True)"
+      - name: Qualify pinned text, embedding and image fixtures
+        run: python -c "import json,pathlib,subprocess,sys; p=json.load(open('target/cpu-qualification-package.json')); r=json.load(open('fixtures/cpu-qualification/reference-bundle-v1.json')); subprocess.run([sys.executable,'tools/run_cpu_qualification.py','--fetch','--archive',str(pathlib.Path('target/cpu-release')/p['archive']),'--archive-sha256',p['sha256'],'--native-checks','.cache/cpu-qualification-native.json','--reference-bundle','.cache/cpu-reference-data-v1.tar.gz','--reference-sha256',r['sha256'],'--report','.cache/cpu-model-qualification.json'],check=True)"
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: pinned-model-evidence-${{ matrix.target }}
+          path: |
+            target/cpu-release/*
+            target/cpu-qualification-package.json
+            .cache/cpu-qualification-native.json
+            .cache/cpu-checks/cpu-qualification-native/**
+            .cache/cpu-model-qualification.json
+            .cache/cpu-qualification/cpu-model-qualification/**
+          include-hidden-files: true
+          if-no-files-found: error

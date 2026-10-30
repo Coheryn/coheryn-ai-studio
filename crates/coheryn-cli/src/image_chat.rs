@@ -23,7 +23,10 @@ pub async fn run(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<()
     if args.images.len() > limits.max_images {
         return Err(Error::resource("too many image attachments"));
     }
-    if args.standalone && args.vision_model.is_none() {
+    if args.standalone
+        && args.vision_model.is_none()
+        && args.model.extension().is_some_and(|e| e == "gguf")
+    {
         return Err(Error::request(
             "standalone image chat requires --vision-model",
         ));
@@ -150,30 +153,67 @@ pub async fn run(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<()
         let cancel = cancel.with_timeout(options.timeout_seconds)?;
         let budget = Budget::new(args.resources.max_memory);
         let _transport = budget.reserve(8 << 20)?;
-        let model = Qwen2Vl::load(
-            &args.model,
-            args.vision_model.as_ref().expect("checked component"),
-            args.resources.limits(),
-            budget,
-            &cancel,
-        )?;
-        let refs: Vec<_> = images.iter().map(Vec::as_slice).collect();
-        let response = model.generate(
-            &native,
-            &refs,
-            &qwen2vl::Options {
-                context: Some(args.resources.context),
-                max_tokens: args.max_tokens,
-                threads,
-                vision: VisionOptions {
-                    threads,
-                    ..Default::default()
-                },
-            },
-            &cancel,
-            &mut emit,
-        )?;
-        let response = coheryn_api::vision::generation_result(response);
+        let response = match &args.vision_model {
+            None => {
+                let model = coheryn_engine::qwen35::Model::load_with_budget(
+                    &args.model,
+                    args.resources.limits(),
+                    budget,
+                    &cancel,
+                )?;
+                let hardware = coheryn_api::hardware::probe();
+                let prepared = model.prepare_images(
+                    &native,
+                    images,
+                    limits,
+                    options.clone(),
+                    args.resources.context,
+                    coheryn_engine::adapters::Execution {
+                        profile,
+                        threads: Some(threads),
+                        hardware: &hardware,
+                    },
+                    1,
+                    &cancel,
+                )?;
+                let mut state = model.begin_images(prepared, &cancel, None, None)?;
+                while !state.is_done() {
+                    if state.needs_forward() {
+                        model.step_batch(&mut [&mut state], None)?;
+                    }
+                    if let Some(event) = state.sample(&model)? {
+                        emit(event)?;
+                    }
+                }
+                model.finish_generation(state)?.0
+            }
+            Some(vision_model) => {
+                let model = Qwen2Vl::load(
+                    &args.model,
+                    vision_model,
+                    args.resources.limits(),
+                    budget,
+                    &cancel,
+                )?;
+                let refs: Vec<_> = images.iter().map(Vec::as_slice).collect();
+                let response = model.generate(
+                    &native,
+                    &refs,
+                    &qwen2vl::Options {
+                        context: Some(args.resources.context),
+                        max_tokens: args.max_tokens,
+                        threads,
+                        vision: VisionOptions {
+                            threads,
+                            ..Default::default()
+                        },
+                    },
+                    &cancel,
+                    &mut emit,
+                )?;
+                coheryn_api::vision::generation_result(response)
+            }
+        };
         if cli.json {
             if args.stream {
                 println!("{}", json!({"result":response}));

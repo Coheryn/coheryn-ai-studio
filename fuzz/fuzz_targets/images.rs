@@ -11,8 +11,8 @@ fuzz_target!(|bytes: &[u8]| {
         max_images: 1,
         ..Default::default()
     };
-    let budget = Budget::new(8 << 20);
-    for processor in [Processor::Llava15Pad336, Processor::Qwen2VlStill] {
+    let budget = Budget::new(16 << 20);
+    for processor in [Processor::Llava15Pad336, Processor::Qwen2VlStill, Processor::Qwen35Still] {
         if let Ok(prepared) = prepare(bytes, processor, limits, &budget, &Cancellation::default()) {
             for start in [0, i32::MAX as u32 - 32, u32::MAX] {
                 if let Ok(span) = ImagePositions::new(prepared.plan(), start) {

@@ -1,3 +1,4 @@
+use super::compute::ComputeLease;
 use super::*;
 use coheryn_engine::{
     memory::Reservation,
@@ -232,7 +233,7 @@ impl Scheduler {
         if queued {
             self.counters.queued.fetch_add(1, Ordering::Relaxed);
         }
-        let (sender, receiver) = mpsc::channel(17);
+        let (sender, receiver) = mpsc::channel(DELIVERY_CHANNEL_SLOTS);
         let scheduler = self.clone();
         let engine_cancel = cancel.clone();
         let output_limit = turn.as_ref().map(|t| t.output_limit());
@@ -304,6 +305,7 @@ impl Scheduler {
                         c.clone(),
                         tx.clone(),
                         deadline,
+                        true,
                     ));
                     let mut cooperate = || gate.borrow_mut().yield_unit();
                     let mut delivered = 0usize;
@@ -417,111 +419,7 @@ impl Scheduler {
             receiver,
             cancel,
             _vision: Some(owner),
+            _qwen35: None,
         })
-    }
-}
-
-/// A blocking worker parks only after all of its numeric workers have joined.
-/// The FIFO semaphore is returned during every checkpoint and delivery wait.
-struct ComputeLease {
-    permit: Option<OwnedSemaphorePermit>,
-    compute: Arc<Semaphore>,
-    counters: Arc<Counters>,
-    cancel: Cancellation,
-    shutdown: CancellationToken,
-    sender: mpsc::Sender<GenerationEvent>,
-    deadline: tokio::time::Instant,
-    runtime: tokio::runtime::Handle,
-    unit_start: Instant,
-    compute_ms: f64,
-    wait_ms: f64,
-    units: u64,
-    yields: u64,
-}
-impl ComputeLease {
-    fn new(
-        permit: OwnedSemaphorePermit,
-        scheduler: &Scheduler,
-        cancel: Cancellation,
-        sender: mpsc::Sender<GenerationEvent>,
-        deadline: tokio::time::Instant,
-    ) -> Self {
-        scheduler
-            .counters
-            .vision_units
-            .fetch_add(1, Ordering::Relaxed);
-        Self {
-            permit: Some(permit),
-            compute: scheduler.compute.clone(),
-            counters: scheduler.counters.clone(),
-            cancel,
-            shutdown: scheduler.shutdown.clone(),
-            sender,
-            deadline,
-            runtime: tokio::runtime::Handle::current(),
-            unit_start: Instant::now(),
-            compute_ms: 0.,
-            wait_ms: 0.,
-            units: 1,
-            yields: 0,
-        }
-    }
-    fn release(&mut self) {
-        if self.permit.take().is_some() {
-            self.compute_ms += self.unit_start.elapsed().as_secs_f64() * 1000.;
-            self.counters.vision_max_unit_micros.fetch_max(
-                self.unit_start.elapsed().as_micros().min(u64::MAX as u128) as u64,
-                Ordering::Relaxed,
-            );
-        }
-    }
-    fn acquire(&mut self) -> coheryn_engine::Result<()> {
-        self.cancel.check()?;
-        if self.permit.is_some() {
-            return Ok(());
-        }
-        self.counters
-            .vision_waiting_units
-            .fetch_add(1, Ordering::Relaxed);
-        let waiting = Instant::now();
-        let permit = self.runtime.block_on(async {
-            tokio::select! {
-                p=self.compute.clone().acquire_owned()=>p.ok(),
-                _=self.sender.closed()=>None,
-                _=self.shutdown.cancelled()=>None,
-                _=tokio::time::sleep_until(self.deadline)=>None,
-            }
-        });
-        self.wait_ms += waiting.elapsed().as_secs_f64() * 1000.;
-        self.counters
-            .vision_waiting_units
-            .fetch_sub(1, Ordering::Relaxed);
-        match permit {
-            Some(p) => {
-                self.permit = Some(p);
-                self.units += 1;
-                self.unit_start = Instant::now();
-                self.counters.vision_units.fetch_add(1, Ordering::Relaxed);
-                self.cancel.check()
-            }
-            None => {
-                self.cancel.cancel();
-                Err(Error::new(
-                    ErrorCode::Cancelled,
-                    "image request cancelled while yielding shared compute",
-                ))
-            }
-        }
-    }
-    fn yield_unit(&mut self) -> coheryn_engine::Result<()> {
-        self.release();
-        self.yields += 1;
-        self.counters.vision_yields.fetch_add(1, Ordering::Relaxed);
-        self.acquire()
-    }
-}
-impl Drop for ComputeLease {
-    fn drop(&mut self) {
-        self.release();
     }
 }

@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "model_manifest": "fixtures/qwen35/model.json",
+  "model_revision": "2fc06364715b967f1860aea9cf38778875588b17",
+  "scope": "Authored constant-color still PNGs; independent FP32 vision/language array equations; no training or external inference runtime. Minimum square and portrait grids, plus ordered two-image integration. Not broad texture/codec/language/model/platform qualification.",
+  "images": [
+    {
+      "id": "red",
+      "rgb": [
+        255,
+        0,
+        0
+      ],
+      "source": [
+        32,
+        32
+      ],
+      "processed": [
+        256,
+        256
+      ],
+      "grid": [
+        16,
+        16
+      ],
+      "file": "fixtures/qwen35/vision/red.png",
+      "sha256": "becf0cf30d6978325d9ccdea315923e2dbbf7e591c2857b92b5f82e41957bb98"
+    },
+    {
+      "id": "blue",
+      "rgb": [
+        0,
+        0,
+        255
+      ],
+      "source": [
+        32,
+        64
+      ],
+      "processed": [
+        192,
+        384
+      ],
+      "grid": [
+        24,
+        12
+      ],
+      "file": "fixtures/qwen35/vision/blue.png",
+      "sha256": "050361c7cd5afea46595080f953522471c76a65a06f4fd3cbe3332c8b5361d1b"
+    }
+  ],
+  "cases": [
+    {
+      "id": "red-question",
+      "images": [
+        "red"
+      ],
+      "text": "What color is the picture?"
+    },
+    {
+      "id": "blue-question",
+      "images": [
+        "blue"
+      ],
+      "text": "What color is the picture?"
+    },
+    {
+      "id": "two-order",
+      "images": [
+        "red",
+        "blue"
+      ],
+      "text": "Name the two colors in order."
+    }
+  ],
+  "max_tokens": 4,
+  "tolerances": {
+    "vision_absolute": 0.002,
+    "vision_relative": 0.0002,
+    "vision_normalized_l2": 0.0002,
+    "language_absolute": 0.003,
+    "language_relative": 0.001,
+    "language_normalized_l2": 0.0005,
+    "greedy_tokens_exact": true
+  },
+  "normalization": {
+    "mean": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "std": [
+      0.5,
+      0.5,
+      0.5
+    ]
+  },
+  "preprocessing": "native bicubic shared codec pipeline; source minimum pixels 65536, maximum pixels 16777216, factor 32, patch 16, still repeated twice, spatial merge 2",
+  "reference_source": "resources/tool-assessment/qwen35-source.json"
+}

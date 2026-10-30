@@ -21,6 +21,8 @@ enum SessionCommand {
     },
     Create {
         model: String,
+        #[arg(long,value_parser=["text-generation","image-to-text"])]
+        task: Option<String>,
         #[arg(long)]
         persist: bool,
         #[arg(long)]
@@ -208,6 +210,7 @@ pub async fn run(cli: &Cli, args: &SessionArgs, cancel: &Cancellation) -> Result
     let (method, path, body) = match &args.command {
         SessionCommand::Create {
             model,
+            task,
             persist,
             name,
             context,
@@ -217,7 +220,7 @@ pub async fn run(cli: &Cli, args: &SessionArgs, cancel: &Cancellation) -> Result
             "POST",
             "/coheryn/v1/sessions".into(),
             Some(
-                json!({"model":model,"persist":persist,"alias":name,"context":context,"system":system,"overflow":overflow}),
+                json!({"model":model,"task":task,"persist":persist,"alias":name,"context":context,"system":system,"overflow":overflow}),
             ),
         ),
         SessionCommand::Submit { .. }
@@ -344,7 +347,7 @@ pub async fn interactive_session(
         }
         client.json("GET", &path, None, false, cancel).await?
     } else {
-        client.json("POST", "/coheryn/v1/sessions", Some(json!({"model":model,"persist":args.persist,"alias":alias,"context":args.resources.context,"system":args.system,"overflow":args.overflow.as_deref().unwrap_or("reject")})), false, cancel).await?
+        client.json("POST", "/coheryn/v1/sessions", Some(json!({"model":model,"task":if args.images.is_empty(){None}else{Some("image-to-text")},"persist":args.persist,"alias":alias,"context":args.resources.context,"system":args.system,"overflow":args.overflow.as_deref().unwrap_or("reject")})), false, cancel).await?
     };
     if view["model"].as_str() != Some(model) {
         return Err(Error::request("session is bound to a different model"));

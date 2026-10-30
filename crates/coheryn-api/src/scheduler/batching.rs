@@ -1,8 +1,62 @@
 //! Bounded dynamic packing of live, compatible model-token work.
 use super::*;
 use coheryn_engine::inference::GenerationState;
-use std::{collections::VecDeque, sync::OnceLock, time::Instant};
+use std::{
+    cell::RefCell,
+    collections::VecDeque,
+    sync::OnceLock,
+    time::{Duration, Instant},
+};
 use tokio::sync::oneshot;
+pub(super) trait BatchModel: Send + Sync + 'static {
+    type State: Send + 'static;
+    fn compatible(a: &Self::State, b: &Self::State) -> bool;
+    fn wait(state: &mut Self::State, ms: f64);
+    fn cancellation(state: &Self::State) -> Cancellation;
+    fn step(
+        &self,
+        states: &mut [&mut Self::State],
+        yield_work: &mut coheryn_engine::multimodal::WorkYield<'_>,
+    ) -> coheryn_engine::Result<coheryn_engine::inference::BatchStep>;
+}
+impl BatchModel for Model {
+    type State = GenerationState;
+    fn compatible(a: &Self::State, b: &Self::State) -> bool {
+        a.compatible(b)
+    }
+    fn wait(state: &mut Self::State, ms: f64) {
+        state.record_scheduler_wait(ms);
+    }
+    fn cancellation(state: &Self::State) -> Cancellation {
+        state.cancellation()
+    }
+    fn step(
+        &self,
+        states: &mut [&mut Self::State],
+        _: &mut coheryn_engine::multimodal::WorkYield<'_>,
+    ) -> coheryn_engine::Result<coheryn_engine::inference::BatchStep> {
+        self.step_batch(states)
+    }
+}
+impl BatchModel for coheryn_engine::qwen35::Model {
+    type State = coheryn_engine::qwen35::GenerationState;
+    fn compatible(a: &Self::State, b: &Self::State) -> bool {
+        a.compatible(b)
+    }
+    fn wait(state: &mut Self::State, ms: f64) {
+        state.record_scheduler_wait(ms);
+    }
+    fn cancellation(state: &Self::State) -> Cancellation {
+        state.cancellation()
+    }
+    fn step(
+        &self,
+        states: &mut [&mut Self::State],
+        yield_work: &mut coheryn_engine::multimodal::WorkYield<'_>,
+    ) -> coheryn_engine::Result<coheryn_engine::inference::BatchStep> {
+        self.step_batch(states, Some(yield_work))
+    }
+}
 struct Queued(Arc<Counters>);
 impl Drop for Queued {
     fn drop(&mut self) {
@@ -11,21 +65,30 @@ impl Drop for Queued {
             .fetch_sub(1, Ordering::Relaxed);
     }
 }
-struct Work {
+struct Work<M: BatchModel> {
     waiting: Option<Queued>,
-    model: Arc<Model>,
-    state: GenerationState,
-    reply: oneshot::Sender<coheryn_engine::Result<GenerationState>>,
+    model: Arc<M>,
+    state: M::State,
+    reply: oneshot::Sender<coheryn_engine::Result<M::State>>,
     enqueued: Instant,
 }
-#[derive(Clone)]
-pub(super) struct Batcher {
-    sender: Arc<OnceLock<mpsc::Sender<Work>>>,
+pub(super) struct Batcher<M: BatchModel = Model> {
+    sender: Arc<OnceLock<mpsc::Sender<Work<M>>>>,
     compute: Arc<Semaphore>,
     counters: Arc<Counters>,
     shutdown: CancellationToken,
 }
-impl Batcher {
+impl<M: BatchModel> Clone for Batcher<M> {
+    fn clone(&self) -> Self {
+        Self {
+            sender: self.sender.clone(),
+            compute: self.compute.clone(),
+            counters: self.counters.clone(),
+            shutdown: self.shutdown.clone(),
+        }
+    }
+}
+impl<M: BatchModel> Batcher<M> {
     pub fn new(
         compute: Arc<Semaphore>,
         counters: Arc<Counters>,
@@ -40,7 +103,7 @@ impl Batcher {
     }
     /// Called by a request-owned blocking worker. Moving the state transfers its
     /// reservations with it, and the reply acknowledges completion before release.
-    pub fn advance(&self, model: Arc<Model>, state: GenerationState) -> Result<GenerationState> {
+    pub fn advance(&self, model: Arc<M>, state: M::State) -> Result<M::State> {
         let sender = self.sender.get_or_init(|| {
             let (sender, receiver) = mpsc::channel(16);
             tokio::spawn(run(
@@ -70,13 +133,13 @@ impl Batcher {
             .map_err(Into::into)
     }
 }
-async fn run(
-    mut receiver: mpsc::Receiver<Work>,
+async fn run<M: BatchModel>(
+    mut receiver: mpsc::Receiver<Work<M>>,
     compute: Arc<Semaphore>,
     counters: Arc<Counters>,
     shutdown: CancellationToken,
 ) {
-    let mut pending = VecDeque::<Work>::new();
+    let mut pending = VecDeque::<Work<M>>::new();
     loop {
         if shutdown.is_cancelled() {
             receiver.close();
@@ -113,7 +176,9 @@ async fn run(
         let count = pending.len();
         for _ in 0..count {
             let work = pending.pop_front().expect("bounded pending length");
-            if Arc::ptr_eq(&work.model, &batch[0].model) && work.state.compatible(&batch[0].state) {
+            if Arc::ptr_eq(&work.model, &batch[0].model)
+                && M::compatible(&work.state, &batch[0].state)
+            {
                 batch.push(work);
             } else {
                 pending.push_back(work);
@@ -145,7 +210,7 @@ async fn run(
             let work = pending.pop_front().expect("bounded pending length");
             if !work.reply.is_closed()
                 && Arc::ptr_eq(&work.model, &batch[0].model)
-                && work.state.compatible(&batch[0].state)
+                && M::compatible(&work.state, &batch[0].state)
             {
                 batch.push(work);
             } else {
@@ -153,19 +218,33 @@ async fn run(
             }
         }
         let stats = counters.clone();
+        let shared_compute = compute.clone();
+        let shared_shutdown = shutdown.clone();
         // Responses are sent from the owning worker itself, so a panic closes every
         // affected reply and drops its buffers instead of stranding a receiver.
         let _ = tokio::task::spawn_blocking(move || {
-            let _permit = permit;
+            let permit=RefCell::new(Some(permit));
+            let cancellations:Vec<_>=batch.iter().map(|w|M::cancellation(&w.state)).collect();
+            let runtime=tokio::runtime::Handle::current();
+            let mut yield_work=|| {
+                drop(permit.borrow_mut().take());
+                let next=runtime.block_on(async {
+                    let acquire=shared_compute.clone().acquire_owned();tokio::pin!(acquire);
+                    loop {
+                        if cancellations.iter().all(|c|c.check().is_err()) || shared_shutdown.is_cancelled(){return None;}
+                        tokio::select! {p=&mut acquire=>return p.ok(),_=shared_shutdown.cancelled()=>return None,_=tokio::time::sleep(Duration::from_millis(10))=>{}}
+                    }
+                });
+                *permit.borrow_mut()=Some(next.ok_or_else(||Error::new(ErrorCode::Cancelled,"shared batch compute cancelled"))?);Ok(())
+            };
             for work in &mut batch {
                 work.waiting.take();
-                work.state
-                    .record_scheduler_wait(work.enqueued.elapsed().as_secs_f64() * 1000.);
+                M::wait(&mut work.state,work.enqueued.elapsed().as_secs_f64()*1000.);
             }
             let model = batch[0].model.clone();
             let result = {
                 let mut states: Vec<_> = batch.iter_mut().map(|w| &mut w.state).collect();
-                model.step_batch(&mut states)
+                M::step(&model,&mut states,&mut yield_work)
             };
             if let Ok(step) = &result {
                 stats.generation_units.fetch_add(1, Ordering::Relaxed);
@@ -185,6 +264,7 @@ async fn run(
                     .matrix_read_bytes
                     .fetch_add(step.matrix_bytes, Ordering::Relaxed);
             }
+            drop(permit.borrow_mut().take());
             for work in batch {
                 let response = match &result {
                     Ok(_) => Ok(work.state),

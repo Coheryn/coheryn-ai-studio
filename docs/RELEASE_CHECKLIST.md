@@ -1,8 +1,14 @@
 # Release evidence and outstanding work
 
+The current development priority is [CPU release hardening](CPU_RELEASE.md), with a [machine-readable candidate scope](../fixtures/cpu-release/scope.json) and fail-closed readiness preflight. Reproducible candidate archives, native startup checks, process-kill recovery and bounded sanitizer campaigns strengthen the existing CPU implementation. They do not waive the full C01–C38 release scope or qualify unexecuted platforms, models, workloads or GPU backends. [Operational recovery procedures](OPERATIONS.md) apply to this narrower candidate.
+
 Source licensing records and distribution staging are in [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md). CI checks the locked all-target dependency notice inventory and file-level mirrored asset mapping. Every source/binary package must retain the complete legal payload; `python3 tools/license_notices.py --bundle target/distribution` stages it for packaging. Custom model terms and final platform/package/legal review remain applicable.
 
-Status: experimental G4 text CPU CLI/API and E2 native embedding CPU CLI/API; M0 component byte verification and corrected image-conditioned references, plus M1 native preprocessing/position foundation, automated S0 checks and initial S1–S6 managed text sessions and tool proposals, isolated KV reuse and opt-in histories. Full v1.0 is not complete.
+Status: experimental native GGUF text/embedding and exact-pair Qwen2-VL CPU CLI/API, including managed image histories and cooperative scheduling, plus initial S0–S6 text-session/tool/schema/sampling/batching evidence. Initial A0/A1 standalone text registry, Qwen3.5 Safetensors CPU text, shared local inspection/validation and metadata-only text planning are implemented; complete A0–A5/F0–F5 acceptance remains open. Full v1.0 is not complete.
+
+The architecture amendment retains C01–C38 and all original mandatory matrices. [MODEL_COMPATIBILITY.md](MODEL_COMPATIBILITY.md) specifies automatic supported-model loading, separate structural/evidence/policy/resource decisions, a behavior-preserving registry refactor and one selected Gemma CPU text demonstrator. A0–A5 acceptance is required before the corresponding expanded release claim; no filename whitelist, universal GGUF promise, automatic code loading or hidden executor fallback is introduced.
+
+The format amendment makes [single-file and indexed-sharded Safetensors](SAFETENSORS.md) mandatory through F0–F5 alongside GGUF. Complete source assets, F32/F16/BF16 CPU semantics, shard-set integrity, bounded storage/handle ownership, atomic multi-file management and the published CPU/F16 Metal subset need their own evidence. A valid file or index does not implement an architecture or qualify a provider's full model family.
 
 The mandatory release scope includes C01–C28 and C29–C38: sessions, persistence, tools, constraints, sampling, continuous batching and independence/presentation proof. S0 has scoped automated checks and S1 has initial text CPU implementation/evidence. S2/S3 now have initial current-host CPU implementation/evidence; S4–S6 now have initial exact-file CPU implementation/evidence; broader batching/backend and complete release qualification remain open. Native Nomic F16/Q8_0 CPU embedding execution is qualified on macOS ARM64; embedding CLI, `/v1/embeddings` and external RAG interfaces have initial E2 evidence. Multimodal extensions to C02/C03/C06/C08/C09/C12–C18/C22/C23 require M0–M2 and G5/G6 evidence, including component manifests, image-aware admission and secure acquisition; existing text-only checks do not satisfy those additions.
 
@@ -10,15 +16,15 @@ The G0/G1 engine, G2/G3 service/planner and G4 packed CPU execution have passed 
 
 | Requirement | Current evidence | Remaining release work |
 |---|---|---|
-| C01 native execution | Coheryn scalar Qwen2 graph and CPU kernels | Complete backend/format qualification |
+| C01 native execution | Coheryn Qwen2 and Qwen3.5 graphs and CPU kernels | Complete backend/format qualification |
 | C02 CLI | Standalone/client run and chat; registry commands, serve, inspect/validate, plan preview, status, metrics, bench and doctor | Versioned configuration evolution and final CLI release qualification |
 | C03 HTTP API | Text completion/chat, qualified paired-image chat, SSE, native generation and versioned admin routes | Broader compatibility/release security qualification |
 | C04 streaming | Bounded CLI/SSE delivery, reserved terminal slot, consumer timeout, disconnect cancellation | Cross-platform release soak tests |
 | C05 headless | Same Rust engine in standalone CLI and Axum daemon | Packaged offline release tests |
-| C06 GGUF | Bounded v3 parser; F32/F16 and packed Qwen2 execution | Broader backend/platform qualification |
-| C07 loading | Shared buffered weight source, checked ranges/header/mutation checks and SHA-256 on managed load | Broader hostile corpus and reviewed mappings if beneficial |
-| C08 management | Managed registry/import/register/pull/inspect/validate/load/unload/remove; hash and quota checks | Packaging/migration/recovery hardening |
-| C09 tokenizer/template | GGUF Qwen BPE and approved text-template fingerprints | Release corpus and documented supported variants |
+| C06 model formats | Bounded GGUF v3 plus initial single/indexed Safetensors reader; packed Qwen2 and BF16/F32 Qwen3.5 text development profiles | A0–A5 native architecture resolution; F0–F5 mandatory single/indexed Safetensors and selected Gemma CPU; retained GGUF/backend/platform matrix |
+| C07 loading | Shared buffered GGUF weights, checked Safetensors/index headers/owned shard ranges, mutation checks and SHA-256 on managed GGUF load | Bounded Safetensors/index/asset parsing and contained shard handles without merging; broader hostile corpus and reviewed mappings |
+| C08 management | Managed registry/import/register/pull/inspect/validate/load/unload/remove; hash and quota checks | F4 authorized complete-set staging/promotion/recovery and shard/asset lifecycle; packaging/migration hardening |
+| C09 tokenizer/template | GGUF Qwen BPE and approved text-template fingerprints | F3 bounded source configuration/tokenizer/template/processor mappings, exact fixtures and documented supported variants |
 | C10 quantized computation | Native Q8_0/Q4_0/Q5_0/Q4_K/Q6_K; independent block/activation/dot fixtures and pinned-model parity | ISA-specific optimization and complete platform/backend matrix |
 | C11 CPU | Controlled 1–16 worker row parallelism; bounded chunks, reusable activations and fixed per-row reductions | Cross-platform qualification, batched prefill and calibrated performance work |
 | C12 GPU | Not implemented | Mandatory Metal FP16/Q4_K_M qualification |
@@ -26,13 +32,13 @@ The G0/G1 engine, G2/G3 service/planner and G4 packed CPU execution have passed 
 | C14 CAEP | Deterministic CPU profiles, hardware probes, metadata-only CLI/API planning and atomic queue-to-execution admission | Vision stage qualification and calibrated complete allocation accounting |
 | C15 KV/workspace | Bounded per-session F32 KV, scratch/I/O and linear-row attention with shared admission | Pooling/paged-KV optimization and calibrated accounting |
 | C16 monitoring | Engine timings/reservations, scheduler counters, OS RAM/swap API, Unix benchmark counters | Private/GPU observability and calibrated planner feedback |
-| C17 compatibility | Structured early graph/type/tokenizer/template failures | Full release support/negative matrix |
+| C17 compatibility | Structured early graph/type/tokenizer/template failures | A0–A5 separate structural compatibility, exact qualification, policy and resource admission; versioned capability/evidence and negative matrix |
 | C18 security | Role credentials, loopback default, body/header/queue quotas, managed IDs, atomic hash-checked acquisition, redirect/DNS restrictions | Sustained API fuzz/security and platform credential review |
 | C19 platforms | Three-platform CPU CI configured | Actual Linux/Windows test evidence and release binaries |
 | C20 offline | Standalone engine and local daemon need no cloud service or telemetry | Packaged offline smoke tests |
 | C21 diagnostics | Structured HTTP logs/errors, explicit exits, private persistent registry/credentials, reproducible flags | Versioned configuration files and final contract qualification |
 | C22 scheduling | Shared residency, configurable budget-admitted sessions (default one), exclusive low-memory execution, strict waiting queue, pin-aware unload and cancellation | Broader concurrent-serving optimization and soak tests |
-| C23 verification | Engine/parser tests, independent oracle, actual HTTP/SSE integration, pinned-model service smoke, fuzz target and benchmarks | Sustained fuzz/sanitizer campaigns and complete backend/platform matrix |
+| C23 verification | Engine/parser tests, independent oracle, actual HTTP/SSE integration, pinned-model service smoke, fuzz target and benchmarks | A/F registry and same-weight single/shard parity, BF16 and source-asset numerics, selected Gemma oracle, evidence-scope/fault checks; sustained fuzz/sanitizer and complete backend/platform matrix |
 | C24 image understanding (P0) | Verified components and processor/reference fixtures; exact-pair native Qwen2-VL CPU CLI/API/SSE, bounded ingress/admission, original assets, managed follow-ups, restart and cooperative scheduling; see IMAGE_SESSIONS.md | LLaVA, broader model/image-count/resolution qualification, Metal, other CPU platforms and sustained memory/security/performance campaigns |
 | C25 native embeddings (P0) | E1 independent Nomic F16/Q8_0 graph, 768-D mean/L2 vectors, exact tokenizer, single/batch/profile parity, 50 multilingual cases, bounded admission and cleanup; see EMBEDDINGS.md | Broader pretrained architecture/encoding qualification, Metal, actual Linux/Windows evidence and comparable memory/throughput benchmarks |
 | C26 embeddings API (P0) | E2 strings/arrays, float/Base64, exact usage, identity headers, task-aware residency, bounded shared scheduling and SDK checks | Broader platform/backend, sustained security and release contract qualification |
@@ -54,7 +60,7 @@ G0/G1 evidence lives in `fixtures/models.json`, `fixtures/golden/`, `fixtures/qu
 
 G3 CPU planner behavior and remaining M0 acceptance are described in [PLANNER.md](PLANNER.md). All four VLM tensor payload files are now byte-verified in `m0-components.json`; complete file identity is not inference qualification. See [native image-stage evidence and limitations](IMAGES.md). Existing text compatibility entries retain their exact-file evidence.
 
-Full v1.0 under v1.7 requires C01–C38, G0–G6/M0–M2/E0–E3/S0–S6 evidence, including embedded persistent-history capability with opt-in runtime use, tool/schema and independent audit acceptance. Existing feature rows above describe their historical scope and do not qualify the newly extended contracts. Optional full RAG/storage/retrieval/reranking features do not gate the core release.
+Full v1.0 under v1.9 requires C01–C38, G0–G6/M0–M2/E0–E3/S0–S6/A0–A5/F0–F5 evidence, including the selected Gemma CPU text profile, both Safetensors layouts and their minimum CPU/F16 Metal matrix, embedded persistent-history capability with opt-in runtime use, tool/schema and independent audit acceptance. Existing feature rows above describe their historical scope and do not qualify newly extended contracts. All existing mandatory GGUF/text/VLM/embedding Metal combinations remain unchanged; Gemma GPU support needs separate explicit qualification. Optional full RAG/storage/retrieval/reranking features do not gate the core release.
 
 G4 exact-file qualification covers four 0.5B quantized publisher files and the second-size 1.5B FP16/Q4_K_M pair. Actual tensor inventories, frozen primary/second-size contracts, layer/logit and greedy results, quantized service/concurrency cleanup and serial local memory/throughput observations are linked from `fixtures/compatibility.json`. This closes the initial macOS ARM64 packed CPU implementation/qualification work; it does not satisfy GPU, native vision, embedding GPU or other-platform release requirements. E1 CPU library evidence is recorded separately in `e1-embeddings.json`, `e1-multilingual.json` and `e1-boundaries.json`.
 
@@ -79,3 +85,28 @@ The selected native Qwen2-VL pair now reaches the main CLI/OpenAI-shaped API thr
 ## Managed image histories and cooperative CPU checkpoint
 
 [IMAGE_SESSIONS.md](IMAGE_SESSIONS.md) extends the current Qwen2-VL subset with private original assets, no-resend conversation history, opt-in save/restart, bounded portable image documents and cooperative text/embedding/image compute. This adds scoped C24/C29–C32/C36 evidence; image tools/constraints, continuous image batching, broader model/backend/platform coverage and sustained network/security/fuzz/crash/performance campaigns remain open. Complete v1.0 acceptance remains unchanged.
+
+The initial native adapter registry and Qwen3.5-0.8B CPU text development checkpoint are documented in [ADAPTERS.md](ADAPTERS.md) and [QWEN35.md](QWEN35.md). They do not complete any broader model/format/platform gate. Existing mandatory GGUF, vision, embedding, Metal and cross-platform combinations retain their required evidence.
+
+The shared metadata checkpoint adds local format-independent text inspection/capabilities and standalone cost estimates through [MODEL_METADATA.md](MODEL_METADATA.md). Metadata fingerprints exclude tensor payloads and cannot authorize model/cache identity reuse. Deep finiteness checks remain separate from full integrity and exact numerical qualification. Managed Safetensors/API lifecycle and the complete A/F release matrices remain open.
+
+Qwen3.5 standalone generation now shares the metadata estimator and atomically holds session/request/profile-headroom reservations through worker retirement. [MODEL_METADATA.md](MODEL_METADATA.md) documents this process-local admission checkpoint; managed source sets, shared budgets and API/session scheduling remain subsequent work.
+
+## Managed checkpoint and stateless Qwen3.5 continuation
+
+[MANAGED_CHECKPOINTS.md](MANAGED_CHECKPOINTS.md) adds complete per-file/source-set identities, bounded authenticated streaming import, private atomic directory/record publication, restart cleanup, integrity-checked load/unload/remove and shared daemon memory accounting. Qwen3.5 stateless CLI/text/chat/SSE shares queue limits, profile admission, cooperative CPU compute and acknowledged cancellation. GGUF, embedding and image paths retain their existing contracts. Managed checkpoint histories, full adapter/task unification, checkpoint URL pull, real multi-shard qualification, broad lifecycle/security/performance campaigns and complete mandatory backend/platform matrices remain open.
+
+## Qwen3.5 managed conversation continuation
+
+[QWEN35_SESSIONS.md](QWEN35_SESSIONS.md) connects complete-source-identity histories to shared bounded text preparation, exact rendered-token context selection and cooperative native execution. Existing ownership, revisions, idempotent receipts, commit-before-success, portable import/export, reset/delete and opt-in persistent restart apply. Replay needs no loaded weights while the source remains registered. Qwen3.5 retains full request-local prefill, zero prefix/recurrent reuse and explicit unsupported controls; history/transport reservations participate in admission and cancellation waits for worker retirement. Cross-turn state caching, task-wide executable adapters and remaining mandatory model/backend/platform/security gates stay open.
+
+## Qwen3.5 hybrid CPU continuation
+
+The current continuation adds bounded exact-prefix KV/recurrent/convolution snapshots, continuous text weight-tile batching, and stateless native still-image CLI/API execution for the pinned complete source profile. This extends scoped cache/scheduling/image evidence without closing the full mandatory release. The authored image oracle passes 140 complete-array comparisons across square, portrait and ordered two-image cases; the standalone CLI reconstructs the frozen streamed continuation. Separate opt-ins exercise cache equality, batch cancellation and encoder resource cleanup. Numerical thresholds and original records remain unchanged.
+
+The socket-free workspace suite passes 240 tests; seven explicit real-checkpoint tests are separate, and seven socket/daemon tests could not run in the restricted environment. Automatic approval review was unavailable because of its usage limit. This is not evidence of failed model execution, nor a passing TCP transport campaign. Full production acceptance still requires those checks, broader image semantics, required architectures/layouts/platforms/Metal and sustained security/performance/lifecycle evidence. Current reproduction and scope are in [QWEN35.md](QWEN35.md).
+
+
+## Qwen3.5 image planning and durable history continuation
+
+Local and managed metadata-only image planning now share execution stage costs, and explicit Qwen3.5 image sessions reuse the existing asset/history/store/receipt lifecycle. The default text-session task is retained. MiniJinja 3.0.5 is the verified stable patch, with both locks and legal inventory updated. All 251 ordinary tests pass, including the seven socket/daemon checks that were unavailable in the earlier checkpoint; that validation restriction is resolved for this run. This adds scoped evidence, while broader model/format/semantic/backend/platform, allocator and sustained lifecycle/security campaigns remain release-gating. See [IMAGE_SESSIONS.md](IMAGE_SESSIONS.md).

@@ -94,12 +94,15 @@ pub enum Processor {
     Llava15Pad336,
     #[serde(rename = "qwen2vl-still-v1")]
     Qwen2VlStill,
+    #[serde(rename = "qwen35-still-v1")]
+    Qwen35Still,
 }
 impl Processor {
     pub fn parse(name: &str) -> Result<Self> {
         match name {
             "llava15-pad336-v1" => Ok(Self::Llava15Pad336),
             "qwen2vl-still-v1" => Ok(Self::Qwen2VlStill),
+            "qwen35-still-v1" => Ok(Self::Qwen35Still),
             _ => Err(Error::new(
                 ErrorCode::UnsupportedImageProcessor,
                 "unknown qualified preprocessing profile",
@@ -110,6 +113,7 @@ impl Processor {
         match self {
             Self::Llava15Pad336 => "llava15-pad336-v1",
             Self::Qwen2VlStill => "qwen2vl-still-v1",
+            Self::Qwen35Still => "qwen35-still-v1",
         }
     }
 }
@@ -156,7 +160,8 @@ fn deviation() -> [f32; 3] {
 pub fn inspect(encoded: &[u8], limits: ImageLimits, cancel: &Cancellation) -> Result<ImageInfo> {
     header::inspect(encoded, &limits, cancel)
 }
-pub fn plan(info: ImageInfo, profile: Processor, limits: ImageLimits) -> Result<ImagePlan> {
+/// Validate source geometry independently of any model's resize/patch profile.
+pub fn validate_info(info: ImageInfo, limits: ImageLimits) -> Result<()> {
     limits.validate()?;
     if info.width == 0
         || info.height == 0
@@ -170,6 +175,11 @@ pub fn plan(info: ImageInfo, profile: Processor, limits: ImageLimits) -> Result<
     {
         return Err(limit("invalid or oversized image descriptor"));
     }
+    Ok(())
+}
+pub fn plan(info: ImageInfo, profile: Processor, limits: ImageLimits) -> Result<ImagePlan> {
+    limits.validate()?;
+    validate_info(info, limits)?;
     let (sw, sh) = info.oriented_dimensions();
     let (width, height, rw, rh) = match profile {
         Processor::Llava15Pad336 => {
@@ -199,6 +209,32 @@ pub fn plan(info: ImageInfo, profile: Processor, limits: ImageLimits) -> Result<
             }
             (w, h, w, h)
         }
+        Processor::Qwen35Still => {
+            if sw.max(sh) > sw.min(sh) * 200 {
+                return Err(limit("Qwen still-image aspect ratio exceeds 200"));
+            }
+            let (factor, minimum, maximum) = if profile == Processor::Qwen35Still {
+                (32., 65536., 16777216.)
+            } else {
+                (28., 3136., 12845056.)
+            };
+            let mut w =
+                ((sw as f64 / factor).round_ties_even() as u32 * factor as u32).max(factor as u32);
+            let mut h =
+                ((sh as f64 / factor).round_ties_even() as u32 * factor as u32).max(factor as u32);
+            if u64::from(w) * u64::from(h) > maximum as u64 {
+                let ratio = (sw as f64 * sh as f64 / maximum).sqrt();
+                w = ((sw as f64 / ratio / factor).floor() as u32 * factor as u32)
+                    .max(factor as u32);
+                h = ((sh as f64 / ratio / factor).floor() as u32 * factor as u32)
+                    .max(factor as u32);
+            } else if u64::from(w) * u64::from(h) < minimum as u64 {
+                let ratio = (minimum / (sw as f64 * sh as f64)).sqrt();
+                w = (sw as f64 * ratio / factor).ceil() as u32 * factor as u32;
+                h = (sh as f64 * ratio / factor).ceil() as u32 * factor as u32;
+            }
+            (w, h, w, h)
+        }
     };
     let pixels = mul(width as u64, height as u64)?;
     if width == 0
@@ -211,9 +247,14 @@ pub fn plan(info: ImageInfo, profile: Processor, limits: ImageLimits) -> Result<
             "canonical processor output exceeds pixel limits; no automatic quality reduction",
         ));
     }
-    let grid = [1, (height / 14) as usize, (width / 14) as usize];
+    let patch = if profile == Processor::Qwen35Still {
+        16
+    } else {
+        14
+    };
+    let grid = [1, (height / patch) as usize, (width / patch) as usize];
     let patches = memory::product(&grid)?;
-    let tokens = if profile == Processor::Qwen2VlStill {
+    let tokens = if profile != Processor::Llava15Pad336 {
         patches / 4
     } else {
         patches
@@ -252,11 +293,14 @@ pub fn plan(info: ImageInfo, profile: Processor, limits: ImageLimits) -> Result<
         resized_height: rh,
         grid,
         patch_rows: patches,
-        patch_features: if profile == Processor::Qwen2VlStill {
-            1176
-        } else {
-            588
-        },
+        patch_features: patch as usize
+            * patch as usize
+            * 3
+            * if profile == Processor::Llava15Pad336 {
+                1
+            } else {
+                2
+            },
         image_feature_tokens: tokens,
         decoder_stage_bytes: decoder,
         resample_stage_bytes: resample,
@@ -339,7 +383,12 @@ impl PreparedImage {
         if row >= self.plan.patch_rows {
             return Err(Error::request("image patch index outside plan"));
         }
-        let merged = self.plan.profile == Processor::Qwen2VlStill;
+        let merged = self.plan.profile != Processor::Llava15Pad336;
+        let patch = if self.plan.profile == Processor::Qwen35Still {
+            16
+        } else {
+            14
+        };
         let (py, px) = if merged {
             let group = row / 4;
             let groups_w = self.plan.grid[2] / 2;
@@ -353,10 +402,10 @@ impl PreparedImage {
         let time = if merged { 2 } else { 1 };
         let width = self.plan.width as usize;
         Ok((0..self.plan.patch_features).map(move |i| {
-            let channel = i / (time * 196);
-            let y = i / 14 % 14;
-            let x = i % 14;
-            self.normalized[((py * 14 + y) * width + px * 14 + x) * 3 + channel]
+            let channel = i / (time * patch * patch);
+            let y = i / patch % patch;
+            let x = i % patch;
+            self.normalized[((py * patch + y) * width + px * patch + x) * 3 + channel]
         }))
     }
 }
@@ -500,8 +549,16 @@ fn finish_pixels(
     }
     let digest = crate::storage::digest_hex(hash.finalize().into());
     let mut normalized = Buffer::filled(rgb.len(), 0.0f32, budget)?;
-    let mean = mean();
-    let deviation = deviation();
+    let mean = if plan.profile == Processor::Qwen35Still {
+        [0.5; 3]
+    } else {
+        mean()
+    };
+    let deviation = if plan.profile == Processor::Qwen35Still {
+        [0.5; 3]
+    } else {
+        deviation()
+    };
     for (i, (pixel, value)) in rgb.iter().zip(normalized.iter_mut()).enumerate() {
         if i % 4096 == 0 {
             cancel.check()?;

@@ -2,6 +2,8 @@
 
 The experimental G4 CPU planner shares one atomic reservation budget with model loading and request scheduling. The pure planner accepts validated metadata, an explicit hardware snapshot and current reservations; identical inputs produce identical plans. It never loads tensor payloads to estimate a model. The daemon now supports explicit embedding workload plans and uses the E1 estimator with E2 transport-stage reservations over the shared budget.
 
+Local GGUF/Qwen3.5 text estimates now use the [shared model descriptor](MODEL_METADATA.md) through `plan LOCAL_SOURCE --standalone`. The descriptor records source/runtime context limits and metadata integrity scope. These estimates hold no reservation; managed execution continues to use the existing atomic admission path.
+
 ```sh
 target/release/coheryn serve --max-concurrency 2
 target/release/coheryn plan MODEL_ID --context 4096 --profile balanced --concurrency 2 --json
@@ -99,3 +101,20 @@ Registered Qwen2-VL pairs accept `task=image-to-text` and bounded oriented image
 ## Managed image history admission
 
 Image sessions reconstruct selected original-byte references under session/owner/global disk quotas. Exact prompt/feature geometry, full decoder capacity and the sequential image-stage peak are admitted before scheduling; metadata/history and transport reservations are counted separately. Explicit oldest-complete-turn exclusion can remove older image turns and records their IDs. Cooperative compute checkpoints retain the existing reservation and buffers while parked; output backpressure releases CPU ownership. Original assets remain on disk and KV/pixels/embeddings remain request-local. See [IMAGE_SESSIONS.md](IMAGE_SESSIONS.md) for finite limits, phase residency and persistence semantics.
+
+## Managed checkpoint and stateless Qwen3.5 continuation
+
+[MANAGED_CHECKPOINTS.md](MANAGED_CHECKPOINTS.md) adds complete per-file/source-set identities, bounded authenticated streaming import, private atomic directory/record publication, restart cleanup, integrity-checked load/unload/remove and shared daemon memory accounting. Qwen3.5 stateless CLI/text/chat/SSE shares queue limits, profile admission, cooperative CPU compute and acknowledged cancellation. GGUF, embedding and image paths retain their existing contracts. Managed checkpoint histories, full adapter/task unification, checkpoint URL pull, real multi-shard qualification, broad lifecycle/security/performance campaigns and complete mandatory backend/platform matrices remain open.
+
+## Qwen3.5 managed conversation continuation
+
+[QWEN35_SESSIONS.md](QWEN35_SESSIONS.md) connects complete-source-identity histories to shared bounded text preparation, exact rendered-token context selection and cooperative native execution. Existing ownership, revisions, idempotent receipts, commit-before-success, portable import/export, reset/delete and opt-in persistent restart apply. Replay needs no loaded weights while the source remains registered. Qwen3.5 retains full request-local prefill, zero prefix/recurrent reuse and explicit unsupported controls; history/transport reservations participate in admission and cancellation waits for worker retirement. Cross-turn state caching, task-wide executable adapters and remaining mandatory model/backend/platform/security gates stay open.
+
+## Qwen3.5 hybrid and image admission
+
+The current hybrid continuation supersedes the earlier zero-reuse restriction. Optional exact-prefix snapshots separately reserve full-attention KV, recurrent matrices and convolution history/cursors. Session/global caps and eviction govern idle capacity; request limits include a retained/new snapshot while it is in use. Ordinary text estimates exclude optional idle caches. Cached state must match model instance, context, workers, token prefix and budget, otherwise full prefill preserves the request's semantics.
+
+Still-image preparation preflights expanded physical token rows and all configured image limits before admitting execution. It conservatively reserves language execution/profile capacity plus encoded inputs, each processor/encoder stage and retained projected features. Norm/bias parameter vectors and numeric workers are included separately from tiled weight reads. No full-model dequantization or image-conditioned prefix cache is introduced. Stateless and managed-image CLI/API paths enforce this admission, and metadata-only Qwen3.5 image estimates now share those stage calculations. See [QWEN35.md](QWEN35.md).
+
+
+Qwen3.5 source image plans now support local `--standalone` paths and managed IDs. Validation checks the actual image component/tensor inventory/processor before estimating, without opening execution tensor views. Dimension-only plans use bounded encoded-byte and RGBA/codec allowances, so they conservatively exceed exact small-file requests. Model weights are counted once as advisory buffered-file residency; independent requests multiply stage/session/ingress/delivery reservations. Plans hold no execution reservation. Submission reconstructs selected history, checks physical text/image/output capacity and atomically reserves actual request stages before queueing.

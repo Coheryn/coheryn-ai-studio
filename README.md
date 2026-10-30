@@ -4,9 +4,11 @@
 
 Coheryn-authored code is licensed under [Apache 2.0](LICENSE). Included third-party assets retain their own terms; see [third-party notices](THIRD_PARTY_NOTICES.md).
 
-An independent Rust-native GGUF inference engine. This repository provides an **experimental CPU CLI/API preview** with text generation, independent embeddings, managed text conversations, session-safe KV reuse and opt-in persistent histories. The [release checklist](docs/RELEASE_CHECKLIST.md) tracks the full mandatory scope. S0 provides automated source/dependency/artifact checks; S1–S6 have initial macOS ARM64 CPU evidence, including an exact-file tool profile, native JSON/schema constraints and expanded sampling controls. Native compatible CPU continuous batching has an initial checkpoint. Native PNG/JPEG preprocessing and the selected Qwen2-VL CPU vision encoder/merger have bounded, reference-tested foundations; see [image-stage status](docs/IMAGES.md) and [native vision scope](docs/VISION.md). The selected Qwen2-VL pair now has an [offline native image-to-text development runner](docs/MULTIMODAL.md). Product image attachments now use registered component pairs, bounded CLI/Base64/opt-in HTTPS acquisition and shared admission/cancellation; see [image CLI/API](docs/IMAGE_API.md). Managed image histories, opt-in save/resume and cooperative CPU scheduling now have an [image conversation checkpoint](docs/IMAGE_SESSIONS.md). Metal and broader batching/platform/release qualification remain open. Full RAG and vector storage remain optional. See [session commands and persistence](docs/SESSIONS.md) and [planner evidence and limits](docs/PLANNER.md).
+An independent Rust-native inference engine with GGUF execution and an experimental Safetensors text adapter. This repository provides an **experimental CPU CLI/API preview** with text generation, independent embeddings, managed text conversations, session-safe KV reuse and opt-in persistent histories. The [release checklist](docs/RELEASE_CHECKLIST.md) tracks the full mandatory scope. S0 provides automated source/dependency/artifact checks; S1–S6 have initial macOS ARM64 CPU evidence, including an exact-file tool profile, native JSON/schema constraints and expanded sampling controls. Native compatible CPU continuous batching has an initial checkpoint. Native PNG/JPEG preprocessing and the selected Qwen2-VL CPU vision encoder/merger have bounded, reference-tested foundations; see [image-stage status](docs/IMAGES.md) and [native vision scope](docs/VISION.md). The selected Qwen2-VL pair now has an [offline native image-to-text development runner](docs/MULTIMODAL.md). Product image attachments now use registered component pairs, bounded CLI/Base64/opt-in HTTPS acquisition and shared admission/cancellation; see [image CLI/API](docs/IMAGE_API.md). Managed image histories, opt-in save/resume and cooperative CPU scheduling now have an [image conversation checkpoint](docs/IMAGE_SESSIONS.md). Metal and broader batching/platform/release qualification remain open. Full RAG and vector storage remain optional. See [session commands and persistence](docs/SESSIONS.md) and [planner evidence and limits](docs/PLANNER.md).
 
-Coheryn owns the Qwen2 generation graph, Nomic embedding graph, packed kernels and controlled CPU parallelism. Native build/test/runtime paths contain no external model executor. Tests consume frozen independent outputs; original capture source and provenance are retained as inert resource research.
+Coheryn owns the Qwen2 and Qwen3.5 generation graphs, Nomic embedding graph, packed kernels and controlled CPU parallelism. Native build/test/runtime paths contain no external model executor. Tests consume frozen independent outputs; original capture source and provenance are retained as inert resource research.
+
+The [native adapter registry](docs/ADAPTERS.md) now selects standalone text implementations. [Qwen3.5-0.8B development support](docs/QWEN35.md) uses the pinned official Safetensors checkpoint on CPU; its managed stateless text/chat API now shares checkpoint integrity, admission and cooperative scheduling; see [managed checkpoints](docs/MANAGED_CHECKPOINTS.md). Qwen3.5 [managed text histories](docs/QWEN35_SESSIONS.md) support persistence, replay and bounded hybrid prefix reuse. Qwen3.5 also has continuous text batching, metadata-only image plans and explicit persistent image conversations through the CLI/API. Local model inspection/validation and standalone text memory estimates now share a [versioned descriptor](docs/MODEL_METADATA.md).
 
 ## Build and test
 
@@ -24,6 +26,19 @@ Package maintenance follows [AGENT.md](AGENT.md); [dependency upgrade notes](doc
 `./tools/cargo` runs the same commands using a workspace-local toolchain when `.cache/cargo` exists. CPU CI covers macOS ARM64, Linux x86-64, and Windows x86-64; configured CI is not evidence that those remote jobs have run.
 
 ## First native inference
+
+For the prioritized Qwen3.5-0.8B standalone development profile:
+
+```sh
+python3 tools/fetch_checkpoint.py
+target/release/coheryn run .cache/qwen3.5-0.8b-source \
+  --standalone --messages fixtures/qwen35/smoke-messages.json \
+  --context 256 --max-tokens 8 --threads 2 --stream
+```
+
+This CPU text profile is experimental; [supported options and remaining work](docs/QWEN35.md) are explicit. It does not yet use the managed daemon.
+
+## GGUF regression and service model
 
 Download the pinned publisher model into the ignored cache, checking its SHA-256 before atomic installation:
 
@@ -66,7 +81,7 @@ The listener defaults to `127.0.0.1:11450`. Distinct inference/admin credentials
 
 CLI errors have stable JSON codes. Exit statuses: `0` success, `1` internal, `2` invalid request/arguments, `3` I/O/missing/changed model, `4` compatibility/format, `5` resource exhaustion, `6` credentials, `7` conflict/full queue, `8` unavailable daemon, `130` cancellation. `--json` writes results to stdout and failures to stderr. `--deep` additionally validates the task-specific tokenizer (including a chat probe for generation models) and scans all supported weight payloads for non-finite values using bounded workspace.
 
-Quantized CPU qualification and embedding reference preparation are documented in [QUANTIZATION.md](docs/QUANTIZATION.md) and [the E0 fixture guide](fixtures/embedding/README.md). Native embedding CLI/API and external RAG interfaces are documented in [EMBEDDING_API.md](docs/EMBEDDING_API.md). Image inference remains unimplemented.
+Quantized CPU qualification and embedding reference preparation are documented in [QUANTIZATION.md](docs/QUANTIZATION.md) and [the E0 fixture guide](fixtures/embedding/README.md). Native embedding CLI/API and external RAG interfaces are documented in [EMBEDDING_API.md](docs/EMBEDDING_API.md). The selected Qwen2-VL image path has separate [CLI/API evidence](docs/IMAGE_API.md); The pinned Qwen3.5 source has separately qualified [still-image support](docs/QWEN35.md#still-image-input-and-scheduling).
 
 ## Native verification and reference evidence
 
@@ -82,6 +97,10 @@ python3 tools/check_service.py
 The real-model service check requires previously acquired pinned weights and a release binary. Its cache conditions are uncontrolled. Unit and fixture checks work without model downloads. Reference-precision settings and frozen tolerances remain in the fixture manifests. Development F32 weights can be derived with `python3 tools/derive_f32.py`; this promotes existing binary16 values and is not original pretrained F32 precision.
 
 See [implementation plan](docs/IMPLEMENTATION_PLAN.md), [validation evidence](docs/VALIDATION.md), [threat model](docs/THREAT_MODEL.md), and [release checklist](docs/RELEASE_CHECKLIST.md).
+
+Development now prioritizes [qualifying the existing CPU capabilities](docs/CPU_RELEASE.md) before additional architectures or GPU execution. Reproducible candidate archives and native startup checks are distinct from production qualification. See [operation and recovery procedures](docs/OPERATIONS.md); the production label stays blocked until the required model, platform, security and operational evidence is reviewed.
+
+The [pinned real-model CPU runner](docs/CPU_QUALIFICATION.md) combines independent numerical fixtures, extracted CLI and authenticated TCP/SSE checks. A manual workflow targets macOS ARM64, Linux x86-64 and Windows x86-64; successful execution evidence is required separately on each platform.
 
 ## Managed text sessions
 

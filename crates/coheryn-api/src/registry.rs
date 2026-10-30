@@ -21,6 +21,8 @@ pub struct ModelRecord {
     pub source: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<ModelPair>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub checkpoint: Option<crate::checkpoint::CheckpointManifest>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -100,6 +102,28 @@ impl Registry {
                 std::fs::remove_file(entry.path())?;
             }
         }
+        // Only recognized, bounded flat checkpoint directories may be reclaimed.
+        for entry in std::fs::read_dir(root.join("models"))? {
+            let entry = entry?;
+            let name = entry.file_name();
+            let Some(name) = name.to_str() else { continue };
+            let staged = name
+                .strip_suffix(".checkpoint-part")
+                .is_some_and(|id| id.len() == 32 && id.bytes().all(|b| b.is_ascii_hexdigit()));
+            let orphan = name
+                .strip_prefix("model-")
+                .and_then(|s| s.strip_suffix(".checkpoint"))
+                .filter(|id| validate_id(id).is_ok())
+                .is_some_and(|id| {
+                    !root
+                        .join("records")
+                        .join(format!("model-{id}.json"))
+                        .exists()
+                });
+            if staged || orphan {
+                crate::checkpoint::remove_directory(&entry.path())?;
+            }
+        }
         Ok(Self {
             root,
             _lock: lock,
@@ -139,7 +163,16 @@ impl Registry {
         let file = File::open(path)?;
         let record: ModelRecord = serde_json::from_reader(file.take(65537))
             .map_err(|_| ApiError::bad("invalid registry record"))?;
-        if record.id != id || record.schema_version != 1 {
+        if record.id != id
+            || !matches!(
+                (
+                    record.schema_version,
+                    record.checkpoint.is_some(),
+                    record.components.is_some()
+                ),
+                (1, false, _) | (2, true, false)
+            )
+        {
             return Err(ApiError::bad("registry record identity/version mismatch"));
         }
         validate_hash(&record.sha256)?;
@@ -147,7 +180,12 @@ impl Registry {
     }
     pub fn get(&self, id: &str) -> Result<ModelRecord> {
         let record = self.read_record(id)?;
-        if let Some(pair) = &record.components {
+        if let Some(checkpoint) = &record.checkpoint {
+            if checkpoint.validate()? != record.bytes || checkpoint.identity()? != record.sha256 {
+                return Err(ApiError::bad("invalid checkpoint record identity"));
+            }
+            checkpoint.verify(&self.checkpoint_root(id)?, false, &Default::default())?;
+        } else if let Some(pair) = &record.components {
             if pair.language.model == pair.vision.model
                 || record.sha256 != pair.identity()
                 || pair.language.bytes.checked_add(pair.vision.bytes) != Some(record.bytes)
@@ -157,6 +195,7 @@ impl Registry {
             for component in [&pair.language, &pair.vision] {
                 let child = self.read_record(&component.model)?;
                 if child.components.is_some()
+                    || child.checkpoint.is_some()
                     || child.sha256 != component.sha256
                     || child.bytes != component.bytes
                     || self.model_path(&component.model)?.metadata()?.len() != component.bytes
@@ -185,8 +224,10 @@ impl Registry {
         }
         let component = |id: &str| -> Result<ComponentRef> {
             let r = self.get(id)?;
-            if r.components.is_some() {
-                return Err(ApiError::bad("nested model pairs are unsupported"));
+            if r.components.is_some() || r.checkpoint.is_some() {
+                return Err(ApiError::bad(
+                    "model pairs require two single-file GGUF components",
+                ));
             }
             Ok(ComponentRef {
                 model: r.id,
@@ -209,6 +250,7 @@ impl Registry {
                 .ok_or_else(|| Error::resource("model pair byte overflow"))?,
             source: None,
             components: Some(pair),
+            checkpoint: None,
         };
         Ok(record)
     }
@@ -217,7 +259,7 @@ impl Registry {
         self.write_record(&record)?;
         Ok(record)
     }
-    fn write_record(&self, record: &ModelRecord) -> Result<()> {
+    pub(crate) fn write_record(&self, record: &ModelRecord) -> Result<()> {
         let path = self.record_path(&record.id)?;
         let tmp = path.with_extension(format!("{}.part", uuid::Uuid::new_v4().simple()));
         let result = (|| -> Result<()> {
@@ -228,6 +270,7 @@ impl Registry {
             )?;
             file.sync_all()?;
             std::fs::rename(&tmp, &path)?;
+            crate::checkpoint::sync_directory(&self.root.join("records"))?;
             Ok(())
         })();
         if result.is_err() {
@@ -235,7 +278,7 @@ impl Registry {
         }
         result
     }
-    pub fn list(&self) -> Result<Vec<ModelRecord>> {
+    fn record_ids(&self) -> Result<Vec<String>> {
         let mut ids = Vec::new();
         for entry in std::fs::read_dir(self.root.join("records"))? {
             let name = entry?.file_name();
@@ -251,14 +294,23 @@ impl Registry {
             }
         }
         ids.sort();
-        ids.into_iter().map(|id| self.get(&id)).collect()
+        Ok(ids)
+    }
+    pub fn list(&self) -> Result<Vec<ModelRecord>> {
+        self.record_ids()?
+            .into_iter()
+            .map(|id| self.get(&id))
+            .collect()
     }
     pub fn check_new(&self, id: &str) -> Result<()> {
         validate_id(id)?;
-        if self.record_path(id)?.exists() || self.model_path(id)?.exists() {
+        if self.record_path(id)?.exists()
+            || self.model_path(id)?.exists()
+            || self.checkpoint_root(id)?.exists()
+        {
             return Err(ApiError::conflict("model ID already exists"));
         }
-        if self.list()?.len() >= 128 {
+        if self.record_ids()?.len() >= 128 {
             return Err(Error::resource("registry is full").into());
         }
         Ok(())
@@ -273,12 +325,17 @@ impl Registry {
                 .into());
             }
             let entry = entry?;
-            if !entry.file_type()?.is_file() {
-                return Err(ApiError::bad("managed storage contains a non-regular file"));
-            }
-            let meta = entry.metadata()?;
+            let bytes = if entry.file_type()?.is_dir() {
+                crate::checkpoint::directory_bytes(&entry.path())?
+            } else if entry.file_type()?.is_file() {
+                entry.metadata()?.len()
+            } else {
+                return Err(ApiError::bad(
+                    "managed storage contains a non-regular entry",
+                ));
+            };
             total = total
-                .checked_add(meta.len())
+                .checked_add(bytes)
                 .ok_or_else(|| Error::resource("disk usage overflow"))?;
         }
         Ok(total)
@@ -310,16 +367,26 @@ impl Registry {
             )?;
             file.sync_all()?;
             std::fs::rename(&tmp, &path)?;
+            crate::checkpoint::sync_directory(&self.root.join("records"))?;
             Ok(())
         })();
         if result.is_err() {
             let _ = std::fs::remove_file(&tmp);
-            let _ = std::fs::remove_file(self.model_path(&record.id)?);
+            if !path.exists() {
+                let _ = std::fs::remove_file(self.model_path(&record.id)?);
+            }
         }
         result
     }
     pub fn remove(&self, id: &str) -> Result<()> {
-        if self.list()?.iter().any(|r| {
+        // Inspect record references without requiring damaged payloads to pass validation.
+        // Administrators must still be able to remove an unused corrupt model.
+        let records = self
+            .record_ids()?
+            .iter()
+            .map(|id| self.read_record(id))
+            .collect::<Result<Vec<_>>>()?;
+        if records.iter().any(|r| {
             r.components
                 .as_ref()
                 .is_some_and(|p| p.language.model == id || p.vision.model == id)
@@ -327,6 +394,14 @@ impl Registry {
             return Err(ApiError::conflict(
                 "component is referenced by a model pair; remove the pair first",
             ));
+        }
+        if self.record_path(id)?.exists() && self.read_record(id)?.checkpoint.is_some() {
+            let root = self.checkpoint_root(id)?;
+            crate::checkpoint::directory_bytes(&root)?;
+            std::fs::remove_file(self.record_path(id)?)?;
+            crate::checkpoint::sync_directory(&self.root.join("records"))?;
+            crate::checkpoint::remove_directory(&root)?;
+            return Ok(());
         }
         let record = self.record_path(id)?;
         let model = self.model_path(id)?;

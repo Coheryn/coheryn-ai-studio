@@ -81,11 +81,46 @@ impl Service {
     pub fn model(&self, id: &str) -> Result<Arc<Model>> {
         match self.resident(id)? {
             Resident::Generation(m) => Ok(m),
-            Resident::Embedding(_) | Resident::Vision(_) => Err(Error::new(
+            Resident::Embedding(_) | Resident::Vision(_) | Resident::Qwen35(_) => Err(Error::new(
                 ErrorCode::UnsupportedModelArchitecture,
-                "selected model cannot serve text-only generation; image model pairs require chat messages",
+                "selected model does not support managed text sessions; use its stateless generation interface",
             )
             .into()),
+        }
+    }
+    pub fn text_model(&self, id: &str) -> Result<crate::resident::TextResident> {
+        match self.resident(id)? {
+            Resident::Generation(model) => Ok(crate::resident::TextResident::Gguf(model)),
+            Resident::Qwen35(model) => Ok(crate::resident::TextResident::Qwen35(model)),
+            _ => Err(Error::new(
+                ErrorCode::UnsupportedModelArchitecture,
+                "selected model cannot serve text conversations",
+            )
+            .into()),
+        }
+    }
+    pub fn submit_generation(
+        &self,
+        request: crate::wire::GenerationRequest,
+        ingress: &mut Option<coheryn_engine::memory::Reservation>,
+    ) -> Result<crate::scheduler::GenerationHandle> {
+        match self.resident(&request.model)? {
+            Resident::Generation(model) => self.scheduler.submit(model, request),
+            Resident::Qwen35(model) => self.scheduler.submit_qwen35(model, request, ingress.take()),
+            _ => Err(Error::new(
+                ErrorCode::UnsupportedModelArchitecture,
+                "selected model cannot serve stateless text generation",
+            )
+            .into()),
+        }
+    }
+    pub fn hybrid_vision(&self, id: &str) -> Result<Option<Arc<coheryn_engine::qwen35::Model>>> {
+        match self.resident(id)? {
+            Resident::Qwen35(m) => {
+                m.vision_configuration()?;
+                Ok(Some(m))
+            }
+            _ => Ok(None),
         }
     }
     pub fn vision(&self, id: &str) -> Result<Arc<coheryn_engine::multimodal::qwen2vl::Qwen2Vl>> {
@@ -118,7 +153,7 @@ impl Service {
     pub fn embedding(&self, id: &str) -> Result<Arc<ResidentEmbedding>> {
         match self.resident(id)? {
             Resident::Embedding(m) => Ok(m),
-            Resident::Generation(_) | Resident::Vision(_) => Err(Error::new(
+            Resident::Generation(_) | Resident::Vision(_) | Resident::Qwen35(_) => Err(Error::new(
                 ErrorCode::UnsupportedModelArchitecture,
                 "generation model cannot perform qualified embedding inference",
             )
@@ -126,7 +161,7 @@ impl Service {
         }
     }
     pub fn loaded(&self) -> Result<Value> {
-        Ok(Value::Array(self.residents()?.iter().map(|(id,m)|json!({"id":id,"context":m.context(),"task":m.task(),"pinned":m.pinned(),"embedding_space":match m {Resident::Embedding(m)=>Some(&m.space),_=>None}})).collect()))
+        Ok(Value::Array(self.residents()?.iter().map(|(id,m)|json!({"id":id,"context":m.context(),"task":m.task(),"pinned":m.pinned(),"conversation":m.conversation_capabilities(),"embedding_space":match m {Resident::Embedding(m)=>Some(&m.space),_=>None}})).collect()))
     }
     pub fn status(&self) -> Result<Value> {
         Ok(
@@ -207,6 +242,24 @@ impl Service {
                 service.residents()?.insert(id.clone(), model);
                 return Ok(json!({"model":id,"context":context,"loaded":true,"task":"image-to-text"}));
             }
+            if let Some(manifest) = record.checkpoint.clone() {
+                let root = service.registry.checkpoint_root(&id)?;
+                let budget = service.budget.clone();
+                let limits = ResourceLimits {context,max_memory:service.config.max_memory};
+                let model = tokio::task::spawn_blocking(move || -> Result<_> {
+                    let validation = budget.reserve(coheryn_engine::qwen35::RESIDENT_METADATA_BYTES)?;
+                    manifest.verify(&root,true,&Default::default())?;
+                    let inspection = manifest.bind(&root,&Default::default())?;
+                    if inspection.descriptor().architecture.as_deref() != Some("qwen3_5") {
+                        return Err(Error::new(ErrorCode::UnsupportedModelArchitecture,"managed checkpoint graph is not implemented").into());
+                    }
+                    drop(inspection); drop(validation);
+                    let model = coheryn_engine::qwen35::Model::load_with_budget(root.join(&manifest.entrypoint), limits, budget, &Default::default())?;
+                    Ok(Resident::Qwen35(Arc::new(model)))
+                }).await??;
+                service.residents()?.insert(id.clone(), model);
+                return Ok(json!({"model":id,"context":context,"loaded":true,"task":"text-generation","adapter":manifest_adapter(&record)}));
+            }
             let path=service.registry.model_path(&id)?;let budget=service.budget.clone();let max_memory=service.config.max_memory;
             let operation=service.budget.reserve(service.parser_limits().max_metadata_allocation)?;
             let max_concurrency=service.scheduler.max_concurrency();
@@ -240,6 +293,19 @@ impl Service {
     pub async fn inspect(self: &Arc<Self>, id: String, deep: bool) -> Result<Value> {
         let _admin = self.admin.lock().await;
         let record = self.registry.get(&id)?;
+        if let Some(manifest) = record.checkpoint.clone() {
+            let root = self.registry.checkpoint_root(&id)?;
+            let reservation = self
+                .budget
+                .reserve(coheryn_engine::qwen35::RESIDENT_METADATA_BYTES)?;
+            return tokio::task::spawn_blocking(move || -> Result<Value> {
+                let _reservation = reservation;
+                if deep { manifest.verify(&root,true,&Default::default())?; }
+                let inspection = manifest.bind(&root,&Default::default())?;
+                if deep { inspection.deep_validate(&Default::default())?; }
+                Ok(json!({"descriptor":inspection.descriptor(),"compatibility":{"executable":true,"adapter":manifest.adapter,"managed_text":true,"images":inspection.descriptor().text_adapter.as_ref().is_some_and(|a|a.images),"image_sessions":inspection.descriptor().text_adapter.as_ref().is_some_and(|a|a.images),"image_planning":inspection.descriptor().text_adapter.as_ref().is_some_and(|a|a.images),"tools":false,"sessions":true,"prefix_kv_reuse":true,"recurrent_state_reuse":true,"continuous_batching":true},"source_set_sha256":record.sha256,"payload_integrity":if deep {"verified"}else{"not-rehashed"}}))
+            }).await?;
+        }
         if record.components.is_some() {
             let service = self.clone();
             return tokio::task::spawn_blocking(move || {
@@ -309,6 +375,116 @@ impl Service {
             embedding,
             planner::{self, PlanInput, Profile},
         };
+        if let Some(manifest) = &record.checkpoint {
+            if request.task.as_deref() == Some("image-to-text") {
+                return crate::vision_planner::estimate_qwen35(
+                    self,
+                    request,
+                    &record,
+                    loaded.as_ref(),
+                );
+            }
+            if request
+                .task
+                .as_deref()
+                .is_some_and(|s| s != "text-generation")
+                || request.images.is_some()
+                || request.input_bytes.is_some()
+                || request.batch_size.is_some()
+                || request.max_input_tokens.is_some()
+                || request.max_batch_tokens.is_some()
+            {
+                return Err(ApiError::bad(
+                    "checkpoint currently supports text-generation planning only",
+                ));
+            }
+            let hardware = crate::hardware::probe();
+            let profile = Profile::parse(&request.profile)?;
+            let plan_request = coheryn_engine::catalog::PlanRequest {
+                context: request.context,
+                concurrency: request.concurrency,
+                max_memory: self.config.max_memory,
+                profile,
+                threads: request.threads,
+                constraints: request.constraints,
+            };
+            let budget = self.budget.stats();
+            let plan = if let Some(Resident::Qwen35(model)) = loaded {
+                coheryn_engine::qwen35::estimate_shared(
+                    model.configuration(),
+                    model.weight_bytes()?,
+                    &plan_request,
+                    &hardware,
+                    budget,
+                    true,
+                    self.scheduler.max_concurrency(),
+                )?
+            } else {
+                let inspection_memory = self
+                    .budget
+                    .reserve(coheryn_engine::qwen35::RESIDENT_METADATA_BYTES)?;
+                let inspection = manifest.bind(
+                    &self.registry.checkpoint_root(&record.id)?,
+                    &Default::default(),
+                )?;
+                let config = coheryn_engine::qwen35::Config::parse(
+                    inspection
+                        .source_configuration()
+                        .ok_or_else(|| ApiError::bad("missing checkpoint configuration"))?,
+                )?;
+                let plan = coheryn_engine::qwen35::estimate_shared(
+                    &config,
+                    inspection.descriptor().tensor_bytes,
+                    &plan_request,
+                    &hardware,
+                    budget,
+                    false,
+                    self.scheduler.max_concurrency(),
+                )?;
+                drop(inspection);
+                drop(inspection_memory);
+                plan
+            };
+            // Scheduling holds an additional bounded delivery reservation per request.
+            let transport = (8u64 << 20)
+                .checked_mul(request.concurrency as u64)
+                .ok_or_else(|| Error::resource("transport reservation overflow"))?;
+            let mut plan = plan;
+            plan.model = request.model;
+            plan.additional_reserved_bytes = plan
+                .additional_reserved_bytes
+                .checked_add(transport)
+                .ok_or_else(|| Error::resource("checkpoint plan overflow"))?;
+            plan.required_reserved_bytes = plan
+                .required_reserved_bytes
+                .checked_add(transport)
+                .ok_or_else(|| Error::resource("checkpoint plan overflow"))?;
+            plan.conservative_host_working_set_additional_bytes = plan
+                .conservative_host_working_set_additional_bytes
+                .checked_add(transport)
+                .ok_or_else(|| Error::resource("checkpoint host estimate overflow"))?;
+            plan.host_allocation_feasible = hardware
+                .ram_available_bytes
+                .map(|n| plan.additional_reserved_bytes <= n);
+            plan.host_memory_feasible = hardware
+                .ram_available_bytes
+                .map(|n| plan.conservative_host_working_set_additional_bytes <= n);
+            if plan.required_reserved_bytes > budget.limit
+                || plan.host_allocation_feasible == Some(false)
+            {
+                plan.admissible = false;
+                plan.reasons.retain(|r| !r.starts_with("request fits"));
+                plan.reasons.push(
+                    "Complete execution and transport reservations exceed available resources"
+                        .into(),
+                );
+            }
+            let mut value =
+                serde_json::to_value(plan).map_err(|e| Error::request(e.to_string()))?;
+            value["transport_reserved_bytes"] = json!(transport);
+            value["source_set_sha256"] = json!(record.sha256);
+            return Ok(value);
+        }
         if record.components.is_some() {
             return crate::vision_planner::estimate(self, request, record, loaded.is_some());
         }
@@ -322,7 +498,9 @@ impl Service {
         let (descriptor, inspection_bytes);
         let d = if let Some(model) = &loaded {
             inspection_bytes = 0;
-            model.descriptor()
+            model
+                .descriptor()
+                .ok_or_else(|| ApiError::bad("selected resident has no GGUF descriptor"))?
         } else {
             let limits = service.parser_limits();
             inspection_bytes = limits.max_metadata_allocation;
@@ -553,6 +731,7 @@ impl Service {
         .await??;
         let record = ModelRecord {
             components: None,
+            checkpoint: None,
             schema_version: 1,
             id: name,
             sha256,
@@ -562,4 +741,8 @@ impl Service {
         self.registry.commit(&mut temporary, &record)?;
         Ok(record)
     }
+}
+
+fn manifest_adapter(record: &ModelRecord) -> Option<&str> {
+    record.checkpoint.as_ref().map(|m| m.adapter.as_str())
 }

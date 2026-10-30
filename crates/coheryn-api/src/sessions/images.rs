@@ -67,11 +67,7 @@ impl ImageAsset {
         {
             return Err(ApiError::bad("invalid saved image byte count"));
         }
-        image::plan(
-            self.info,
-            image::Processor::Qwen2VlStill,
-            ImageLimits::default(),
-        )?;
+        image::validate_info(self.info, ImageLimits::default())?;
         Ok(())
     }
 }
@@ -388,7 +384,7 @@ impl super::Sessions {
         cancel: &Cancellation,
     ) -> Result<Attachment> {
         let info = image::inspect(bytes, limits, cancel)?;
-        image::plan(info, image::Processor::Qwen2VlStill, limits)?;
+        image::validate_info(info, limits)?;
         let hash = coheryn_engine::storage::digest_hex(Sha256::digest(bytes).into());
         let mut state = self.state()?;
         let id = Self::resolve(&state, owner, id)?;
@@ -567,6 +563,61 @@ impl super::TurnLease {
         limits: ImageLimits,
         cancel: &Cancellation,
     ) -> Result<coheryn_engine::multimodal::qwen2vl::PreparedRequest> {
+        self.prepare_image_history(
+            image::Processor::Qwen2VlStill,
+            limits,
+            cancel,
+            |messages, images| {
+                let prepared = model.prepare_owned(messages, images, options, cancel)?;
+                let tokens = prepared.plan().physical_prompt_tokens;
+                Ok((prepared, tokens))
+            },
+        )
+    }
+    pub fn prepare_qwen35_images(
+        &mut self,
+        model: &coheryn_engine::qwen35::Model,
+        limits: ImageLimits,
+        execution: coheryn_engine::adapters::Execution<'_>,
+        concurrency: usize,
+        cancel: &Cancellation,
+    ) -> Result<coheryn_engine::qwen35::PreparedImages> {
+        let options = self.vision_request().options();
+        let context = self.context;
+        self.prepare_image_history(
+            image::Processor::Qwen35Still,
+            limits,
+            cancel,
+            |messages, images| {
+                let prepared = model.prepare_images(
+                    messages,
+                    images,
+                    limits,
+                    options.clone(),
+                    context,
+                    coheryn_engine::adapters::Execution {
+                        profile: execution.profile,
+                        threads: execution.threads,
+                        hardware: execution.hardware,
+                    },
+                    concurrency,
+                    cancel,
+                )?;
+                let tokens = prepared.prompt_token_count();
+                Ok((prepared, tokens))
+            },
+        )
+    }
+    fn prepare_image_history<T>(
+        &mut self,
+        processor: image::Processor,
+        limits: ImageLimits,
+        cancel: &Cancellation,
+        mut prepare: impl FnMut(
+            &[coheryn_engine::multimodal::qwen2vl::ChatMessage],
+            Vec<Vec<u8>>,
+        ) -> Result<(T, usize)>,
+    ) -> Result<T> {
         use coheryn_engine::multimodal::qwen2vl::{ChatContent, ChatMessage, ChatPart};
         let mut selected: Vec<_> = self
             .messages
@@ -652,7 +703,7 @@ impl super::TurnLease {
                             let a = descriptors.next().expect("checked image descriptors");
                             let bytes = assets.read(&self.id, &a, cancel)?;
                             let info = image::inspect(&bytes, limits, cancel)?;
-                            let plan = image::plan(info, image::Processor::Qwen2VlStill, limits)?;
+                            let plan = image::plan(info, processor, limits)?;
                             features += plan.image_feature_tokens;
                             if features > limits.max_total_image_tokens {
                                 return Err(Error::new(
@@ -679,11 +730,10 @@ impl super::TurnLease {
                     });
                 }
                 crate::vision::validate_controls(&self.vision_request())?;
-                let prepared = model.prepare_owned(&messages, images, options, cancel)?;
-                Ok(prepared)
+                prepare(&messages, images)
             })();
             match result {
-                Ok(prepared) => {
+                Ok((prepared, prompt_tokens)) => {
                     let history_revision = self.watch.snapshot()?.revision;
                     self.watch
                         .0
@@ -694,7 +744,7 @@ impl super::TurnLease {
                         policy: self.policy,
                         history_revision,
                         context: self.context,
-                        prompt_tokens: prepared.plan().physical_prompt_tokens,
+                        prompt_tokens,
                         reserved_output_tokens: self.settings.max_tokens,
                         included_message_ids: selected.iter().map(|m| m.id.clone()).collect(),
                         excluded_message_ids: excluded,

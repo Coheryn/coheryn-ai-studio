@@ -1,10 +1,18 @@
 name: CPU engine and service
 on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
   cpu:
     strategy:
       matrix:
-        os: [macos-14, ubuntu-24.04, windows-2022]
+        include:
+          - os: macos-15
+            target: aarch64-apple-darwin
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+          - os: windows-2022
+            target: x86_64-pc-windows-msvc
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7.0.1
@@ -23,12 +31,29 @@ jobs:
       - uses: dtolnay/rust-toolchain@1.99.1
         with:
           components: rustfmt, clippy
-      - run: cargo fmt --all -- --check
-      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
-      - run: cargo test --workspace --locked
-      - run: cargo build --release --workspace --locked
       - run: cargo fetch --locked --manifest-path fuzz/Cargo.toml
-      - run: python tools/license_notices.py
+      - name: Check native runner identity
+        run: python -c "import sys; sys.path.insert(0, 'tools'); from verify_cpu_package import native_target; assert native_target() == '${{ matrix.target }}'"
+      - run: python tools/run_cpu_checks.py --report .cache/cpu-native-checks.json
       - run: python tools/test_license_notices.py
-      - run: python tools/check_independence.py
-      - run: python tools/check_release_strings.py
+      - run: python tools/test_cpu_soak.py
+      - run: python tools/test_cpu_qualification.py
+      - run: python tools/run_cpu_soak.py --profile fixtures/soak/cpu-smoke-v1.json --report .cache/cpu-soak-smoke.json
+      - run: python tools/check_release_strings.py --report target/cpu-release-strings.json
+      - run: python tools/package_cpu_release.py --target ${{ matrix.target }} --build-record .cache/cpu-native-checks.json --report target/cpu-package.json
+      - name: Verify and execute the extracted native candidate
+        run: python -c "import json, pathlib, subprocess, sys; r=json.load(open('target/cpu-package.json')); subprocess.run([sys.executable,'tools/verify_cpu_package.py',str(pathlib.Path('target/cpu-release')/r['archive']),'--sha256',r['sha256'],'--report','target/cpu-package-smoke.json'],check=True)"
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: cpu-candidate-${{ matrix.target }}
+          path: |
+            target/cpu-release/*
+            target/cpu-package.json
+            target/cpu-package-smoke.json
+            .cache/cpu-native-checks.json
+            .cache/cpu-checks/**
+            .cache/cpu-soak-smoke.json
+            .cache/cpu-soak/cpu-soak-smoke/**
+          include-hidden-files: true
+          if-no-files-found: error

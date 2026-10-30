@@ -257,6 +257,9 @@ impl Model {
     }
 }
 impl GenerationState {
+    pub fn cancellation(&self) -> Cancellation {
+        self.cancel.clone()
+    }
     fn check_model(&self, model: &Model) -> Result<()> {
         if !Weak::ptr_eq(&self.model, &Arc::downgrade(&model.cache_owner)) {
             return Err(Error::request(

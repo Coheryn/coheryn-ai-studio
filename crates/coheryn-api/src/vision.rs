@@ -174,6 +174,15 @@ impl VisionRequest {
         limits: &VisionLimits,
         cancel: &Cancellation,
     ) -> Result<(GenerationRequest, Vec<qwen2vl::ChatMessage>, Vec<Vec<u8>>)> {
+        self.acquire_with_processor(limits, cancel, image::Processor::Qwen2VlStill)
+            .await
+    }
+    pub async fn acquire_with_processor(
+        self,
+        limits: &VisionLimits,
+        cancel: &Cancellation,
+        processor: image::Processor,
+    ) -> Result<(GenerationRequest, Vec<qwen2vl::ChatMessage>, Vec<Vec<u8>>)> {
         let mut messages = Vec::with_capacity(self.messages.len());
         let mut images = Vec::new();
         let mut total = 0u64;
@@ -212,11 +221,7 @@ impl VisionRequest {
                                         .await?;
                                 cancel.check()?;
                                 let info = image::inspect(&bytes, limits.images, cancel)?;
-                                let plan = image::plan(
-                                    info,
-                                    image::Processor::Qwen2VlStill,
-                                    limits.images,
-                                )?;
+                                let plan = image::plan(info, processor, limits.images)?;
                                 total_features += plan.image_feature_tokens;
                                 if total_features > limits.images.max_total_image_tokens {
                                     return Err(Error::new(

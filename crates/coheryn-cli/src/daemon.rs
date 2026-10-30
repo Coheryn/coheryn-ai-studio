@@ -12,7 +12,6 @@ use std::{
     io::{self, BufRead, Read, Write},
     net::IpAddr,
     path::{Path, PathBuf},
-    sync::Arc,
 };
 
 #[derive(Args)]
@@ -281,14 +280,18 @@ pub async fn run(cli: &Cli, args: &Run, cancel: &Cancellation) -> Result<()> {
         Ok(())
     };
     let result = if args.standalone {
-        let model = Model::load(&args.model, args.resources.limits())?;
+        let model = coheryn_engine::adapters::Registry::default().load(
+            &args.model,
+            args.resources.limits(),
+            cancel,
+        )?;
         let prompt = if let Some(messages) = messages {
             model.render(&messages)?
         } else {
             args.prompt.clone().expect("clap prompt")
         };
         generate_local(
-            &model,
+            model.as_ref(),
             &prompt,
             &options,
             (&args.profile, args.threads),
@@ -394,7 +397,11 @@ pub async fn chat(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<(
     }
     let managed = crate::sessions::interactive_session(cli, args, cancel).await?;
     let model = if args.standalone {
-        Some(Arc::new(Model::load(&args.model, args.resources.limits())?))
+        Some(coheryn_engine::adapters::Registry::default().load(
+            &args.model,
+            args.resources.limits(),
+            cancel,
+        )?)
     } else {
         None
     };
@@ -488,7 +495,7 @@ pub async fn chat(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<(
                 .await?
         } else if let Some(model) = &model {
             generate_local(
-                model,
+                model.as_ref(),
                 &model.render(&messages)?,
                 &options,
                 (&args.profile, args.threads),
@@ -532,6 +539,12 @@ pub async fn chat(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<(
 }
 #[derive(Args)]
 pub struct PlanArgs {
+    /// Inspect a local model source without a daemon, model load, or session allocation.
+    #[arg(long)]
+    pub standalone: bool,
+    /// Engine reservation budget for local estimates; does not cap OS residency.
+    #[arg(long, requires = "standalone", default_value_t = 1073741824)]
+    pub max_memory: u64,
     /// Inspect local attachment headers for task=image-to-text; bytes are not uploaded by plan.
     #[arg(long = "image")]
     pub images: Vec<PathBuf>,
@@ -561,6 +574,75 @@ pub async fn plan(cli: &Cli, args: &PlanArgs, cancel: &Cancellation) -> Result<(
     let context = args
         .context
         .unwrap_or(if args.task == "embedding" { 512 } else { 4096 });
+    if args.standalone {
+        if !matches!(args.task.as_str(), "text-generation" | "image-to-text")
+            || args.input_bytes.is_some()
+            || args.batch_size.is_some()
+            || args.max_input_tokens.is_some()
+            || args.max_batch_tokens.is_some()
+        {
+            return Err(Error::new(
+                ErrorCode::UnsupportedFeature,
+                "local adapter planning supports text generation and qualified image workloads",
+            ));
+        }
+        let mut inspected =
+            coheryn_engine::adapters::Registry::default().inspect(&args.model, cancel)?;
+        let request = coheryn_engine::catalog::PlanRequest {
+            context,
+            concurrency: args.concurrency,
+            max_memory: args.max_memory,
+            profile: coheryn_engine::planner::Profile::parse(&args.profile)?,
+            threads: args.threads,
+            constraints: args.constraints,
+        };
+        let hardware = coheryn_api::hardware::probe();
+        if args.task == "image-to-text" {
+            let images = planning_images(args, "qwen35-still-v1", cancel)?
+                .ok_or_else(|| Error::request("image plans require --image attachments"))?;
+            let plan =
+                inspected.plan_images(&request, &hardware, &images, Default::default(), cancel)?;
+            crate::print_json(
+                &json!({"schema_version":1,"mode":"standalone-metadata","model_descriptor":inspected.descriptor(),"plan":plan}),
+            )?;
+            return plan.require_admission();
+        }
+        if !args.images.is_empty() {
+            return Err(Error::request("--image requires task=image-to-text"));
+        }
+        let plan = inspected.plan(&request, &hardware, cancel)?;
+        crate::print_json(
+            &json!({"schema_version":1,"mode":"standalone-metadata","model_descriptor":inspected.descriptor(),"plan":plan}),
+        )?;
+        return plan.require_admission();
+    }
+    let profile = if args.images.is_empty() {
+        "qwen2vl-still-v1"
+    } else {
+        coheryn_api::registry::validate_id(&args.model).map_err(|e| e.error)?;
+        let info = client(cli)?
+            .json(
+                "GET",
+                &format!("/api/v1/models/{}/inspect", args.model),
+                None,
+                true,
+                cancel,
+            )
+            .await?;
+        if info["descriptor"]["text_adapter"]["architecture"] == "qwen3_5" {
+            "qwen35-still-v1"
+        } else {
+            "qwen2vl-still-v1"
+        }
+    };
+    let images = planning_images(args, profile, cancel)?;
+    crate::print_json(&client(cli)?.json("POST","/api/v1/plans/estimate",Some(json!({"model":args.model,"constraints":args.constraints,"task":args.task,"context":context,"profile":args.profile,"concurrency":args.concurrency,"threads":args.threads,"images":images,"input_bytes":args.input_bytes,"batch_size":args.batch_size,"max_input_tokens":args.max_input_tokens,"max_batch_tokens":args.max_batch_tokens})),true,cancel).await?)
+}
+fn planning_images(
+    args: &PlanArgs,
+    profile: &str,
+    cancel: &Cancellation,
+) -> Result<Option<coheryn_engine::planner::ImageWorkload>> {
     let images = if args.images.is_empty() {
         None
     } else {
@@ -598,10 +680,10 @@ pub async fn plan(cli: &Cli, args: &PlanArgs, cancel: &Cancellation) -> Result<(
         }
         Some(coheryn_engine::planner::ImageWorkload {
             images,
-            processor_profile: "qwen2vl-still-v1".into(),
+            processor_profile: profile.into(),
         })
     };
-    crate::print_json(&client(cli)?.json("POST","/api/v1/plans/estimate",Some(json!({"model":args.model,"constraints":args.constraints,"task":args.task,"context":context,"profile":args.profile,"concurrency":args.concurrency,"threads":args.threads,"images":images,"input_bytes":args.input_bytes,"batch_size":args.batch_size,"max_input_tokens":args.max_input_tokens,"max_batch_tokens":args.max_batch_tokens})),true,cancel).await?)
+    Ok(images)
 }
 #[derive(Args)]
 pub struct BenchResources {
@@ -714,45 +796,22 @@ pub async fn bench(cli: &Cli, args: &BenchArgs, cancel: &Cancellation) -> Result
 }
 
 pub(crate) fn generate_local(
-    model: &Model,
+    model: &dyn coheryn_engine::adapters::TextModel,
     prompt: &str,
     options: &GenerationOptions,
     settings: (&str, Option<usize>),
     cancel: &Cancellation,
-    emit: impl FnMut(coheryn_engine::TokenEvent) -> Result<()>,
+    mut emit: impl FnMut(coheryn_engine::TokenEvent) -> Result<()>,
 ) -> Result<GenerationResult> {
-    use coheryn_engine::planner::{self, PlanInput, Profile};
-    let plan = planner::estimate(PlanInput {
-        constraints: options.response_format.enabled(),
-        descriptor: &model.descriptor,
-        config: &model.config,
-        model: "standalone",
-        profile: Profile::parse(settings.0)?,
-        context: model.context_limit(),
-        concurrency: 1,
-        max_concurrency: 1,
-        loaded: true,
-        budget: model.memory(),
-        hardware: coheryn_api::hardware::probe(),
-        images: None,
-        threads: settings.1,
-    })?;
-    plan.require_admission()?;
-    let mut admission = model.reserve_session_with_execution(
-        model.context_limit(),
-        plan.additional_reserved_bytes - plan.session_reserved_bytes,
-        plan.io_buffer_bytes,
-        coheryn_engine::inference::ExecutionSettings {
-            threads: plan.threads_per_session,
-            prefill_chunk_tokens: plan.prefill_chunk_tokens,
+    model.generate(
+        prompt,
+        options,
+        coheryn_engine::adapters::Execution {
+            profile: coheryn_engine::planner::Profile::parse(settings.0)?,
+            threads: settings.1,
+            hardware: &coheryn_api::hardware::probe(),
         },
-    )?;
-    if plan.constraint_reserved_bytes > 0 {
-        admission.constraints = Some(
-            admission
-                .reservation
-                .split(plan.constraint_reserved_bytes)?,
-        );
-    }
-    model.generate_admitted(prompt, options, admission, cancel, emit)
+        cancel,
+        &mut emit,
+    )
 }

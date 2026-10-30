@@ -104,6 +104,8 @@ pub enum OverflowPolicy {
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct CreateSession {
+    #[serde(default)]
+    pub task: Option<SessionTask>,
     pub model: String,
     #[serde(default)]
     pub persist: bool,
@@ -214,7 +216,12 @@ impl TurnSettings {
         }
     }
 
-    fn request(&self, model: String, context: usize, prompt: String) -> GenerationRequest {
+    pub(crate) fn request(
+        &self,
+        model: String,
+        context: usize,
+        prompt: String,
+    ) -> GenerationRequest {
         let options = GenerationOptions {
             timeout_seconds: self.timeout_seconds,
             strict_tool: false,
@@ -425,6 +432,30 @@ struct TurnRecord {
     fingerprint: [u8; 32],
     watch: TurnWatch,
 }
+pub(crate) enum TextCache {
+    Gguf(PrefixCache),
+    Qwen35(coheryn_engine::qwen35::HybridCache),
+}
+impl TextCache {
+    fn is_live(&self) -> bool {
+        match self {
+            Self::Gguf(c) => c.is_live(),
+            Self::Qwen35(c) => c.is_live(),
+        }
+    }
+    fn reserved_bytes(&self) -> u64 {
+        match self {
+            Self::Gguf(c) => c.reserved_bytes(),
+            Self::Qwen35(c) => c.reserved_bytes(),
+        }
+    }
+    fn token_count(&self) -> usize {
+        match self {
+            Self::Gguf(c) => c.token_count(),
+            Self::Qwen35(c) => c.token_count(),
+        }
+    }
+}
 struct Session {
     loaded: bool,
     _history_reservation: Option<Reservation>,
@@ -434,7 +465,7 @@ struct Session {
     keys: BTreeMap<String, TurnRecord>,
     touched: Instant,
     _metadata: Reservation,
-    cache: Option<(PrefixCache, Instant)>,
+    cache: Option<(TextCache, Instant)>,
 }
 impl Session {
     fn view(&self, history: bool) -> SessionView {
@@ -463,7 +494,7 @@ pub enum BeginTurn {
 /// The scheduler owns this lease through worker acknowledgement, including disconnects.
 pub struct TurnLease {
     task: SessionTask,
-    pub(crate) cache: Option<PrefixCache>,
+    pub(crate) cache: Option<TextCache>,
     sessions: Sessions,
     id: String,
     key: String,
@@ -842,7 +873,8 @@ impl Sessions {
             .min(self.0.budget.stats().limit / 4);
         for session in state.values_mut() {
             if session.cache.as_ref().is_some_and(|(c, t)| {
-                c.reserved_bytes() > self.0.cache_limits.session_bytes
+                !c.is_live()
+                    || c.reserved_bytes() > self.0.cache_limits.session_bytes
                     || t.elapsed().as_secs() >= self.0.cache_limits.idle_seconds
             }) {
                 session.cache = None;
@@ -894,6 +926,13 @@ impl Sessions {
         }
         Ok(())
     }
+    pub(crate) fn cache_limit(&self) -> u64 {
+        self.0
+            .cache_limits
+            .session_bytes
+            .min(self.0.cache_limits.global_bytes)
+            .min(self.0.budget.stats().limit / 4)
+    }
     pub fn cache_stats(&self) -> Result<serde_json::Value> {
         let state = self.cache_state()?;
         Ok(
@@ -916,7 +955,8 @@ impl Sessions {
         request: CreateSession,
         hash: String,
     ) -> Result<SessionView> {
-        self.create_task(owner, request, hash, SessionTask::TextGeneration)
+        let task = request.task.unwrap_or(SessionTask::TextGeneration);
+        self.create_task(owner, request, hash, task)
     }
     pub fn create_task(
         &self,
@@ -925,6 +965,14 @@ impl Sessions {
         hash: String,
         task: SessionTask,
     ) -> Result<SessionView> {
+        if request.task.is_some_and(|selected| selected != task) {
+            return Err(ApiError::bad(
+                "session task differs from validated model capability",
+            ));
+        }
+        if task == SessionTask::ImageToText && request.context > 4096 {
+            return Err(ApiError::bad("managed image context exceeds 4096"));
+        }
         if request.persist && self.0.store.is_none() {
             return Err(ApiError::bad(
                 "persistent histories require serve --session-persistence",
@@ -1558,6 +1606,27 @@ impl TurnLease {
         self.reserve.as_ref().map_or(0, Reservation::bytes)
     }
     pub fn prepare(&mut self, model: &Model, cancel: &Cancellation) -> Result<GenerationRequest> {
+        self.prepare_conversation(model, cancel)
+    }
+    pub fn prepare_conversation(
+        &mut self,
+        model: &dyn crate::resident::TextConversation,
+        cancel: &Cancellation,
+    ) -> Result<GenerationRequest> {
+        if self.task != SessionTask::TextGeneration
+            || self.context > model.context_limit()
+            || !model.supports_history()
+        {
+            return Err(ApiError::bad(
+                "conversation task/context is incompatible with loaded model",
+            ));
+        }
+        model.validate_options(
+            &self
+                .settings
+                .request(self.model.clone(), self.context, String::new())
+                .options(),
+        )?;
         let mut messages: Vec<_> = self
             .messages
             .iter()
@@ -1576,7 +1645,7 @@ impl TurnLease {
             .collect();
         loop {
             cancel.check()?;
-            let rendered = model.tokenizer.render_tools(
+            let rendered = model.render_history(
                 &messages
                     .iter()
                     .map(|m| Message {
@@ -1602,7 +1671,7 @@ impl TurnLease {
                 Err(error) => return Err(error.into()),
             };
             if let Some(rendered) = rendered {
-                let tokens = model.tokenizer.encode(&rendered)?.len();
+                let tokens = model.token_count(&rendered)?;
                 if tokens
                     .checked_add(self.settings.max_tokens)
                     .is_some_and(|total| total <= self.context)

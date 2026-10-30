@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "kind": "cpu-dependency-advisories",
+  "checked_on": "2026-10-30",
+  "tool": "cargo-audit 0.22.2",
+  "database_revision": "ee1a49a2769a24a596afc1c20cb33748d2769586",
+  "database_entries": 1386,
+  "audits": [
+    {
+      "scope": "workspace",
+      "lockfile": "Cargo.lock",
+      "lockfile_sha256": "83d8bc511536f9a5aa1ae7865ba6e6dc51fff1a9b107dcaac564a5281f7a66c8",
+      "raw_log_sha256": "a6b864ec0372c1c98dfac944ae0d096a9f02f758f9300f6a9d993d615613bd91",
+      "vulnerabilities": 0,
+      "warnings": [
+        {
+          "kind": "unmaintained",
+          "package": "paste",
+          "version": "1.0.15",
+          "advisory": "RUSTSEC-2024-0436"
+        }
+      ]
+    },
+    {
+      "scope": "fuzz",
+      "lockfile": "fuzz/Cargo.lock",
+      "lockfile_sha256": "6749db7a7763be0837acd8b5036a2e971b94b93bed89e25a3c8481cfd59d55ba",
+      "raw_log_sha256": "db172dd279a2e13b06907ffafe149b5fb5b814235d76e09dff104ec632ec35f9",
+      "vulnerabilities": 0,
+      "warnings": [
+        {
+          "kind": "unmaintained",
+          "package": "paste",
+          "version": "1.0.15",
+          "advisory": "RUSTSEC-2024-0436"
+        }
+      ]
+    }
+  ],
+  "advisories_ignored": [],
+  "release_review": "blocked",
+  "finding": "The current upstream tokenizer uses an unmaintained build-time macro dependency. No known vulnerabilities were reported; the maintenance warning still requires reviewed resolution or exception. No source patch or global ignore is applied.",
+  "latest_direct_versions": "fixtures/qualification/b4-final-dependency-versions.json",
+  "dev_tool_versions": {
+    "cargo_fuzz": "0.13.2",
+    "nightly": "nightly-2026-10-30",
+    "nightly_version": "1.101.0-nightly (92b5b8c87 2026-10-29)",
+    "upload_artifact": "v7.0.2",
+    "sources": [
+      "https://crates.io/api/v1/crates/cargo-fuzz",
+      "https://static.rust-lang.org/dist/channel-rust-nightly.toml",
+      "https://api.github.com/repos/actions/upload-artifact/releases/latest"
+    ]
+  }
+}

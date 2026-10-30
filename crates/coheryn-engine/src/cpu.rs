@@ -8,8 +8,8 @@ pub fn decode(bytes: &[u8], dtype: u32, output: &mut [f32]) -> Result<()> {
     }
     let size = match dtype {
         0 => 4,
-        1 => 2,
-        _ => return Err(Error::invalid("reference decoder expects F32/F16")),
+        1 | 30 => 2,
+        _ => return Err(Error::invalid("reference decoder expects F32/F16/BF16")),
     };
     if Some(bytes.len()) != output.len().checked_mul(size) {
         return Err(Error::invalid("numeric buffer shape mismatch"));
@@ -17,6 +17,8 @@ pub fn decode(bytes: &[u8], dtype: u32, output: &mut [f32]) -> Result<()> {
     for (dst, src) in output.iter_mut().zip(bytes.chunks_exact(size)) {
         *dst = if size == 4 {
             f32::from_le_bytes(src.try_into().expect("four bytes"))
+        } else if dtype == 30 {
+            f32::from_bits(u32::from(u16::from_le_bytes(src.try_into().expect("two bytes"))) << 16)
         } else {
             f16::from_bits(u16::from_le_bytes(src.try_into().expect("two bytes"))).to_f32()
         };

@@ -67,7 +67,8 @@ impl Reservation {
             bytes,
         })
     }
-    pub(crate) fn covers(&self, budget: &Budget, bytes: u64) -> bool {
+    /// Check owner identity and capacity before transferring workspace admission.
+    pub fn covers(&self, budget: &Budget, bytes: u64) -> bool {
         Arc::ptr_eq(&self.budget.0, &budget.0) && self.bytes >= bytes
     }
 }

@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "scope": "Final native standalone PNG CLI; balanced/two workers, streaming/frozen continuation, explicit norm/bias reservations and zero retired execution buffers. No socket claim.",
+  "binary_sha256": "fc6813fa4d34ecea2c3d98482b07c49afc8a7a565cb544425eadced64a65817f",
+  "reference_sha256": "6cc3f329d36cd7bc8c87d560420275163b9a389a9dd24e526041742bb65042fc",
+  "result": {
+    "batching": {
+      "batched_forward_units": 0,
+      "forward_units": 87,
+      "maximum_batch_width": 1,
+      "prefilled_tokens": 84,
+      "profile": "coheryn-qwen35-batch-v1",
+      "scheduler_wait_ms": 0.0,
+      "strategy": "continuous-weight-tiled"
+    },
+    "completion_tokens": 4,
+    "decode_ms": 4660.325708,
+    "finish_reason": "length",
+    "first_token_ms": 95594.818166,
+    "memory": {
+      "limit": 1073741824,
+      "peak_reserved": 370761815,
+      "peak_session_buffer_capacity_bytes": 29137016,
+      "reserved": 276824064,
+      "session_buffer_capacity_bytes": 0
+    },
+    "output_delivery_ms": 0.0,
+    "prefill_ms": 95586.91354200002,
+    "prompt_tokens": 84,
+    "reused_prompt_tokens": 0,
+    "text": "The picture is **",
+    "token_ids": [
+      760,
+      6588,
+      369,
+      2972
+    ],
+    "tokenization_ms": 2.028916,
+    "vision": {
+      "effective_positions": 28,
+      "images": 1,
+      "language_sha256": "",
+      "peak_request_reserved_bytes": 93937751,
+      "profile": "qwen35-still-cpu-v1",
+      "vision_ms": 16658.367625,
+      "vision_sha256": ""
+    }
+  },
+  "events": [
+    {
+      "token": {
+        "text": "The",
+        "token_id": 760
+      }
+    },
+    {
+      "token": {
+        "text": " picture",
+        "token_id": 6588
+      }
+    },
+    {
+      "token": {
+        "text": " is",
+        "token_id": 369
+      }
+    },
+    {
+      "token": {
+        "text": " **",
+        "token_id": 2972
+      }
+    }
+  ],
+  "external_executor_invoked": false,
+  "cache_condition": "uncontrolled"
+}
