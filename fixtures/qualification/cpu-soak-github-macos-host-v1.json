@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "kind": "cpu-host-preflight",
+  "policy": {
+    "min_free_disk_bytes": 8589934592,
+    "min_available_memory_bytes": 1073741824,
+    "max_compressed_fraction": 0.35,
+    "max_load_per_cpu": 2.0,
+    "sample_seconds": 2.0,
+    "max_samples": 16384
+  },
+  "production_ready": false,
+  "outcome": "fail",
+  "observation": {
+    "system": "Darwin",
+    "disk_free_bytes": 45871595520,
+    "cpu_count": 3,
+    "thermal_state": "nominal",
+    "compressed_memory_bytes": 279150592,
+    "memory_pressure_level": 1,
+    "load_1m": 30.6435546875,
+    "physical_memory_bytes": 7516192768,
+    "available_memory_bytes": 3535486976,
+    "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+  },
+  "reason": "host load exceeds cutoff"
+}

@@ -14,7 +14,7 @@ import test_cpu_qualification as qualification_tests
 
 
 class SoakRunnerTests(unittest.TestCase):
-    def run_checks(self, root, *, output=None, exit_code=0, unhealthy=False, changed=False):
+    def run_checks(self, root, *, output=None, exit_code=0, unhealthy=False, changed=False, fetch_only=False):
         report = root / 'result.json'
         source = {'example.rs': 'frozen'}
         make_guard = lambda directory: Guard(directory, sampler=lambda: {
@@ -38,7 +38,7 @@ class SoakRunnerTests(unittest.TestCase):
              patch.object(runner.signal, 'signal'), \
              patch('builtins.print'), \
              patch.dict(runner.os.environ, {'CARGO_BUILD_TARGET': ''}), \
-             patch.object(sys, 'argv', ['checks', '--report', str(report)]):
+             patch.object(sys, 'argv', ['checks', '--report', str(report)] + (['--fetch-only'] if fetch_only else [])):
             with self.assertRaises(SystemExit) as done: runner.main()
         return json.loads(report.read_text()), done.exception.code, execute.call_count
 
@@ -85,6 +85,18 @@ class SoakRunnerTests(unittest.TestCase):
             self.assertEqual(code, 1)
             self.assertEqual(calls, len(runner.COMMANDS) + 2)
             self.assertFalse(result['source_unchanged'])
+
+    def test_fresh_runner_bootstrap_fetches_both_locked_graphs_without_compiling(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            result, code, calls = self.run_checks(Path(temporary).resolve(), fetch_only=True)
+            self.assertEqual(code, 0)
+            self.assertEqual(calls, len(runner.FETCH_COMMANDS) + 2)
+            self.assertEqual(result['kind'], 'cpu-soak-dependencies')
+            self.assertEqual([c['command'] for c in result['commands']], [
+                ['cargo', 'fetch', '--locked'],
+                ['cargo', 'fetch', '--locked', '--manifest-path', 'fuzz/Cargo.toml']])
+            self.assertTrue(all(c['validated'] and 'tests' not in c for c in result['commands']))
+            self.assertFalse(result['production_ready'])
 
     @staticmethod
     def input_fixture(root):

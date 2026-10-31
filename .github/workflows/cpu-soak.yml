@@ -41,13 +41,16 @@ jobs:
           EXPECTED_TARGET: ${{ matrix.target }}
         run: python -c "import os,sys; sys.path.insert(0,'tools'); from verify_cpu_package import native_target; from cpu_qualification.common import require; require(native_target()==os.environ['EXPECTED_TARGET'],'unexpected native runner')"
       - name: Host preflight
-        run: python tools/check_cpu_host.py --report .cache/cpu-soak-host.json
+        run: python tools/check_cpu_host.py --wait-for-load-seconds 180 --report .cache/cpu-soak-host.json
       - name: Check qualification controllers
         run: python tools/test_cpu_soak_runner.py
       - run: python tools/test_cpu_qualification.py
       - run: python tools/test_cpu_soak.py
       - run: python tools/test_cpu_shards.py
-      - run: python tools/license_notices.py
+      - name: Prepare locked dependency graphs for offline license checks
+        run: python tools/check_cpu_soak.py --fetch-only --report .cache/cpu-soak-dependencies.json
+      - name: Check legal records with retained diagnostics
+        run: python -c "import pathlib,subprocess,sys; r=subprocess.run([sys.executable,'tools/license_notices.py'],capture_output=True,text=True); pathlib.Path('.cache/cpu-soak-legal.log').write_text(r.stdout+r.stderr,encoding='utf-8'); print(r.stdout+r.stderr); sys.exit(r.returncode)"
       - run: python tools/check_repository_policy.py
       - name: Guarded Rust tests and strict Clippy
         run: python tools/check_cpu_soak.py --report .cache/cpu-soak-checks.json
@@ -67,8 +70,11 @@ jobs:
           if-no-files-found: error
           path: |
             .cache/cpu-soak-host.json
+            .cache/cpu-soak-legal.log
             .cache/cpu-soak-checks.json
             .cache/cpu-soak-checks/**
+            .cache/cpu-soak-dependencies.json
+            .cache/cpu-soak-checks/cpu-soak-dependencies/**
             .cache/cpu-soak-inputs.json
             .cache/cpu-soak-inputs/**
             .cache/cpu-soak-synthetic.json

@@ -19,6 +19,10 @@ COMMANDS = (
     ('cargo', 'test', '--release', '--workspace', '--example', 'cpu_soak', '--locked'),
     ('cargo', 'clippy', '--release', '--workspace', '--example', 'cpu_soak', '--tests', '--locked', '--', '-D', 'warnings'),
 )
+FETCH_COMMANDS = (
+    ('cargo', 'fetch', '--locked'),
+    ('cargo', 'fetch', '--locked', '--manifest-path', 'fuzz/Cargo.toml'),
+)
 
 
 def test_counts(path):
@@ -36,6 +40,8 @@ def test_counts(path):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--report', type=Path, required=True)
+    parser.add_argument('--fetch-only', action='store_true',
+                        help='prepare both locked Cargo graphs for offline legal checks; do not compile')
     args = parser.parse_args()
     if args.report.exists(): raise FileExistsError(args.report)
     if os.name != 'nt':
@@ -46,11 +52,14 @@ def main():
     directory = ROOT / '.cache/cpu-soak-checks' / args.report.stem
     directory.mkdir(parents=True, exist_ok=False)
     source = source_identity()
-    result = {'schema_version': 1, 'kind': 'cpu-soak-checks', 'outcome': 'running',
+    commands = FETCH_COMMANDS if args.fetch_only else COMMANDS
+    result = {'schema_version': 1, 'kind': 'cpu-soak-dependencies' if args.fetch_only else 'cpu-soak-checks', 'outcome': 'running',
               'production_ready': False, 'target': target, 'source_snapshot': source,
               'compatibility_sha256': sha(ROOT / 'fixtures/compatibility.json'), 'commands': [],
               'host': {'system': platform.system(), 'release': platform.release(), 'machine': platform.machine()},
               'scope': 'Soak driver compilation, example tests and strict Clippy only; no model, sustained-soak or release qualification.'}
+    if args.fetch_only:
+        result['scope'] = 'Locked workspace/fuzz dependency acquisition only; no compilation, model execution or release qualification.'
     result['ci'] = {key: os.environ[key] for key in ('GITHUB_REPOSITORY', 'GITHUB_SHA', 'GITHUB_RUN_ID',
                                                   'GITHUB_RUN_ATTEMPT', 'GITHUB_REF') if key in os.environ}
     guard, children = None, []
@@ -77,7 +86,7 @@ def main():
             result['toolchain'][name] = {'output': log.read_text(encoding='utf-8'),
                                          'log': log.relative_to(ROOT).as_posix(), 'log_sha256': sha(log)}
             checkpoint(args.report, result)
-        for number, command in enumerate(COMMANDS):
+        for number, command in enumerate(commands):
             log = directory / f'{number}.log'
             record = {'command': list(command), 'exit': None, 'validated': False,
                       'log': log.relative_to(ROOT).as_posix()}

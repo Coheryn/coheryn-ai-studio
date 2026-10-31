@@ -23,6 +23,7 @@ from cpu_qualification.transport import frames, image_content
 from run_cpu_qualification import Context, checkpoint, main
 from cpu_qualification.host import Guard, HostLimitError, Policy, bounded_text, mac_memory, rejection
 from cpu_qualification.profiles import PROFILES, selected
+from check_cpu_host import readiness
 
 
 class QualificationTests(unittest.TestCase):
@@ -47,6 +48,40 @@ class QualificationTests(unittest.TestCase):
         self.assertIsNone(rejection({**good, 'thermal_state': 'fair'}, Policy()))
         self.assertIsNotNone(rejection({**good, 'disk_free_bytes': 9 << 30}, Policy(), 2 << 30))
         with self.assertRaises(ValueError): rejection(good, Policy(), -1)
+
+    def test_startup_load_wait_retains_rejections_without_weakening_admission(self):
+        tick = [0.]
+        def sleep(seconds): tick[0] += seconds
+        good = self.healthy_host()
+        sample = Mock(side_effect=[{**good, 'load_1m': 30.}, good])
+        result = readiness(Policy(), sample, 10, now=lambda: tick[0], sleep=sleep)
+        self.assertEqual(result['outcome'], 'pass')
+        self.assertEqual(len(result['samples']), 2)
+        self.assertEqual(result['samples'][0]['reason'], 'host load exceeds cutoff')
+        self.assertEqual(tick[0], 5.)
+
+    def test_startup_wait_is_bounded_and_never_starts_work_on_an_unhealthy_host(self):
+        tick = [0.]
+        def sleep(seconds): tick[0] += seconds
+        sample = lambda: {**self.healthy_host(), 'load_1m': 30.}
+        result = readiness(Policy(), sample, 10, now=lambda: tick[0], sleep=sleep)
+        self.assertEqual(result['outcome'], 'fail')
+        self.assertEqual(len(result['samples']), 3)
+        self.assertEqual(tick[0], 10.)
+        for invalid in (-1, 301, True):
+            with self.assertRaises(ValueError): readiness(Policy(), sample, invalid)
+
+    def test_startup_wait_does_not_retry_other_violations_or_invalid_load_values(self):
+        for changes in ({'load_1m': 30., 'compressed_memory_bytes': 3 << 30},
+                        {'load_1m': 30., 'available_memory_bytes': 0},
+                        {'load_1m': 30., 'thermal_state': 'serious'},
+                        {'load_1m': float('nan')}, {'load_1m': -1.}):
+            sleep = Mock()
+            result = readiness(Policy(), lambda: {**self.healthy_host(), **changes}, 30, sleep=sleep)
+            self.assertEqual(result['outcome'], 'fail')
+            json.dumps(result, allow_nan=False)
+            sleep.assert_not_called()
+            self.assertEqual(len(result['samples']), 1)
 
     def test_non_mac_sensors_are_explicitly_unavailable_without_weakening_memory_disk_limits(self):
         row = {**self.healthy_host(), 'system': 'Linux', 'thermal_state': 'unavailable',

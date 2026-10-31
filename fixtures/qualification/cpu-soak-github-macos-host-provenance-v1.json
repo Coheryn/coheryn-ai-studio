@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "kind": "github-cpu-soak-host-observation",
+  "outcome": "fail",
+  "production_ready": false,
+  "source_commit": "26f4413b52c95b649e77cdd4f274845321b08987",
+  "run_id": 41152213149,
+  "run_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41152213149",
+  "target": "aarch64-apple-darwin",
+  "artifact": {
+    "id": 13023776469,
+    "name": "cpu-soak-evidence-aarch64-apple-darwin-1",
+    "size_in_bytes": 556,
+    "digest": "sha256:57e488caa9dc04f0cf5fcea8f8c84d8195f5f9d0abd290fd26e1ecbfd0312322"
+  },
+  "report": {
+    "path": "fixtures/qualification/cpu-soak-github-macos-host-v1.json",
+    "sha256": "b93de6553ec6df2d916339a6b0ad650e70cc2bfde6a292100f08c0ed5213fffb"
+  },
+  "retrieval": "Public artifact proxy; ZIP bytes verified against the official GitHub artifact digest before reading.",
+  "diagnosis": "Startup load 30.6435546875 exceeds the unchanged 2x3-CPU cutoff. Memory, disk and thermal checks were within limits. No compiler or model started in this soak job.",
+  "next_attempt": "Add explicit bounded idle startup observation and locked dependency bootstrap. Preserve this failed observation; do not weaken cutoffs."
+}
