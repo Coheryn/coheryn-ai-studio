@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "kind": "github-cpu-soak-host-observation",
+  "outcome": "fail",
+  "production_ready": false,
+  "source_commit": "b72095f9184c10cbdb41239c0cdf44487bdbc8ff",
+  "run_id": 41153161064,
+  "run_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41153161064",
+  "target": "aarch64-apple-darwin",
+  "artifact": {
+    "id": 13023549891,
+    "name": "cpu-soak-evidence-aarch64-apple-darwin-1",
+    "size_in_bytes": 2019,
+    "digest": "sha256:3d2c3d5ba89ec3d098b23fe933ca7f106593f094614d14100dda9b6567d1aeaa"
+  },
+  "report": {
+    "path": "fixtures/qualification/cpu-soak-github-macos-host-v2.json",
+    "sha256": "f67c2d3c13c62eee7d8d856ee16a2eb5fcb3358592576a06bfd8607591562f2d"
+  },
+  "retrieval": "Public artifact proxy; ZIP bytes verified against the official GitHub artifact digest before reading.",
+  "diagnosis": "37 startup samples over 180 seconds; load declined from 41.2578125 to 7.69384765625, exceeding the unchanged 6.0 admission cutoff. Memory, disk and thermal observations were within policy; no compiler/model started.",
+  "next_attempt": "Use the existing bounded maximum of 300 seconds for idle startup observation, without changing any runtime resource cutoff."
+}

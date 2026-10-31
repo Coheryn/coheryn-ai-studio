@@ -41,7 +41,7 @@ jobs:
           EXPECTED_TARGET: ${{ matrix.target }}
         run: python -c "import os,sys; sys.path.insert(0,'tools'); from verify_cpu_package import native_target; from cpu_qualification.common import require; require(native_target()==os.environ['EXPECTED_TARGET'],'unexpected native runner')"
       - name: Host preflight
-        run: python tools/check_cpu_host.py --wait-for-load-seconds 180 --report .cache/cpu-soak-host.json
+        run: python tools/check_cpu_host.py --wait-for-load-seconds 300 --report .cache/cpu-soak-host.json
       - name: Check qualification controllers
         run: python tools/test_cpu_soak_runner.py
       - run: python tools/test_cpu_qualification.py
