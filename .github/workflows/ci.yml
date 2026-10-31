@@ -57,5 +57,24 @@ jobs:
             .cache/cpu-checks/**
             .cache/cpu-soak-smoke.json
             .cache/cpu-soak/cpu-soak-smoke/**
+            resources/policy/artifact-findings.json
+            target/cpu-release-strings.json
+      - name: Retain failed executable diagnostics with complete notices
+        uses: actions/upload-artifact@v7.0.2
+        if: failure()
+        with:
+          name: cpu-executable-diagnostics-${{ matrix.target }}-${{ github.run_attempt }}
+          include-hidden-files: true
+          if-no-files-found: error
+          path: |
+            target/release/coheryn
+            target/release/coheryn.exe
+            target/release/coheryn-bench
+            target/release/coheryn-bench.exe
+            resources/policy/artifact-findings.json
+            LICENSE
+            NOTICE
+            THIRD_PARTY_NOTICES.md
+            resources/licensing/**
           include-hidden-files: true
           if-no-files-found: error
