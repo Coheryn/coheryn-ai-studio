@@ -30,7 +30,7 @@ def main():
         target = ROOT / 'resources/policy/artifact-findings.json'
         target.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
         raise SystemExit('controlled executable string policy failed; detailed findings are in the resource policy directory')
-    evidence = {'schema_version': 1, 'scope': 'Current-host release executables: UTF-8 throughout; UTF-16 in data and metadata, excluding declared instruction sections. Unknown formats receive full scanning; malformed recognized section tables fail. Not an installer/signature/notice or other-platform qualification.',
+    evidence = {'schema_version': 1, 'scope': 'Current-host release executables: UTF-8 and UTF-16 in data and metadata, excluding declared instruction sections. Unknown formats receive full scanning; malformed recognized section tables fail. Not an installer/signature/notice or other-platform qualification.',
                 'encoding_scopes': report['encoding_scopes'],
                 'policy_sha256': hashlib.sha256((ROOT / 'resources/policy/repository.json').read_bytes()).hexdigest(),
                 'files': records, 'finding_count': 0}
