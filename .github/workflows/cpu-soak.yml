@@ -50,7 +50,7 @@ jobs:
       - name: Prepare locked dependency graphs for offline license checks
         run: python tools/check_cpu_soak.py --fetch-only --report .cache/cpu-soak-dependencies.json
       - name: Check legal records with retained diagnostics
-        run: python -c "import pathlib,subprocess,sys; r=subprocess.run([sys.executable,'tools/license_notices.py'],capture_output=True,text=True); pathlib.Path('.cache/cpu-soak-legal.log').write_text(r.stdout+r.stderr,encoding='utf-8'); print(r.stdout+r.stderr); sys.exit(r.returncode)"
+        run: python -c "import pathlib,subprocess,sys; r=subprocess.run([sys.executable,'tools/license_notices.py','--tracked'],capture_output=True,text=True); pathlib.Path('.cache/cpu-soak-legal.log').write_text(r.stdout+r.stderr,encoding='utf-8'); print(r.stdout+r.stderr); sys.exit(r.returncode)"
       - run: python tools/check_repository_policy.py
       - name: Guarded Rust tests and strict Clippy
         run: python tools/check_cpu_soak.py --report .cache/cpu-soak-checks.json

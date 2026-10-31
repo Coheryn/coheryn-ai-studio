@@ -21,7 +21,7 @@ COMMANDS = (
     ('python', 'tools/test_cpu_release.py'),
     ('python', 'tools/test_cpu_qualification.py'),
     ('python', 'tools/test_cpu_shards.py'),
-    ('python', 'tools/license_notices.py'),
+    ('python', 'tools/license_notices.py', '--tracked'),
     ('python', 'tools/check_repository_policy.py'),
     ('python', 'tools/check_independence.py', '--report', 'target/cpu-independence.json'),
 )

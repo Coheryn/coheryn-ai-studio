@@ -11,3 +11,7 @@ __pycache__/
 .DS_Store
 !/resources/tool-assessment/
 !/resources/licensing/
+!/resources/vlm-provenance/
+/resources/vlm-provenance/*
+!/resources/vlm-provenance/llava-original-config.json
+!/resources/vlm-provenance/llava-original-provenance.json

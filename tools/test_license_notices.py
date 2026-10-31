@@ -79,6 +79,17 @@ class LicenseTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'required distribution legal file missing'):
             legal.check()
 
+    def test_ignored_local_asset_cannot_conceal_missing_git_provenance(self):
+        required = legal.required_source_files()
+        selected = 'resources/vlm-provenance/llava-original-config.json'
+        self.assertIn(selected, required)
+        self.assertTrue((self.root / selected).is_file())
+        with patch.object(legal.subprocess, 'check_output', return_value=('\0'.join(sorted(required)) + '\0').encode()):
+            legal.check_tracked()
+        with patch.object(legal.subprocess, 'check_output', return_value=('\0'.join(sorted(required - {selected})) + '\0').encode()):
+            with self.assertRaisesRegex(ValueError, 'required legal source files are not tracked'):
+                legal.check_tracked()
+
 
 if __name__ == '__main__':
     unittest.main()

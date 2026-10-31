@@ -1,0 +1,8 @@
+{
+  "repository": "liuhaotian/llava-v1.5-7b",
+  "revision": "4481d270cc22fd5c4d1bb5df129622006ccd9234",
+  "file": "config.json",
+  "sha256": "f112de882e31171a105f0d3f69d9e6e8700a40149f0944f4b507d3a41789e492",
+  "bytes": 1161,
+  "path": "resources/vlm-provenance/llava-original-config.json"
+}

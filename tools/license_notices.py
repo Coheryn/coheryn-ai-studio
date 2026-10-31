@@ -246,6 +246,23 @@ def distribution_files():
     return result
 
 
+def required_source_files():
+    paths = set(distribution_files())
+    for group in read_json(DIRECTORY / 'assets.json')['groups']:
+        paths.update(group['license_files'])
+        paths.update(asset['path'] for asset in group['files'])
+    paths.update(record['archive_path'] for record in read_json(ROOT / 'resources/reference-archive/relocations.json')['records'])
+    return paths
+
+
+def check_tracked():
+    """A local ignored copy must not conceal a missing clean-checkout input."""
+    tracked = set(subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode('utf-8').split('\0'))
+    missing = required_source_files() - tracked
+    if missing:
+        raise ValueError('required legal source files are not tracked: ' + ', '.join(sorted(missing)))
+
+
 def bundle(destination):
     destination = destination.resolve()
     if not destination.is_relative_to(ROOT / 'target'):
@@ -262,11 +279,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--collect', action='store_true', help='regenerate notices from acquired locked archives')
     parser.add_argument('--bundle', type=Path, help='copy complete legal payload into a target/ staging directory')
+    parser.add_argument('--tracked', action='store_true', help='require all legal/provenance inputs in the Git index')
     args = parser.parse_args()
     try:
         if args.collect:
             collect()
         packages_count, assets_count = check()
+        if args.tracked:
+            check_tracked()
         if args.bundle:
             bundle(args.bundle)
     except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:

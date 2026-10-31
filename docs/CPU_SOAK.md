@@ -108,7 +108,7 @@ The job verifies native runner identity, checks host health, runs controller reg
 
 ```sh
 python3 tools/check_cpu_soak.py --fetch-only --report .cache/cpu-soak-dependencies.json
-python3 tools/license_notices.py
+python3 tools/license_notices.py --tracked
 python3 tools/check_cpu_soak.py --report .cache/cpu-soak-checks.json
 python3 tools/run_cpu_soak.py --profile fixtures/soak/cpu-smoke-v1.json \
   --report .cache/cpu-soak-synthetic.json --timeout-seconds 300
@@ -123,6 +123,8 @@ These commands also work on another supported development machine. Omit `--fetch
 The guarded Rust checker records actual Cargo/compiler versions, the native target, source/lockfile/input identities, complete diagnostic logs and test totals. Empty, filtered or failed test runs cannot pass. Both tests and strict Clippy use the workspace dependency feature set, retaining cache reuse with workspace builds. All builds use one Cargo job. A failed preflight starts no compiler; cutoff, interruption and incomplete shutdown preserve failed reports. Concurrent shutdown calls cannot signal a successfully retired owned group twice. Permission failures and Windows tree-termination failures remain explicit; they never imply confirmed descendant cleanup.
 
 Fresh runners first use `--fetch-only` to acquire both locked workspace and fuzz dependency graphs under the same guard. The offline license checker needs those registry manifests even before any compilation. Dependency preparation has its own report kind and cannot count as passing Rust or model checks. It does not modify lockfiles or regenerate legal records.
+
+Legal checks also require every indexed source asset and notice in Git. A locally ignored provenance file cannot conceal a missing clean-checkout input. The small original LLaVA configuration and its provenance are explicitly tracked with unchanged publisher bytes; broad resource exclusions still protect private specifications and model caches.
 
 The first hosted Mac preflight recorded load 30.64 on three CPUs while memory, disk and thermal observations were within limits. The workflow now permits an explicit idle startup wait of at most 180 seconds for load to settle. Every rejected sample is retained; other violations or malformed measurements fail immediately. No compiler or model starts during that window. This does not retry failed inference, relax a cutoff or change the continuously enforced guard after admission. Failure to reach a healthy startup state still fails the job.
 
