@@ -8,6 +8,8 @@ The immediate priority is qualifying the existing native CPU implementation befo
 
 Qualification must cover macOS ARM64, Linux x86-64 and Windows x86-64. CI configuration alone does not count as execution evidence. Passing synthetic tests and native executable startup do not establish model-level numerical parity. Current independent numerical model evidence is scoped to macOS ARM64. The [selected modern operational smoke](CPU_SOAK.md#verified-hosted-smoke-checkpoint) has passed on all three native targets; it checks repeatability and lifecycle behavior, not independent numerical parity. Reference and numerical limitations in the individual task guides still apply.
 
+[Verified native candidate evidence](../fixtures/qualification/cpu-github-native-candidates-v1.json) now records all three targets through ordinary tests, release compilation, legal/policy checks, package integrity and extracted startup. [Repeated modern smoke evidence](../fixtures/qualification/cpu-github-modern-smoke-v2.json) separately records selected text/image/embedding lifecycle checks. Both retain their original source revision and explicit limits; neither accepts the sustained, numerical, security or release-review gates.
+
 ## Required evidence
 
 1. Warning-free formatting, Clippy, ordinary tests, crash recovery and release compilation on each native target. Record the exact source, lockfiles, compiler, OS, CPU and executable identities.

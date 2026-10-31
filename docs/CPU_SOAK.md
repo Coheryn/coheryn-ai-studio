@@ -94,7 +94,7 @@ The modern smoke fixes two measured cycles, one fault-bearing warmup, a restart 
 
 The controller protects both its single-job optimized build and native driver with the [qualification host guard](CPU_QUALIFICATION.md). It checks available-memory, disk and load reserves, plus macOS pressure, compressed memory and thermal state, before starting and while running. Managed-copy disk headroom counts consumed physical files once for shared text/vision and retains an additional staging margin. Guard cutoffs, timeout and interruption stop only owned child process groups. Disposable stores are removed only after confirming all owned children have exited; cleanup failure retains the private stores and fails the run. Progress reports are written atomically; failed attempts and host observations remain available. The guard observes host conditions and cannot guarantee prevention of every OS/hardware fault. It does not change engine admission limits or make unobserved platform sensors available.
 
-On 2026-10-31 the modern extension's controller checks passed, but two optimized test-build attempts and a metadata-only compiler attempt crossed the host compressed-memory cutoff. No new synthetic or pretrained native smoke was executed. The implementation is pending Rust compilation/tests and the two source-bound smoke runs above; previous native evidence remains attached to its original snapshot. Keep the cutoff intact and resume on a host with sufficient memory headroom.
+On 2026-10-31 the modern extension's controller checks passed, but two optimized test-build attempts and a metadata-only compiler attempt crossed the host compressed-memory cutoff. No new synthetic or pretrained native smoke was executed. Those local attempts produced no completed native smoke. The hosted checkpoints below subsequently completed the build/tests and selected smokes with their own source-bound evidence; earlier local failures remain preserved and the cutoff remains unchanged.
 
 ## GitHub Actions execution
 
@@ -144,6 +144,30 @@ A later workspace-feature test build on the local Mac also hit the unchanged com
 | Linux x86-64 | Pass | 2 measured cycles | 2 measured cycles | 396.45 / 0.00 MiB |
 | Windows x86-64 | Pass | 2 measured cycles | 2 measured cycles | 150.97 / 1.62 MiB |
 
-Each modern run completed two service epochs, six text requests, six embedding operations and four image operations. All four required fault scenarios occurred twice during measured execution; cleanup and unchanged source were confirmed. Each run used the frozen balanced, concurrency-one profile with shared Qwen3.5 text/vision and independent Nomic embeddings. These are separate host observations under uncontrolled cache conditions, not cross-platform performance comparisons. RSS sampling is not a complete physical-allocation measurement.
+Each modern run completed two service epochs, six text requests, six embedding operations and four image operations. All four required fault scenarios occurred once during warmup and once during measured execution; the reported total of two per scenario includes both phases. Cleanup and unchanged source were confirmed. Each run used the frozen balanced, concurrency-one profile with shared Qwen3.5 text/vision and independent Nomic embeddings. These are separate host observations under uncontrolled cache conditions, not cross-platform performance comparisons. RSS sampling is not a complete physical-allocation measurement.
 
 This closes the selected operational smoke execution checkpoint. It does not close the 400-cycle synthetic campaign, sustained pretrained workloads, numerical/platform matrix, TCP/security/package review or production approval. The independent numerical workflow still needs the exact frozen reference archive at an approved HTTPS location. CPU support remains experimental.
+
+## Native candidates and repeated hosted smoke
+
+[The native candidate record](../fixtures/qualification/cpu-github-native-candidates-v1.json) and [repeated modern smoke record](../fixtures/qualification/cpu-github-modern-smoke-v2.json) bind source `e8dcb70e9ac29b7ef8680b5095cc6b3478d30d0c`. Both GitHub workflows passed on all three targets. The native jobs completed formatting, strict Clippy, ordinary tests, release compilation, legal/dependency/policy checks, synthetic smoke, candidate packaging and extracted startup. Ordinary tests passed 261 cases on macOS, 261 on Linux and 257 on Windows; each run recorded nine ignored tests separately.
+
+The artifact review verified official ZIP digests, command-log hashes, report/source/binary bindings and every candidate archive member, including complete original legal bytes. Native startup occurred on each matching GitHub runner. The local review inspected extracted executable files as data. Original report bytes are retained beside each index. The repeated modern reports distinguish one warmup and one measured occurrence of every fault; neither total is presented as two measured faults. These records qualify their declared checkpoints and original source; they do not promote the CPU release scope.
+
+## Sustained campaign
+
+The separate [sustained workflow](../.github/workflows/cpu-sustained.yml) supports manual dispatch or an explicit `qualification/cpu-sustained/` branch push. It first runs the existing full synthetic profile: 100 measured cycles across concurrency one/two and balanced/low-memory execution, for 400 measured cycles and sixteen service epochs. Each fault scenario must occur eight times during warmup and forty times during measured execution across those configurations.
+
+The [extended modern profile](../fixtures/soak/cpu-modern-shared-soak-v1.json) then runs ten measured cycles in one process, two warmup cycles and a service restart after five measured cycles, using the same shared Qwen3.5/Nomic inputs. Every fault must occur twice during warmup and five times during measured execution. Expected operation coverage is twenty text operations, twenty embedding operations and thirteen two-image operations, including first-capture and warmup operations. Service restarts retain process allocator effects; separate invocations cannot substitute for the ten-cycle contract.
+
+Modern admission, sampled RSS, drained growth, request, consumer and cleanup bounds remain identical to the frozen smoke profile. Only repetition, warmup and restart cadence change. Host limits, cancellation, bounded observations and private-store cleanup remain enforced. Reports use distinct `cpu-sustained-*` names, preserve failures and never convert incomplete work into a shorter passing run. Builds and verified inputs are reused within each job. The workflow records operational cutoffs; they are not development delivery estimates.
+
+```sh
+python3 tools/run_cpu_soak.py --profile fixtures/soak/cpu-synthetic-v1.json \
+  --report target/cpu-sustained-synthetic.json --timeout-seconds 3600
+python3 tools/run_cpu_soak.py --profile fixtures/soak/cpu-modern-shared-soak-v1.json \
+  --models fixtures/soak/qwen35-shared-nomic-models-v2.json \
+  --report target/cpu-sustained-modern.json --timeout-seconds 7200
+```
+
+Campaign execution and review are required before claiming a result. This workload does not close independent numerical parity, broader pretrained concurrency/profile/context coverage, TCP/TLS, security, signing or production review. The approved numerical reference location remains pending.

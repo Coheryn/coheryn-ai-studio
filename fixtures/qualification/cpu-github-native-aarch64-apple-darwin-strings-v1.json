@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "scope": "Current-host release executables: UTF-8 and UTF-16 in data and metadata, excluding declared instruction sections. Unknown formats receive full scanning; malformed recognized section tables fail. Not an installer/signature/notice or other-platform qualification.",
+  "encoding_scopes": [
+    {
+      "path": "coheryn-bench",
+      "instruction_ranges": [
+        [
+          2240,
+          2132292
+        ]
+      ],
+      "encodings": [
+        "utf-8",
+        "utf-16-le",
+        "utf-16-be"
+      ]
+    },
+    {
+      "path": "coheryn",
+      "instruction_ranges": [
+        [
+          2816,
+          12463304
+        ]
+      ],
+      "encodings": [
+        "utf-8",
+        "utf-16-le",
+        "utf-16-be"
+      ]
+    }
+  ],
+  "policy_sha256": "f911a30794aaf6d8f0aff16320b0c26271e8456b436b81df7cb45bc2976f9471",
+  "files": [
+    {
+      "file": "coheryn",
+      "bytes": 20145872,
+      "sha256": "3d721c9451dee6cf558e8136ecd81640b02afe550549bee48f1adfd0fcea9ce6"
+    },
+    {
+      "file": "coheryn-bench",
+      "bytes": 4272176,
+      "sha256": "dfa94f0cd5d93a844d55ee44224761c64bb484ca072865b37c0206714d0b6490"
+    }
+  ],
+  "finding_count": 0
+}

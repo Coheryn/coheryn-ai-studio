@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "kind": "github-native-candidate-evidence",
+  "outcome": "pass",
+  "production_ready": false,
+  "source_commit": "e8dcb70e9ac29b7ef8680b5095cc6b3478d30d0c",
+  "run_id": 41159622334,
+  "run_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41159622334",
+  "targets": [
+    {
+      "target": "aarch64-apple-darwin",
+      "outcome": "pass",
+      "ordinary_tests": {
+        "passed": 261,
+        "failed": 0,
+        "ignored": 9,
+        "filtered": 0
+      },
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-native-aarch64-apple-darwin-checks-v1.json",
+          "bytes": 51831,
+          "sha256": "2aa198d97e11c0d3379b127e72c49653c9a310d884c2cbf44bbfd5d2c737bf65"
+        },
+        "package": {
+          "path": "fixtures/qualification/cpu-github-native-aarch64-apple-darwin-package-v1.json",
+          "bytes": 67125,
+          "sha256": "a20de86cff750480dedc85f888000be6811eb437bae3954b4be50ea41c0599e4"
+        },
+        "startup": {
+          "path": "fixtures/qualification/cpu-github-native-aarch64-apple-darwin-startup-v1.json",
+          "bytes": 67771,
+          "sha256": "7ebede3d6b3e21db53fe6de426576485052b2fb08ae855b74bd6fb943b174456"
+        },
+        "strings": {
+          "path": "fixtures/qualification/cpu-github-native-aarch64-apple-darwin-strings-v1.json",
+          "bytes": 1195,
+          "sha256": "2c357fe0c32b471b6ca1ab85ccbce435ef16d5670bee530e15ff645da9ef746c"
+        }
+      },
+      "artifact": {
+        "id": 13027390129,
+        "name": "cpu-candidate-aarch64-apple-darwin",
+        "digest": "sha256:4426406049944c5608292874a763f0a9818f2920bc1f5955028671d7ba4a20b3",
+        "size_in_bytes": 10384880
+      },
+      "candidate": {
+        "archive": "coheryn-ai-studio-0.1.0-dev-aarch64-apple-darwin-cpu-candidate.tar.gz",
+        "sha256": "45f984eed2f385e1b4fe8d918e230505ee8d228a1740f196ec772d6b498bcc3d",
+        "bytes": 10323364
+      }
+    },
+    {
+      "target": "x86_64-unknown-linux-gnu",
+      "outcome": "pass",
+      "ordinary_tests": {
+        "passed": 261,
+        "failed": 0,
+        "ignored": 9,
+        "filtered": 0
+      },
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-native-x86_64-unknown-linux-gnu-checks-v1.json",
+          "bytes": 51849,
+          "sha256": "4257106a9597fe1399e42cc27669456ae81cf1011b7b0cd136c841f9309a3e0d"
+        },
+        "package": {
+          "path": "fixtures/qualification/cpu-github-native-x86_64-unknown-linux-gnu-package-v1.json",
+          "bytes": 67137,
+          "sha256": "e811dccf772164eeab6a1322b4e28e9e81ea7dad19bb72a7274876042deaa62c"
+        },
+        "startup": {
+          "path": "fixtures/qualification/cpu-github-native-x86_64-unknown-linux-gnu-startup-v1.json",
+          "bytes": 67783,
+          "sha256": "a87d279b1206916fa54d00020a2e90a9a0ca912b8d6c8ac171b309f7a510a742"
+        },
+        "strings": {
+          "path": "fixtures/qualification/cpu-github-native-x86_64-unknown-linux-gnu-strings-v1.json",
+          "bytes": 1495,
+          "sha256": "724e191549ac8c0470259316c4034087ea2647a09164e58f647f19beab768e6c"
+        }
+      },
+      "artifact": {
+        "id": 13026817834,
+        "name": "cpu-candidate-x86_64-unknown-linux-gnu",
+        "digest": "sha256:210e2c2d17a2a16b91a2102d361ff708d7ae16e93f7232c48c7d127818a4002a",
+        "size_in_bytes": 11366027
+      },
+      "candidate": {
+        "archive": "coheryn-ai-studio-0.1.0-dev-x86_64-unknown-linux-gnu-cpu-candidate.tar.gz",
+        "sha256": "9f081f6dab2f86fbf34cf861a47c05381a599008fd78f42ef2ab79c2e6b9aaaf",
+        "bytes": 11326659
+      }
+    },
+    {
+      "target": "x86_64-pc-windows-msvc",
+      "outcome": "pass",
+      "ordinary_tests": {
+        "passed": 257,
+        "failed": 0,
+        "ignored": 9,
+        "filtered": 0
+      },
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-native-x86_64-pc-windows-msvc-checks-v1.json",
+          "bytes": 52415,
+          "sha256": "1fc1962f17212e7a7579ce265ac24d97ba21ed1a98eababc0770d551bccc147b"
+        },
+        "package": {
+          "path": "fixtures/qualification/cpu-github-native-x86_64-pc-windows-msvc-package-v1.json",
+          "bytes": 68644,
+          "sha256": "82cf83a34c433000c8761ef8c0b401b62d7703ea024cb25f1a0cd7e63d6244dc"
+        },
+        "startup": {
+          "path": "fixtures/qualification/cpu-github-native-x86_64-pc-windows-msvc-startup-v1.json",
+          "bytes": 69320,
+          "sha256": "1b47299b33a000ee85cb575a0bd7a34376a8d7b13a6011c51a63318e83f50738"
+        },
+        "strings": {
+          "path": "fixtures/qualification/cpu-github-native-x86_64-pc-windows-msvc-strings-v1.json",
+          "bytes": 1259,
+          "sha256": "d7c09004c76bb676f1af3db994c10fc2c2b9ae70273034fa86d6ad5117f33c63"
+        }
+      },
+      "artifact": {
+        "id": 13026309603,
+        "name": "cpu-candidate-x86_64-pc-windows-msvc",
+        "digest": "sha256:72ea56901ca531c8d41d356598e0b1c335ade17b7ea8af5c8a039147bb5ed21c",
+        "size_in_bytes": 10385665
+      },
+      "candidate": {
+        "archive": "coheryn-ai-studio-0.1.0-dev-x86_64-pc-windows-msvc-cpu-candidate.tar.gz",
+        "sha256": "6aa755333577a1c27aec2b16cfb0e342e6fb4a64830fecaaafd1cd4a1b11a870",
+        "bytes": 10312787
+      }
+    }
+  ],
+  "scope": "Exact native formatting, strict Clippy, ordinary tests, release build, legal/dependency/policy checks, synthetic smoke and verified candidate startup. Independent model, sustained resource, signing/security and release approval remain separate. Original source-bound reports are preserved; no gate promotion for later source changes.",
+  "retrieval": "ZIPs verified against official GitHub digests; command log hashes, report/package/source/binary bindings and candidate archive members verified. Extracted foreign binaries inspected only as data locally; startup results were produced on their native GitHub runners."
+}
