@@ -6,7 +6,7 @@ The immediate priority is qualifying the existing native CPU implementation befo
 
 [The machine-readable scope](../fixtures/cpu-release/scope.json) identifies the required native targets and existing text, embedding and vision profiles. The detailed file identities, encodings, contexts, templates and numerical evidence remain in [the compatibility matrix](../fixtures/compatibility.json). Container validity and architecture compatibility do not establish model quality or production qualification. No universal model, language, image or GGUF claim is made.
 
-Qualification must cover macOS ARM64, Linux x86-64 and Windows x86-64. CI configuration alone does not count as execution evidence. Passing synthetic tests and native executable startup do not establish model-level numerical parity. Current actual model evidence is scoped to macOS ARM64; reference-tool and numerical limitations in the individual task guides still apply.
+Qualification must cover macOS ARM64, Linux x86-64 and Windows x86-64. CI configuration alone does not count as execution evidence. Passing synthetic tests and native executable startup do not establish model-level numerical parity. Current independent numerical model evidence is scoped to macOS ARM64. The [selected modern operational smoke](CPU_SOAK.md#verified-hosted-smoke-checkpoint) has passed on all three native targets; it checks repeatability and lifecycle behavior, not independent numerical parity. Reference and numerical limitations in the individual task guides still apply.
 
 ## Required evidence
 

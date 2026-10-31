@@ -133,3 +133,17 @@ The first hosted Mac preflight recorded load 30.64 on three CPUs while memory, d
 Every job uploads reports and observer/driver logs even after failure. Artifact names include the target and run attempt. Failed-run stores are excluded from upload, including when cleanup cannot be confirmed. Source changes, missing fault coverage, early EOS or exceeded limits fail the run; profiles are never relaxed automatically. A passing two-cycle smoke remains separate from sustained resource, independent numerical and production-release acceptance.
 
 A later workspace-feature test build on the local Mac also hit the unchanged compressed-memory cutoff. The cache-only preparation verified all ten selected file hashes before its final host check failed. Those observations do not establish successful compilation or native smoke execution; the user selected GitHub Actions for the remaining native work.
+
+## Verified hosted smoke checkpoint
+
+[The recorded campaign](../fixtures/qualification/cpu-github-modern-smoke-v1.json) completed on macOS ARM64, Linux x86-64 and Windows x86-64 in [GitHub Actions](https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41155745636). It binds source commit `665d564960d184bad81d3abbf3db094cab94c04c`; later tooling changes do not relabel those reports as current-source qualification. Original check, synthetic and modern report bytes are preserved beside the index. Artifact ZIP hashes were verified against official metadata, every declared report artifact was checked, and observer summaries were recomputed before recording these results.
+
+| Native target | Driver tests / strict Clippy | Synthetic smoke | Modern shared smoke | Sampled peak RSS / warmed drained growth |
+|---|---|---|---|---|
+| macOS ARM64 | Pass | 2 measured cycles | 2 measured cycles | 305.98 / 55.30 MiB |
+| Linux x86-64 | Pass | 2 measured cycles | 2 measured cycles | 396.45 / 0.00 MiB |
+| Windows x86-64 | Pass | 2 measured cycles | 2 measured cycles | 150.97 / 1.62 MiB |
+
+Each modern run completed two service epochs, six text requests, six embedding operations and four image operations. All four required fault scenarios occurred twice during measured execution; cleanup and unchanged source were confirmed. Each run used the frozen balanced, concurrency-one profile with shared Qwen3.5 text/vision and independent Nomic embeddings. These are separate host observations under uncontrolled cache conditions, not cross-platform performance comparisons. RSS sampling is not a complete physical-allocation measurement.
+
+This closes the selected operational smoke execution checkpoint. It does not close the 400-cycle synthetic campaign, sustained pretrained workloads, numerical/platform matrix, TCP/security/package review or production approval. The independent numerical workflow still needs the exact frozen reference archive at an approved HTTPS location. CPU support remains experimental.

@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "kind": "github-modern-cpu-smoke-evidence",
+  "production_ready": false,
+  "source_commit": "665d564960d184bad81d3abbf3db094cab94c04c",
+  "run_id": 41155745636,
+  "run_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41155745636",
+  "classification": "Selected two-cycle operational smoke; not sustained, numerical, TCP or release qualification. Reports retain their original complete source; later source changes require new evidence.",
+  "retrieval": "Public artifact proxy; ZIP hashes checked against official GitHub digests before reading. Original report bytes preserved. All declared report artifact hashes verified; observer summaries independently recomputed.",
+  "targets": [
+    {
+      "target": "x86_64-unknown-linux-gnu",
+      "outcome": "pass",
+      "artifact": {
+        "id": 13025817372,
+        "name": "cpu-soak-evidence-x86_64-unknown-linux-gnu-1",
+        "size_in_bytes": 319716,
+        "digest": "sha256:2e1c0345b10e16592d8eee600f38885c2982bd2eee92082c967939f211a0a0d3"
+      },
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-soak-x86_64-unknown-linux-gnu-checks-v1.json",
+          "bytes": 51112,
+          "sha256": "29f830520c76e140b1376620f4eb9decc959d22ba63f6219d6ea5d123467aabf"
+        },
+        "synthetic": {
+          "path": "fixtures/qualification/cpu-github-soak-x86_64-unknown-linux-gnu-synthetic-v1.json",
+          "bytes": 54867,
+          "sha256": "9ccfed5ae84ccc7f88ba948d169a37a5eb75cccf9227d2a7ee89af093f38e8a6"
+        },
+        "modern": {
+          "path": "fixtures/qualification/cpu-github-soak-x86_64-unknown-linux-gnu-modern-v1.json",
+          "bytes": 58023,
+          "sha256": "339e2c126b4e9ef579f631a7705edd78f201f51a99d0189588cef17a0e5c4b02"
+        }
+      },
+      "binary_sha256": "228d525229b82813a0dde28b7910f1895fd68478ee52543523274db2db1aa491",
+      "measurements": {
+        "measured_cycles": 2,
+        "service_epochs": 2,
+        "samples": 11633,
+        "faults": {
+          "image_backpressure_peer_progress_and_drop": 2,
+          "resource_rejection_and_model_reload": 2,
+          "queue_saturation_and_disconnect": 2,
+          "slow_consumer_timeout": 2
+        },
+        "operations": {
+          "1/balanced/embedding": {
+            "count": 6,
+            "max_ms": 1121.709325,
+            "path": "/v1/embeddings",
+            "mean_ms": 1112.1350713333334
+          },
+          "1/balanced/text": {
+            "count": 6,
+            "max_ms": 44229.97907,
+            "path": "/api/v1/generate",
+            "mean_ms": 32223.003145833336
+          },
+          "1/balanced/image": {
+            "count": 4,
+            "max_ms": 168517.632396,
+            "path": "/api/v1/generate",
+            "mean_ms": 168179.70057625
+          }
+        },
+        "sampled_peak_rss_bytes": 415707136,
+        "max_drained_rss_growth_bytes": 0,
+        "peak_reserved_bytes": 657345930,
+        "peak_engine_buffer_bytes": 71966224,
+        "rss_acceptance": "evaluated"
+      }
+    },
+    {
+      "target": "aarch64-apple-darwin",
+      "outcome": "pass",
+      "artifact": {
+        "id": 13025594174,
+        "name": "cpu-soak-evidence-aarch64-apple-darwin-1",
+        "size_in_bytes": 260956,
+        "digest": "sha256:6ab092abd02af5f2e17d32f200bfd47d3943d6cc7eead4e7fc6385999b52f77a"
+      },
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-soak-aarch64-apple-darwin-checks-v1.json",
+          "bytes": 51114,
+          "sha256": "588b8e5d250a4de71bc8315af73b980d9a390f90621c0e69a940df079d6c1d0a"
+        },
+        "synthetic": {
+          "path": "fixtures/qualification/cpu-github-soak-aarch64-apple-darwin-synthetic-v1.json",
+          "bytes": 54903,
+          "sha256": "c76b12d5066a13336384064184ee516e37315dcd5fc0e629b8711ecbde6cf89e"
+        },
+        "modern": {
+          "path": "fixtures/qualification/cpu-github-soak-aarch64-apple-darwin-modern-v1.json",
+          "bytes": 58053,
+          "sha256": "2b5b60d6f2af5784914bd0d7d1535e51420381b059f3aeabbef6f2536ab74c42"
+        }
+      },
+      "binary_sha256": "100743468a7070dccef52627a7fe162baa6dffe56a4ea946ed1b1777844b9e7b",
+      "measurements": {
+        "measured_cycles": 2,
+        "service_epochs": 2,
+        "samples": 6843,
+        "faults": {
+          "resource_rejection_and_model_reload": 2,
+          "slow_consumer_timeout": 2,
+          "image_backpressure_peer_progress_and_drop": 2,
+          "queue_saturation_and_disconnect": 2
+        },
+        "operations": {
+          "1/balanced/embedding": {
+            "count": 6,
+            "max_ms": 510.71683300000007,
+            "path": "/v1/embeddings",
+            "mean_ms": 287.66707633333334
+          },
+          "1/balanced/text": {
+            "count": 6,
+            "max_ms": 57968.468333,
+            "path": "/api/v1/generate",
+            "mean_ms": 39732.92310416667
+          },
+          "1/balanced/image": {
+            "count": 4,
+            "max_ms": 200287.036083,
+            "path": "/api/v1/generate",
+            "mean_ms": 194417.00581225
+          }
+        },
+        "sampled_peak_rss_bytes": 320847872,
+        "max_drained_rss_growth_bytes": 57982976,
+        "peak_reserved_bytes": 657345802,
+        "peak_engine_buffer_bytes": 71966224,
+        "rss_acceptance": "evaluated"
+      }
+    },
+    {
+      "target": "x86_64-pc-windows-msvc",
+      "outcome": "pass",
+      "artifact": {
+        "id": 13025528319,
+        "name": "cpu-soak-evidence-x86_64-pc-windows-msvc-1",
+        "size_in_bytes": 263567,
+        "digest": "sha256:3d20a8f6684a0534e76abc76841e367dc222b54eef6e7c2c43272cbbd6d3f5f3"
+      },
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-soak-x86_64-pc-windows-msvc-checks-v1.json",
+          "bytes": 51640,
+          "sha256": "b82c3f8704ffa3bfdd05088601316950ed7552fe9bb5256b1559886025465f3f"
+        },
+        "synthetic": {
+          "path": "fixtures/qualification/cpu-github-soak-x86_64-pc-windows-msvc-synthetic-v1.json",
+          "bytes": 55529,
+          "sha256": "4711ddeaec16f4195d5a78c0850b790b1b6716c807baf62362fbaa4b7474b62f"
+        },
+        "modern": {
+          "path": "fixtures/qualification/cpu-github-soak-x86_64-pc-windows-msvc-modern-v1.json",
+          "bytes": 58721,
+          "sha256": "fb5f0e5013b5a373b5ac254a9de7a0fcf3f1d24af9611a9663e888ea13a77154"
+        }
+      },
+      "binary_sha256": "f36b078306eda218ea85467129499239dfc17a91f8c8243996319a077874d6d1",
+      "measurements": {
+        "measured_cycles": 2,
+        "service_epochs": 2,
+        "samples": 7744,
+        "faults": {
+          "slow_consumer_timeout": 2,
+          "resource_rejection_and_model_reload": 2,
+          "image_backpressure_peer_progress_and_drop": 2,
+          "queue_saturation_and_disconnect": 2
+        },
+        "operations": {
+          "1/balanced/embedding": {
+            "count": 6,
+            "max_ms": 785.8299,
+            "path": "/v1/embeddings",
+            "mean_ms": 774.1451833333332
+          },
+          "1/balanced/text": {
+            "count": 6,
+            "max_ms": 33216.3186,
+            "path": "/api/v1/generate",
+            "mean_ms": 23913.046416666668
+          },
+          "1/balanced/image": {
+            "count": 4,
+            "max_ms": 119077.7231,
+            "path": "/api/v1/generate",
+            "mean_ms": 118233.264475
+          }
+        },
+        "sampled_peak_rss_bytes": 158306304,
+        "max_drained_rss_growth_bytes": 1703936,
+        "peak_reserved_bytes": 589188562,
+        "peak_engine_buffer_bytes": 71966224,
+        "rss_acceptance": "evaluated"
+      }
+    }
+  ],
+  "pending": [
+    "Full numerical matrix requires the unchanged frozen archive at an approved HTTPS location.",
+    "Sustained resource campaigns, broader configurations, security and release review remain open."
+  ],
+  "outcome": "pass"
+}
