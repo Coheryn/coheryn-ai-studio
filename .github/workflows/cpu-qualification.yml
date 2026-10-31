@@ -33,6 +33,7 @@ jobs:
         env:
           EXPECTED_TARGET: ${{ matrix.platform.target }}
         run: python -c "import os,sys; sys.path.insert(0,'tools'); from verify_cpu_package import native_target; from cpu_qualification.common import require; require(native_target()==os.environ['EXPECTED_TARGET'],'unexpected native runner')"
+      - run: cargo fetch --locked
       - run: cargo fetch --locked --manifest-path fuzz/Cargo.toml
       - run: python tools/test_cpu_qualification.py
       - run: python tools/test_cpu_shards.py
