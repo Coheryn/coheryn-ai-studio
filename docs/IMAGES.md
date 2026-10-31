@@ -50,3 +50,5 @@ Independent processor and vision research executes separately under the resource
 The subsequent [offline Qwen image-to-text checkpoint](MULTIMODAL.md) adds the language decoder and atomic local request admission. Its metadata-correct reference profile preserves the earlier Qwen epsilon-zero language captures as diagnostics. The image stages and original input/reference bytes remain unchanged; full product/Metal/platform/release acceptance is still open.
 
 The subsequent [product image ingress checkpoint](IMAGE_API.md) adds managed pairs, metadata-only vision estimates, strict Base64/opt-in public HTTPS acquisition and request-wide queue/response lifetimes. Earlier component-only limitations above describe their historical checkpoints; the compatibility matrix records the current end-to-end scope.
+
+Native Qwen3.5-0.8B source checkpoints and their selected paired GGUF conversions also use the shared text/image graph. See [MODERN_MODELS.md](MODERN_MODELS.md) for preparation, physical shard layouts, per-file references and current qualification limits.

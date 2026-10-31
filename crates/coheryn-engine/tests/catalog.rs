@@ -321,6 +321,8 @@ fn metadata_factories_are_extensible_ambiguous_claims_fail_and_no_execution_load
 #[test]
 fn qwen35_session_estimates_include_fixed_recurrent_state_and_linear_kv_growth() {
     let c = coheryn_engine::qwen35::Config {
+        zero_centered_norms: true,
+        ssm_pre_exponentiated: false,
         hidden: 1024,
         intermediate: 3584,
         vocabulary: 248320,

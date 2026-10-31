@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "purpose": "Quantization quality observations on two short text cases; separate from executor correctness.",
+  "semantic_quality_claim": false,
+  "baseline": "f16-text.reference-v1.json",
+  "cases": [
+    {
+      "label": "q8_0",
+      "case": "english",
+      "first_logits_values": 248320,
+      "first_logits_normalized_l2": 0.01817955120490868,
+      "top1_same": true,
+      "top10_overlap": 10,
+      "greedy_same": true,
+      "greedy_token_ids": [
+        9419,
+        0,
+        2500,
+        628
+      ],
+      "greedy_text": "Hello! How can",
+      "reference_sha256": "0b3ccd268eb0e7c6252e295e0310fc6cac203dd99057b79e8ae7f578e67014fd"
+    },
+    {
+      "label": "q8_0",
+      "case": "unicode",
+      "first_logits_values": 248320,
+      "first_logits_normalized_l2": 0.03435846437796184,
+      "top1_same": true,
+      "top10_overlap": 9,
+      "greedy_same": true,
+      "greedy_token_ids": [
+        151318,
+        212488,
+        148885,
+        0
+      ],
+      "greedy_text": "হ্যালো!",
+      "reference_sha256": "0b3ccd268eb0e7c6252e295e0310fc6cac203dd99057b79e8ae7f578e67014fd"
+    },
+    {
+      "label": "q4_0",
+      "case": "english",
+      "first_logits_values": 248320,
+      "first_logits_normalized_l2": 0.25515976428034365,
+      "top1_same": true,
+      "top10_overlap": 7,
+      "greedy_same": true,
+      "greedy_token_ids": [
+        9419,
+        0,
+        2500,
+        628
+      ],
+      "greedy_text": "Hello! How can",
+      "reference_sha256": "c7df9bb80305a1079d925ebc99a3a441afec331dab9041b0139e86832c014996"
+    },
+    {
+      "label": "q4_0",
+      "case": "unicode",
+      "first_logits_values": 248320,
+      "first_logits_normalized_l2": 0.4118025830927809,
+      "top1_same": true,
+      "top10_overlap": 5,
+      "greedy_same": false,
+      "greedy_token_ids": [
+        151318,
+        182694,
+        154962,
+        11
+      ],
+      "greedy_text": "হ্যাঁ,",
+      "reference_sha256": "c7df9bb80305a1079d925ebc99a3a441afec331dab9041b0139e86832c014996"
+    },
+    {
+      "label": "q4_k_m",
+      "case": "english",
+      "first_logits_values": 248320,
+      "first_logits_normalized_l2": 0.15652579024008006,
+      "top1_same": true,
+      "top10_overlap": 8,
+      "greedy_same": true,
+      "greedy_token_ids": [
+        9419,
+        0,
+        2500,
+        628
+      ],
+      "greedy_text": "Hello! How can",
+      "reference_sha256": "d0004dcbc3dff7bc1119cad7e536f8802aa4f866d44d4ef9c3de1d4de4fcadd2"
+    },
+    {
+      "label": "q4_k_m",
+      "case": "unicode",
+      "first_logits_values": 248320,
+      "first_logits_normalized_l2": 0.2598586166480425,
+      "top1_same": true,
+      "top10_overlap": 6,
+      "greedy_same": true,
+      "greedy_token_ids": [
+        151318,
+        212488,
+        148885,
+        0
+      ],
+      "greedy_text": "হ্যালো!",
+      "reference_sha256": "d0004dcbc3dff7bc1119cad7e536f8802aa4f866d44d4ef9c3de1d4de4fcadd2"
+    },
+    {
+      "label": "q6_k_m",
+      "case": "english",
+      "first_logits_values": 248320,
+      "first_logits_normalized_l2": 0.0566773302326211,
+      "top1_same": true,
+      "top10_overlap": 9,
+      "greedy_same": true,
+      "greedy_token_ids": [
+        9419,
+        0,
+        2500,
+        628
+      ],
+      "greedy_text": "Hello! How can",
+      "reference_sha256": "b79016b07058bcc85ee2c2bd00cf22a9d51f4418f8afcd70d6faaa4e2a62d97c"
+    },
+    {
+      "label": "q6_k_m",
+      "case": "unicode",
+      "first_logits_values": 248320,
+      "first_logits_normalized_l2": 0.06159759051743561,
+      "top1_same": true,
+      "top10_overlap": 9,
+      "greedy_same": true,
+      "greedy_token_ids": [
+        151318,
+        212488,
+        148885,
+        0
+      ],
+      "greedy_text": "হ্যালো!",
+      "reference_sha256": "b79016b07058bcc85ee2c2bd00cf22a9d51f4418f8afcd70d6faaa4e2a62d97c"
+    }
+  ]
+}

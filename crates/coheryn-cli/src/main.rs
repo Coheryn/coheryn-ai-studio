@@ -299,7 +299,9 @@ async fn execute(cli: &Cli) -> Result<()> {
         .map_err(|e| Error::new(ErrorCode::Internal, e.to_string()))?;
     match &cli.command {
         Command::Doctor => {
-            let mut capabilities = serde_json::json!({"version":env!("CARGO_PKG_VERSION"),"os":std::env::consts::OS,"architecture":std::env::consts::ARCH,"backend":"cpu-reference","default_thread_policy":"profile-and-cpu-share","max_threads_per_session":16,"execution_encodings":["F32","F16","Q4_0","Q5_0","Q8_0","Q4_K","Q6_K"],"qualification":"experimental-exact-file-evidence-in-fixtures/compatibility.json","vision":true,"vision_profile":"qwen2vl-still-f16-cpu-greedy","vision_backends":["cpu-reference"],"vision_api":true,"image_formats":["png","jpeg"],"vision_max_images":4,"embeddings":true,"embedding_cli_api":true,"embedding_architectures":["nomic-bert"],"embedding_encodings":["F32","F16","Q8_0"],"embedding_max_input_tokens":512,"embedding_max_items":256,"embedding_api_encodings":["float","base64"],"qualified_embedding_dimensions":[768],"http_api":true,"managed_sessions":true,"session_storage":"opt-in-embedded","persistent_sessions":true,"session_kv_reuse":true,"tool_calling":true,"tool_profiles":["qwen-tools-v1"],"strict_tool_arguments":true,"schema_constraints":true,"constraint_profile":"coheryn-json-v1","strict_tool_mode":"single-required-or-named-no-parallel","sampling_profile":"coheryn-sampling-v2","continuous_batching":true,"batching_profile":"coheryn-cpu-batch-v1","generation_quantum_tokens":1,"metal":false,"telemetry":false});
+            let mut capabilities = serde_json::json!({"version":env!("CARGO_PKG_VERSION"),"os":std::env::consts::OS,"architecture":std::env::consts::ARCH,"backend":"cpu-reference","default_thread_policy":"profile-and-cpu-share","max_threads_per_session":16,"execution_encodings":["F32","F16","Q4_0","Q5_0","Q8_0","Q4_K","Q5_K","Q6_K"],"qualification":"experimental-exact-file-evidence-in-fixtures/compatibility.json","vision":true,"vision_profile":"qwen2vl-still-f16-cpu-greedy","vision_backends":["cpu-reference"],"vision_api":true,"image_formats":["png","jpeg"],"vision_max_images":4,"embeddings":true,"embedding_cli_api":true,"embedding_architectures":["nomic-bert"],"embedding_encodings":["F32","F16","Q8_0"],"embedding_max_input_tokens":512,"embedding_max_items":256,"embedding_api_encodings":["float","base64"],"qualified_embedding_dimensions":[768],"http_api":true,"managed_sessions":true,"session_storage":"opt-in-embedded","persistent_sessions":true,"session_kv_reuse":true,"tool_calling":true,"tool_profiles":["qwen-tools-v1"],"strict_tool_arguments":true,"schema_constraints":true,"constraint_profile":"coheryn-json-v1","strict_tool_mode":"single-required-or-named-no-parallel","sampling_profile":"coheryn-sampling-v2","continuous_batching":true,"batching_profile":"coheryn-cpu-batch-v1","generation_quantum_tokens":1,"metal":false,"telemetry":false});
+            capabilities["vision_profiles"] =
+                serde_json::json!(["qwen2vl-still-f16-cpu-greedy", "qwen35-still-v1"]);
             capabilities["managed_image_sessions"] = true.into();
             capabilities["image_asset_storage"] = "private-original-bytes".into();
             capabilities["image_scheduler"] = "coheryn-vlm-cooperative-v1".into();
@@ -413,7 +415,7 @@ async fn execute(cli: &Cli) -> Result<()> {
                 }
                 print_json(&Inspection {
                     descriptor: d,
-                    task: report.task,
+                    task: inspected.descriptor().task,
                     embedding_config: &report.embedding_config,
                     model_descriptor: inspected.descriptor(),
                 })
@@ -439,7 +441,13 @@ async fn execute(cli: &Cli) -> Result<()> {
                 } else {
                     inspected.require_compatible()
                 };
-                let mut report = if let Some((_, legacy)) = inspected.gguf() {
+                let mut report = if let Some((_, legacy)) = inspected.gguf().filter(|_| {
+                    inspected
+                        .descriptor()
+                        .text_adapter
+                        .as_ref()
+                        .is_none_or(|a| a.adapter == "qwen2-gguf-cpu-v1")
+                }) {
                     let mut value =
                         serde_json::to_value(legacy).map_err(|e| Error::request(e.to_string()))?;
                     value["model_descriptor"] = serde_json::to_value(inspected.descriptor())

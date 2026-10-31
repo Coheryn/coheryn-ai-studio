@@ -12,7 +12,9 @@
     "qwen2-gguf-text",
     "nomic-bert-gguf-embedding",
     "qwen2vl-gguf-paired-image",
-    "qwen35-safetensors-text-image"
+    "qwen35-safetensors-text-image",
+    "qwen35-gguf-text-image",
+    "qwen35-real-shards"
   ],
   "requirements": [
     {
@@ -55,8 +57,8 @@
     {
       "id": "native-checks",
       "target": "aarch64-apple-darwin",
-      "path": "fixtures/qualification/cpu-model-native-checks-v4.json",
-      "sha256": "c9f04b252d3adcf95c81f42d7bbeb1afc37c60e7cae18f89764b0c839368369f"
+      "path": "fixtures/qualification/cpu-modern-native-v4.json",
+      "sha256": "2ca7799a6919adb1d44fb13db8431b5eb5f16483d0a74d9d4528aa400a75ccaf"
     }
   ],
   "notes": [

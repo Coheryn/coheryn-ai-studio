@@ -271,12 +271,15 @@ fn constant_block(dtype: u32, value: f32) -> Vec<u8> {
             b.extend([0x11; 16]);
             b
         }
-        12 => {
+        12 | 13 => {
             let mut b = scale.to_vec();
             b.extend([0, 0]);
             b.extend([1; 4]);
             b.extend([0; 4]);
             b.extend([1; 4]);
+            if dtype == 13 {
+                b.extend([0; 32]);
+            }
             b.extend([0x11; 128]);
             b
         }

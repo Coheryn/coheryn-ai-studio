@@ -1,5 +1,7 @@
 # Validation evidence
 
+Modern Qwen3.5 qualification adds native packed/F16 GGUF bindings, paired vision byte views and a losslessly derived real three-shard Safetensors layout. [MODERN_MODELS.md](MODERN_MODELS.md) defines the precision and source contracts. Per-encoding references use identical GGUF weights; quantization quality is measured separately. Native jobs consume frozen data without importing the independent assessment reader or equations.
+
 The [real-model CPU runner](CPU_QUALIFICATION.md) adds portable full-array comparisons, immutable data-bundle transport, extracted CLI and authenticated loopback TCP/SSE checks for an explicit pinned subset. Its manual three-platform workflow reports actual native evidence; configuring it does not establish platform/model qualification. Numerical references and tolerances remain unchanged.
 
 ## CPU hardening evidence boundary
@@ -12,7 +14,7 @@ The five bounded campaigns each execute 100,000 inputs with recorded edge covera
 
 The archive regression tests cover deterministic serialization, declared architecture, complete file-set and legal-payload integrity, traversal/links/reserved paths, archive checksum and expanded-size rejection, and false or tampered release evidence. Package startup uses an extracted executable with empty PATH and no credentials; actual offline generation remains a distinct qualification step.
 
-Current status is experimental native text, embedding and exact-pair Qwen2-VL image inference on macOS ARM64 CPU, plus native Qwen3.5 Safetensors CPU text and image/session paths. The workspace passes 255 ordinary tests, with eight model opt-ins and a child-process test entrypoint kept separate. Qwen3.5 uses independent array-equation references under its declared precision profile; full publisher-framework parity remains open. Earlier image evidence covers restart/no-resend follow-ups, stateless parity, concurrent text progress and 31 bit-exact cooperative numerical arrays. LLaVA, Metal, other-platform execution and complete release qualification remain open.
+Current status is experimental native text, embedding and exact-pair Qwen2-VL image inference on macOS ARM64 CPU, plus native Qwen3.5 Safetensors CPU text and image/session paths. Ordinary tests and opt-in model entrypoints are counted separately in source-bound reports. Qwen3.5 uses independent array-equation references under its declared precision profile; full publisher-framework parity remains open. Earlier image evidence covers restart/no-resend follow-ups, stateless parity, concurrent text progress and 31 bit-exact cooperative numerical arrays. LLaVA, Metal, other-platform execution and complete release qualification remain open.
 
 The [release checklist](RELEASE_CHECKLIST.md) tracks the complete target. S0 now has source/path, locked workspace/fuzz graph, intact archived-data and current-host executable-string evidence. S1 adds managed histories and exact context controls. S2/S3 add bounded isolated KV reuse and opt-in transactional storage, restart/replay, lazy pages, retention and import/export. S4–S6 have initial exact-file CPU protocol/model evidence; broader batching/backend and complete platform/security/license/package qualification remain open. Earlier sections retain their historical scope; archived capture source is inert and excluded from the native chain.
 

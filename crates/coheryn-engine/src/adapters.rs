@@ -113,6 +113,9 @@ impl Default for Registry {
             .register(Box::new(Qwen35))
             .expect("unique built-in adapter");
         registry
+            .register(Box::new(Qwen35Gguf))
+            .expect("unique built-in adapter");
+        registry
     }
 }
 struct Qwen2;
@@ -242,69 +245,7 @@ impl TextAdapter for Qwen35 {
         {
             return None;
         }
-        Some((|| {
-            let config = crate::qwen35::Config::parse(
-                source.configuration().expect("source configuration"),
-            )?;
-            config.validate_tensors(source.tensors().expect("tensor source"))?;
-            // These IDs and vocabulary size are properties of the exact tokenizer hash below.
-            if config.eos != 248044 || config.vocabulary < 248070 {
-                return Err(Error::new(
-                    ErrorCode::UnsupportedTokenizer,
-                    "Qwen3.5 vocabulary/special-token mismatch",
-                ));
-            }
-            let tokenizer = source.read_asset("tokenizer.json", 16 << 20, cancel)?;
-            if crate::storage::digest_hex(sha2::Sha256::digest(&tokenizer).into())
-                != crate::qwen35::TOKENIZER_SHA256
-            {
-                return Err(Error::new(
-                    ErrorCode::UnsupportedTokenizer,
-                    "unqualified Qwen3.5 tokenizer profile",
-                ));
-            }
-            drop(tokenizer);
-            let template = source.read_asset("chat_template.jinja", 16 << 10, cancel)?;
-            if crate::storage::digest_hex(sha2::Sha256::digest(&template).into())
-                != crate::qwen35::TEMPLATE_SHA256
-            {
-                return Err(Error::new(
-                    ErrorCode::UnsupportedChatTemplate,
-                    "unqualified Qwen3.5 chat template",
-                ));
-            }
-            let mut capabilities = qwen35_capabilities();
-            let root = source.tensors().expect("tensor source").root().to_owned();
-            if root.join("preprocessor_config.json").try_exists()? {
-                let processor = source.read_asset("preprocessor_config.json", 1 << 20, cancel)?;
-                capabilities.images = crate::qwen35::vision::VisionConfig::parse(
-                    source.configuration().expect("configuration"),
-                    &processor,
-                    source.tensors().expect("tensor source"),
-                )
-                .is_ok();
-            }
-            let json = serde_json::to_value(&config).map_err(|e| Error::request(e.to_string()))?;
-            Ok(crate::catalog::TextMetadata::new(
-                capabilities,
-                json,
-                config.context,
-                config.context.min(8192),
-                move |source, request, hardware| {
-                    crate::qwen35::estimate(
-                        &config,
-                        source.tensors().expect("tensor source").tensor_bytes()?,
-                        request,
-                        hardware,
-                        crate::memory::MemoryStats {
-                            limit: request.max_memory,
-                            ..Default::default()
-                        },
-                        false,
-                    )
-                },
-            ))
-        })())
+        describe_qwen35(source, cancel, false)
     }
     fn load(
         &self,
@@ -367,7 +308,11 @@ impl TextModel for Model {
 }
 impl TextModel for crate::qwen35::Model {
     fn capabilities(&self) -> Capabilities {
-        let mut result = qwen35_capabilities();
+        let mut result = if self.is_gguf() {
+            qwen35_gguf_capabilities()
+        } else {
+            qwen35_capabilities()
+        };
         result.images = self.vision_configuration().is_ok();
         result
     }
@@ -410,4 +355,139 @@ fn qwen35_capabilities() -> Capabilities {
         continuous_batching: true,
         qualification: "experimental-cpu-text-and-still-image",
     }
+}
+
+fn describe_qwen35(
+    source: &mut crate::catalog::Source,
+    cancel: &Cancellation,
+    gguf: bool,
+) -> Option<Result<crate::catalog::TextMetadata>> {
+    if gguf && let Err(error) = source.prepare_qwen35_gguf(cancel) {
+        return Some(Err(error));
+    }
+    Some((|| {
+        let config = if gguf {
+            crate::qwen35::gguf::configure(
+                source.gguf().expect("GGUF source").0,
+                source.configuration().expect("configuration"),
+            )?
+        } else {
+            crate::qwen35::Config::parse(source.configuration().expect("source configuration"))?
+        };
+        config.validate_tensors(source.tensors().expect("tensor source"))?;
+        // These IDs and vocabulary size are properties of the exact tokenizer hash below.
+        if config.eos != 248044 || config.vocabulary < 248070 {
+            return Err(Error::new(
+                ErrorCode::UnsupportedTokenizer,
+                "Qwen3.5 vocabulary/special-token mismatch",
+            ));
+        }
+        let tokenizer = source.read_asset("tokenizer.json", 16 << 20, cancel)?;
+        if crate::storage::digest_hex(sha2::Sha256::digest(&tokenizer).into())
+            != crate::qwen35::TOKENIZER_SHA256
+        {
+            return Err(Error::new(
+                ErrorCode::UnsupportedTokenizer,
+                "unqualified Qwen3.5 tokenizer profile",
+            ));
+        }
+        drop(tokenizer);
+        let template = source.read_asset("chat_template.jinja", 16 << 10, cancel)?;
+        if crate::storage::digest_hex(sha2::Sha256::digest(&template).into())
+            != crate::qwen35::TEMPLATE_SHA256
+        {
+            return Err(Error::new(
+                ErrorCode::UnsupportedChatTemplate,
+                "unqualified Qwen3.5 chat template",
+            ));
+        }
+        let mut capabilities = if gguf {
+            qwen35_gguf_capabilities()
+        } else {
+            qwen35_capabilities()
+        };
+        let root = source.tensors().expect("tensor source").root().to_owned();
+        if root.join("preprocessor_config.json").try_exists()? {
+            let processor = source.read_asset("preprocessor_config.json", 1 << 20, cancel)?;
+            capabilities.images = crate::qwen35::vision::VisionConfig::parse(
+                source.configuration().expect("configuration"),
+                &processor,
+                source.tensors().expect("tensor source"),
+            )
+            .is_ok();
+        }
+        let json = serde_json::to_value(&config).map_err(|e| Error::request(e.to_string()))?;
+        Ok(crate::catalog::TextMetadata::new(
+            capabilities,
+            json,
+            config.context,
+            config.context.min(8192),
+            move |source, request, hardware| {
+                crate::qwen35::estimate(
+                    &config,
+                    source.tensors().expect("tensor source").tensor_bytes()?,
+                    request,
+                    hardware,
+                    crate::memory::MemoryStats {
+                        limit: request.max_memory,
+                        ..Default::default()
+                    },
+                    false,
+                )
+            },
+        ))
+    })())
+}
+struct Qwen35Gguf;
+impl TextAdapter for Qwen35Gguf {
+    fn id(&self) -> &'static str {
+        "qwen35-gguf-cpu-v1"
+    }
+    fn accepts(&self, path: &Path, _limits: ResourceLimits) -> Result<bool> {
+        if !crate::qwen35::gguf::is_source(path)? {
+            return Ok(false);
+        }
+        Ok(crate::inspect(path, crate::ParseLimits::default())?
+            .architecture
+            .as_deref()
+            == Some("qwen35"))
+    }
+    fn describe(
+        &self,
+        source: &mut crate::catalog::Source,
+        cancel: &Cancellation,
+    ) -> Option<Result<crate::catalog::TextMetadata>> {
+        if source.format() != crate::catalog::Format::Gguf
+            || source.architecture() != Some("qwen35")
+        {
+            return None;
+        }
+        describe_qwen35(source, cancel, true)
+    }
+    fn load(
+        &self,
+        path: &Path,
+        limits: ResourceLimits,
+        cancel: &Cancellation,
+    ) -> Result<Box<dyn TextModel>> {
+        Ok(Box::new(crate::qwen35::Model::load(path, limits, cancel)?))
+    }
+}
+fn qwen35_gguf_capabilities() -> Capabilities {
+    let mut c = qwen35_capabilities();
+    c.adapter = "qwen35-gguf-cpu-v1";
+    c.architecture = "qwen35";
+    c.format = "gguf";
+    c
+}
+
+/// Bounded local container dispatch; no tokenizer/session or numeric payload is loaded.
+pub fn is_qwen35_gguf(path: &Path, cancel: &Cancellation) -> Result<bool> {
+    cancel.check()?;
+    if !crate::qwen35::gguf::is_source(path)? {
+        return Ok(false);
+    }
+    let d = crate::inspect(path, crate::ParseLimits::default())?;
+    cancel.check()?;
+    Ok(d.architecture.as_deref() == Some("qwen35"))
 }

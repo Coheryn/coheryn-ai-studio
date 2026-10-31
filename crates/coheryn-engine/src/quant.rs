@@ -5,10 +5,10 @@ use crate::{Error, ErrorCode, Result};
 use half::f16;
 
 pub fn supported(dtype: u32) -> bool {
-    matches!(dtype, 0 | 1 | 2 | 6 | 8 | 12 | 14)
+    matches!(dtype, 0 | 1 | 2 | 6 | 8 | 12 | 13 | 14)
 }
 pub fn is_packed(dtype: u32) -> bool {
-    matches!(dtype, 2 | 6 | 8 | 12 | 14)
+    matches!(dtype, 2 | 6 | 8 | 12 | 13 | 14)
 }
 pub fn row_bytes(dtype: u32, width: usize) -> Result<usize> {
     let (block, bytes) = match dtype {
@@ -18,6 +18,7 @@ pub fn row_bytes(dtype: u32, width: usize) -> Result<usize> {
         6 => (32, 22),
         8 => (32, 34),
         12 => (256, 144),
+        13 => (256, 176),
         14 => (256, 210),
         _ => {
             return Err(Error::new(
@@ -78,7 +79,14 @@ pub fn decode(bytes: &[u8], dtype: u32, out: &mut [f32]) -> Result<()> {
             },
         )
     } else {
-        (256, if dtype == 12 { 144 } else { 210 })
+        (
+            256,
+            match dtype {
+                12 => 144,
+                13 => 176,
+                _ => 210,
+            },
+        )
     };
     for (block, dst) in bytes.chunks_exact(size).zip(out.chunks_exact_mut(width)) {
         if dtype == 14 {
@@ -112,18 +120,24 @@ pub fn decode(bytes: &[u8], dtype: u32, out: &mut [f32]) -> Result<()> {
                                 - 16) as f32;
                     }
                 }
-                12 => {
+                12 | 13 => {
                     let min = half(&block[2..])?;
                     for group in 0..8 {
                         let (scale, minimum) = k4_coefficients(&block[4..16], group);
                         let ds = d * scale as f32;
                         let dm = min * minimum as f32;
                         for j in 0..32 {
-                            let packed = block[16 + (group / 2) * 32 + j];
+                            let packed =
+                                block[if dtype == 13 { 48 } else { 16 } + (group / 2) * 32 + j];
                             let q = if group % 2 == 0 {
                                 packed & 15
                             } else {
                                 packed >> 4
+                            };
+                            let q = if dtype == 13 {
+                                q | (((block[16 + j] >> group) & 1) << 4)
+                            } else {
+                                q
                             };
                             dst[group * 32 + j] = ds * f32::from(q) - dm;
                         }
@@ -177,7 +191,7 @@ impl QuantizedInput {
         self.used = 0;
         let (width, size, kind) = match weight_dtype {
             2 | 6 | 8 => (32, 34, 8),
-            12 | 14 => (256, 292, 15),
+            12..=14 => (256, 292, 15),
             _ => return Err(Error::invalid("activation requires packed weight dtype")),
         };
         if input.is_empty()
@@ -248,6 +262,7 @@ pub fn dot(row: &[u8], dtype: u32, input: &QuantizedInput) -> Result<f32> {
         6 => (32, 22, 8),
         8 => (32, 34, 8),
         12 => (256, 144, 15),
+        13 => (256, 176, 15),
         14 => (256, 210, 15),
         _ => return Err(Error::invalid("dot requires packed weights")),
     };
@@ -294,7 +309,7 @@ pub fn dot(row: &[u8], dtype: u32, input: &QuantizedInput) -> Result<f32> {
         } else {
             let da = f32::from_le_bytes(activation[..4].try_into().expect("scale bytes"));
             let mut integers = [0i32; 8];
-            if dtype == 12 {
+            if matches!(dtype, 12 | 13) {
                 let dw = half(weight)?;
                 let dm = half(&weight[2..])?;
                 let mut minimum_sum = 0i32;
@@ -309,11 +324,17 @@ pub fn dot(row: &[u8], dtype: u32, input: &QuantizedInput) -> Result<f32> {
                     ]));
                     minimum_sum += minimum * group_sum;
                     for i in 0..32 {
-                        let packed = weight[16 + (group / 2) * 32 + i];
+                        let packed =
+                            weight[if dtype == 13 { 48 } else { 16 } + (group / 2) * 32 + i];
                         let q = if group % 2 == 0 {
                             packed & 15
                         } else {
                             packed >> 4
+                        };
+                        let q = if dtype == 13 {
+                            q | (((weight[16 + i] >> group) & 1) << 4)
+                        } else {
+                            q
                         };
                         integers[i % 8] +=
                             scale * i32::from(q) * i32::from(activation[4 + group * 32 + i] as i8);

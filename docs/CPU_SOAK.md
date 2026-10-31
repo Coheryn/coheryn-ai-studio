@@ -75,3 +75,51 @@ This input set selects the pinned Qwen2.5-0.5B Q4_K_M text file, Nomic Q8_0 embe
 Custom input sets use schema 1 with `kind: "pinned"`, `text` and `embedding` objects containing a local `path` and expected `sha256`. `vision` accepts either `kind: "checkpoint"` with `path`, the complete consumed `pinned_files` name/hash map and an `image` path/hash object, or `kind: "pair"` with `language`, `projector` and `image` path/hash objects. Architecture support is still determined by native validation, not this input file. Text-role file imports currently require compatible GGUF; the image checkpoint option supports the existing native Qwen3.5 profile.
 
 Pretrained generation must actually reach the bounded event queue for backpressure tests. If a selected model stops early, the scenario fails explicitly; there is no hidden EOS override or synthetic replacement. The two-cycle pinned smoke verifies the harness path, not sustained pretrained qualification, all encodings/models or other hardware. A full release still requires reviewed representative workloads on every mandatory native platform. The [CPU release checklist](CPU_RELEASE.md) retains those open requirements; these reports do not automatically accept its resource-soak gate.
+
+## Shared modern checkpoint workload
+
+The schema-2 [modern input set](../fixtures/soak/qwen35-shared-nomic-models-v2.json) assigns both text and image requests to one managed Qwen3.5-0.8B Q4_K_M/F16-vision checkpoint. Nomic Q8_0 remains an independent embedding model. The checkpoint inventory pins every consumed language, vision, tokenizer, template, configuration and license file. Its adapter still determines execution compatibility; role sharing does not make unsupported checkpoints executable. Resident baselines record the unique model IDs and image role, and the driver checks that exactly two models are loaded. The existing schema-1 inputs keep their three-resident behavior.
+
+```sh
+python3 tools/run_cpu_soak.py \
+  --profile fixtures/soak/cpu-modern-shared-smoke-v1.json \
+  --models fixtures/soak/qwen35-shared-nomic-models-v2.json \
+  --report fixtures/qualification/cpu-modern-soak-pinned-v1.json \
+  --timeout-seconds 7200
+```
+
+Schema 2 accepts exactly one `text` file or `text_checkpoint` source. `vision.kind: "shared_text"` requires the checkpoint source and supplies a separately hashed image. Optional `workload` fields freeze the text, backpressure and image prompts before execution; each is bounded to 4096 UTF-8 bytes. Image requests are classified by their content as well as their model role, so sharing an ID cannot hide image-operation coverage. Image bytes are hashed after the bounded read, and managed file imports verify the expected checksum rather than merely attaching it as provenance.
+
+The modern smoke fixes two measured cycles, one fault-bearing warmup, a restart after each cycle, concurrency one and balanced execution. Engine reservations and sampled RSS each have a separate 1 GiB ceiling; drained RSS growth is limited to 128 MiB. Requests have a 1200-second bound, cleanup 30 seconds and consumer cancellation 60 seconds. Those values define this smoke workload, not a general service SLA. Prompts request sufficiently long output naturally; EOS behavior is unchanged and early completion still fails backpressure coverage. A passing smoke does not satisfy a sustained-soak or production-release gate.
+
+The controller protects both its single-job optimized build and native driver with the [qualification host guard](CPU_QUALIFICATION.md). It checks available-memory, disk and load reserves, plus macOS pressure, compressed memory and thermal state, before starting and while running. Managed-copy disk headroom counts consumed physical files once for shared text/vision and retains an additional staging margin. Guard cutoffs, timeout and interruption stop only owned child process groups. Disposable stores are removed only after confirming all owned children have exited; cleanup failure retains the private stores and fails the run. Progress reports are written atomically; failed attempts and host observations remain available. The guard observes host conditions and cannot guarantee prevention of every OS/hardware fault. It does not change engine admission limits or make unobserved platform sensors available.
+
+On 2026-10-31 the modern extension's controller checks passed, but two optimized test-build attempts and a metadata-only compiler attempt crossed the host compressed-memory cutoff. No new synthetic or pretrained native smoke was executed. The implementation is pending Rust compilation/tests and the two source-bound smoke runs above; previous native evidence remains attached to its original snapshot. Keep the cutoff intact and resume on a host with sufficient memory headroom.
+
+## GitHub Actions execution
+
+The [Opt-in modern CPU soak workflow](../.github/workflows/cpu-soak.yml) prepares independent native jobs on macOS ARM64, Linux x86-64 and Windows x86-64. It is separate from the numerical qualification workflow and needs no reference-data archive. Native runs remain pending until the workflow actually executes and its reports pass review. Configuration does not register release evidence.
+
+Once the workflow is committed and available on the repository's default branch, select **Actions → Opt-in modern CPU soak → Run workflow**, choose the source branch and keep `modern_models` enabled for pretrained coverage. Disabling that input runs only the Rust/controller checks and synthetic operational smoke. Each platform uses its own runner; independent jobs can run concurrently. No model weights, tokens or private managed stores are uploaded as evidence.
+
+For qualification before merging, pushing a branch under `qualification/cpu-soak/` also starts the workflow, with modern models enabled. This opt-in branch trigger works through ordinary Git SSH access without a separate API credential. Other branch pushes do not start this workflow. The existing general CI still runs under its own triggers. Every report remains bound to the submitted source; publishing a branch or starting a run does not establish a passing result.
+
+The job verifies native runner identity, checks host health, runs controller regressions and then executes:
+
+```sh
+python3 tools/check_cpu_soak.py --report .cache/cpu-soak-checks.json
+python3 tools/run_cpu_soak.py --profile fixtures/soak/cpu-smoke-v1.json \
+  --report .cache/cpu-soak-synthetic.json --timeout-seconds 300
+python3 tools/prepare_cpu_soak.py --fetch --report .cache/cpu-soak-inputs.json
+python3 tools/run_cpu_soak.py --profile fixtures/soak/cpu-modern-shared-smoke-v1.json \
+  --models fixtures/soak/qwen35-shared-nomic-models-v2.json \
+  --report .cache/cpu-soak-modern.json --timeout-seconds 7200
+```
+
+These commands also work on another supported development machine. Omit `--fetch` when all pinned inputs are already cached. Preparation acquires only the Q4_K_M language file, F16 vision component, required source sidecars and Nomic Q8_0 file; it does not download other encodings or the full source-weight checkpoint. It checks the exact frozen soak inventory with bounded streaming reads and verifies pending managed-copy disk headroom. Preparation is byte validation, not inference qualification.
+
+The guarded Rust checker records actual Cargo/compiler versions, the native target, source/lockfile/input identities, complete diagnostic logs and test totals. Empty, filtered or failed test runs cannot pass. Both tests and strict Clippy use the workspace dependency feature set, retaining cache reuse with workspace builds. All builds use one Cargo job. A failed preflight starts no compiler; cutoff, interruption and incomplete shutdown preserve failed reports. Concurrent shutdown calls cannot signal a successfully retired owned group twice. Permission failures and Windows tree-termination failures remain explicit; they never imply confirmed descendant cleanup.
+
+Every job uploads reports and observer/driver logs even after failure. Artifact names include the target and run attempt. Failed-run stores are excluded from upload, including when cleanup cannot be confirmed. Source changes, missing fault coverage, early EOS or exceeded limits fail the run; profiles are never relaxed automatically. A passing two-cycle smoke remains separate from sustained resource, independent numerical and production-release acceptance.
+
+A later workspace-feature test build on the local Mac also hit the unchanged compressed-memory cutoff. The cache-only preparation verified all ten selected file hashes before its final host check failed. Those observations do not establish successful compilation or native smoke execution; the user selected GitHub Actions for the remaining native work.

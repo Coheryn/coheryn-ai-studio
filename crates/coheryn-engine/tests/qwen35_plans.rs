@@ -11,6 +11,8 @@ use coheryn_engine::{
 };
 fn config() -> Config {
     Config {
+        zero_centered_norms: true,
+        ssm_pre_exponentiated: false,
         hidden: 1024,
         intermediate: 3584,
         vocabulary: 248320,

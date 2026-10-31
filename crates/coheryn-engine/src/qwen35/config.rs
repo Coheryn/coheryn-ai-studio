@@ -5,6 +5,8 @@ use std::collections::BTreeSet;
 
 #[derive(Clone, Debug, Serialize)]
 pub struct Config {
+    pub zero_centered_norms: bool,
+    pub ssm_pre_exponentiated: bool,
     pub hidden: usize,
     pub intermediate: usize,
     pub vocabulary: usize,
@@ -172,6 +174,8 @@ impl Config {
             ));
         }
         Ok(Self {
+            zero_centered_norms: true,
+            ssm_pre_exponentiated: false,
             hidden: integer(v, "hidden_size", 32768)?,
             intermediate: integer(v, "intermediate_size", 131072)?,
             vocabulary,
@@ -207,15 +211,16 @@ impl Config {
                 .ok_or_else(|| unsupported(format!("missing Qwen3.5 tensor {name}")))?;
             let actual = tensor.dimensions.iter().rev().copied().collect::<Vec<_>>();
             if actual != shape.iter().map(|n| *n as u64).collect::<Vec<_>>()
-                || !matches!(tensor.dtype, 0 | 30)
+                || !(crate::quant::supported(tensor.dtype) || tensor.dtype == 30)
             {
                 return Err(unsupported(format!(
                     "unsupported Qwen3.5 tensor shape/precision {name}"
                 )));
             }
-            let width = if tensor.dtype == 0 { 4u64 } else { 2 };
-            if (shape.len() == 2 && shape[1] as u64 * width > 256 << 10)
-                || (shape.len() != 2 && tensor.bytes > 256 << 10)
+            let row_bytes = crate::quant::row_bytes(tensor.dtype, *shape.last().unwrap_or(&1))?;
+            if (shape.len() == 2 && row_bytes > 256 << 10)
+                || (shape.len() != 2
+                    && (tensor.bytes > 256 << 10 || crate::quant::is_packed(tensor.dtype)))
             {
                 return Err(unsupported(format!(
                     "Qwen3.5 tensor exceeds bounded native read/workspace {name}"

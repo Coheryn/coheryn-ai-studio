@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "kind": "local-host-restart-observation",
+  "production_ready": false,
+  "qualification_outcome": "incomplete",
+  "boot_time_local": "2026-10-31T00:35:15+06:00",
+  "timezone": "Asia/Dhaka",
+  "qualification_running_before_restart": true,
+  "interrupted_suite": "qwen35-gguf-q4_k_m-text",
+  "interrupted_probe_started_local": "2026-10-31T00:34:16+06:00",
+  "confirmed_completed_suites": 7,
+  "required_suites": 14,
+  "completed_records": [
+    {
+      "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+      "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+      "outcome": "pass",
+      "suites": [
+        "qwen35-gguf-f16-image",
+        "qwen35-gguf-q4_k_m-image",
+        "qwen35-sharded-image",
+        "qwen35-image",
+        "qwen35-gguf-f16-text"
+      ]
+    },
+    {
+      "path": "fixtures/qualification/cpu-modern-qwen35-gguf-q8_0-text-v3.json",
+      "sha256": "8d2eec2e364cfe36caffe4c84fbaa7f9b198b65d7c8072a7b8f932bf4901d72c",
+      "outcome": "pass",
+      "suites": [
+        "qwen35-gguf-q8_0-text"
+      ]
+    },
+    {
+      "path": "fixtures/qualification/cpu-modern-qwen35-gguf-q4_0-text-v3.json",
+      "sha256": "cf1391a381c006b66d82cf314050ab6fe63cbb23dcb2abebc5bc9f8f4b6702d6",
+      "outcome": "pass",
+      "suites": [
+        "qwen35-gguf-q4_0-text"
+      ]
+    }
+  ],
+  "heavy_tests_restarted": false,
+  "cause_confirmed": false,
+  "observations": [
+    "macOS boot time and reboot history confirm a restart.",
+    "No panic report for this restart was found in the accessible standard diagnostic directories. DumpPanic logs say no SOCD data was found.",
+    "An earlier Coheryn disk-write diagnostic (ending 2026-10-30 22:04:39 +0600) recorded 34.36 GB cumulative writes, 532 MB free storage, and action taken: none. This is a resource diagnostic, not proof of a fatal crash.",
+    "Before restart, an earlier sample showed about 3.54 GiB occupied by compressed memory. This was system-wide, not Coheryn allocation alone.",
+    "No active Coheryn qualification/server/probe process was found after reboot. Current free storage is about 13 GiB.",
+    "Powerd recorded 1457 DarkWake Thermal Emergency messages between 00:10:11 and 00:34:27 +0600 before restart. These messages alone do not establish a system-wide overheating shutdown.",
+    "After reboot, privileged pmset -g therm reported no recorded thermal or performance warning. This does not reconstruct pre-reboot temperatures."
+  ],
+  "assessment": "The tests may have contributed to overall resource pressure or a freeze, but the available evidence does not establish the restart cause.",
+  "next_execution_condition": "Investigate the freeze/restart and add host-wide resource guards before restarting extended qualification.",
+  "sources": [
+    {
+      "title": "Apple unexpected restart troubleshooting",
+      "url": "https://support.apple.com/en-ie/102382"
+    }
+  ],
+  "private_log": {
+    "path": ".cache/modern-validation-resume/restart-powerd.log",
+    "sha256": "e61420806238c97fd2c9db3512079a31ddb459936f8b4c79b69014b303d3efc8"
+  },
+  "completed_full_array_comparisons": 896,
+  "resource_guard_status": "Engine limits are present; host-wide memory/thermal/disk-pressure cutoffs are not yet implemented in the extended qualification runner.",
+  "user_reported_restart_mode": "automatic, not a power-button forced restart"
+}

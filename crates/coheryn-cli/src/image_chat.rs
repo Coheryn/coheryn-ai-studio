@@ -26,6 +26,7 @@ pub async fn run(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<()
     if args.standalone
         && args.vision_model.is_none()
         && args.model.extension().is_some_and(|e| e == "gguf")
+        && !coheryn_engine::adapters::is_qwen35_gguf(&args.model, cancel)?
     {
         return Err(Error::request(
             "standalone image chat requires --vision-model",

@@ -57,14 +57,25 @@ async fn call(
     })
     .await?
 }
-async fn post(app: &Router, path: &str, body: Value, p: &Profile, log: &Log) -> Result<Value> {
-    let task = if path == "/v1/embeddings" {
+fn operation_task(path: &str, body: &Value) -> &'static str {
+    if path == "/v1/embeddings" {
         "embedding"
-    } else if body["model"] == "image" {
+    } else if body["model"] == "image"
+        || body["messages"].as_array().is_some_and(|messages| {
+            messages.iter().any(|m| {
+                m["content"]
+                    .as_array()
+                    .is_some_and(|parts| parts.iter().any(|p| p["type"] == "image_url"))
+            })
+        })
+    {
         "image"
     } else {
         "text"
-    };
+    }
+}
+async fn post(app: &Router, path: &str, body: Value, p: &Profile, log: &Log) -> Result<Value> {
+    let task = operation_task(path, &body);
     let start = Instant::now();
     let result = call(app, "POST", path, body, 200, p).await;
     log.write(json!({"kind":"operation","task":task,"path":path,"elapsed_ms":start.elapsed().as_secs_f64()*1000.,"outcome":if result.is_ok(){"pass"}else{"fail"}}))?;
@@ -120,8 +131,13 @@ pub async fn idle(s: &Arc<Service>, p: &Profile) -> Result<()> {
     .await
 }
 
-fn text(profile: &str) -> Value {
-    json!({"model":"text","prompt":"Hello. বাংলা 中文 العربية 🙂","max_tokens":2,"context":512,"threads":1,"profile":profile})
+fn text(sources: &Sources, profile: &str) -> Value {
+    let prompt = sources
+        .workload
+        .as_ref()
+        .map(|w| w.text_prompt.as_str())
+        .unwrap_or("Hello. বাংলা 中文 العربية 🙂");
+    json!({"model":"text","prompt":prompt,"max_tokens":2,"context":512,"threads":1,"profile":profile})
 }
 fn embedding(profile: &str) -> Value {
     json!({"model":"embed","input":["hello","hello world","hello","hello world","hello","hello world"],"batch_size":2,"threads":1,"profile":profile})
@@ -137,9 +153,14 @@ fn vision(
     let mut parts: Vec<_> = (0..count)
         .map(|_| json!({"type":"image_url","image_url":{"url":url}}))
         .collect();
-    parts.push(json!({"type":"text","text":"Describe the picture in detail. বাংলা 中文 العربية 🙂"}));
+    let prompt = sources
+        .workload
+        .as_ref()
+        .map(|w| w.image_prompt.as_str())
+        .unwrap_or("Describe the picture in detail. বাংলা 中文 العربية 🙂");
+    parts.push(json!({"type":"text","text":prompt}));
     Ok(
-        json!({"model":"image","messages":[{"role":"user","content":parts}],"max_tokens":tokens,"context":512,"threads":1,"profile":profile,"stream":stream}),
+        json!({"model":sources.image_model(),"messages":[{"role":"user","content":parts}],"max_tokens":tokens,"context":512,"threads":1,"profile":profile,"stream":stream}),
     )
 }
 fn generation_identity(v: &Value) -> Value {
@@ -185,7 +206,7 @@ pub async fn mixed(
     // compute scheduler. In-process bodies deliberately exclude TCP buffering.
     let image = vision(sources, profile, false, 2, 2)?;
     let (text, embedded, pictured) = tokio::join!(
-        post(app, "/api/v1/generate", text(profile), p, log),
+        post(app, "/api/v1/generate", text(sources, profile), p, log),
         post(app, "/v1/embeddings", embedding(profile), p, log),
         post(app, "/api/v1/generate", image, p, log),
     );
@@ -198,10 +219,15 @@ pub async fn mixed(
         json!({"text":generation_identity(&text?),"embedding":embedding_identity(&embedded?)?,"image":generation_identity(&pictured)}),
     )
 }
-fn long_request() -> GenerationRequest {
+fn long_request(sources: &Sources) -> GenerationRequest {
     let mut request = GenerationRequest::completion(
         "text".into(),
-        "List integers from one to one hundred, one per line:\n1.".into(),
+        sources
+            .workload
+            .as_ref()
+            .map(|w| w.backpressure_prompt.as_str())
+            .unwrap_or("List integers from one to one hundred, one per line:\n1.")
+            .into(),
         &GenerationOptions {
             max_tokens: 128,
             ..Default::default()
@@ -214,18 +240,32 @@ fn long_request() -> GenerationRequest {
     request
 }
 
-async fn saturation(s: &Arc<Service>, app: &Router, p: &Profile, log: &Log) -> Result<()> {
+async fn saturation(
+    s: &Arc<Service>,
+    app: &Router,
+    sources: &Sources,
+    p: &Profile,
+    log: &Log,
+) -> Result<()> {
     let start = Instant::now();
-    let mut handles = vec![s.submit_generation(long_request(), &mut None)?];
+    let mut handles = vec![s.submit_generation(long_request(sources), &mut None)?];
     wait(p, || s.scheduler.counters.snapshot().active == 1).await?;
     for _ in 0..s.config.queue_capacity {
-        handles.push(s.submit_generation(long_request(), &mut None)?);
+        handles.push(s.submit_generation(long_request(sources), &mut None)?);
     }
     require(
         s.scheduler.counters.snapshot().queued == s.config.queue_capacity as u64,
         "queue was not saturated",
     )?;
-    let rejected = call(app, "POST", "/v1/completions", text("balanced"), 429, p).await?;
+    let rejected = call(
+        app,
+        "POST",
+        "/v1/completions",
+        text(sources, "balanced"),
+        429,
+        p,
+    )
+    .await?;
     require(
         rejected["error"]["code"] == "QUEUE_FULL",
         "saturation returned the wrong error",
@@ -239,10 +279,10 @@ async fn saturation(s: &Arc<Service>, app: &Router, p: &Profile, log: &Log) -> R
     log.write(json!({"kind":"fault","scenario":"queue_saturation_and_disconnect","held_requests":s.config.queue_capacity+1,"elapsed_ms":start.elapsed().as_secs_f64()*1000.}))
 }
 
-async fn slow_consumer(s: &Arc<Service>, p: &Profile, log: &Log) -> Result<()> {
+async fn slow_consumer(s: &Arc<Service>, sources: &Sources, p: &Profile, log: &Log) -> Result<()> {
     let start = Instant::now();
     let before = s.scheduler.counters.snapshot();
-    let mut handle = s.submit_generation(long_request(), &mut None)?;
+    let mut handle = s.submit_generation(long_request(sources), &mut None)?;
     tokio::time::timeout(
         Duration::from_secs(p.request_timeout_seconds),
         s.scheduler.drained(),
@@ -319,12 +359,12 @@ async fn image_stall(
     })
     .await??;
     require(
-        s.unload("image").is_err(),
+        s.unload(sources.image_model()).is_err(),
         "undelivered image response lost its residency pin",
     )?;
     let start = Instant::now();
     let (text, embedding) = tokio::join!(
-        post(app, "/api/v1/generate", text(profile), p, log),
+        post(app, "/api/v1/generate", text(sources, profile), p, log),
         post(app, "/v1/embeddings", embedding(profile), p, log)
     );
     text?;
@@ -371,13 +411,13 @@ pub async fn cycle(
     )?;
     quiescent(s, baseline, p).await?;
     if faults {
-        saturation(s, app, p, log).await?;
+        saturation(s, app, sources, p, log).await?;
         quiescent(s, baseline, p).await?;
-        slow_consumer(s, p, log).await?;
+        slow_consumer(s, sources, p, log).await?;
         quiescent(s, baseline, p).await?;
         image_stall(s, app, sources, profile, p, log).await?;
         quiescent(s, baseline, p).await?;
-        let mut memory = text(profile);
+        let mut memory = text(sources, profile);
         memory["max_memory"] = json!(1);
         let error = call(app, "POST", "/api/v1/generate", memory, 503, p).await?;
         require(
@@ -447,4 +487,30 @@ pub async fn replay(app: &Router, expected: &Value, p: &Profile) -> Result<()> {
         &actual == expected,
         "unloaded restart did not replay the exact durable receipt",
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn shared_resident_image_requests_keep_the_image_observation_role() {
+        assert_eq!(
+            operation_task(
+                "/api/v1/generate",
+                &json!({"model":"text","messages":[{"role":"user","content":[{"type":"image_url","image_url":{"url":"data:image/png;base64,AA=="}}]}]})
+            ),
+            "image"
+        );
+        assert_eq!(
+            operation_task(
+                "/api/v1/generate",
+                &json!({"model":"text","prompt":"Hello"})
+            ),
+            "text"
+        );
+        assert_eq!(
+            operation_task("/v1/embeddings", &json!({"model":"embed","input":"Hello"})),
+            "embedding"
+        );
+    }
 }

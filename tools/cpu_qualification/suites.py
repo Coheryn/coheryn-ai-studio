@@ -2,6 +2,7 @@
 import math
 
 from .common import ROOT, compare, pinned, read, require, sha, vector, write
+from .profiles import PROFILES
 
 
 def generated(actual, case, image=False):
@@ -116,8 +117,9 @@ def embedding(context, suite, model):
 
 
 def qwen35(context, suite, model):
-    image = suite == 'qwen35-image'
-    ref = read(ROOT / ('fixtures/qwen35/vision/reference-v1.json' if image else 'fixtures/qwen35/reference-v1.json'))
+    profile = PROFILES[suite]
+    image = profile['image']
+    ref = read(ROOT / profile['reference'])
     contract = read(ROOT / 'fixtures/qwen35/vision/contract-v1.json')
     images = {i['id']: pinned(ROOT / i['file'], {**i, 'bytes': (ROOT / i['file']).stat().st_size}) for i in contract['images']}
     results = []
@@ -126,7 +128,11 @@ def qwen35(context, suite, model):
             name = suite + '-' + case['id'] + '-' + str(threads)
             directory = context.directory / name
             directory.mkdir()
-            selected = model if threads == 1 else model / 'model.safetensors-00001-of-00001.safetensors'
+            selected = model
+            if threads == 2 and profile['layout'] == 'publisher':
+                selected = model / 'model.safetensors-00001-of-00001.safetensors'
+            elif threads == 2 and profile['layout'] == 'sharded':
+                selected = model / 'model.safetensors.index.json'
             request = ({'images': [str(images[i]) for i in case['images']], 'text': case['text'], 'teacher': case['greedy_token_ids'][:-1]} if image else
                        {'messages': case['messages'], 'teacher_tokens': case['greedy_token_ids'][:-1], 'threads': threads,
                         'max_tokens': len(case['greedy_token_ids']), 'trace_directory': str(directory), 'lifecycle': threads == 1})
@@ -140,7 +146,7 @@ def qwen35(context, suite, model):
             comparisons = []
 
             def numeric(path, expected, kind):
-                reference = context.references / 'references' / suite / (expected['name'] + '.f32')
+                reference = context.references / 'references' / profile['arrays'] / (expected['name'] + '.f32')
                 a, b = vector(path), vector(reference)
                 length = math.prod(expected['shape']) if image else expected['length']
                 require(len(b) == length, 'reference shape mismatch')
@@ -159,6 +165,7 @@ def qwen35(context, suite, model):
                 numeric(directory / f'{last}-layer.{index}.f32', expected, 'language')
             for index, expected in enumerate(case['teacher_forced']):
                 numeric(directory / f'{last + index}-logits.f32', expected, 'language')
-            results.append({'case': case['id'], 'threads': threads, 'layout': 'indexed' if threads == 1 else 'single-file', 'arrays': comparisons})
+            layout = profile['layout'] if profile['layout'] != 'publisher' else ('indexed' if threads == 1 else 'single-file')
+            results.append({'case': case['id'], 'threads': threads, 'layout': layout, 'arrays': comparisons})
         cli_generation(context, suite + '-cli-' + case['id'], model, case, [images[i] for i in case['images']] if image else None)
     return {'runs': results, 'publisher_framework_parity': False}

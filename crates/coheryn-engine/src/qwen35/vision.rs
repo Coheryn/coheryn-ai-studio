@@ -86,7 +86,7 @@ impl VisionConfig {
             let t = set
                 .tensor(&name)
                 .ok_or_else(|| bad("missing required vision tensor"))?;
-            if !matches!(t.dtype, 0 | 30)
+            if !matches!(t.dtype, 0 | 1 | 30)
                 || t.dimensions.iter().rev().copied().collect::<Vec<_>>()
                     != shape.iter().map(|n| *n as u64).collect::<Vec<_>>()
             {
@@ -194,7 +194,7 @@ impl Linear {
         let mut t = t.clone();
         t.dimensions = vec![self.width as u64, self.rows as u64];
         tensor::matmul_cooperative(storage, 0, &t, input, out, work, cancel, cooperate)
-            .map_err(crate::safetensors::source_error)?;
+            .map_err(|error| set.source_error(error))?;
         for row in out.chunks_exact_mut(self.rows) {
             cancel.check()?;
             for (v, b) in row.iter_mut().zip(&self.bias) {
@@ -296,6 +296,7 @@ pub(super) fn encode(
     let mut accounting = model.budget.track_buffers(held.bytes());
     let start = Instant::now();
     let mut work = Workspace::new((4 * h).max(f).max(1536), 256 << 10, threads, 32)?;
+    work.preserve_f32_operands();
     let patch = Linear::new(&model.set, "model.visual.patch_embed.proj", 1536, h)?;
     let pos = model.set.bind("model.visual.pos_embed.weight")?;
     let mut blocks = Vec::new();

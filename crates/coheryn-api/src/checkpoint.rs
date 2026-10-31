@@ -62,6 +62,7 @@ fn portable(name: &str) -> bool {
 fn allowed(name: &str) -> bool {
     portable(name)
         && (name.ends_with(".safetensors")
+            || name.ends_with(".gguf")
             || matches!(
                 name,
                 "model.safetensors.index.json"
@@ -96,8 +97,14 @@ impl CheckpointManifest {
             coheryn_engine::adapters::Registry::default().inspect(&selected, cancel)?;
         inspection.require_compatible()?;
         let d = inspection.descriptor();
-        if d.format != catalog::Format::Safetensors {
-            return Err(ApiError::bad("checkpoint transport requires Safetensors"));
+        if d.format != catalog::Format::Safetensors
+            && d.text_adapter
+                .as_ref()
+                .is_none_or(|a| a.adapter != "qwen35-gguf-cpu-v1")
+        {
+            return Err(ApiError::bad(
+                "checkpoint transport requires a supported native source set",
+            ));
         }
         let adapter = d
             .text_adapter
@@ -162,6 +169,7 @@ impl CheckpointManifest {
                 .all(|b| b.is_ascii_alphanumeric() || b"._-".contains(&b))
             || !allowed(&self.entrypoint)
             || !(self.entrypoint.ends_with(".safetensors")
+                || self.entrypoint.ends_with(".gguf")
                 || self.entrypoint == "model.safetensors.index.json")
         {
             return Err(ApiError::bad(
@@ -186,7 +194,7 @@ impl CheckpointManifest {
             let cap = match file.name.as_str() {
                 "tokenizer.json" => 16 << 20,
                 "chat_template.jinja" => 16 << 10,
-                n if n.ends_with(".safetensors") => u64::MAX,
+                n if n.ends_with(".safetensors") || n.ends_with(".gguf") => u64::MAX,
                 _ => 1 << 20,
             };
             if file.bytes > cap {
@@ -268,7 +276,8 @@ impl CheckpointManifest {
             .inspect(root.join(&self.entrypoint), cancel)?;
         inspection.require_compatible()?;
         let d = inspection.descriptor();
-        if d.format != catalog::Format::Safetensors
+        if !(d.format == catalog::Format::Safetensors
+            || (d.format == catalog::Format::Gguf && self.adapter == "qwen35-gguf-cpu-v1"))
             || d.text_adapter
                 .as_ref()
                 .is_none_or(|a| a.adapter != self.adapter)
@@ -283,7 +292,9 @@ impl CheckpointManifest {
             .iter()
             .any(|name| !self.files.iter().any(|f| f.name == *name))
             || self.files.iter().any(|f| {
-                (f.name.ends_with(".safetensors") || f.name.ends_with(".index.json"))
+                (f.name.ends_with(".safetensors")
+                    || f.name.ends_with(".gguf")
+                    || f.name.ends_with(".index.json"))
                     && !required.contains(f.name.as_str())
             })
         {

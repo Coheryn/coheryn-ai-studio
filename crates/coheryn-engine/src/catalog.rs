@@ -187,6 +187,42 @@ impl Source {
         }
         Ok(source)
     }
+    pub(crate) fn prepare_qwen35_gguf(&mut self, cancel: &Cancellation) -> Result<()> {
+        if self.safetensors.is_some() {
+            return Ok(());
+        }
+        let root = self.path.parent().unwrap_or(Path::new("."));
+        let bytes = crate::safetensors::bounded_bytes(&root.join("config.json"), 1 << 20)?;
+        let json = crate::safetensors::configuration(&bytes)?;
+        let descriptor = &self
+            .gguf
+            .as_ref()
+            .ok_or_else(|| Error::request("missing GGUF descriptor"))?
+            .0;
+        let (_, set) = crate::qwen35::gguf::open(&self.path, descriptor, &json, cancel)?;
+        for f in set.files() {
+            if !self.files.iter().any(|p| p.name == f.file) {
+                self.files.push(SourceFile {
+                    name: f.file.clone(),
+                    role: "vision-weights",
+                    bytes: f.bytes,
+                    metadata_sha256: f.header_sha256.clone(),
+                    hash_scope: "gguf-header",
+                });
+            }
+        }
+        self.safetensors = Some(set);
+        self.config = Some(json);
+        self.files.push(SourceFile {
+            name: "config.json".into(),
+            role: "asset",
+            bytes: bytes.len() as u64,
+            metadata_sha256: hash(&bytes),
+            hash_scope: "complete-file",
+        });
+        self.read_asset("config.json", 1 << 20, cancel)?;
+        Ok(())
+    }
     pub fn format(&self) -> Format {
         self.format
     }
@@ -384,22 +420,23 @@ impl Registry {
                 ),
             ));
         }
-        let (count, bytes, encodings) = if let Some((d, _)) = source.gguf() {
-            (d.tensors.len(), d.tensor_bytes, d.encodings.clone())
-        } else {
-            let set = source.tensors().expect("validated source");
-            let mut total = 0u64;
-            let mut encodings = BTreeMap::new();
-            for f in set.files() {
-                for t in &f.tensors {
-                    total = total
-                        .checked_add(t.bytes)
-                        .ok_or_else(|| Error::resource("tensor inventory overflow"))?;
-                    *encodings.entry(t.dtype.clone()).or_insert(0) += 1;
+        let (count, bytes, encodings) =
+            if let Some((d, _)) = source.gguf().filter(|_| source.tensors().is_none()) {
+                (d.tensors.len(), d.tensor_bytes, d.encodings.clone())
+            } else {
+                let set = source.tensors().expect("validated source");
+                let mut total = 0u64;
+                let mut encodings = BTreeMap::new();
+                for f in set.files() {
+                    for t in &f.tensors {
+                        total = total
+                            .checked_add(t.bytes)
+                            .ok_or_else(|| Error::resource("tensor inventory overflow"))?;
+                        *encodings.entry(t.dtype.clone()).or_insert(0) += 1;
+                    }
                 }
-            }
-            (set.tensor_count(), total, encodings)
-        };
+                (set.tensor_count(), total, encodings)
+            };
         let status = if executable {
             StructuralStatus::Compatible
         } else if diagnostics.iter().any(|e| {
@@ -417,7 +454,13 @@ impl Registry {
             StructuralStatus::Unsupported
         };
         let layout = if source.format == Format::Gguf {
-            "single-file"
+            if source.tensors().is_none() {
+                "single-file"
+            } else if source.tensors().is_some_and(|s| s.files().len() > 1) {
+                "paired-with-assets"
+            } else {
+                "single-file-with-assets"
+            }
         } else if source
             .tensors()
             .expect("tensor source")
@@ -479,7 +522,7 @@ impl Inspection {
         cancel: &Cancellation,
     ) -> Result<crate::qwen35::vision::VisionConfig> {
         self.require_compatible()?;
-        if self.source.architecture() != Some("qwen3_5") {
+        if !matches!(self.source.architecture(), Some("qwen3_5" | "qwen35")) {
             return Err(Error::new(
                 crate::ErrorCode::UnsupportedModelArchitecture,
                 "source has no Qwen3.5 image planner",
@@ -580,7 +623,9 @@ impl Inspection {
     pub fn deep_validate(&self, cancel: &Cancellation) -> Result<()> {
         cancel.check()?;
         self.require_compatible()?;
-        if let Some((d, _)) = self.source.gguf() {
+        if let Some(set) = self.source.tensors() {
+            set.validate_payloads(cancel)
+        } else if let Some((d, _)) = self.source.gguf() {
             crate::validate_tokenizer(d)?;
             crate::deep_validate(&self.source.path, d, cancel)
         } else {

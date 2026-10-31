@@ -45,3 +45,7 @@ Qwen3.5 standalone generation now shares the metadata estimator and atomically h
 ## Qwen3.5 hybrid continuation
 
 The bundled Qwen3.5 adapter now exposes validated still-image capability when the actual processor/tensor/rotary profile matches. Typed managed dispatch connects native image inputs to the existing bounded transport and compute coordinator. Text generation states support independent cancellation and shared weight-tile batching. Optional history snapshots contain full KV, recurrent matrices and convolution history/cursors under separate budget reservations; they are not portable adapter packages or serialized model state. Broader executable interface unification and external adapter distribution remain separate gates. [QWEN35.md](QWEN35.md) and [QWEN35_SESSIONS.md](QWEN35_SESSIONS.md) define current scope.
+
+## Modern container bindings
+
+The native `qwen35-gguf-cpu-v1` adapter shares the Qwen3.5 hybrid/vision graph with `qwen35-safetensors-cpu-v1`. It validates GGUF metadata, source assets, tensor aliases, folded coefficients and actual encodings before allocation. A checked temporal patch byte view preserves the split GGUF projector layout without a merged model copy. [MODERN_MODELS.md](MODERN_MODELS.md) records the selected inputs, precision and qualification limits.

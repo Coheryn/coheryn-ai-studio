@@ -5,6 +5,7 @@ use cache::CacheSlot;
 pub use cache::HybridCache;
 mod execution;
 mod generation;
+pub(crate) mod gguf;
 mod image_generation;
 pub mod image_plan;
 pub use generation::GenerationState;
@@ -131,13 +132,20 @@ impl Model {
         };
         let source = asset(root, "config.json", 1 << 20)?;
         let json = crate::safetensors::configuration(&source)?;
-        let config = Config::parse(&json)?;
+        let (config, set) = if gguf::is_source(selected)? {
+            let descriptor = crate::inspect(selected, crate::ParseLimits::default())?;
+            gguf::open(selected, &descriptor, &json, cancel)?
+        } else {
+            (
+                Config::parse(&json)?,
+                TensorSet::open(selected, Limits::default(), cancel)?,
+            )
+        };
         if limits.context > config.context {
             return Err(Error::request(
                 "requested context exceeds source model context",
             ));
         }
-        let set = TensorSet::open(selected, Limits::default(), cancel)?;
         config.validate_tensors(&set)?;
         // Reject infeasible context before constructing tokenizer or session buffers.
         drop(budget.reserve(Session::bytes(&config, limits.context, 1)?)?);
@@ -191,6 +199,9 @@ impl Model {
             _resident: resident,
             owner: std::sync::Arc::new(()),
         })
+    }
+    pub fn is_gguf(&self) -> bool {
+        self.set.is_gguf()
     }
     pub fn configuration(&self) -> &Config {
         &self.config

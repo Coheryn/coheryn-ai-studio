@@ -134,7 +134,7 @@ pub struct FileInfo {
 }
 struct TensorFile {
     info: FileInfo,
-    storage: Storage,
+    storage: Arc<Storage>,
     tensors: BTreeMap<String, Tensor>,
 }
 
@@ -387,7 +387,7 @@ fn tensor_file(path: &Path, limits: Limits, cancel: &Cancellation) -> Result<Ten
         .collect::<Result<BTreeMap<_, _>>>()?;
     Ok(TensorFile {
         info,
-        storage: Storage::from_tensor_file(file)?,
+        storage: Arc::new(Storage::from_tensor_file(file)?),
         tensors,
     })
 }
@@ -422,6 +422,8 @@ pub struct TensorSet {
     files: Vec<TensorFile>,
     lookup: BTreeMap<String, (usize, Tensor)>,
     owner: Arc<()>,
+    views: Vec<Storage>,
+    gguf: bool,
 }
 pub(crate) struct BoundTensor {
     file: usize,
@@ -543,7 +545,143 @@ impl TensorSet {
             files,
             lookup,
             owner: Arc::new(()),
+            views: Vec::new(),
+            gguf: false,
         })
+    }
+    /// Bind architecture-owned aliases to checked GGUF ranges. Physical files stay
+    /// independent; the optional temporal patch is a bounded byte view over one file.
+    pub(crate) fn from_gguf(
+        entrypoint: &Path,
+        parts: &[(&Path, &crate::Descriptor)],
+        aliases: Vec<(usize, Tensor)>,
+        patch: Option<(usize, Tensor, Tensor, Tensor)>,
+        cancel: &Cancellation,
+    ) -> Result<Self> {
+        let root = entrypoint
+            .parent()
+            .unwrap_or(Path::new("."))
+            .canonicalize()?;
+        let mut files = Vec::new();
+        for (path, descriptor) in parts {
+            cancel.check()?;
+            if std::fs::symlink_metadata(path)?.file_type().is_symlink()
+                || descriptor.byte_order != "little"
+            {
+                return Err(Error::invalid(
+                    "GGUF adapter requires regular little-endian components",
+                ));
+            }
+            let storage = Arc::new(Storage::open(path, descriptor)?);
+            let tensors = descriptor
+                .tensors
+                .iter()
+                .map(|t| {
+                    Ok(TensorInfo {
+                        name: t.name.clone(),
+                        shape: t.dimensions.iter().rev().copied().collect(),
+                        dtype: crate::gguf::encoding(t.dtype)
+                            .ok_or_else(|| Error::invalid("unknown encoding"))?
+                            .0
+                            .into(),
+                        offset: descriptor.data_offset + t.offset,
+                        bytes: t.bytes,
+                    })
+                })
+                .collect::<Result<Vec<_>>>()?;
+            files.push(TensorFile {
+                info: FileInfo {
+                    file: path
+                        .file_name()
+                        .ok_or_else(|| Error::invalid("missing component name"))?
+                        .to_string_lossy()
+                        .into_owned(),
+                    bytes: descriptor.file_bytes,
+                    header_bytes: descriptor.data_offset as usize,
+                    header_sha256: descriptor.header_sha256.clone(),
+                    tensors,
+                },
+                storage,
+                tensors: BTreeMap::new(),
+            });
+        }
+        let mut lookup = BTreeMap::new();
+        for (file, mut tensor) in aliases {
+            let descriptor = parts
+                .get(file)
+                .ok_or_else(|| Error::invalid("invalid component index"))?
+                .1;
+            tensor.offset = descriptor
+                .data_offset
+                .checked_add(tensor.offset)
+                .ok_or_else(|| Error::invalid("GGUF offset overflow"))?;
+            if tensor
+                .offset
+                .checked_add(tensor.bytes)
+                .is_none_or(|end| end > descriptor.file_bytes)
+                || lookup.insert(tensor.name.clone(), (file, tensor)).is_some()
+            {
+                return Err(Error::invalid("invalid or duplicate bound GGUF tensor"));
+            }
+        }
+        let mut views = Vec::new();
+        if let Some((file, left, right, mut logical)) = patch {
+            let descriptor = parts
+                .get(file)
+                .ok_or_else(|| Error::invalid("invalid patch component"))?
+                .1;
+            let rows = *left
+                .dimensions
+                .last()
+                .ok_or_else(|| Error::invalid("empty patch shape"))?;
+            if left.dimensions != right.dimensions
+                || left.dimensions.len() != 4
+                || left.dimensions[..3] != [16, 16, 3]
+                || left.dtype != right.dtype
+                || !matches!(left.dtype, 0 | 1 | 30)
+                || left.bytes != right.bytes
+            {
+                return Err(Error::invalid("unsupported split temporal patch layout"));
+            }
+            views.push(Storage::temporal_patch(
+                files[file].storage.clone(),
+                [
+                    descriptor.data_offset + left.offset,
+                    descriptor.data_offset + right.offset,
+                ],
+                rows,
+                256,
+                3,
+                if left.dtype == 0 { 4 } else { 2 },
+            )?);
+            logical.offset = 0;
+            if lookup
+                .insert(logical.name.clone(), (files.len(), logical))
+                .is_some()
+            {
+                return Err(Error::invalid("duplicate patch alias"));
+            }
+        }
+        Ok(Self {
+            entrypoint: entrypoint.canonicalize()?,
+            index_identity: None,
+            root,
+            files,
+            lookup,
+            owner: Arc::new(()),
+            views,
+            gguf: true,
+        })
+    }
+    pub(crate) fn is_gguf(&self) -> bool {
+        self.gguf
+    }
+    pub(crate) fn source_error(&self, error: Error) -> Error {
+        if self.gguf {
+            error
+        } else {
+            source_error(error)
+        }
     }
     pub fn entrypoint(&self) -> &Path {
         &self.entrypoint
@@ -583,7 +721,7 @@ impl TensorSet {
             .lookup
             .get(name)
             .ok_or_else(|| invalid(format!("missing tensor {name}")))?;
-        Ok((&self.files[*file].storage, tensor))
+        Ok((self.storage(*file)?, tensor))
     }
     pub(crate) fn bind(&self, name: &str) -> Result<BoundTensor> {
         let (file, tensor) = self
@@ -603,7 +741,16 @@ impl TensorSet {
         if !Arc::ptr_eq(&self.owner, &binding.owner) {
             return Err(invalid("tensor belongs to another storage set"));
         }
-        Ok((&self.files[binding.file].storage, &binding.tensor))
+        Ok((self.storage(binding.file)?, &binding.tensor))
+    }
+    fn storage(&self, index: usize) -> Result<&Storage> {
+        if index < self.files.len() {
+            Ok(self.files[index].storage.as_ref())
+        } else {
+            self.views
+                .get(index - self.files.len())
+                .ok_or_else(|| invalid("invalid tensor storage view"))
+        }
     }
     /// Explicit deep validation scans finite values in bounded tiles without a model/session.
     pub fn validate_payloads(&self, cancel: &Cancellation) -> Result<()> {
@@ -611,17 +758,28 @@ impl TensorSet {
         let mut floats = memory::zeros(bytes.len() / 2)?;
         for name in self.names() {
             let (storage, tensor) = self.source(name)?;
-            let width = if tensor.dtype == 0 { 4 } else { 2 };
+            let width = usize::try_from(tensor.dimensions.first().copied().unwrap_or(1))
+                .map_err(|_| invalid("tensor row width overflow"))?;
+            let row_bytes = crate::quant::row_bytes(tensor.dtype, width)?;
+            let chunk_rows = (bytes.len() / row_bytes).min(floats.len() / width);
+            if chunk_rows == 0 {
+                return Err(Error::resource("tensor row exceeds deep-validation tile"));
+            }
             let mut position = 0;
             while position < tensor.bytes {
                 cancel.check()?;
                 storage.unchanged()?;
-                let count = ((tensor.bytes - position).min(bytes.len() as u64)) as usize;
+                let count =
+                    ((tensor.bytes - position).min((chunk_rows * row_bytes) as u64)) as usize;
                 storage
                     .read(tensor.offset + position, &mut bytes[..count])
-                    .map_err(source_error)?;
-                cpu::decode(&bytes[..count], tensor.dtype, &mut floats[..count / width])
-                    .map_err(source_error)?;
+                    .map_err(|error| self.source_error(error))?;
+                cpu::decode(
+                    &bytes[..count],
+                    tensor.dtype,
+                    &mut floats[..count / row_bytes * width],
+                )
+                .map_err(|error| self.source_error(error))?;
                 position += count as u64;
             }
         }
@@ -630,8 +788,12 @@ impl TensorSet {
     }
     pub fn read_vector(&self, name: &str) -> Result<Vec<f32>> {
         let (storage, tensor) = self.source(name)?;
-        let count = usize::try_from(tensor.bytes / if tensor.dtype == 0 { 4 } else { 2 })
-            .map_err(|_| invalid("vector length overflow"))?;
+        let count = tensor.dimensions.iter().try_fold(1usize, |a, b| {
+            usize::try_from(*b)
+                .ok()
+                .and_then(|b| a.checked_mul(b))
+                .ok_or_else(|| invalid("vector length overflow"))
+        })?;
         if tensor.dimensions.len() > 3 || tensor.bytes > 256 << 10 {
             return Err(Error::resource("small-tensor read exceeds bound"));
         }
@@ -644,7 +806,7 @@ impl TensorSet {
         let mut out = memory::zeros(count)?;
         storage.unchanged()?;
         storage.read(tensor.offset, &mut bytes)?;
-        cpu::decode(&bytes, tensor.dtype, &mut out).map_err(source_error)?;
+        cpu::decode(&bytes, tensor.dtype, &mut out).map_err(|error| self.source_error(error))?;
         Ok(out)
     }
 }

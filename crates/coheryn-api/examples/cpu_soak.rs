@@ -223,6 +223,13 @@ async fn execute(
                 for id in &ids {
                     service.load((*id).into(), 512).await?;
                 }
+                require(
+                    service
+                        .loaded()?
+                        .as_array()
+                        .is_some_and(|rows| rows.len() == ids.len()),
+                    "loaded residents differ from the declared unique model roles",
+                )?;
                 let resident_baseline = service.budget.stats().reserved;
                 if let Some(expected) = loaded_baseline {
                     require(
@@ -232,7 +239,7 @@ async fn execute(
                 } else {
                     loaded_baseline = Some(resident_baseline);
                     log.write(
-                        json!({"kind":"resident_baseline","reserved_bytes":resident_baseline}),
+                        json!({"kind":"resident_baseline","reserved_bytes":resident_baseline,"model_ids":ids,"image_model_id":sources.image_model()}),
                     )?;
                 }
                 if epoch == 0 {

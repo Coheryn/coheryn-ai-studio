@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-10-30",
+  "scope": "No new production dependency. Native tooling uses the Python standard library and the already verified Rust package set. The independent assessment wheel remains outside production and native CI.",
+  "native_tools": {
+    "record": "fixtures/qualification/cpu-model-tool-versions.json",
+    "rust": "1.99.1"
+  },
+  "independent_assessment": {
+    "schema_version": 1,
+    "purpose": "Independent GGUF reader/dequantizer assessment only; excluded from production/native CI.",
+    "package": "gguf",
+    "version": "0.19.0",
+    "license": "MIT",
+    "requires_python": ">=3.10",
+    "wheel": {
+      "file": "gguf-0.19.0-py3-none-any.whl",
+      "sha256": "70bcd10edfe697fb2dad6e40af2234b9d8ece9a41a99761405121ebda1c3c1cd",
+      "url": "https://files.pythonhosted.org/packages/b3/bb/d71d6da82763528c2c2ed6b59a9d6142c6595545a4c448e2085d155e88c2/gguf-0.19.0-py3-none-any.whl",
+      "bytes": 118475
+    },
+    "verified_on": "2026-10-30",
+    "module_scope": [
+      "gguf.gguf_reader",
+      "gguf.quants",
+      "gguf.constants",
+      "gguf.lazy"
+    ],
+    "package_initializer_executed": false,
+    "license_record": "resources/licensing/upstream/gguf-assessment-0.19.0-LICENSE.txt"
+  }
+}

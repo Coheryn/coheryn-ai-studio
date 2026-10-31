@@ -236,7 +236,7 @@ pub fn validate(d: &Descriptor) -> CompatibilityReport {
             diagnostics.push(Error::new(
                 ErrorCode::UnsupportedGgufTensorType,
                 format!(
-                    "{} uses dtype {}; native CPU supports F32/F16/Q8_0/Q4_0/Q5_0/Q4_K/Q6_K",
+                    "{} uses dtype {}; native CPU supports F32/F16/Q8_0/Q4_0/Q5_0/Q4_K/Q5_K/Q6_K",
                     t.name, t.dtype
                 ),
             ));

@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "kind": "modern-cpu-local-verification",
+  "outcome": "incomplete",
+  "production_ready": false,
+  "target": "aarch64-apple-darwin",
+  "completed_suites": {
+    "qwen35-gguf-f16-image": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 140,
+      "values": 14194688,
+      "http_scope": "preserved authenticated loopback TCP evidence; no new image request"
+    },
+    "qwen35-gguf-q4_k_m-image": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 140,
+      "values": 14194688,
+      "http_scope": "preserved authenticated loopback TCP evidence; no new image request"
+    },
+    "qwen35-sharded-image": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 140,
+      "values": 14194688,
+      "http_scope": "preserved authenticated loopback TCP evidence; no new image request"
+    },
+    "qwen35-image": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 140,
+      "values": 14194688,
+      "http_scope": "preserved authenticated loopback TCP evidence; no new image request"
+    },
+    "qwen35-gguf-f16-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 112,
+      "values": 4071424,
+      "http_scope": "loopback TCP, authenticated, extracted candidate"
+    },
+    "qwen35-gguf-q8_0-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-qwen35-gguf-q8_0-text-v3.json",
+        "sha256": "8d2eec2e364cfe36caffe4c84fbaa7f9b198b65d7c8072a7b8f932bf4901d72c",
+        "bytes": 97862
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 112,
+      "values": 4071424,
+      "http_scope": "loopback TCP, authenticated, extracted candidate"
+    },
+    "qwen35-gguf-q4_0-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-qwen35-gguf-q4_0-text-v3.json",
+        "sha256": "cf1391a381c006b66d82cf314050ab6fe63cbb23dcb2abebc5bc9f8f4b6702d6",
+        "bytes": 97852
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 112,
+      "values": 4071424,
+      "http_scope": "loopback TCP, authenticated, extracted candidate"
+    }
+  },
+  "pending_suites": [
+    "embedding-f16",
+    "embedding-q8",
+    "gguf-text",
+    "qwen35-gguf-q4_k_m-text",
+    "qwen35-gguf-q6_k_m-text",
+    "qwen35-sharded-text",
+    "qwen35-text"
+  ],
+  "summary": {
+    "completed_suites": 7,
+    "required_suites": 14,
+    "completed_full_array_comparisons": 896,
+    "completed_full_array_values": 68993024
+  },
+  "historical_native_checks": {
+    "path": "fixtures/qualification/cpu-modern-native-v2.json",
+    "sha256": "49044223997ee1d00586596ac47c2e4aee329629aad54dd5a89e0acc5d2f0acd",
+    "bytes": 51070
+  },
+  "historical_package": {
+    "path": "fixtures/qualification/cpu-modern-package-v2.json",
+    "sha256": "85a08a8a01142720076180297982102864cfda5b3d337596a1074c61b95814c6",
+    "bytes": 67122
+  },
+  "runtime_and_frozen_inputs_unchanged_since_historical_native_check": true,
+  "changed_runtime_or_frozen_inputs": [],
+  "current_harness_checks": {
+    "path": "fixtures/qualification/cpu-modern-host-guard-checks-v1.json",
+    "sha256": "678dd2c4e339c256d9efa4bf21d1d6127edc39fe682a736c2b78fe3a6febde3c",
+    "bytes": 49884
+  },
+  "interruption": {
+    "path": "fixtures/qualification/cpu-modern-host-interruption-v1.json",
+    "sha256": "f96c1403eba9438e292f5a0a3a4f7bf447e78ac438fa002b14d70b8aab6078a7",
+    "bytes": 3399
+  },
+  "limitations": [
+    "Seven passing suites were executed/revalidated under the original snapshots; they do not qualify the revised host guard or current complete source.",
+    "The live host preflight could not execute because automatic approval review was unavailable; no model workload was restarted after the reboot.",
+    "Current source-bound native checks/package and remaining model suites are pending.",
+    "No publisher-framework, broad semantic image, complete language/context, Linux/Windows, GPU/Metal or production qualification is implied."
+  ]
+}

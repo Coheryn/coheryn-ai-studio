@@ -629,7 +629,10 @@ pub async fn plan(cli: &Cli, args: &PlanArgs, cancel: &Cancellation) -> Result<(
                 cancel,
             )
             .await?;
-        if info["descriptor"]["text_adapter"]["architecture"] == "qwen3_5" {
+        if matches!(
+            info["descriptor"]["text_adapter"]["architecture"].as_str(),
+            Some("qwen3_5" | "qwen35")
+        ) {
             "qwen35-still-v1"
         } else {
             "qwen2vl-still-v1"

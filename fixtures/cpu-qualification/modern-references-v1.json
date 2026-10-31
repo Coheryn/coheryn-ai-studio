@@ -1,0 +1,4106 @@
+{
+  "schema_version": 1,
+  "purpose": "Immutable combined historical and modern independently captured data; no native expected-value generation.",
+  "gguf_trace_origin": "fixtures/qualification/g4-quantization-quality.json baseline_raw_trace_sha256",
+  "manifests": {
+    "fixtures/models.json": "03795e813d540da6a37f26603fb4c0d9f66acbf2876d18d2f142a0905a468967",
+    "fixtures/golden/qwen2.5-0.5b-instruct-fp16.json": "674e079a3272716a8e0660ff99e47f2d0535266ea2a39ecea8e433479ed78ed7",
+    "fixtures/prompts.json": "dc6a0cb5c81ca8c2c737ee2220d3bcc04b5b7bd566dc9a11b2cbd44299ad8d95",
+    "fixtures/qwen35/model.json": "63d21bda846639d1967fdb3919c362839dc497961b663759960e3cd5227442b3",
+    "fixtures/qwen35/reference-v1.json": "cfc74509be771dbe26a4f1139dbdd550d7f35a74d920e8552187c4f198103ba6",
+    "fixtures/qwen35/vision/reference-v1.json": "6cc3f329d36cd7bc8c87d560420275163b9a389a9dd24e526041742bb65042fc",
+    "fixtures/qwen35/vision/contract-v1.json": "a242855e3715c17155a81be5f401ae58c53a8c8e78b551033ee67a00cde45e23",
+    "fixtures/embedding/reference-contract.json": "5f98e54cd47a5db8821f6ea6222850c3e5c684a93c7f46ac4b9e8d6243d7ea62",
+    "fixtures/embedding/models.json": "199448ca98638b2f1411b7367d4b19c225df1fb27d776f4f218acb5ec4c1d44a",
+    "fixtures/embedding/nomic-embed-text-v1.5.f16.reference.json": "ec06e3f0cd0fde59309e4f368677ac2143318e117d168721d187343df8c07c28",
+    "fixtures/embedding/nomic-embed-text-v1.5.Q8_0.reference.json": "d97dd9ff42f10a6b9145966aeeb4df3529eb81393716ef9ea00322d93c64cc8b",
+    "fixtures/qwen35/gguf/models-v1.json": "979db39cc4ae70d03c123f1b72a1fedfebb6621e4bf4d0bffaa338ac9cae4254",
+    "fixtures/qwen35/sharded-layout-v1.json": "c5e5135e04144b5709cb32c07f7933a56d76657dc08ceff97cf1508688830a7c",
+    "fixtures/quantized/q5_k-v1.json": "e0b31968d02bbb65b6199de96765ae2f1e606d6d96ed77d31b1930f4f65f3e07",
+    "fixtures/qwen35/gguf/f16-text.reference-v1.json": "82bd39013aff14fc72e8ad68a743f8533f905f5c19367af371491ee695407d1f",
+    "fixtures/qwen35/gguf/q8_0-text.reference-v1.json": "0b3ccd268eb0e7c6252e295e0310fc6cac203dd99057b79e8ae7f578e67014fd",
+    "fixtures/qwen35/gguf/q4_0-text.reference-v1.json": "c7df9bb80305a1079d925ebc99a3a441afec331dab9041b0139e86832c014996",
+    "fixtures/qwen35/gguf/q4_k_m-text.reference-v1.json": "d0004dcbc3dff7bc1119cad7e536f8802aa4f866d44d4ef9c3de1d4de4fcadd2",
+    "fixtures/qwen35/gguf/q6_k_m-text.reference-v1.json": "b79016b07058bcc85ee2c2bd00cf22a9d51f4418f8afcd70d6faaa4e2a62d97c",
+    "fixtures/qwen35/gguf/f16-image.reference-v1.json": "a80b0a7e7e47ceb511ee37e1aa4cf2cbf679694030920bbf4147d05f14195b03",
+    "fixtures/qwen35/gguf/q4_k_m-image.reference-v1.json": "788657ddb66505113b046973dacf118e66316f74807f189be82737f528f9b325",
+    "fixtures/qwen35/gguf/quantization-quality-v1.json": "85bee39521744199df3448805efd660717ecf8e7109d9bc0f885eee9fcbadeeb"
+  },
+  "files": [
+    {
+      "path": "references/gguf/reference-trace.jsonl",
+      "source": ".cache/oracle/reference-trace.jsonl",
+      "bytes": 2064719,
+      "sha256": "2f3497984991302da2e68347aa758a297b47bb944f15a9eb033d6293b9e4541d"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.0.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "3d8eacb96192c4d858273f63c41020d13550bafd2fe5e3052e5b812ad1448f4a"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.1.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "d24cd6580e65a5c7a94f3de960bc0798f5eb7fdd617f88b3770bd5fa0b7456fa"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.2.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "4e8012a6c7ff65f6965309ce125776eb2eff82c29aafeb7e9e174a9d5dfe40e6"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.3.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "1668207ab2423a3db36b0e1b6db87ec848213a821342fb4d34056f070ecdc8d0"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.4.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "d381072235503659815d2206c80cb6fa343aa12a753fabab867592578f84da30"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.5.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "c58571e9551629af977f86d18fded65e59869d089c9ed0c433a82e869959de0c"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.6.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "d4a2fe67a4db4a544e47bfaa33ea17ed1ce32a62c8d26e99b6bd04a771c79c07"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.7.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "680a9b4751c424c634a7290b4d753a3bf859bc1e7fde349c8454bcb136cbbe37"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.8.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "08020c629cbb31353936286e5d91fd7c48888aa5bee55eed224a2ce9d00c5aa2"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.9.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "d30de1ee15909d93d6fde155527878e8ba212d9206f3f6b78d7bb0bf48619810"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.10.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "520e4becc247e800c4e4dc96965edd02196e1de6eada67d07610a899aed5b798"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.11.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "100f2a6f5559b34c760ff9e2e35d2026118e84888f0dfb670a897b088ee125ed"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.12.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "71542049cdb22be1e82d77d801ac0017a294866cc74907900b2272b3a34d3f41"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.13.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "c686e998b08d15046a0d93b8701639984c01a3ea71336636d841c3f5a1a1ab10"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.14.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "c61b3cbc0dc8da63fd5c72eb810a1f27e749dcc309485cabbe358a447c8324a2"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.15.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "9eceabeb559a600cb63deb7c0141bbd5f3d8036a2995da547f07c65e5f17c1a6"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.16.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "f8920dd9f06261abf1e2b805fc607f6ef1e6c6642836150c1656c2632652e8f6"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.17.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "aaa8ecd575bd543f1a99ba3a336d4f4f4cc2e690a773a3074d556cec43e345cb"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.18.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "ef2f134fae5aaebdb48cf72398705d7cc4a336ee1430c69e504fa21606ee311e"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.19.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "d6ca1b74b3ee9b70b6b7fa459f761f770cdb472267dce7fd98a5f79cadac5beb"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.20.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "61cbadf3c86c217bd7515cb0c57cf824550c90191baddfc1bfbb10aeeb19141d"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.21.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "8ce9b1c164f84ca09f3e473d8dea3da8dbea2696c373ef02641bb57a3cc8e2a3"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.22.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "83c0592ae40ee9bae81c9097157d1326bd50dddb31bb331188e39115c5e491dc"
+    },
+    {
+      "path": "references/qwen35-text/english-prompt-layer.23.f32",
+      "source": ".cache/q35-reference/english-prompt-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "4f3fbbd2f26c63a02c942770f96af6aa0531a5a241f6318dc6e87090336d358c"
+    },
+    {
+      "path": "references/qwen35-text/english-logits-0.f32",
+      "source": ".cache/q35-reference/english-logits-0.f32",
+      "bytes": 993280,
+      "sha256": "3edf9a5db1f7d3a97b51731b925503f841c6ec5db8728cb1b43eca066507e725"
+    },
+    {
+      "path": "references/qwen35-text/english-logits-1.f32",
+      "source": ".cache/q35-reference/english-logits-1.f32",
+      "bytes": 993280,
+      "sha256": "189ff0446626c17e23369cbdde80f8831af6c90f876aa6b67cc118fc6759b889"
+    },
+    {
+      "path": "references/qwen35-text/english-logits-2.f32",
+      "source": ".cache/q35-reference/english-logits-2.f32",
+      "bytes": 993280,
+      "sha256": "b660179e71dab7780980e65bd20269586bc5299060544cba30e6dcd779c95162"
+    },
+    {
+      "path": "references/qwen35-text/english-logits-3.f32",
+      "source": ".cache/q35-reference/english-logits-3.f32",
+      "bytes": 993280,
+      "sha256": "7f5539dff452efc7e956ae7d1057dca2edf70e540a449aea0d8c05dd162c2813"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.0.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "e3b4874f4420121594d4c82ac4d81630b78b2182a8010ba02f61a9f194be2260"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.1.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "40ac933d6262da478404704c75dba4a5b9f6aa383372d924c68e7a0a7f4d9665"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.2.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "f3f4210bd385b9babc8053f2b7665e8d6aef366ea75a2e8ca2cb9869a8093608"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.3.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "291c4ae1737aee67de068d3680b62c96fcefc483b92b163aadbd9cd8b2d57e8d"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.4.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "6015d2c0564fcce4e1f1fa2b7d8e26764c328087111485d949c122e4684f7555"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.5.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "491aab62ae06adebfebd7ca18e6a76d8d4ab850aa233cf83c98952a81e1d94ff"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.6.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "3ec7ac1cf48f1879273456f89ef4593ece4288460d06ad318fb5a01db76417ea"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.7.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "088230ff90e480c80995d27160f7a460ad2779155712072822c3e707332d289a"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.8.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "1105b7c077bd7e08d4e6b1d951e430d9916be1f0aae231c45ed1713bae3ab953"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.9.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "1a669fe7904f79434e28b25d28b484910910bd8acf797893ce9e019e734c70f0"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.10.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "1e3e41e81ef42acd8be205f32d392936b8e957a70e33e68390752b7ac7e0f306"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.11.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "412fb363348b8d75ec85e0b102f001727283cc6d2538f161b6fd6b4ab876ff75"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.12.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "4d14091ea6d31a0cb4c8550a7563e0c27d02b625cad2954c622cc986a566c599"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.13.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "782c7eeb48e0761e7180c405ae8374848df385ab416c3c64c0a8c5ef682986a9"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.14.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "55206b6d024129423d581d607230c3394ce2f9d98f603fab82b560b4c0794ae1"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.15.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "8b2b6cc1497e74bb92b9243511fa6ffb219f817dac6a52b037bab019330dfef0"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.16.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "28c8141e31f652d73d18117d68343b2e1415a8aaf596ccfc4317f3a166c22920"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.17.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "a483e5c739f6359f0a5d0080901ed2448fd2c91a39dd6a65a56b938fad880042"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.18.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "9d144fecb2b0e9481547daa16d3af555b1fcc157dd5b3c00a7bf81ea8327f632"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.19.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "6160ac7f7de1617f71a2e0f80012a7f1bc149faba7e2d869684479a192c1e938"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.20.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "555182e85fd7d62f83e3d1542a02e88c7d4ae80cbf55cec243bcc327598bb66b"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.21.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "b6553e09c3a9b420459a7c444936511e89d4d3d2e4dfd1307630fc07347973f1"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.22.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "274673fc620858e12262eac5849c83e9568aa0a47f565f6142f09d435c089550"
+    },
+    {
+      "path": "references/qwen35-text/unicode-prompt-layer.23.f32",
+      "source": ".cache/q35-reference/unicode-prompt-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "d3b845a43f6e37f361b60b8487dd3780cd31574775f3fe65e79b1e4ee14ad166"
+    },
+    {
+      "path": "references/qwen35-text/unicode-logits-0.f32",
+      "source": ".cache/q35-reference/unicode-logits-0.f32",
+      "bytes": 993280,
+      "sha256": "b3eccad7847b1aefd8cbd4ae256aaba29efd07f1c60ff88508f5cb8326dd0c34"
+    },
+    {
+      "path": "references/qwen35-text/unicode-logits-1.f32",
+      "source": ".cache/q35-reference/unicode-logits-1.f32",
+      "bytes": 993280,
+      "sha256": "1915195e3b77d846993747af5af04e3fdaeaa131968de9ac373783408acbf8df"
+    },
+    {
+      "path": "references/qwen35-text/unicode-logits-2.f32",
+      "source": ".cache/q35-reference/unicode-logits-2.f32",
+      "bytes": 993280,
+      "sha256": "c5aa6fd5a4bd36f1b9e36afe2b1452016856fc572d80f0c279e5c2b273835bd0"
+    },
+    {
+      "path": "references/qwen35-text/unicode-logits-3.f32",
+      "source": ".cache/q35-reference/unicode-logits-3.f32",
+      "bytes": 993280,
+      "sha256": "66b770c44d149d5c66d1e781d3061512222ffc9955ca39215088162f801c6c88"
+    },
+    {
+      "path": "references/qwen35-image/red-patches.f32",
+      "source": ".cache/q35-vision-reference/red-patches.f32",
+      "bytes": 1572864,
+      "sha256": "e6ce79140a5d45a5fda806e2e1d555f1db4d3b66dabb828325079455fa5281a7"
+    },
+    {
+      "path": "references/qwen35-image/red-embedding.f32",
+      "source": ".cache/q35-vision-reference/red-embedding.f32",
+      "bytes": 786432,
+      "sha256": "affc1b3d9b3b76b01b805b685ffd87263b178a9b5aeead64761099df16d41646"
+    },
+    {
+      "path": "references/qwen35-image/red-layer.0.f32",
+      "source": ".cache/q35-vision-reference/red-layer.0.f32",
+      "bytes": 786432,
+      "sha256": "2e2428bced94956642b6547c599efa813168ce537a2e2f3542b79e5fcfed405c"
+    },
+    {
+      "path": "references/qwen35-image/red-layer.1.f32",
+      "source": ".cache/q35-vision-reference/red-layer.1.f32",
+      "bytes": 786432,
+      "sha256": "f89013d528d93c6850724d7fd04670e003892a89a4f66b813fdae329000f42b5"
+    },
+    {
+      "path": "references/qwen35-image/red-layer.2.f32",
+      "source": ".cache/q35-vision-reference/red-layer.2.f32",
+      "bytes": 786432,
+      "sha256": "3e4246c3d2bb12d11fac3895ffe1e2706dd802721709775ba646e33404a74f5d"
+    },
+    {
+      "path": "references/qwen35-image/red-layer.3.f32",
+      "source": ".cache/q35-vision-reference/red-layer.3.f32",
+      "bytes": 786432,
+      "sha256": "c149a50d580c18a7cb570fd8a4ce60db66e81baa676e301adbda36edbf3501b3"
+    },
+    {
+      "path": "references/qwen35-image/red-layer.4.f32",
+      "source": ".cache/q35-vision-reference/red-layer.4.f32",
+      "bytes": 786432,
+      "sha256": "7be74b03ee5a166f546014731f72d1d9f7e508a2fa2dae827148bceb4f08e5ca"
+    },
+    {
+      "path": "references/qwen35-image/red-layer.5.f32",
+      "source": ".cache/q35-vision-reference/red-layer.5.f32",
+      "bytes": 786432,
+      "sha256": "7c20ff331fbbf6705790ab6a6100dcf57f9b66a37c8c17f534cc5c64188f189a"
+    },
+    {
+      "path": "references/qwen35-image/red-layer.6.f32",
+      "source": ".cache/q35-vision-reference/red-layer.6.f32",
+      "bytes": 786432,
+      "sha256": "bca00490defb21a4406521a0db4a71a745ae713dd11cdce557b0dc5159ae7201"
+    },
+    {
+      "path": "references/qwen35-image/red-layer.7.f32",
+      "source": ".cache/q35-vision-reference/red-layer.7.f32",
+      "bytes": 786432,
+      "sha256": "c03d7498e150ba519fb0fa2a55d9f12f166383e4182cc61b9cd00b5858e85c49"
+    },
+    {
+      "path": "references/qwen35-image/red-layer.8.f32",
+      "source": ".cache/q35-vision-reference/red-layer.8.f32",
+      "bytes": 786432,
+      "sha256": "0bd32e9795903c3b24251f5c0453f5406a858b8001d4135861a241987f7ee4c9"
+    },
+    {
+      "path": "references/qwen35-image/red-layer.9.f32",
+      "source": ".cache/q35-vision-reference/red-layer.9.f32",
+      "bytes": 786432,
+      "sha256": "0b8fac5b71aea5c7c6f70e57615eb164211a1354236f67622019737d701f50be"
+    },
+    {
+      "path": "references/qwen35-image/red-layer.10.f32",
+      "source": ".cache/q35-vision-reference/red-layer.10.f32",
+      "bytes": 786432,
+      "sha256": "8efd167f7649395117b360dbe3438cb49153ae4c58d25f6d802abca73b194f34"
+    },
+    {
+      "path": "references/qwen35-image/red-layer.11.f32",
+      "source": ".cache/q35-vision-reference/red-layer.11.f32",
+      "bytes": 786432,
+      "sha256": "6dc6d3dfcfd2afa87d0cfe9fac4783df88a7cea024caf7c739371707dc6fe8a3"
+    },
+    {
+      "path": "references/qwen35-image/red-merged.f32",
+      "source": ".cache/q35-vision-reference/red-merged.f32",
+      "bytes": 262144,
+      "sha256": "0c20fd2a38883630f7c381585a38628ee332a83192c57cb6c509147af060e9db"
+    },
+    {
+      "path": "references/qwen35-image/blue-patches.f32",
+      "source": ".cache/q35-vision-reference/blue-patches.f32",
+      "bytes": 1769472,
+      "sha256": "5ca47426c8c6ae336d136bd922111163c698e7d6a7c56effff269f18a262b1dd"
+    },
+    {
+      "path": "references/qwen35-image/blue-embedding.f32",
+      "source": ".cache/q35-vision-reference/blue-embedding.f32",
+      "bytes": 884736,
+      "sha256": "1132b1078e468ea4b6cdeedfb6896f0ed267a5ddfae384ec317d7e19d449fd8d"
+    },
+    {
+      "path": "references/qwen35-image/blue-layer.0.f32",
+      "source": ".cache/q35-vision-reference/blue-layer.0.f32",
+      "bytes": 884736,
+      "sha256": "ac3ec8f735c1e5acfeda2cdbddb56d6d27b72adc279509363e1afe4e6163dee9"
+    },
+    {
+      "path": "references/qwen35-image/blue-layer.1.f32",
+      "source": ".cache/q35-vision-reference/blue-layer.1.f32",
+      "bytes": 884736,
+      "sha256": "2da99669c2e1c20ba00bd5ba478d07df9587c49c451219eb0aad3ea7d5161100"
+    },
+    {
+      "path": "references/qwen35-image/blue-layer.2.f32",
+      "source": ".cache/q35-vision-reference/blue-layer.2.f32",
+      "bytes": 884736,
+      "sha256": "3b901279eb24a5487c2f581f24a6724b4bb5fde2b6c084860b1ccab40f5f6d62"
+    },
+    {
+      "path": "references/qwen35-image/blue-layer.3.f32",
+      "source": ".cache/q35-vision-reference/blue-layer.3.f32",
+      "bytes": 884736,
+      "sha256": "2a5bd19169bd79e302c1517c88fda17ef65075ddc98191e2ab243ad4cb51805d"
+    },
+    {
+      "path": "references/qwen35-image/blue-layer.4.f32",
+      "source": ".cache/q35-vision-reference/blue-layer.4.f32",
+      "bytes": 884736,
+      "sha256": "e3a3ff6a59b985b80e3f3764e78a602f502a7c261eb6986ceae09b28676a0361"
+    },
+    {
+      "path": "references/qwen35-image/blue-layer.5.f32",
+      "source": ".cache/q35-vision-reference/blue-layer.5.f32",
+      "bytes": 884736,
+      "sha256": "0cdf5969505b3ecc54231302690cbca80e74ea61f2dae43ae0efe6586b46aea5"
+    },
+    {
+      "path": "references/qwen35-image/blue-layer.6.f32",
+      "source": ".cache/q35-vision-reference/blue-layer.6.f32",
+      "bytes": 884736,
+      "sha256": "26aa8d5f8af177f6ddd137292c6750fc5a83055af208085133acc5407db0ac88"
+    },
+    {
+      "path": "references/qwen35-image/blue-layer.7.f32",
+      "source": ".cache/q35-vision-reference/blue-layer.7.f32",
+      "bytes": 884736,
+      "sha256": "f6e8008d3cc31cecd2bd3159531d98da91e69403664093a32019dfe27687787d"
+    },
+    {
+      "path": "references/qwen35-image/blue-layer.8.f32",
+      "source": ".cache/q35-vision-reference/blue-layer.8.f32",
+      "bytes": 884736,
+      "sha256": "84b744ce1bc179d566dc9b74c93a93d88c6be3a8d0ebae8482790efd792e9d17"
+    },
+    {
+      "path": "references/qwen35-image/blue-layer.9.f32",
+      "source": ".cache/q35-vision-reference/blue-layer.9.f32",
+      "bytes": 884736,
+      "sha256": "dea0e05813465459ec9ac789b65f72d9af781be1a99c6bd22e6643c3becc7d6d"
+    },
+    {
+      "path": "references/qwen35-image/blue-layer.10.f32",
+      "source": ".cache/q35-vision-reference/blue-layer.10.f32",
+      "bytes": 884736,
+      "sha256": "092c9c831dfe41ec6cbb7a8a74dc32798bda2db4e3e1e9671930c2a740d5d6bd"
+    },
+    {
+      "path": "references/qwen35-image/blue-layer.11.f32",
+      "source": ".cache/q35-vision-reference/blue-layer.11.f32",
+      "bytes": 884736,
+      "sha256": "3aae185c77a43df55fe3b92de74b3aa1b04f01e235238e17b990cbb219b13531"
+    },
+    {
+      "path": "references/qwen35-image/blue-merged.f32",
+      "source": ".cache/q35-vision-reference/blue-merged.f32",
+      "bytes": 294912,
+      "sha256": "3dd11301fd78881ef177109bb50f83edff44306807426d6694ebfa877315fdd8"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.0.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.0.f32",
+      "bytes": 4096,
+      "sha256": "f76788848cf1dec28cac613059385af5ab4ecc9f41988a942ea4f9e383645e15"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.1.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.1.f32",
+      "bytes": 4096,
+      "sha256": "a4c7386027caf9ec2bdf0395dac5f74c93b250ea7fd7e6ba4d65825003528476"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.2.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.2.f32",
+      "bytes": 4096,
+      "sha256": "342aac46370d7139c0bfe62b92717fd2df183db3f515fa2bdff5a614d41ba896"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.3.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.3.f32",
+      "bytes": 4096,
+      "sha256": "4ce05da92d52bbd8dbfc71d79c01b677e081dc5d119a35016a94d2e2d7f5cc4c"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.4.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.4.f32",
+      "bytes": 4096,
+      "sha256": "a9ab42d0ab894f7f437998a0a55620e659d149c12c4c5687ec715c93b76cbc07"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.5.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.5.f32",
+      "bytes": 4096,
+      "sha256": "359e3598040f078dc85e4311cd4b11f7394e48200526f3e2f37fc27f2807a747"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.6.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.6.f32",
+      "bytes": 4096,
+      "sha256": "6166f32cdb3dc8d48a86a74f7c92f8c4c5a5ed2db5644d47ba2adde31fcb32ab"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.7.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.7.f32",
+      "bytes": 4096,
+      "sha256": "86aca07d486c7bebb170c314735f37cf117428e73d5aa06e2d24d8d0854e463a"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.8.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.8.f32",
+      "bytes": 4096,
+      "sha256": "f41448f66786e3754d3279213bf3cb0dda3d7167497f96d68a0e3579654c34be"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.9.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.9.f32",
+      "bytes": 4096,
+      "sha256": "94beaff08a4baa090a0a54ca0b4bfd01f24a09ec6acebe902dde15918297ca28"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.10.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.10.f32",
+      "bytes": 4096,
+      "sha256": "1845a8c4443f8441fea5cc7f70c29d97231315275e836af55f29bfc7e48c732c"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.11.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.11.f32",
+      "bytes": 4096,
+      "sha256": "31c3957b6599978a69310e07113e160ca05b0fda2036d4ec80f415af993e6ca4"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.12.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.12.f32",
+      "bytes": 4096,
+      "sha256": "735ff6adcf31eeaa0843e454b4cab5194bbacd0479346b21abcab9be66a8b719"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.13.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.13.f32",
+      "bytes": 4096,
+      "sha256": "ffe117bb7786b48fb2bbcbc13bdce9381cb540bfd18ae5045dace8b6724b970b"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.14.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.14.f32",
+      "bytes": 4096,
+      "sha256": "83317435000d97968705f4f6e6685dc4bd305504c7ca92c9ffee55f0c2b0f6c6"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.15.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.15.f32",
+      "bytes": 4096,
+      "sha256": "32277c96ad60caabd2235cd5791c5d2221f84d59b050aaec4808e6412a342482"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.16.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.16.f32",
+      "bytes": 4096,
+      "sha256": "cf167b9a4dded23d8a503f781592ad8c3ab7b28abb660e5ae10c45354b35993c"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.17.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.17.f32",
+      "bytes": 4096,
+      "sha256": "fb39cffa3e1f24a03921b6d3a24a62b5d4f712ad68ac46369a02c82db8bb49ab"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.18.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.18.f32",
+      "bytes": 4096,
+      "sha256": "0cc8977ed5aa2152b11289e19b9a025112a8910a2c0f55aa60fa319ce0f320c5"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.19.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.19.f32",
+      "bytes": 4096,
+      "sha256": "32d886d3adb64792ad1335deb0a9235ae8068acc816723064229d6d2ffc6a435"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.20.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.20.f32",
+      "bytes": 4096,
+      "sha256": "23ac4f8ea894148eb3b37863b4d83399f86ac08ef1e518ebf3890c4d7e6d5e49"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.21.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.21.f32",
+      "bytes": 4096,
+      "sha256": "3caaa6a4fe0a0a458e1db77fc7937ce4c81faef1286fb98c593faf9f01065190"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.22.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.22.f32",
+      "bytes": 4096,
+      "sha256": "0586970087d3eec8924056b830d79045a68c449895fc1d3ae09e26b5edc2e010"
+    },
+    {
+      "path": "references/qwen35-image/red-question-language.23.f32",
+      "source": ".cache/q35-vision-reference/red-question-language.23.f32",
+      "bytes": 4096,
+      "sha256": "a3862b2139b25836093b64fd567898114c1eccc52aa85cce680fb0d6b15aeace"
+    },
+    {
+      "path": "references/qwen35-image/red-question-logits.0.f32",
+      "source": ".cache/q35-vision-reference/red-question-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "ece1f0c389b5fac951b7f5825c3dba1a66f47ea3328db51d8977a5dafd084c28"
+    },
+    {
+      "path": "references/qwen35-image/red-question-logits.1.f32",
+      "source": ".cache/q35-vision-reference/red-question-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "61a506daa1f9941879b2f6db72100c2864485259014aa05947d585bc3d618570"
+    },
+    {
+      "path": "references/qwen35-image/red-question-logits.2.f32",
+      "source": ".cache/q35-vision-reference/red-question-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "a423d89633f5451a6f76eed9258fd1b5d5543a286136a3dd3c613c4df3be98b1"
+    },
+    {
+      "path": "references/qwen35-image/red-question-logits.3.f32",
+      "source": ".cache/q35-vision-reference/red-question-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "71f5bea1658fa648002f4f4c12b44909d0283b2eab56045914e48b86f2909aef"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.0.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.0.f32",
+      "bytes": 4096,
+      "sha256": "757b004cb06e014664763dbfdf04440382210aca6eb6877b562e3e8943f934a5"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.1.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.1.f32",
+      "bytes": 4096,
+      "sha256": "e0955abaf3442084d05621aa279e55fa7343fa69be5089b71b6acb052e4f2a42"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.2.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.2.f32",
+      "bytes": 4096,
+      "sha256": "d91134583795d1c8b0dc21e66cc132369a21631a2b650a1c4c03e7860b502449"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.3.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.3.f32",
+      "bytes": 4096,
+      "sha256": "d676f843b3f338f37c588bc911ca5d1572165cb95a36a42ab5094576c330b351"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.4.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.4.f32",
+      "bytes": 4096,
+      "sha256": "3b9a23a76a4326ba2286eb01e02c1757d074f01276fb0db8c61fca534602814e"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.5.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.5.f32",
+      "bytes": 4096,
+      "sha256": "52b23b572df48e6c9523afd1e316181e1afa52c5cfe92bd4da238adb64a55570"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.6.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.6.f32",
+      "bytes": 4096,
+      "sha256": "4880d6e862928a8ab99d6964f8d862dcdc9c083f9e7ea3a3d1711a9e3853c772"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.7.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.7.f32",
+      "bytes": 4096,
+      "sha256": "b7d6885bdd7506cb6a889105d3599b08bf613b73f0314137d9b089f9a4864295"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.8.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.8.f32",
+      "bytes": 4096,
+      "sha256": "f178860c20abc6cb4a332cb0c04192ce6f93c2b527da6d702dc463e27226b0f6"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.9.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.9.f32",
+      "bytes": 4096,
+      "sha256": "948a0184340ca3c0bec61e595dc5947ac55e1a0d8464f08f73cbf9dfd2ead4c0"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.10.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.10.f32",
+      "bytes": 4096,
+      "sha256": "4c1b19a36f90106e365bb7c0e0650c044253c92e1906b99b55b590ece70f0f28"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.11.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.11.f32",
+      "bytes": 4096,
+      "sha256": "61b0082a0bb9017c9f5371b9a0714283889268ade237d4adb7b5c84090d013e5"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.12.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.12.f32",
+      "bytes": 4096,
+      "sha256": "54e8de9b0ec394a955434db580279faa13477f16e26b27f6d44412e13b728444"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.13.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.13.f32",
+      "bytes": 4096,
+      "sha256": "3e65e3c732999aadef01d797cc2f1704836c5a002aacb891e7f48d358d0dc8eb"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.14.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.14.f32",
+      "bytes": 4096,
+      "sha256": "c1135336a44bfdabc3f30a1e84a47b53b91e021df937632aad27d4048201d75c"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.15.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.15.f32",
+      "bytes": 4096,
+      "sha256": "842ba5cb8df22bd5ffd12b0741cc536de95f75177cb96c88210ca09e59f05386"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.16.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.16.f32",
+      "bytes": 4096,
+      "sha256": "10be8537abdcf9f19860dbe9c9e941435f3612ad949d226fe71e0854634bfd4b"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.17.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.17.f32",
+      "bytes": 4096,
+      "sha256": "9d17c090fdd162f4665a48d716b5d6f8d68d007662d6d880c933c1fe26e70144"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.18.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.18.f32",
+      "bytes": 4096,
+      "sha256": "01b24bd4aceadec5022c64ca5a71e6e7db2354e191e4d3bd3a9215a069ce7d7c"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.19.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.19.f32",
+      "bytes": 4096,
+      "sha256": "49e463e29b6e3f4e1bf7018508a8efa9f1787f3cf97e86e5869fdf7503a80c7a"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.20.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.20.f32",
+      "bytes": 4096,
+      "sha256": "4e58f182da7ce88544368ba19c68853ebe8d683e0c7caf1a45fc65322215471c"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.21.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.21.f32",
+      "bytes": 4096,
+      "sha256": "eb774bcf12f69460323dd3793590aacde86cef06d783e0837014909f4b62e833"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.22.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.22.f32",
+      "bytes": 4096,
+      "sha256": "0fe575d16d2c7f85f9fac30f659e7deb57e9277dd3dbbd49e198a94d27024e85"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-language.23.f32",
+      "source": ".cache/q35-vision-reference/blue-question-language.23.f32",
+      "bytes": 4096,
+      "sha256": "73e9116caed7841f99e1744ff34ade6eb7aff802b09c81f833db043e8ff818a2"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-logits.0.f32",
+      "source": ".cache/q35-vision-reference/blue-question-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "ff0d33998bd2ab8a267a8e0f7c179b47524015b237eea92ab65ee4b91be8cb19"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-logits.1.f32",
+      "source": ".cache/q35-vision-reference/blue-question-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "b59275a73f7801a99eab294eef25f22ba9127552e5d96206a4bbf25445cd9633"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-logits.2.f32",
+      "source": ".cache/q35-vision-reference/blue-question-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "4f044ff9247607760d4b6dbfb402e074a984e170a877ed8c1c936e74204b01b2"
+    },
+    {
+      "path": "references/qwen35-image/blue-question-logits.3.f32",
+      "source": ".cache/q35-vision-reference/blue-question-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "f2ef5a6e4bb00e5cab60662ff8b7432c20391ac26d0094f36919fa3e35446b06"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.0.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.0.f32",
+      "bytes": 4096,
+      "sha256": "f5daf96d8f7e36712058ca74eb0a7de3666d0a61e6d2f411034f86a983b55878"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.1.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.1.f32",
+      "bytes": 4096,
+      "sha256": "cb48f4f96f9ce84a44a1ea221973d00afab5c1392d50e311e09161921e6f5adb"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.2.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.2.f32",
+      "bytes": 4096,
+      "sha256": "0686dc61a801178b2e17c7d39283ae3a2ed664e1a8ce01fc6a906c02aa881117"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.3.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.3.f32",
+      "bytes": 4096,
+      "sha256": "06c0c2336f946d764910e3456848152b141258de67eccda2808169ca4841d8b8"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.4.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.4.f32",
+      "bytes": 4096,
+      "sha256": "ec35ec21a9bbe37d77da11c281e675fc2991b7c91b01679de2db16aa99f8b4bc"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.5.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.5.f32",
+      "bytes": 4096,
+      "sha256": "03770dbc29bbf8a346635b3bc0d6247b2edb976ab9160d823c4d5ac6c95c71a7"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.6.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.6.f32",
+      "bytes": 4096,
+      "sha256": "22632e3ae00429bffc9f8607f4b960968a6e5f871ee429c25878adf9750d8c50"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.7.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.7.f32",
+      "bytes": 4096,
+      "sha256": "1e6c602032415a15afae9596a4a584364b62363d4c2bc6259f4463d2dc2c460f"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.8.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.8.f32",
+      "bytes": 4096,
+      "sha256": "eb9d863900853502861b878539668b2386203ff403e9a101dffee8c674edf5ae"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.9.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.9.f32",
+      "bytes": 4096,
+      "sha256": "4e1f8fe58611ea9b354496d383f89d9c45a83fa647354c0680f6b7157b90fc63"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.10.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.10.f32",
+      "bytes": 4096,
+      "sha256": "655d8c92484b8e71d0d07854ef4bd27fe2df340b101053a6090d29cff7fae302"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.11.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.11.f32",
+      "bytes": 4096,
+      "sha256": "352da376c3a57f7e034e658ea9663f024773675ce064386d8c485df54fe31811"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.12.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.12.f32",
+      "bytes": 4096,
+      "sha256": "3ca125e24753d14d440f605d26abc606f2422ac4a073be8e0a51e29ee27123a1"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.13.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.13.f32",
+      "bytes": 4096,
+      "sha256": "0753ea1e4ed4cf3d17ae4b6240cb8a72d85aff915a5d6e3294daf83fbd9fe9bd"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.14.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.14.f32",
+      "bytes": 4096,
+      "sha256": "54c8ff20099ddfcf4fb1f4ac464f42aa47c4b62309f9e97bd9c4ee6ee0c14269"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.15.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.15.f32",
+      "bytes": 4096,
+      "sha256": "e342702f8a76d5cb77610a875e3dc9963e391d303de9a74af5e428910eda29a0"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.16.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.16.f32",
+      "bytes": 4096,
+      "sha256": "0da39ddd3a865dc35224926d923b573ddf2f4f1a011222c2e63942d0d43f73c1"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.17.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.17.f32",
+      "bytes": 4096,
+      "sha256": "4b3e3db2884a0a3ae05c71a1630f16398aab4cb1c241718c1b233374b567987f"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.18.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.18.f32",
+      "bytes": 4096,
+      "sha256": "b5706fd0bfec26f7fdf7b1947e7d3d9eeebeae57845c06ddfe73d0431a443864"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.19.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.19.f32",
+      "bytes": 4096,
+      "sha256": "d6fbfeb96069d63f91010d9e7fcad415de373b901b74ffcddb6c1a9fd56de3c4"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.20.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.20.f32",
+      "bytes": 4096,
+      "sha256": "979a5c645b6b7fcdd498250b56136e8a1f8bbf99415079d51848a0537e350719"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.21.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.21.f32",
+      "bytes": 4096,
+      "sha256": "109ebeb2299644b512e1079ee17acbbbb83d157b43aaf6570966547f4bee1c37"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.22.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.22.f32",
+      "bytes": 4096,
+      "sha256": "2bf68ee9e4bf5cb3d66555ef933d3467e33abbfcbe9fd008c967b520c8fe7a70"
+    },
+    {
+      "path": "references/qwen35-image/two-order-language.23.f32",
+      "source": ".cache/q35-vision-reference/two-order-language.23.f32",
+      "bytes": 4096,
+      "sha256": "fc54e918d306b5c81f605e0082dec55fd0826132bb10a14fe548757ad3d3e89d"
+    },
+    {
+      "path": "references/qwen35-image/two-order-logits.0.f32",
+      "source": ".cache/q35-vision-reference/two-order-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "3139231ab4abe1217dd1e8c36b69624a8440854a1bac17bd34ff6649f52f0994"
+    },
+    {
+      "path": "references/qwen35-image/two-order-logits.1.f32",
+      "source": ".cache/q35-vision-reference/two-order-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "805ad0e09be32b1a754a00ec9c2c3a850aad4b42c5e6f1cd4c8b31f21ca3240a"
+    },
+    {
+      "path": "references/qwen35-image/two-order-logits.2.f32",
+      "source": ".cache/q35-vision-reference/two-order-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "00a6cb57894772bdba0a69e112ae80d3faafe059d04a6b89414c105f759c007f"
+    },
+    {
+      "path": "references/qwen35-image/two-order-logits.3.f32",
+      "source": ".cache/q35-vision-reference/two-order-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "52a116ccc1bd053ea8f88b2db7a0cea0dedcf5cb2ffb969a7021a5278c2e88ca"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "517072bd98b611b5d558159076cce0d77fa9f6884de3b841a4eb9c0b95d80c8b"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "ac3b5f71345bec2f6bb022776ecaee92a94922b921b85e90f1940d4cea765e00"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "8ef39ef5ffbc4097facf2e03620ba695605ccb168e7f1713f7ce8ffe7dfd2a46"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "5b4db61caaebcfd629ec804aaf7ac109d53af25ad46f82dd25fc4efd0ed7bfb1"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "217f9111f39ffc95a86007835af9e1d2c65610776eff2a04fcef43509f6b26d8"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "e305c91b632c9e40c8133ed266663018fe6dea28b55cd20213795d6299cabe8e"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "2131994a8baa7bb4ac185e40dd53d69a4de7f3e5234d618d26661bfa8edba866"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "562507a5ff31233a57f002a368621fdb6846e30b11e127137f08c8ef0cb737f0"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "93a8787516e24b536fd457dd8ed30102e77344dcefa1ebd3a29415a4637f23bb"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "0a10ac44a9c4b809293eab565bd6ee77f7c9ac0f4713e238840f488d3287001e"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "ea147a20f78a5e6c2227bafeab81c0ad3b82598ec3ca61194ef2300a5a22c77e"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "11f3bdbca203d34043f74d81a9ee5fa4e557d1b4b911b57d620ccc8e4823ce5f"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "3842b15ec97808a6e56d4700ce1ad7d003027fba5ce7ee9616fda62c1bb83c29"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "68d1884a7c85e0aa39d3b75b4d928ca602ad8074d164e52f160aaa22c06f6b3d"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "59ae3b73ae76b46816ab8bfc95537a142695701e683d99d5977c9884706f4b95"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "fdedc81071261e2489cf255d1fa0b669642dc4e97d020d93a7e2396b1ce2865e"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "13bc5beb5b6ab615a2ffb6604193691a96c715fe12407e91db928327d41e8f79"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "654a708e5e7dafbbb6b3f27a1fc898d2b0d604e6c894b0ec0d0e394a7094b01f"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "65232e5686e9fdb7ddfe0ffd38ac74b82cbbebcc82687ad887d1304c34a1d022"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "70eb4127f1977eeb6fe727fdf753bc8b8dffe6aae615510df358315965abed14"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "41b40ac3f042ff5f464b5a71ca36243cdf154419a299ce3bdeb2c84cfdfab0be"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "864cff96dc6cf683990d928d8877ff76666f64363227ee0142d9f378ac28ef3f"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "4e83a21aa4564d55a4121888f1f43e1368d0698e5c451c2dc0a508504a7687a1"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "1b7992e38a058cc4e446af4de79c249e79c5d577207e7d967acedfaa866ed849"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "5426236f1df9008bf5cd64fe3ff3a84f3714528e33749254f06ce829985ce1d2"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "a1dcb1c0c94b07c71c46e2d370d5c53cc2e1bc54988d3aee54cf5b86fbbb2786"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "5b61e7fb11dba619899a14befdc841c6157039c8c88ffc4f29e9bee9318de8f4"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/english-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/english-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "43c7b948d5073a7625d3f46bc5be5db4bca1122a77bb411ec59df4a023c0e971"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "3c343c4df885103acdb575b5a17b722820e4e1246e6cce92c6f09397b3730507"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "a6006a16a30eab15499139f00478eb9152d864a270f60ffdd99d71e45ac58371"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "32b2c9bd93a713d1c8eaed3a38152eeadd450146b39d552dd93e7fefa7803627"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "d3723b00c99c094ad430fcb8fb66b2a1d11233f77ffa709cea2ef1c86a5971cd"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "6d596def2ea9878bc4aa54f75c2ddd93f5163355b6f250e423c0a900eeaaf03b"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "72c590e8df2625bf09c2f45278f52923c2945e70c1d3a0c026197f41a79507a3"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "ef76b8e7c2a99a5bce163bc93776418e3d808e7714ab393e90df866e37cb0a02"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "f2bffd94c68e2872647a92dd523446ccea9e7f484f629a70d62c3df9092508de"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "7239cf33df092eab034be99d2de803737aa74edea471deb177988eb819cec860"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "2a3fedd4d25f46e6550358766bad13c281d1e4936061e8459a3a322dd8ef62b1"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "62147318d2c163c4e11ab30564a79f92f73b28c6664cbd53d5753b55e66a338b"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "d04dcfc9e2e1288cd7b43a1aa9bad2c6f549cabe0bb9e8b2c20b112c95627eb8"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "ee70310176fa9762f47ea72cd253b442adf30a077576194ec2d0cf9be04d4dab"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "7ea97c5eeb82406c32902354c0f539c973e0ce58ae93b088d7375b82449ab292"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "85b0718d49da05a258a0d569a42a6235f656be0acbaadc49e7de38e32e219c37"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "bd17c853c37549091b86f8ab34b8725f0244870b2d2f3542b66f82a20016bef9"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "f08e9441170fb10bb5d23b264df4ff2c936234c7dd71fc9b974526081cbbc6a6"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "1d0e8ee379ee71177fa7d383f50164f082f9008ced8513d3af8e824bc3a166ab"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "4ff6adde8429145876d4115591cd6e573eb0a912fd2c31331ec2b43a58ac9f2e"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "5100aaa6f7f376b1c96dc0c9271eee02627ceac63fe10266b6ffa081b798f2e3"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "5fbde13e7dc03ca26ba5bdb2a220cb981ff58896d89d81bd05a051b669619295"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "d5f9a96b1f7bae65776e6014b33f218dc3c0d0957beb832d645d6bbc82d349f7"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "d5072a98bce382611aa6c001134747c1a5455396d405b512dcd326c46722e2a2"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "0c94086108f43386b9558cd88a7a1d65979cd1ea23f04e5d1ea65cc27cc8aa0a"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "1c8ea2972bf604090c33453ae689d5bb37e15b9f1e9407c4b1a95871c46779c3"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "0883571522b255d2d64b9d72428fdcc543eb41dbf7dee4eabf27d4bee83dede2"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "0b084179f7c186530fba4de7cb55d20285a69022699ed3c3286cd689d5dced2d"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-text/unicode-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-text/unicode-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "85b93ee766a02026d127768c6e04f9ff24b1016243d2cdde1d5e8f37fd172099"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "460f1395ff711031679e603b8b124e0833e3b8faf9442460e99893c49329ad69"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "75925c2e0afc3456ad53cec7004be566c250499066bc19c4e1fdef84bd8235ab"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "4543ad9edf11e92dbaab8d4c74b5cd53660595ca6815a1322b9b14e98743eb0d"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "59f8731d1ce4558843803fdf8a07939eb5a148706252f7ff635ee692d4660a3c"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "73b4e3fd9f43819c95897ef298982b77e4549f697e63af333dc134adf1106463"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "a61e8a92390fb9f5fbc88434ac1e0b805cb0888b66435c9b11f6094f59fe9aa9"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "ee881c9a33caa19bc682f2eb9c2dce34914d3033e3930bae3224491a4d2f4e17"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "ee8ec3bbf5f76b965c1a499f44fb3332158535a4b48ca1c11a559d04cedcaf52"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "accb6a8cb7d652d328a254b2c51928a0e3fdd88772d9b016951126ca86f68371"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "0eda500c18bb631c88bcdf43dc73aa45b5c9f7e973f333dba0fb5d665292631c"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "542b5c02febe2f7ab3abd337db60bb68eda9f997103bfbde3d5713892c622513"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "bf8408d79fe9e5cade617141ece125864c17331aba64ffa05ff1980163886f72"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "08dc17c5ec65ab859c3687384eed098b535376bf849f37e3b5b114aa19ed9119"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "48f31907fb0f498050c0ca2d5383ac4ccacfd09d8656f1d5a831ae7b8007eac7"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "97134ee34f2d18d2e326f65f3add6d87ac0d7f1e5cd271ac3fc3b02cecaa90e4"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "fc5b96b7c369c38777e35e15282bafc7afd8e2c3fdc4e0410aa2e0423c63c788"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "73925e0ed7677798fd614288bd6f3fc977ac3468748476bc9befdb5011e3fdd8"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "1a38a711bf752989a405929aeb63ca35adb7956f7f54f0559e6db8388eb67f07"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "47cbc0986987ca6f0ccb1b9a8ac68a2c73f84f0d6490cd546b1d8ebd687f891e"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "e26ebfcbe675f0bb5067dc404e80708e5c836c3802ada4e7dafecf6aa5e00c01"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "aeab05357e57c80959216f2976094c081f151484751b1b37140c1c8e488fa2ff"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "70b0509864e171c45ebb618b26ca1013e8297f344ed479dc8d180fce86ae9e17"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "01b5b84d13d999abf64108493d4536b27c30bd7dbafc993869a235899b95493f"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "d9f3d192d6578509af3cbc0a7433e34182c9fc42f97f1a235d723b41b20bfd0c"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "5c89b781e6359d46b099822e7cdd76adeedb4b39631c643e242db750d059d43b"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "9fed2b37c450cea03ef1fdae0514732a61ee43435b0736aea2f572dbea18e3f4"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "abd4b5df0990cd8cd212d3362fad34c0a86abde252a2ab634c2d4304187d8e23"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/english-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/english-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "6037f3d2e5b8252231c90d58c349c81be83ae979f6bb86e98e29ceadaa4a2991"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "1978158cfd50f168be076dd1b3ead603ef756cad62d3bfa4a13fe5a67fee8a66"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "d1dc9a7ddfd354af10e7d0e3a76339b1dfef265110e5dbabbd310dce849751f3"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "db3c659acae1786b1344079c07f1b302e99274bad9e0229ec057ceaed4d56b7f"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "de4cdb3eeef10282456238e9bc61283594315b5cf15649e0ece8f5438971b672"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "607be4f98c2b18864f3bf5fc8d5e0ca4db43ce342503f24913f356d1632f7eab"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "2379c0ecdbebf3dac111d7786756090305c3b30e40f33e94cea9b367fa284f4a"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "a2b98aa921009f4a1e80cb2103ea993bb26f18a297dbe99f051f25dc59479987"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "78479a1c6f2802d90fac9cf46b22a926490134732c5278fe0f0054af35abea0a"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "d1d8151812169bae6ab520975f331cb92cba31f7166c3ba91d4c964b613ee5da"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "9b0b9d66c8c43e82941dca4e2dabc6ebfae7e3c606426c5473bed4e106e2654e"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "ca90d74b400007c9d83687316bde7b6c65ed82db8c8120eee6ddb5c0f46e5f1e"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "131f7749957684b672201880cf2140514b3bfd0c7211eb357e66e9aa5fda8213"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "158d2d009d85addcadf97884bd5b1e55d77eb1e37c5c8e029be7da1886d8c19a"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "397cd31b26efe64ac14cd2d87c342e51a3c5d13f3c700663e51df1c751b7c237"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "0a9577638b11176984945af27e8fa78cce3e30819259b811e3ff337f0fa9a7b4"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "d409cba30d550a0583dcc90d1b9d2ab3c1889a80e5bd8eeaf688b142d7b0a1b6"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "f41bc025003b9149e133183f27a596ed85c2a069fb67326d78a311e600d99748"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "ec39a46b0b98a92ad62333771c95513bf3b6a583c956e0431787ef8496b2461c"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "1a884c2cd2e55533d0b0d2fe97ea032fc8b46cbf6576af96b9dbc625946ded28"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "ef9e1866c3c0e81d7068b18cb8b9be32fce7d403d945a775ee621647ca1f8840"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "acd52a0e539192e6976e600ebb8d21aff03ad56a9583027a38fd676b0457be84"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "1409f978fb6aedb11a1d1ceca9660d5686f20c1ffe1cc1d025ac38e27c6f951c"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "0740f656e7c6ad7da61642e83fe8b356ff5397b923fa2e673571ae644374b4c7"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "5160231f9e6e7d4852badd1ad08fe3c74814e8c4dc8fd07bb3045b26d6f6fb34"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "51a1f9fdb8c4dc30f7d2ad197cdb3c9733da0cea05a5dd7205018773228376bb"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "6d3006aceca9429e0c9838066bed62a3519b1ed966d6e89d16e2164472fc5b5f"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "86cf8b238f0c9a865f4a3f5100a27be2b05c0f1f8a37e7b362c50792c9438fe3"
+    },
+    {
+      "path": "references/qwen35-gguf-q8_0-text/unicode-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q8_0-text/unicode-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "673be678b107fa0999cb06a1a282ef67800f76a041fc4b0e15933d02f30f017c"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "3245fcc8c191afab13b01402e004d7d77f3479cde0af5c4d9b8f6dff043d63dd"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "200853f85c0587d77cabdbad0b581273edfeedf14712642041aa5a3eee7169cd"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "34b5adefa8c236f590ac841e0858a89ead7eb156f11494aba39f4f49969bf153"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "94b6e8a7670d6b796cd28e62ed254f769a358ac60f1e682592f5dad7c7bf7a8b"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "7965b0b22d0d4dbde770f4f25618fc78a266be7968f79a9d4a6059e4c37c2a9f"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "b69e98a63bfd18df34726d51830b4fb65bdf311728ce4f98b3671ab75187dd26"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "0a4af7a61cc10107a7a985ed565ca8f3c5453ef19e189ded65fbdda1170ddbcd"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "4fd6b5a53bd148a68110adcd2602bbf1f0c9c58ed7228b34f2b217a6bcfef33b"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "498310d825bdb24b46f281ba98ea1425e0f50c543afb0247cf17ce2cbd1c2bf7"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "91f3c7e207592b26999a25d158f272ccd678ce8e56f207234e035197796c643a"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "3da38936622c263744eb7fc12d340e2cba2343d08feb12aeb4d412de90e5a1f9"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "f4b1ba364f19d18efc68c9940fe6127b9325c68d4abec28533b2af6c3f97eab4"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "d6d611ca8e50ed6af8b3d5b1f3bc14ee9396f81982000111a2b23644ef290441"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "e52b186b8928243fdc4013d14f3ff6339b77e817a19fa65b3bf1e398fae7d655"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "e8acc4547a421e9d235d3a7f3fc5d673232d56d09de47e41cc120571e8d0add1"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "cdf01cf66750c57d5319cced31d9c22d83ed8a6c8500a1abeb0db26680bd7550"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "215818315cf9bba1017388e802a93cd092972f3409499d8219ef44eb15857c5a"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "7c6c9bac4494dde4d20396527412a53a0761c9ef539db3e4b3c95dc08337c010"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "b7d97aeed977c12692ce51ae20c4e4e81ddfeda4049029242d28e4ba3cb0fe53"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "0c9c6cef952c0d57065afac4b345af8e9372ecde0eae248ce42336d063c0581e"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "249053651cb6e378588061c90cc36037d4556fbdb994a368477a95c4ee7fabe3"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "2b2a5f55277520fa2c5e2f849fa388982afb9f0597bb8c8612a846538d210369"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "a4ae6b9dc6dd47cc965afba3456571e04e44d53018537b1c8d6e7719e489a89d"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "db21ab514623bb8b4b6cc114b298fd852ed395ea9c2a01a41204d26c48920112"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "00d21d2f0f3b9306b22e4868e11727de2c42fe85842ee55305b7b95a3ecf1bb0"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "0057851e8cf517fc824d1e26e030bd939d7b2529c33411ef59cc4d98ebdda60d"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "afda9fd4defdd817e20e155ced798ebb5d5b68bc499b30edea06f371a24eddd3"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/english-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/english-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "472a1ca54adf6a1acd7addbe0bafec5a08eda864795e0a53311ef0d8e8ceabd2"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "9c33de71b52ce90ff9dbb6d07bef67e4c1cc931def30b3f1d5ded4784c3eace6"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "8d8d177b79e458f7aca1f66f622b7c04d5f185c3a41758149abed6e6afd88a7e"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "8015f64fdc6722ad155fc30e0142dc3bcd34020717b335dc09bb65032c843192"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "53a75413a0cda6dbe5716f1e74e7ff7b6774887b8089ed43d527737feb76ac4f"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "2a81f923231ffcb69c51fbc5ddada6c0b90648f78fdd4ab1aec8603a458f91bd"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "be249239e897f3ba2dc10c365a55b6b89a554f69589fa8d4a84a92729a218f1e"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "46d87b0cd161acafae597945d0b8f175ff06335c3034c5f68ab62dd00296c535"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "4c98080941b9b556ad05d4be64408b9ec88251ec452462114fa6bbee8e4475b2"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "9b40704bc4f4b00acb7c6341a4f9e6e8b796a62721419b32b7bc332ae8b1dfde"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "362e7cf427f21f0378735437da7e0ea86ad35e083b93c0bfb53f19fa84f3f89b"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "aead47ef57da7578477f48483b9fdf05509284740bb6d16e3496b187ac747056"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "7f7ee4c8a6e09458094cb24312961aacebe87e7ac289cc3759d29dbd0977e0c8"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "4789b25461cccb4902cf1c4e7919b4c18654b7e204b4678e82b7e324c6d5f1b0"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "9437859789779b9db68fddb62631ec091e5153b4289288449e886a349b4f44c1"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "fd462e438e81bc630b74fd9f820fa21e296ff63f91ed0d22287d9b1a476849ed"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "765650a7fa812fa897529d5274da33b02a53acb7691deb6b54db3495655aef6b"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "5351730a24bfaa19a0824bc20526e89ea8a2c9ec64a734b01d5b39219b1f4fc2"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "82771cb7c66e0b9572b1458a3f7508d2c7ef2155f6aa23c305b0f09db717abd7"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "c814687557a1d553c50072a1be8d849ebfc2771e53715168b2213094d3c8cb4a"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "16172f8a15d85cb7a0d905e7eb1e062ece8e455feed7f8f503f320655f6b226a"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "0215f2604c596ef81611898fab77a0a1a326bcaab9f1033bb5663f3354d4252c"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "e0fe8bfedfa2849615a9bc7b8fdae3940a78f47aff5b33c4ccc839760b9b6c50"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "b36fa810f50785f0adfea251d0febeba23197e03cb12c14a0a85a4097bdb61eb"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "f2a57057445eeceead8e3b741937878328745b0cdd744bf3ced47bf2092ce7a4"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "1629b181d4f4da70f5ca878dbce5053ee1786b4c5b9fc4768863016a5bfbebb1"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "586c0c1812c7d9ea643938f3a4be14004c3920d19a77ba885fbf518bceaee7bc"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "050c33187329e22e0e88f8b33b1301e80702101c97ae81f105770b8c585cdb64"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_0-text/unicode-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_0-text/unicode-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "357e0c336a3a64b481dc5e0e2ea0c9ba2813836c6cc624483fe488e0149e515b"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "1465aaaa4fc929a7d580ecc43276c89c78c07cb998cad061a260bf6ffb01db64"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "3a51095392e82ce06940f58be4d2a96ff33f83888112186f68c7498854215490"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "c14436629d684650b6cb9006c0300c0027715aca8de5ee8c2573c1f9af4640a4"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "6e21e6aa8e49ec55c4d878579eb050d8db0b1f45dd3857add050a6511e8bb564"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "916423b1b72e943a48b0b68716756608769384ba56feaeb4b9b0da2306a02998"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "62ca8a457e0d61d504caff3930c10c91b6561db7fc1669ed41258d967120085c"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "4b19d822abe35786a3277e11bfa14ab677a27a1dcec709088d5f9795aefec26e"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "e02408f7751f0a7da22aa9278812aa0e1b9dfd70c1cd3e1e972c1d1c0ed49f7a"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "e5175420eaff968d26d0c09ce1067627d1b08287b11fc15423f465e20b7e82ff"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "ab48480f74f7dcc52d2a26fd2c159f29c2664d0fcb990a38d58e72243c2ba01b"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "9cf30789eeff35ab9380160bf199da1802cd55a199c947e9ec5c7ed1e9c65991"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "5a7d8d1055a5dd4a7a3f9d5fdd0ae2b582c01d58a8410c10702f229acdca8ca0"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "d0afbfc47e4bfb2fec8ee8364fe212cb4ac2a2a95d3d8c530f5239e403492c07"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "361c16776eb1888e53179a6a978fa25a1a04df2e31d8eaceaddedb5425ee32af"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "0e6ec47147548036474ec68be5665f07ba752b3e38926950993906427bfc9f1f"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "55e5e47301dfb4a5d11c73c1e5e38b66428c48d419b0165569247d67140ff500"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "38be84fef3ab47d7d7214849005a1e36640d5a37771fcf086aba1b9999605b56"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "6922b3e88126e982b535e41758a0b21f8f71f7a2641732943be4b470c7079889"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "0186a3938bda8bdacf4719e3939f874460e613ce58283f6cb134eaca3f7e7d7d"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "722f257ea032dc1d0514bee09396dd315678272a3ebf4b30402f1b43f0057ea8"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "9f5acc34c0c9ef951b13ee396652963ca189567c1e69a6e5896ef0f363edcfb9"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "ab9cc88c6d1d44414a406b137a5243d09574fbf594a6f8b1e7de35bc23d34022"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "39826eefb91251c5d6ad5768b0b6329e321d773d14b428eacf24b2c604540555"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "5f6807bf018b08a7780ba9609a2a65bf552aad005016e6491a68725f4c55c002"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "4a29f4abc94ca985657be3a627879e5f4361cd1bc89fad2aeffe0d66a41efb4e"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "dd11026e7fb985f2f91b39268b3559fb61d246eaa7da6312152133d383bb0189"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "3a8243f15d8bf0154d1e08fc24a9dd10cf065ddd5a656f9ccaf78dbd0801e120"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/english-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/english-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "2202f12368a013513c3edc80bf16c660198f02f598325c5f4ffbef0aaab22584"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "12bb9b302dccaf3a80b5fa1a9c57c3224b42f956a3b2d2a3e3c1be6a575d5e50"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "e3e39afecc6018acf1892caacf5d8fd193edf1f4307120b334b409fa49efa2a6"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "ea3edcc8c2e8e3150f6de6a66905142768e26cead8f5cdecce81b2c403091cc9"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "baa117cea2623f90ad1689559d725dcba94c1c3f3b215f8f67b9705d99c0419a"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "a5bd5c9f560798111a3e2b2040ea484fefda7719540142841f63253820453845"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "8cec5cbb8f9eb28c9066a719432622e83718415ada95c9f5ba69c89822f7de8f"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "c7d996a93251977812e853a57cfcee3ea7c45acfcd334d3837ed84300ce45686"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "73c43051e62abe92e908a7152851350ecedcc59c937f06de88753eedcca4530b"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "eb89d8629d6b52b84cff26c02858dd0daa56a1591b6277d163584a7a868b8041"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "e17ce51527a163ba6606ec5a4f9ed4786183ea609562b853fde3fae275c7ee20"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "4c3c5ca1beecf64df754763019d536b2d903497f56259888052c7011ed710d27"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "41a73f117086ae483dde6a03ab0b1e7f087e4cb7c157b3824d37ca408fc1add2"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "a7fcdcf211ef37ecdb51325d7dcd74ba16a31ce6d8afc592c3afa3a34c1139ab"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "5d44c187d50f6de147b9c074cccfb6fb08dc08dc8968d54e2f273aea0484549a"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "e6e0d90a730f953ff71b108e151c48026ace529724203e2bb5d6a5ec7180ed79"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "5a22e8ca5f5337579c265fcd1bcb4ffb3ece05e78c9a2a4f83d711d6cdd621d5"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "1cf38f8cf4e1033f3e49f458843d21e8681fb85d3ab36b0bce4ebd49bb4fd70b"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "6beb4f26ac062f472302c50f51894e3f28508c2bbe5bf3c971004f27361e4adb"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "fa8723077b9612efecbb8633cd4ab5d78daf931f7f9e53f4926de775d0edf8f8"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "7ab1720945fee16f8aaaadc567397f024839738caae3f232fdf1d00ef3e41211"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "89bec29ffe349670db87718ab81075ec3c1f178a621a4ad41007de949a13cb16"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "d45cb0196fcebe6bbbcd430e3835e4fdf5f9ee06b1ae044b40057a7a51e4062f"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "1961112d2345743b58abc300fa6fbf5e40a9178857fb9a1708881580ca729397"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "928a15e218208f06e482ee333f87cea274f37d9fba2f50132de1105b6c18d2d7"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "1dd1ad7166e5e09894f50d4150cfd8b098b06ef03f92ca90931ca6abe605ce2d"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "40507d66091a95b874615d0f36a9628645ca904fb9448c065d2120db782aa4c7"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "60089e87019ea06ef1cf066acae366216af82d6a434b1a3cc1d9cc93c92ffe66"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-text/unicode-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-text/unicode-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "36e31a3eacb3a826c63488f1cf3e8d0300316c63785b1d99660696e5353336f2"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "8ef36ba125741f79a3d3a6e1d996f402827bcde3a26a6ff2babd02939b0dfed1"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "898eb614e64b2788eabe93497d6245aa3720f55db2df1a0603d58457e14792fc"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "850f0b75159ee5522ca88ee7953b390dfcef8c5e90bf2a7530de2cbf6ae68832"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "566ce72dfa8a7eaa974b6044ea6d25db3568d0a577197e2b1567045bf20d0de7"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "a14a0447cf5e26f4bfd9366e0d39899038a3f4e288d298091f003dfcdb017c93"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "3cda665acf60058176413a395bd1a8a1da4e64c1dbc637bbed6c59691e40096d"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "084789bde00ed15f583d5d523d0c4c50df4d30cb74ca182351e6847c88609b05"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "8d555ae90672f8950f6b55071fc8aad14078e4729e5cfc79bf2db6d46a372ceb"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "97986515903a00c41dc595051eda5e797f82a4aae884f572d6e89a2b9ec5a302"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "5778882e68c8bbfeaa814016ad68065fef55bcf63bb05fcd63d6a3a9875427ef"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "829e6a934c0daaff4eb71bbb6a76ae6ac46f4a92d980d671e59aaee9a5319e8c"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "a22b43a2d5d273f604363af9ad2afdedd88ce2fde10ac4671fb6db31f648a506"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "b9786f9c02f92a3944e30202dce62ce2a517723a88bec73ddc0dfeabf09c4646"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "42d4b2d4d2e0ec461963909d6aedb114d8d480f01e17b2b5741ec53e2da38a38"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "2a850545d9be3072542bf186b3a5e92d7f06bac0af59af7fd74759eb2ecca052"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "4ac1e39f1309cd899053370307d556c1e88f2afc88e6201ed2ef28850ce09760"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "a4a4fce8cb929f09497b5829654153f6961c18fbed787580a0781e38b72b90ba"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "bea53142ad9476363e320a7f4e0079dfc019df5c86e1f636fc95e54a43604097"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "6881aaf565469fa4d1a32f077f4973bd20d73065afeb90f688d0e121562b2afe"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "6788ba0c1e2b7c6f58b8e8358e9d60663c78b4798cb9b6205030216567d42405"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "cc1f8dd47ece307ef3f6d5e6cf86aa8adc620734b6280de9d44cad2b7d1514e2"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "27885f9fd51662c9c5cdfff9e704a5f33eadf7d3c43c539d69992e006671b064"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "05e5986459bf95a5cbd5783917f714d43c079d039e6f1bdf0634e821cdcf3f53"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "086626e32b4532b286c27b9b170563fe4ebef8c755755fa872471b74b0c7d80d"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "bee2ab7c71614fea3cecd03b99ff50605b28150e8149700316fec22be9fbe773"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "f1946fa0e718c120ce01c28e2b59f4f33a48f7d197587d881d84c2ea9b169566"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "7c46d7e02683fa0daf66af0f1a0d0517b124673a78f2a2d4f6c7c6e1e112bc73"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/english-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/english-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "b3e5c3f33970f5e5175edf024d3da0e4cd7a9558823e98811fb18d2ef5b6f6ae"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "ad6970a3ca3d594a40e464592983b865f0730226e7ac3624d9a0e5227bb6c360"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "3ae2b46b7ba79afb34a523fc8f124112fbdfd01c9ed4c29727116bf3a5356a88"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "b7900d35c5906f4f6240f0540ab26f64901511daaa8eab23e5b48497e6de06a1"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "5a0a888e304f53ebe36874afde337a96724579ecd39533e8b61a1f82a654cc61"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "13eac06fbf8668daf20dcea95d7b9eb05d2b412665b34b50c3a1817cb283f4d7"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "022b032561c754124808b28dda15215ba92705473bf74e53b9eb5f16e4ff5b4a"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "e448a497c056197ee686b1a89f595cd5a43b5caa2c4fad6036b67e9cdf3c9073"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "114fb3c3e1e91d6ebdefcbfe28bf6c260725a78c2b3848bf46ed740badb5c630"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "6ee4f494cedec55b85180b7d78b660a7d58ea12d2ad13a4b53fa99d95fce050d"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "ad51ce24c6d8157b25dd4c6e75193bd176c2adacd2e7c2e7b0a4db5108a9a0d3"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "124af3110554ac5d2cbea3b4429255b9714c9ec57cbf35c6975c4f9f9032d330"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "bd8b17a59421fc522deccfa725b0004b69060f909fed1694b698e5a2c93473ec"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "725a70eb85ea00973df1dbf188fb2bff1024307b250f8bae00eedb3dc888aa65"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "f915a11f5851584592acadbfb2cb3a0e22ec0cf5e4bc15cc6aaa1d2d38411a49"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "9a2e45f4359aa013d2eade5dbcf199e369365d957e5f2ea127da3a0b77d7db06"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "6645f3f7650110fed8a42e4db16748d02cedfd9b7c7ec5966e923bda59102698"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "4ea03438be0d9f50b2f54835726d5ff01c974c76b5b6448533841185611ad752"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "391efec4d8dbc8fbbcf0b76c61606f4331bc9f928bdfcbfb3db0e1e4c2a641d2"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "56d3a9219e1cd9fefa5ca0170f64d02a5b6ea8ef4dbf62316c3c9eebdb11e8d7"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "7231ca94ecb49a8b9914e5254ba15b4cab3c294cc96c4295d54c77ce75c3f26c"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "e785cdd043cc413ef01ba487b41a70ffae611d64e47e9597be3458a0c82f947e"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "d2a8cdd7f70f12c6b9aa463fa7e4cb00f660675455915fba8953fe27f4eeb1e3"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "6a07a2236b2f614910b5b38caf85a89dcb6409d25c99a8c0a2700d8aefd5cf64"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "517edbd4fceea9cdbd901e0578b5da987b1f8a018421ed95c6de9bc69b430438"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "67ca79a9e416b9ea632d04763053b6fcd8948cc0806d1cd43bafaa955c75a5ac"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "ef3b28989fb8f50117c645c93f8e982b486e8e05efa528c950a0cd70c38ae3c4"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "6a3f60fc8f2d22a9cdeb79ea341543bd0be35f773e914c72c12b5c531536179e"
+    },
+    {
+      "path": "references/qwen35-gguf-q6_k_m-text/unicode-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q6_k_m-text/unicode-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "8ea49df93160a02e13a5a90bccf2c46c19ac494eba70398b822701e6341a6332"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-patches.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-patches.f32",
+      "bytes": 1572864,
+      "sha256": "e6ce79140a5d45a5fda806e2e1d555f1db4d3b66dabb828325079455fa5281a7"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-embedding.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-embedding.f32",
+      "bytes": 786432,
+      "sha256": "4ed8c30b4de17464f8c1a5b2ca1f5d613c482f4c28cb62ce5f3cb012a5711fd5"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-layer.0.f32",
+      "bytes": 786432,
+      "sha256": "93f89691d4dda2ddc3d36545d3ff4b80752579547d7be3c4b8e28bde4354b690"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-layer.1.f32",
+      "bytes": 786432,
+      "sha256": "5c2329c3dde4b2b775f07e1f524b6c3269ebaf2da775d83bc9b13a166dada720"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-layer.2.f32",
+      "bytes": 786432,
+      "sha256": "dbc3702a3895e5c708d8c6fa6fe5980eba6e63003d0d8d0281e0a75b147647fb"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-layer.3.f32",
+      "bytes": 786432,
+      "sha256": "876bbfbe6d369a78b9a18f54b925e20b5a6a55c46f0186daa2664985e16f5cb8"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-layer.4.f32",
+      "bytes": 786432,
+      "sha256": "0330f5ce2a47d67d1433952df530b5f50a5c830fe8516fd2da3c552bba5b7a29"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-layer.5.f32",
+      "bytes": 786432,
+      "sha256": "d26ee9e7753e3a5cf7c7b8df2ea791c40d3995cafe0469fb09cf7551208fcde5"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-layer.6.f32",
+      "bytes": 786432,
+      "sha256": "b2c9c81e2d917dea73ba7afeb6512f1b34ccb2da25cd02d1aa43b24b0fec79c7"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-layer.7.f32",
+      "bytes": 786432,
+      "sha256": "1bd497d4ff6b7b1c33f75cdf7126e272e84bc5c4d0f36bf896853b3a570ed876"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-layer.8.f32",
+      "bytes": 786432,
+      "sha256": "bda4d6b496cbcef1c04733a4a20967a5facd012e3abd5c215f7f4ab91def3642"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-layer.9.f32",
+      "bytes": 786432,
+      "sha256": "2a415fed8d62e114420debbaa9bb44a9ef253a45d96648c3e8feb64cb7a1b217"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-layer.10.f32",
+      "bytes": 786432,
+      "sha256": "844f4360c51be0d496a2bd6247ef4f54411f2c7733c7ddd44425b7d1f771e90e"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-layer.11.f32",
+      "bytes": 786432,
+      "sha256": "65fb91be580b99be1d7e9749ac0ee5b465d3a9a3781891e82034097aec6b2ec9"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-merged.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-merged.f32",
+      "bytes": 262144,
+      "sha256": "07ddf33bf4cf62e293b33b672d8d9c1b66856ad66264ef211995ed979923c100"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-patches.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-patches.f32",
+      "bytes": 1769472,
+      "sha256": "5ca47426c8c6ae336d136bd922111163c698e7d6a7c56effff269f18a262b1dd"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-embedding.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-embedding.f32",
+      "bytes": 884736,
+      "sha256": "a35dd18dc8787b85a1b948be7ee6b0099e3187dfc078fa97fefeed7402a97454"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-layer.0.f32",
+      "bytes": 884736,
+      "sha256": "13904c941f0494fd54f87db75f1bd147e0715c40dbb4e5e07a3c111ca061949c"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-layer.1.f32",
+      "bytes": 884736,
+      "sha256": "60f68c3040aa2780d1c838d5951ca20f6af62f58ffd947ecacce43350c1ac12d"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-layer.2.f32",
+      "bytes": 884736,
+      "sha256": "55adb4c6a37f234db72c48eb39357ca6108be4d3c27f697f63179348dbd0dcfd"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-layer.3.f32",
+      "bytes": 884736,
+      "sha256": "f04adcc96c69c51b39cc1cf5f411deeafc9368ed966a63c89aa078c72b31b308"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-layer.4.f32",
+      "bytes": 884736,
+      "sha256": "f18043bae0f37aa55eb5c77939f10d5b5fd4270e63f9378fc0c5f43a16f1461b"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-layer.5.f32",
+      "bytes": 884736,
+      "sha256": "03aeceb66d2a0bf41e0ddb6bf3a46b0e247b530601ee28e3a84a1e789b9656c9"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-layer.6.f32",
+      "bytes": 884736,
+      "sha256": "c0a343ce76d621a8256606e40a0ab7d3677f0388c0920dd9d69fa48ca046fa8e"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-layer.7.f32",
+      "bytes": 884736,
+      "sha256": "0644ef9ff0513806c047bb184bb6de9a5fa109fe8683455fca573edad98aa666"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-layer.8.f32",
+      "bytes": 884736,
+      "sha256": "c2d4c49b8f720d3e0bb6f1346bc39479d4e6da951bcabb8fef78a34c0c4ed755"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-layer.9.f32",
+      "bytes": 884736,
+      "sha256": "b76a3eb32bafd6e88942d933f7c43b8b07ef6451573ee7393ecb03e5aa631d82"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-layer.10.f32",
+      "bytes": 884736,
+      "sha256": "22e21641533775ac2eaf22e38fe2a43b9529238e55bd0165a2241b54c74329fc"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-layer.11.f32",
+      "bytes": 884736,
+      "sha256": "42605fea94d9cbcb8813a455f2d515f442f807f13a6dbacf224e0d2651af0442"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-merged.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-merged.f32",
+      "bytes": 294912,
+      "sha256": "a4bffdaa2896d3617651920b09c571060a30cbdf1896350f04b2275965769156"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "7be9e40c5feca295fdd89af8a93502b116b4c87ca0aa72d143c82d4f94381e0e"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "c7832524401669fae53b0c0b63bd8fafd2d2e0cf2c32ab9da6cb284c11a257c1"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "7dbf118ed8b1c6d2a2210b157eae0cf195fd6819caed95cc90ab25059d5b83d5"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "a4c1411103eb5abdb1de862044539cde8ac1aa93f6f75379a309928682cba3fd"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "0bf0a4592b3c5176a8ce45efe022553aeb8ab62bd31d741b5d3100bff64ae199"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "a42e9f5a72e3c9b6402ad3fd38767859878229ff411bbcb04db5fac0700095a2"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "09c13a9eaadf49c8a25b3d267e8d49f3caa6c43278f022b9fc2faa18a92673c6"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "eb8bf2954ac01bd88baf2f27842e7fc6c4338bacbe2a9937fcf6bab5542b7004"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "4c6b9bb9178625f86b2677670fe7293b94f5b2b4a8df9cc246ad63c67611e5ed"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "bb5c87d105717597af24085a401d72647ae1de0d1278928010ebb3501c3ce4ad"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "b9b75f5363cd60da2e16f9cb6dbd9e291c63751c95ca03ba040988da155847e7"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "21d91dda0f0dd6b19e7b60a661fe6263647a75f5462d7739fe6bffdff5e24766"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "6cfef3d1845513709d4be58b4e33ce5fc51ed50f9051f0e525aa9892a3cb6d7e"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "b4303fe5158012e5c0f5a330bb9730357cd3ab4ea0892e0d2faef974d648bcf3"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "4170f2c95089ccdd99aabe03404406fb26c40ff6a12ef5e8746f841d5c4deece"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "27b8bc74196c0ff7c099cca8ab0e7f7b3bc2c39cc5191cc46c519a153d86fb4b"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "a3552335af95b71a382703ffecdbc399825959047adf881a7d8bd08404bea63f"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "4b6c7f28be84965f7af12bfcdb8605253fc082fde140588db7276ba3226dd0be"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "d6d55a3af64920e407f8608fd1a69386b979a000c3d615cf5391e1dd31156b27"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "4ad916f7fb18a63df3d5d4e20e25841fe6a565c506e97353e5e12cc02d3a6f3d"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "640f3fd3dfd169caa0f0a33e14dea5b9c2877ff64a23a6384e95c77a84283619"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "93270413db29ae9fa1e333ecf0be5f83450becd36c6c88877d0c51b2919d8723"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "8940beea131c5ac2e1d2ccccce4f5be3630f84e903985158b824407a383f0523"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "feffac2e34c033f2c2601a8b0e45933d95db81f44faecb893cdc47c1e5fc93cf"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "bb8cacb5bc917a6bc7072a7588b4c71dfa02f58c59a3407f7d9142b3e098b122"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "fdba1eed5ed86c4109182856ac982e890f25151a635402125d12f51dcfbd1298"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "4a67fec1057af8abb82f0d707f304345a64e24e95fec609f244418dc17db54d0"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/red-question-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/red-question-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "ffc2ee3f9a2136584c8bd4543f03fccf5da40927cc49982bd0d9f437bf335473"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "36913a542e3793c6ad513788212a573c960a41deee3f0de429ee68f25f4761a3"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "f1861630ccaa078b0cb1d3d09b8f64d82e267cf2cd8b175d0410c69fbb0af3b2"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "6b29885a0dd4453e2b70fce3cec03144f8ec64b7048cd491cdcabda7a13832ff"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "df4fdf32f42ec679d150bcbb62abf3bdc760570cc2721421a7ede83df94fa5ba"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "394f837b00fc047db5b919c16bf2f87c2f83e89341d576433491562505f6c081"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "4d225ef7373e64476ad6d4dba973e91a5b55cff4f107896acd645a520c0c1957"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "6e587e3e8977674ce409131c28cfadce026f7b9724192237c4b6527a894bf05c"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "8dba314dd929acba41a2e8da120ccd4ba33f5c18095b284eaa137bdaefa177a9"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "8eaa86976c4ed7567240bcdbf40b0d8629cbd41f17b5327d4ecf7fa09fd4eda6"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "c879a73da860dd248b4234fbcf1dcb98a38067c2e7ef4225860908caf9153dca"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "72ba9a32c2605e6a6896d71bf2513ead6a670f9e40063bcf99aa84f1b13e59bb"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "18ada2b351769b13367ed779b47bdf5da12a1610b15c908ef939377be6cd61e6"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "dfb07c28f086b61cdde0e594865bc10d6024703a4bf5ef7a3801e381958b4aec"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "6a661aaab53b474ff3c04d0462a1117876ad7cc5e390cb831d130ea97aa85557"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "9da3203da67c248be8942a826b7694975f42448ce9296d98cb929f75fb287d3b"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "609b8ef5df643cff869a2c9cc8e440b2dc51d0c1e121361b658c5b604a17aa89"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "ec25c22f73d09e50e59964d303365c28a223b84cf4465d1ef95efcdba01355f7"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "c7b89dc949c6041e0235e968c31ee5d63bdb4c936624814511244efa96c8b055"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "899bd8f99ec5a2bec72bd5da6a0923e10f1d799a5d866ff8e1b358123f19b120"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "145205442d83e84fcde635aec3850860cc1a70e49720b634de52cc9377659a9e"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "0275b7913e3336eede7d91da4b44b85956e36fc3edaa10ca628adce490d8b4b4"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "0f60c42347d4a4aebe95a4181baaed796d32ecd0ab29b8e342d3fa35aab04ebb"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "29a3283b9627aeb76a0398075f6f3a56ee90873d62d8064f8e03120ac6c2ce48"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "98f4c9618280777d1e05f6e9f62b303f8b0d15136052c3e8140f1db2fb0658f2"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "42559a836b387774faa465f6acd8d08241b32c57bad0363fc6b67712a2845408"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "f9062b0b6db87ec339e7fecc9bb2a0205c5d1c916d1baccdbf5a9dce0c6db3ad"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "f4aa6b44603b6856d4fa6e1b50b5b176acbf651cde0878960397f899a7a4b2c2"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/blue-question-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/blue-question-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "81dfb2043b90991e93c75cf738a97e0dc76819752443ea6712f4917dcdb4e492"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "acba801cce11607c55565f4ddfc49e8aa671218556a58699af7dce0cb6e426eb"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "9637c1a6486da3bf26b5f295f2522fe16f934a7e597efaa96b59c53944b14567"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "bb74dd540625f2ff7585067c40b9f7f04ea263454e2366816d33755520cc8d22"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "a088ee7cc2063e537399fc77caaf239c8512c9a2b5cde1d497f744a65c740b3c"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "ab6bc7857c5eaff5333535d8ebac243422fe5f8da666de79f7011ffdb21cdbe8"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "c0b52d03f1c7218a520ced4e4b0faca949d2a500d143bb31898c73b7893b9569"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "1c6e692b415ed9982c179b5eef489d639d2ebdd134f10c6231b59137bd7043f4"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "5de34f06c606193a4cac5c6385f780b3d1033e76a64c90ac9ef63304766504cf"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "50155b15e6003f08cec1d6e8e042dd033792e162fb14c27b1172352a2db1b225"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "d66a7d6009533d6f120088aec405cd1fe84ab97f7d00c8b42465ec1073e39b35"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "037fa6b19d0629e8d927cdb2097152db512fc1ce4596e7acc5bf6073e7bacdf8"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "839f5e7e4e59407446adb6f788cb4325c153671ccdb162ea65314d4ab0ff85b5"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "e35dcb982373270b56b097b425937d05615d7fd2085c9d44bb5cac00a6e86316"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "b85c289341d8e0ae847bd6d5fcc18ff8afde60c7cb19586a45db891a3ddec798"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "e39cc83e88821181fa84b1ddc13d925a1940fe82550dc3695d1d98981aca9a12"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "29b1e2fc498d0207f2c98ee4f07f3a6c250575dca62b7a207f8024f4744fe885"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "0d26e3374a8f5d2238750975c044cef89acb84bbd4692970b2cc2b57e447f3d8"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "d21445540a6aabd35ca82955161dd9965516c3de693359a975a7d7ab975dd828"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "b92372811b659d462d7e448d4fc4d22908993919c830387e0e5df2e3dab5bd56"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "a3b3f30a22028123e23413bf0d4ae51a516bdd4a43473299762fb2a4da4d0c18"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "8375757b28a8f8ee2fe764bc1b0599cb8e34a3323b3d70ba45e565a368188f09"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "1a24d4e4c7cd6d1447d62755d646398920007f0a2187f5beb65c7707d7d13d5a"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "c56f00581ce165fd9448c9d21ea2dd4b635ed7a2b3bc3744b4903740bff3bf47"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "3b1f66eddef14a888fdfd62803a89149fd6078e182025aba12d8b9f1796893ef"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "a574e1996da229e618e9202c869bc3bd17607391d2f3a2d2930e14ad1ff5b3d8"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "ad1352c68f980015606085117027795e3e56b335ae58858dd7daec332ffc0293"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "ed927919037948f4b491ee572427f67dbc6ddffeb062a6a936f3acba99982397"
+    },
+    {
+      "path": "references/qwen35-gguf-f16-image/two-order-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/f16-image/two-order-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "7522dc08aa9e2277b14c8ab49b52584a9703f161dc54504936df3d4c68968193"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-patches.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-patches.f32",
+      "bytes": 1572864,
+      "sha256": "e6ce79140a5d45a5fda806e2e1d555f1db4d3b66dabb828325079455fa5281a7"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-embedding.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-embedding.f32",
+      "bytes": 786432,
+      "sha256": "4ed8c30b4de17464f8c1a5b2ca1f5d613c482f4c28cb62ce5f3cb012a5711fd5"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-layer.0.f32",
+      "bytes": 786432,
+      "sha256": "93f89691d4dda2ddc3d36545d3ff4b80752579547d7be3c4b8e28bde4354b690"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-layer.1.f32",
+      "bytes": 786432,
+      "sha256": "5c2329c3dde4b2b775f07e1f524b6c3269ebaf2da775d83bc9b13a166dada720"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-layer.2.f32",
+      "bytes": 786432,
+      "sha256": "dbc3702a3895e5c708d8c6fa6fe5980eba6e63003d0d8d0281e0a75b147647fb"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-layer.3.f32",
+      "bytes": 786432,
+      "sha256": "876bbfbe6d369a78b9a18f54b925e20b5a6a55c46f0186daa2664985e16f5cb8"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-layer.4.f32",
+      "bytes": 786432,
+      "sha256": "0330f5ce2a47d67d1433952df530b5f50a5c830fe8516fd2da3c552bba5b7a29"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-layer.5.f32",
+      "bytes": 786432,
+      "sha256": "d26ee9e7753e3a5cf7c7b8df2ea791c40d3995cafe0469fb09cf7551208fcde5"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-layer.6.f32",
+      "bytes": 786432,
+      "sha256": "b2c9c81e2d917dea73ba7afeb6512f1b34ccb2da25cd02d1aa43b24b0fec79c7"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-layer.7.f32",
+      "bytes": 786432,
+      "sha256": "1bd497d4ff6b7b1c33f75cdf7126e272e84bc5c4d0f36bf896853b3a570ed876"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-layer.8.f32",
+      "bytes": 786432,
+      "sha256": "bda4d6b496cbcef1c04733a4a20967a5facd012e3abd5c215f7f4ab91def3642"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-layer.9.f32",
+      "bytes": 786432,
+      "sha256": "2a415fed8d62e114420debbaa9bb44a9ef253a45d96648c3e8feb64cb7a1b217"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-layer.10.f32",
+      "bytes": 786432,
+      "sha256": "844f4360c51be0d496a2bd6247ef4f54411f2c7733c7ddd44425b7d1f771e90e"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-layer.11.f32",
+      "bytes": 786432,
+      "sha256": "65fb91be580b99be1d7e9749ac0ee5b465d3a9a3781891e82034097aec6b2ec9"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-merged.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-merged.f32",
+      "bytes": 262144,
+      "sha256": "07ddf33bf4cf62e293b33b672d8d9c1b66856ad66264ef211995ed979923c100"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-patches.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-patches.f32",
+      "bytes": 1769472,
+      "sha256": "5ca47426c8c6ae336d136bd922111163c698e7d6a7c56effff269f18a262b1dd"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-embedding.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-embedding.f32",
+      "bytes": 884736,
+      "sha256": "a35dd18dc8787b85a1b948be7ee6b0099e3187dfc078fa97fefeed7402a97454"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-layer.0.f32",
+      "bytes": 884736,
+      "sha256": "13904c941f0494fd54f87db75f1bd147e0715c40dbb4e5e07a3c111ca061949c"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-layer.1.f32",
+      "bytes": 884736,
+      "sha256": "60f68c3040aa2780d1c838d5951ca20f6af62f58ffd947ecacce43350c1ac12d"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-layer.2.f32",
+      "bytes": 884736,
+      "sha256": "55adb4c6a37f234db72c48eb39357ca6108be4d3c27f697f63179348dbd0dcfd"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-layer.3.f32",
+      "bytes": 884736,
+      "sha256": "f04adcc96c69c51b39cc1cf5f411deeafc9368ed966a63c89aa078c72b31b308"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-layer.4.f32",
+      "bytes": 884736,
+      "sha256": "f18043bae0f37aa55eb5c77939f10d5b5fd4270e63f9378fc0c5f43a16f1461b"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-layer.5.f32",
+      "bytes": 884736,
+      "sha256": "03aeceb66d2a0bf41e0ddb6bf3a46b0e247b530601ee28e3a84a1e789b9656c9"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-layer.6.f32",
+      "bytes": 884736,
+      "sha256": "c0a343ce76d621a8256606e40a0ab7d3677f0388c0920dd9d69fa48ca046fa8e"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-layer.7.f32",
+      "bytes": 884736,
+      "sha256": "0644ef9ff0513806c047bb184bb6de9a5fa109fe8683455fca573edad98aa666"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-layer.8.f32",
+      "bytes": 884736,
+      "sha256": "c2d4c49b8f720d3e0bb6f1346bc39479d4e6da951bcabb8fef78a34c0c4ed755"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-layer.9.f32",
+      "bytes": 884736,
+      "sha256": "b76a3eb32bafd6e88942d933f7c43b8b07ef6451573ee7393ecb03e5aa631d82"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-layer.10.f32",
+      "bytes": 884736,
+      "sha256": "22e21641533775ac2eaf22e38fe2a43b9529238e55bd0165a2241b54c74329fc"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-layer.11.f32",
+      "bytes": 884736,
+      "sha256": "42605fea94d9cbcb8813a455f2d515f442f807f13a6dbacf224e0d2651af0442"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-merged.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-merged.f32",
+      "bytes": 294912,
+      "sha256": "a4bffdaa2896d3617651920b09c571060a30cbdf1896350f04b2275965769156"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "aac5588af2a5c49bc7db00459b75ce4b4c6cbcbd40b551314800e57e214171be"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "256ea2a282a02d443714fdd056193d16dc34028fe582e666f6c712ba033ffd0e"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "63467f62718395370f2bec0e6c75e2de1b83def93153de974232393316879bbd"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "4f841fd7328128495d289100822005e344ffc3f52a84cc72441dfc2ee98f267f"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "19d69b6aacf688ce3df608d505d91b0cd1fbe3f6e135b4e00fca706307b633a4"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "9f4bc77b9489a5bf45c40046d73bc59a9ecbe51a7fa226ca233d6ec93c3ac791"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "f3c8183c858940a7b0eb5130d6f72c185568a9629aaab07317c8a8f01637ddfa"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "bb727c7c81a0d992e93ee6b7b46a70e30f859eafc9c51c61bd151eb7e3e74637"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "d4c19347f8be77710aedfedd7054c5c627e6b2976fba5982723a1450f18b5dbf"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "5699f88bebd250c5ad8feb78ab699ccf2af71be2cdf9f450be4515b1c6f08527"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "b8fb33cfdf0c087f8d02bed8dd6bad8a60848d58b02b00680b304dacc44a8fd4"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "322b32012b7a1d1c8aa85b236d76dea19b7bc0ba852c49b94c2a0f6b3d87cb54"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "c9e322d78d6cb49df4bc8fe702faf331aa997d015f83850b46251c58f1fc3c66"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "b82410d0048912c99a0a7c7636674102bf5e9e49ae14c6da681a97b0f8d1bb1a"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "7089808589a4e6139f69bce43e0cc5886dcb5076b528411b64a5ad592bf51019"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "8d5ba9ffed4241e3a3ec7b9de48b315994c79c21342952b2258eb97d9bfbdff9"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "ba34d59d6b3e61bd5211f7b86c47a71d4e18ec4332fd58d98ce33a9b86d02154"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "d71151dc7aee5e02b8e759393d036cdf7641904eb0b94110c6a804bdf5082c0a"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "37fb46e200f9e7de73af523c360233ba87ddc0afdff69cd474506e39651ee60e"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "a7a88e570d43deb90bd150f52bc54fe82d0d98cb76b04001776e3dfceb5ed4cd"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "008a8bdad2969392362174fcec9f42e1e216b3fdea9d280d63a74cc70ae10835"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "2353c902ddb13d16317e65261382753a2012364641fcfe2df8217113057f30bc"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "a699bf8ec210a645c13447d0dd933b1e6e77e360c659cefc3f078f0450a98eee"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "fa69bb5f3df01ae646d63eb23da01a30fdf7f93e731aee34ab6d85eea33e74d9"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "723d769e9f21e09522db0b1552f027e0138ef6d1ab40bf6f22327778e302dec0"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "c0723f1bcbd16f5c9b6c121cad0c7b44ad16bf1f9e4279519309ccffb838674a"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "81b0b747aa01664ecb4e7334ec6dcd034c0a9907f1dbdb2c5fbb36107868639b"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/red-question-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/red-question-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "e102a31e6837b1cbc6c53d0f5c740b4f3588d1a7d0b4ff39d8916eeb15667a94"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "21674659b1acf1eb6de6066255cdd5b041f21add5d4e6f3c4223443ea4089803"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "6d7dd05441e528eaa938ccd6daa2bc523f97d3874980a392b8230af01007a144"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "a1966cc2a374aab348604e37e6011ac9171e76e2a07160db0df432608a5304ec"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "4f2c76a8926c4b239581b5f6181cde1dc85d8ff92abcce9de145d03fe8a1aee7"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "f7d15e6dd106b73139b96ea8bfa7fc3b3da581879dfcc7db952faa8027079ec2"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "5b80ad71263401da14188f9dd67a5bd44e0dd01d9cc679f532a3f22184446e2c"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "59ae8df0a10d2ab964cf42254724bc559b2b7263ba791925ae2f5d4d3b123c95"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "0ff6708574c808f5c5bc3f76c529de3f44d06adc50daa19c4f730941cb07a48a"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "4f888cbad44a3630f86a0fa5e1cb96379e980bca91f9991766b900c1a6ac502c"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "ce149a1797179219fded162cd50d2cdd6e076f13bd568adc738a85e9c890cf39"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "4754339d30e2b7a3e465a3df9e61cfc9e62ff85045e101456ebe0f37a6f55ecb"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "d1bf86642f1ac08b288ce62249e793de533584e1e3ccb9d3c7219bef9a2b2ae6"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "e1778859299586f95b7e583cb64c0ae7d70ff6cc7add3ea174caf8e7ed0f08bf"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "0ae1b4a2258449568dd5583e63d9e792603f36434a841730ec2a6618cc693407"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "026a5e4ad086a5c074179582ed160a7b7d9748aa1247c6c289f0642941796699"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "5b073cd15afb810695f5537dda8d131186d6c0ae8220a4bb82cb14ae1331364f"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "860b253cf2d56919c95aa72dbe0697cf9efc64eb6c1439fc35f6c2fe6db0ed91"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "e87b93cd5ade819682f4081fc74271568f11881eafc7eca3492100e7d4b5af74"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "5dcfd71efa29c070da040a47211f019c60a5155e582d3e40ee200b7f3ae8c414"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "ae1b6f9308b65ec3ea9c1435531182b938a9213b6ab78cedb3e587b8dfe931e4"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "3af1442f0aa5322b4ae36e6b1f97bc6bcd6b19eb1d9f3402cdc879bf2746f7ce"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "47a26197ef984fe4bdd7b4d9b0b3b6b61abd24496fb75828a50457816d4fa96c"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "a12e21967abcc144670e90467d8b3d5b6533f2453139d92a1873792779ca6fde"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "4409f0b2f87f5cfe19cd9216a65eb6d5ccce2662d9b701df2fb70823b23374b1"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "cc6cf7dba240f3a27e69324a9c8347b0fc1586d84ccd83ecaadff08a5f1b3036"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "4d6f82c5f50ed817417cdf0556643512067b4a139935a3b27980cd96512dd2e8"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "25b5d6c22f456ea5b38fb70e531679df3867f299d112062e8bcdbaa752265f2f"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/blue-question-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/blue-question-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "5310a23a5d98b3b3e6e81fb6d1e64983398312e3b7324c3e80e9877c001ae865"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.0.f32",
+      "bytes": 4096,
+      "sha256": "fed8be3b8a5de46e4675fd59cb298e4ef4c908140ae01f088396020aaeb50589"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.1.f32",
+      "bytes": 4096,
+      "sha256": "1fd148baf254951297723af2c859d305fb533b7e8ae034af09ad7569d9fae47f"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.2.f32",
+      "bytes": 4096,
+      "sha256": "524e2b3f489b679dd36a4238486eed4263f3096098c2a4c7b4f780f4be340555"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.3.f32",
+      "bytes": 4096,
+      "sha256": "be6f560635236841cb773c73b973e4b7e39e4ec08c85600a67f16e5b5bb36cb0"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.4.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.4.f32",
+      "bytes": 4096,
+      "sha256": "46b60232001ef8d714b3b7eaf086fe7b01eb5f768702d366ce8b96fea2c42b86"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.5.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.5.f32",
+      "bytes": 4096,
+      "sha256": "c11cb554b0f72dee06c8c01a7e26d50956732cb0c3f8a4ae2aaf25d7e2f30f18"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.6.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.6.f32",
+      "bytes": 4096,
+      "sha256": "95a1b0006d33d9864b8acaabbb07ea6902b442b787abe28a2936fe13f813e546"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.7.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.7.f32",
+      "bytes": 4096,
+      "sha256": "613ebc9b255659103dcbe091fafc254ce57d1b1590118cecf0feb6210eaa69b9"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.8.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.8.f32",
+      "bytes": 4096,
+      "sha256": "19067009da345e775e10a2e08df52dc369883ce4591d9252c99d45d829ae27c9"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.9.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.9.f32",
+      "bytes": 4096,
+      "sha256": "582216b8aefe2b73b3ac61df1594275e656bf3730a3f5c2f8a5967b7143b58e9"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.10.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.10.f32",
+      "bytes": 4096,
+      "sha256": "bf288bc61af351f9fa48ef940371ea6701610eb68a9669660c9031164a252b33"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.11.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.11.f32",
+      "bytes": 4096,
+      "sha256": "652d32e5238c5cbc6296e1ad0d4e76e7b79314d73fe0ef065d8502e3f4875be5"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.12.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.12.f32",
+      "bytes": 4096,
+      "sha256": "f04fa3c4452c5a684b508d011ad588e27e4bf53d90946650f9047c8fadb16670"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.13.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.13.f32",
+      "bytes": 4096,
+      "sha256": "16c0eacc6f81ce5b7461629b3e845ccb485ddb6b5e0954f5a4fc41fc9797d755"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.14.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.14.f32",
+      "bytes": 4096,
+      "sha256": "1b53fbf74ab238e206dde32ff0fa2e9825f10d9823019c594edb96e641524172"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.15.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.15.f32",
+      "bytes": 4096,
+      "sha256": "298da2e37dd05fb4548bd55d05b01147c91a042e93a71f0dab6441f4f3d81faa"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.16.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.16.f32",
+      "bytes": 4096,
+      "sha256": "8eac82eebaacd61a93a04f9ec543be0c60e034fd645626327c7bdc3c1de84d85"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.17.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.17.f32",
+      "bytes": 4096,
+      "sha256": "fbcb0e49aa124693689e465146f738b8ac4cadd52ece37997800581b9753a77e"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.18.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.18.f32",
+      "bytes": 4096,
+      "sha256": "30dd79894e37b3742ed9d04fbf48ccb2bef2bfe234960d97c81144454fa02b95"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.19.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.19.f32",
+      "bytes": 4096,
+      "sha256": "de9cd8d30dcfc42ebc834effaacfeea338b4c50fb3bb1f49c2a8e8d4cfd9a657"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.20.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.20.f32",
+      "bytes": 4096,
+      "sha256": "e1c7d81efa84e623cbc77a2154cc25ecde4d7352a4615bf51f85efa634c09a42"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.21.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.21.f32",
+      "bytes": 4096,
+      "sha256": "1277308e135325f12ad8d28e55f1ea92e1c7a13141f099d077dc9e765e4210c6"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.22.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.22.f32",
+      "bytes": 4096,
+      "sha256": "b61466c935d90d16e1d7f0738882714c5124bd3d71db284288c9753fc43bb46a"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-layer.23.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-layer.23.f32",
+      "bytes": 4096,
+      "sha256": "49dac0fc4ee6e0261e903b99583728a6e1421dc9fcb9a61d394080bd81ac1ab4"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-logits.0.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-logits.0.f32",
+      "bytes": 993280,
+      "sha256": "9558d8fc0d73059e2d1cb3ae29696570d1f746ea613670fc4e29490c4c35f12b"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-logits.1.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-logits.1.f32",
+      "bytes": 993280,
+      "sha256": "3f0fd6e88f203788a06be08efd8303a523a1ce6f4a056cfabe2084cde42a1412"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-logits.2.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-logits.2.f32",
+      "bytes": 993280,
+      "sha256": "8e098ee5ff3fd77ca81f6e9cad377eb8ec43bed88ed5197af8b2b7434019aedd"
+    },
+    {
+      "path": "references/qwen35-gguf-q4_k_m-image/two-order-logits.3.f32",
+      "source": ".cache/qwen35-gguf-reference/q4_k_m-image/two-order-logits.3.f32",
+      "bytes": 993280,
+      "sha256": "48dd066ae9308030f0fc065af73ecabe7fb81558c0b71086bbca04ac01fcd0b5"
+    }
+  ],
+  "modern_origin": "resources/tool-assessment/capture_qwen35_gguf.py; exact per-file weights and folded GGUF coefficients"
+}

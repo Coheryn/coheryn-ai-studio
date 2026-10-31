@@ -5,7 +5,7 @@ use std::{
     fs::{File, Metadata},
     io::{Read, Seek, SeekFrom},
     path::Path,
-    sync::Mutex,
+    sync::{Arc, Mutex},
     time::SystemTime,
 };
 
@@ -35,11 +35,60 @@ pub fn sha256_file(path: impl AsRef<Path>) -> Result<String> {
 }
 
 pub struct Storage {
-    file: Mutex<File>,
+    source: Source,
     bytes: u64,
     modified: Option<SystemTime>,
 }
+enum Source {
+    File(Mutex<File>),
+    // Two checked temporal kernels are exposed in source [channel,time,y,x]
+    // order. This is a byte view, not dequantization or a merged model copy.
+    TemporalPatch {
+        source: Arc<Storage>,
+        offsets: [u64; 2],
+        spatial: u64,
+        channels: u64,
+        element_bytes: u64,
+    },
+}
 impl Storage {
+    pub(crate) fn temporal_patch(
+        source: Arc<Storage>,
+        offsets: [u64; 2],
+        rows: u64,
+        spatial: u64,
+        channels: u64,
+        element_bytes: u64,
+    ) -> Result<Self> {
+        let half = rows
+            .checked_mul(spatial)
+            .and_then(|v| v.checked_mul(channels))
+            .and_then(|v| v.checked_mul(element_bytes))
+            .filter(|n| *n > 0)
+            .ok_or_else(|| Error::invalid("patch view size overflow"))?;
+        if !matches!(element_bytes, 2 | 4)
+            || offsets.iter().any(|offset| {
+                offset
+                    .checked_add(half)
+                    .is_none_or(|end| end > source.bytes)
+            })
+        {
+            return Err(Error::invalid("patch view outside validated storage"));
+        }
+        Ok(Self {
+            source: Source::TemporalPatch {
+                source,
+                offsets,
+                spatial,
+                channels,
+                element_bytes,
+            },
+            bytes: half
+                .checked_mul(2)
+                .ok_or_else(|| Error::invalid("patch view overflow"))?,
+            modified: None,
+        })
+    }
     /// Takes ownership of an already range-validated tensor file. The format loader
     /// validates its header through this same handle before creating tensor views.
     pub(crate) fn from_tensor_file(file: File) -> Result<Self> {
@@ -48,7 +97,7 @@ impl Storage {
             return Err(Error::invalid("tensor storage must be a regular file"));
         }
         Ok(Self {
-            file: Mutex::new(file),
+            source: Source::File(Mutex::new(file)),
             bytes: meta.len(),
             modified: meta.modified().ok(),
         })
@@ -83,14 +132,17 @@ impl Storage {
             ));
         }
         Ok(Self {
-            file: Mutex::new(file),
+            source: Source::File(Mutex::new(file)),
             bytes: meta.len(),
             modified: meta.modified().ok(),
         })
     }
     pub fn unchanged(&self) -> Result<()> {
-        let m: Metadata = self
-            .file
+        let file = match &self.source {
+            Source::TemporalPatch { source, .. } => return source.unchanged(),
+            Source::File(file) => file,
+        };
+        let m: Metadata = file
             .lock()
             .map_err(|_| Error::new(ErrorCode::Internal, "weight storage lock poisoned"))?
             .metadata()?;
@@ -109,8 +161,34 @@ impl Storage {
         {
             return Err(Error::invalid("weight read outside validated file"));
         }
-        let mut file = self
-            .file
+        let file = match &self.source {
+            Source::TemporalPatch {
+                source,
+                offsets,
+                spatial,
+                channels,
+                element_bytes,
+            } => {
+                let segment = spatial * element_bytes;
+                let mut cursor = offset;
+                let mut target = output;
+                while !target.is_empty() {
+                    let index = cursor / segment;
+                    let within = cursor % segment;
+                    let row = index / (channels * 2);
+                    let channel = (index % (channels * 2)) / 2;
+                    let time = (index % 2) as usize;
+                    let physical = offsets[time] + (row * channels + channel) * segment + within;
+                    let count = target.len().min((segment - within) as usize);
+                    source.read(physical, &mut target[..count])?;
+                    target = &mut target[count..];
+                    cursor += count as u64;
+                }
+                return Ok(());
+            }
+            Source::File(file) => file,
+        };
+        let mut file = file
             .lock()
             .map_err(|_| Error::new(ErrorCode::Internal, "weight storage lock poisoned"))?;
         file.seek(SeekFrom::Start(offset))?;
@@ -122,6 +200,43 @@ impl Storage {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn temporal_patch_view_preserves_channel_time_order_and_fragmented_ranges() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("patches");
+        let physical: Vec<u16> = (0..12).chain(100..112).collect();
+        std::fs::write(
+            &path,
+            physical
+                .iter()
+                .flat_map(|v| v.to_le_bytes())
+                .collect::<Vec<_>>(),
+        )
+        .unwrap();
+        let source = Arc::new(Storage::from_tensor_file(File::open(&path).unwrap()).unwrap());
+        let view = Storage::temporal_patch(source.clone(), [0, 24], 2, 2, 3, 2).unwrap();
+        let expected: Vec<u16> = vec![
+            0, 1, 100, 101, 2, 3, 102, 103, 4, 5, 104, 105, 6, 7, 106, 107, 8, 9, 108, 109, 10, 11,
+            110, 111,
+        ];
+        let expected: Vec<u8> = expected.iter().flat_map(|v| v.to_le_bytes()).collect();
+        let mut actual = vec![0; 48];
+        view.read(0, &mut actual).unwrap();
+        assert_eq!(actual, expected);
+        let mut fragment = vec![0; 29];
+        view.read(3, &mut fragment).unwrap();
+        assert_eq!(fragment, expected[3..32]);
+        assert!(view.read(40, &mut fragment).is_err());
+        assert!(Storage::temporal_patch(source, [0, 25], 2, 2, 3, 2).is_err());
+        File::options()
+            .write(true)
+            .open(&path)
+            .unwrap()
+            .set_len(8)
+            .unwrap();
+        assert_eq!(view.unchanged().unwrap_err().code, ErrorCode::ModelChanged);
+    }
 
     #[test]
     fn standard_sha256_vectors_and_file_fingerprints_remain_stable() {

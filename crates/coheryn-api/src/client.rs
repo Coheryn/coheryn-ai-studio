@@ -322,7 +322,19 @@ impl Client {
         cancel: &Cancellation,
     ) -> Result<Value> {
         crate::registry::validate_id(name).map_err(|e| e.error)?;
-        if path.is_dir()
+        let qwen35_gguf = if path.is_file() {
+            let path = path.to_owned();
+            let cancel = cancel.clone();
+            tokio::task::spawn_blocking(move || {
+                coheryn_engine::adapters::is_qwen35_gguf(&path, &cancel)
+            })
+            .await
+            .map_err(|e| Error::request(e.to_string()))??
+        } else {
+            false
+        };
+        if qwen35_gguf
+            || path.is_dir()
             || path.extension().is_some_and(|e| e == "safetensors")
             || path
                 .file_name()

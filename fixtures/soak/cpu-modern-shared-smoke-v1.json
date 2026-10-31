@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "name": "cpu-modern-shared-soak-smoke-v1",
+  "cycles": 2,
+  "warmup_cycles": 1,
+  "restart_every": 1,
+  "fault_every": 2,
+  "concurrency": [
+    1
+  ],
+  "execution_profiles": [
+    "balanced"
+  ],
+  "max_memory_bytes": 1073741824,
+  "max_rss_bytes": 1073741824,
+  "max_drained_rss_growth_bytes": 134217728,
+  "require_rss": true,
+  "sample_ms": 100,
+  "request_timeout_seconds": 1200,
+  "cleanup_timeout_seconds": 30,
+  "consumer_timeout_seconds": 60
+}

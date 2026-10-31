@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "kind": "modern-cpu-local-verification",
+  "outcome": "running",
+  "production_ready": false,
+  "target": "aarch64-apple-darwin",
+  "completed_suites": {
+    "qwen35-gguf-f16-image": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 140,
+      "values": 14194688,
+      "http_scope": "preserved authenticated loopback TCP evidence; no new image request"
+    },
+    "qwen35-gguf-q4_k_m-image": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 140,
+      "values": 14194688,
+      "http_scope": "preserved authenticated loopback TCP evidence; no new image request"
+    },
+    "qwen35-sharded-image": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 140,
+      "values": 14194688,
+      "http_scope": "preserved authenticated loopback TCP evidence; no new image request"
+    },
+    "qwen35-image": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 140,
+      "values": 14194688,
+      "http_scope": "preserved authenticated loopback TCP evidence; no new image request"
+    },
+    "qwen35-gguf-f16-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 112,
+      "values": 4071424,
+      "http_scope": "loopback TCP, authenticated, extracted candidate"
+    },
+    "qwen35-gguf-q8_0-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-qwen35-gguf-q8_0-text-v3.json",
+        "sha256": "8d2eec2e364cfe36caffe4c84fbaa7f9b198b65d7c8072a7b8f932bf4901d72c",
+        "bytes": 97862
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 112,
+      "values": 4071424,
+      "http_scope": "loopback TCP, authenticated, extracted candidate"
+    },
+    "qwen35-gguf-q4_0-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-qwen35-gguf-q4_0-text-v3.json",
+        "sha256": "cf1391a381c006b66d82cf314050ab6fe63cbb23dcb2abebc5bc9f8f4b6702d6",
+        "bytes": 97852
+      },
+      "source_scope": "Original source snapshot in the retained record; predates the host guard.",
+      "arrays": 112,
+      "values": 4071424,
+      "http_scope": "loopback TCP, authenticated, extracted candidate"
+    },
+    "qwen35-gguf-q4_k_m-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-retained-components-v1.json",
+        "sha256": "adbc38ab551c2a351b40bd8a50ca25b92d5b1cfa07a7eebe865eb53df9f9c20c",
+        "bytes": 93087
+      },
+      "source_scope": "Completed components of an intentionally interrupted earlier campaign; original campaign remains failed/interrupted. Production/probe binaries and captured hashes reverified.",
+      "arrays": 112,
+      "values": 4071424,
+      "http_scope": "loopback TCP, authenticated, extracted candidate"
+    },
+    "qwen35-sharded-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-retained-components-v1.json",
+        "sha256": "adbc38ab551c2a351b40bd8a50ca25b92d5b1cfa07a7eebe865eb53df9f9c20c",
+        "bytes": 93087
+      },
+      "source_scope": "Completed components of an intentionally interrupted earlier campaign; original campaign remains failed/interrupted. Production/probe binaries and captured hashes reverified.",
+      "arrays": 112,
+      "values": 4071424,
+      "http_scope": "loopback TCP, authenticated, extracted candidate"
+    }
+  },
+  "pending_suites": [
+    "embedding-f16",
+    "embedding-q8",
+    "gguf-text",
+    "qwen35-gguf-q6_k_m-text",
+    "qwen35-text"
+  ],
+  "summary": {
+    "completed_suites": 9,
+    "required_suites": 14,
+    "completed_full_array_comparisons": 1120,
+    "completed_full_array_values": 77135872
+  },
+  "historical_native_checks": {
+    "path": "fixtures/qualification/cpu-modern-native-v2.json",
+    "sha256": "49044223997ee1d00586596ac47c2e4aee329629aad54dd5a89e0acc5d2f0acd",
+    "bytes": 51070
+  },
+  "historical_package": {
+    "path": "fixtures/qualification/cpu-modern-package-v2.json",
+    "sha256": "85a08a8a01142720076180297982102864cfda5b3d337596a1074c61b95814c6",
+    "bytes": 67122
+  },
+  "runtime_and_frozen_inputs_unchanged_since_historical_native_check": true,
+  "changed_runtime_or_frozen_inputs": [],
+  "current_harness_checks": {
+    "path": "fixtures/qualification/cpu-modern-host-guard-checks-v1.json",
+    "sha256": "678dd2c4e339c256d9efa4bf21d1d6127edc39fe682a736c2b78fe3a6febde3c",
+    "bytes": 49884
+  },
+  "interruption": {
+    "path": "fixtures/qualification/cpu-modern-host-interruption-v1.json",
+    "sha256": "f96c1403eba9438e292f5a0a3a4f7bf447e78ac438fa002b14d70b8aab6078a7",
+    "bytes": 3399
+  },
+  "limitations": [
+    "Nine historical completed components retain their original snapshots and byte-identical executables; the guard is not retroactively qualified by those runs.",
+    "Five unfinished suites are executing under the guarded current source; this is not yet a completed campaign.",
+    "No publisher-framework, broad semantic image, complete language/context, Linux/Windows, GPU/Metal or production qualification is implied."
+  ],
+  "current_native_checks": {
+    "path": "fixtures/qualification/cpu-modern-native-v4.json",
+    "sha256": "2ca7799a6919adb1d44fb13db8431b5eb5f16483d0a74d9d4528aa400a75ccaf",
+    "bytes": 51276
+  },
+  "current_package": {
+    "path": "fixtures/qualification/cpu-modern-package-v4.json",
+    "sha256": "e2e35a36080e1e3718a4cb7b2f2a57bd7ee5d4fde5b6cb4abb3b9b04e2736f8c",
+    "bytes": 67123
+  },
+  "live_host_preflight": {
+    "path": ".cache/modern-validation-resume/host-preflight-v2.json",
+    "sha256": "e2fcd0acd6d77d3bd0823ba9e9c584b25acb194819eb96b4884daef72ab2b0c4",
+    "bytes": 761
+  }
+}

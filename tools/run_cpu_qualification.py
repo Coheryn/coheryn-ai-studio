@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Qualify selected pinned real models on this native host; never promote production status."""
 import argparse
+from contextlib import nullcontext
 import hashlib
 import json
 import os
@@ -9,15 +10,17 @@ import platform
 import signal
 import subprocess
 import sys
+import tempfile
 import time
 import traceback
 
 from check_cpu_release import source_identity
 from verify_cpu_package import native_target, verify
-from cpu_qualification import assets, references, suites, transport
+from cpu_qualification import assets, host, references, suites, transport
 from cpu_qualification.common import ROOT, clean_environment, read, require, sha, write
+from cpu_qualification.profiles import PROFILES, GROUPS, selected as group_suites
 
-SUITES = ('gguf-text', 'embedding-f16', 'embedding-q8', 'qwen35-text', 'qwen35-image')
+SUITES = tuple(PROFILES)
 
 
 def hardware():
@@ -43,12 +46,14 @@ def hardware():
 
 
 class Context:
-    def __init__(self, directory):
+    def __init__(self, directory, guard=None):
         self.directory = directory
         self.commands = []
         self.suffix = '.exe' if os.name == 'nt' else ''
         self.binary = directory / 'package/bin' / ('coheryn' + self.suffix)
         self.references = directory / 'reference-data'
+        self.guard = guard
+        self.on_command = None
 
     @staticmethod
     def json_lines(path):
@@ -58,24 +63,30 @@ class Context:
         stdout, stderr = self.directory / (name + '.stdout'), self.directory / (name + '.stderr')
         started = time.monotonic()
         with stdout.open('xb') as output, stderr.open('xb') as errors:
+            if self.guard:
+                self.guard.sample()
             environment = {**os.environ, 'CARGO_BUILD_JOBS': '2', 'CARGO_INCREMENTAL': '0'} if build else clean_environment()
             process = subprocess.Popen(arguments, cwd=ROOT if build else self.directory, env=environment,
-                                       stdin=subprocess.DEVNULL, stdout=output, stderr=errors)
+                                       stdin=subprocess.DEVNULL, stdout=output, stderr=errors, **host.child_options())
             try:
-                while process.poll() is None:
-                    require(time.monotonic() - started < (1800 if build else 1200), 'subprocess deadline exceeded: ' + name)
-                    require(stdout.stat().st_size + stderr.stat().st_size <= 64 << 20, 'subprocess output limit exceeded: ' + name)
-                    try:
-                        process.wait(timeout=.1)
-                    except subprocess.TimeoutExpired:
-                        pass
+                with self.guard.owned(process) if self.guard else nullcontext():
+                    while process.poll() is None:
+                        if self.guard:
+                            self.guard.check()
+                        require(time.monotonic() - started < (1800 if build else 1200), 'subprocess deadline exceeded: ' + name)
+                        require(stdout.stat().st_size + stderr.stat().st_size <= 64 << 20, 'subprocess output limit exceeded: ' + name)
+                        try:
+                            process.wait(timeout=.1)
+                        except subprocess.TimeoutExpired:
+                            pass
             finally:
                 if process.poll() is None:
-                    process.kill()
-                    process.wait(timeout=30)
+                    self.guard.stop(process) if self.guard else host.stop_owned(process)
                 self.commands.append({'case': name, 'arguments': arguments, 'exit': process.returncode,
                                       'elapsed_seconds': time.monotonic() - started,
                                       'stdout': stdout.name, 'stdout_sha256': sha(stdout), 'stderr': stderr.name, 'stderr_sha256': sha(stderr)})
+                if self.on_command:
+                    self.on_command()
         require(process.returncode == 0, 'native command failed: ' + name + '; see ' + str(stderr))
         require(stdout.stat().st_size + stderr.stat().st_size <= 64 << 20, 'completed subprocess output limit exceeded: ' + name)
         print('PASS command ' + name, flush=True)
@@ -97,9 +108,28 @@ class Context:
         return result if binary == 'embedding_probe' else [result]
 
 
+def checkpoint(path, report):
+    """Atomically preserve progress; an abrupt restart cannot publish partial JSON."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', dir=path.parent,
+                                         prefix='.' + path.name, delete=False) as stream:
+            temporary = Path(stream.name)
+            json.dump(report, stream, ensure_ascii=False, indent=2, allow_nan=False)
+            stream.write('\n')
+            stream.flush()
+            os.fsync(stream.fileno())
+        temporary.replace(path)
+    finally:
+        if temporary:
+            temporary.unlink(missing_ok=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--suite', action='append', choices=SUITES)
+    parser.add_argument('--group', choices=('all', *GROUPS), default='all')
     parser.add_argument('--fetch', action='store_true', help='allow bounded pinned model downloads')
     parser.add_argument('--archive', required=True, type=Path)
     parser.add_argument('--archive-sha256', required=True)
@@ -113,20 +143,34 @@ def main():
             raise KeyboardInterrupt('qualification interrupted')
         signal.signal(signal.SIGTERM, interrupted)
     require(not args.report.exists(), 'report already exists')
-    selected = args.suite or list(SUITES)
+    selected = args.suite or group_suites(args.group)
     require(len(set(selected)) == len(selected), 'duplicate qualification suite')
     directory = ROOT / '.cache/cpu-qualification' / args.report.stem
     directory.mkdir(parents=True, exist_ok=False)
     source = source_identity()
     context = Context(directory)
-    report = {'schema_version': 1, 'kind': 'cpu-real-model-qualification', 'outcome': 'fail', 'target': native_target(),
+    guard = None
+    report = {'schema_version': 1, 'kind': 'cpu-real-model-qualification', 'outcome': 'running', 'target': native_target(),
               'host': {'system': platform.system(), 'release': platform.release(), 'machine': platform.machine(), **hardware()},
               'source_snapshot': source, 'source_unchanged': False, 'selected_suites': selected, 'production_ready': False,
               'cache_condition': 'uncontrolled', 'external_executor_invoked': False, 'results': {},
-              'limitations': ['Selected fixtures only; other model sizes, encodings, image semantics and the paired GGUF image path remain separate qualification.',
+              'limitations': ['Selected fixtures only; other sizes/encodings, publisher-sharded checkpoints, legacy vision paths and broad image semantics remain separate qualification.',
                               'No GPU, cross-platform extrapolation, publisher-framework Qwen3.5 parity, TLS, soak, fuzz or durable-session qualification.',
                               'Internal reservation cleanup checked; RSS, private memory, faults and I/O unavailable in this runner.']}
+    report['commands'] = context.commands
+    report['artifacts'] = directory.relative_to(ROOT).as_posix()
+    def save():
+        if guard:
+            report['host_guard'] = guard.report()
+            if guard.stream.closed:
+                report['host_guard']['log_sha256'] = sha(guard.log)
+        checkpoint(args.report, report)
+    context.on_command = save
+    save()
     try:
+        guard = host.Guard(directory)
+        context.guard = guard
+        guard.start()
         native = read(args.native_checks)
         require(report['target'] and native['target'] == report['target'] and native['outcome'] == 'pass'
                 and native['source_unchanged'] and native['source_snapshot'] == source, 'current native build evidence required')
@@ -139,13 +183,14 @@ def main():
                 and manifest['source_snapshot_sha256'] == hashlib.sha256(json.dumps(source, sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
                 'package source/native evidence mismatch')
         report.update(archive_sha256=args.archive_sha256, binary_sha256=sha(context.binary))
-        if any(s in selected for s in ('gguf-text', 'qwen35-text', 'qwen35-image')):
+        if any(PROFILES[s]['family'] != 'embedding' for s in selected):
             require(args.reference_bundle and args.reference_sha256, 'numerical suites require the frozen data bundle and its SHA-256')
             context.references.mkdir()
             report['references'] = references.unpack(args.reference_bundle.resolve(), args.reference_sha256, context.references)
-        models, identities = assets.models(selected, args.fetch)
+        models, identities = assets.models(selected, args.fetch, guard)
         report['models'] = identities
-        probes = sorted(set('embedding_probe' if s.startswith('embedding-') else 'qwen35_image_probe' if s == 'qwen35-image' else 'qwen35_probe'
+        guard.sample()
+        probes = sorted(set('embedding_probe' if s.startswith('embedding-') else 'qwen35_image_probe' if PROFILES[s]['image'] else 'qwen35_probe'
                             for s in selected if s != 'gguf-text'))
         if probes:
             cargo = str(ROOT / 'tools/cargo') if os.name != 'nt' else 'cargo'
@@ -155,24 +200,34 @@ def main():
             context.command('build-probes', command, build=True)
         report['probes'] = {p: sha(ROOT / 'target/release/examples' / (p + context.suffix)) for p in probes}
         for suite in selected:
+            guard.sample()
             print('START ' + suite, flush=True)
             numerical = suites.gguf(context, models[suite]) if suite == 'gguf-text' else suites.embedding(context, suite, models[suite]) if suite.startswith('embedding-') else suites.qwen35(context, suite, models[suite])
             # Preserve completed numerical evidence even if a later transport check fails.
             report['results'][suite] = {'numerical_and_packaged_cli': numerical}
+            save()
             report['results'][suite]['http'] = transport.run(context, suite, models[suite])
+            save()
             print('PASS ' + suite, flush=True)
         require(source_identity() == source, 'source changed during qualification')
         report['outcome'] = 'pass'
     except (Exception, KeyboardInterrupt) as error:
+        report['outcome'] = 'fail'
         report['error'] = str(error)
         traceback.print_exc()
     finally:
+        if guard:
+            try:
+                guard.close()
+            except Exception as error:
+                report['outcome'] = 'fail'
+                report['observer_close_error'] = str(error)
+            report['host_guard'] = guard.report()
         report['source_unchanged'] = source_identity() == source
         report['commands'] = context.commands
         # The private vault is destroyed by transport before report/artifact publication.
         report['artifacts'] = directory.relative_to(ROOT).as_posix()
-        args.report.parent.mkdir(parents=True, exist_ok=True)
-        write(args.report, report)
+        save()
     raise SystemExit(report['outcome'] != 'pass')
 
 

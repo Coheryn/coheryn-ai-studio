@@ -9,6 +9,7 @@ pub(crate) struct Workspace {
     pub(crate) quantized: quant::QuantizedInput,
     extra_quantized: Vec<quant::QuantizedInput>,
     tile_rows: usize,
+    f32_operands: bool,
     pool: Option<crate::parallel::CpuPool>,
 }
 impl Workspace {
@@ -51,12 +52,17 @@ impl Workspace {
             quantized: quant::QuantizedInput::new(width)?,
             extra_quantized,
             tile_rows,
+            f32_operands: false,
             pool: if threads > 1 {
                 Some(crate::parallel::CpuPool::new(threads)?)
             } else {
                 None
             },
         })
+    }
+    /// Source-preserving arithmetic for native BF16/F16/packed architecture adapters.
+    pub(crate) fn preserve_f32_operands(&mut self) {
+        self.f32_operands = true;
     }
     fn activation(&self, row: usize) -> &quant::QuantizedInput {
         if row == 0 {
@@ -144,8 +150,10 @@ pub(crate) fn matmul_cooperative(
     {
         return Err(Error::invalid("matrix input/output shape mismatch"));
     }
+    let packed = quant::is_packed(tensor.dtype) && !work.f32_operands;
+    let rounded = tensor.dtype == 1 && !work.f32_operands;
     let row_bytes = quant::row_bytes(tensor.dtype, width)?;
-    let chunk_rows = (work.io.len() / row_bytes).min(if quant::is_packed(tensor.dtype) {
+    let chunk_rows = (work.io.len() / row_bytes).min(if packed {
         usize::MAX
     } else {
         work.floats.len() / width
@@ -155,7 +163,7 @@ pub(crate) fn matmul_cooperative(
     }
     // Dense source rows need no per-input quantization/rounding scratch. Reuse one
     // decoded weight tile for every admitted input row instead of rereading it.
-    let input_rows = if matches!(tensor.dtype, 0 | 30) {
+    let input_rows = if matches!(tensor.dtype, 0 | 30) || work.f32_operands {
         input.len() / width
     } else {
         work.tile_rows
@@ -167,9 +175,9 @@ pub(crate) fn matmul_cooperative(
         cancel.check()?;
         storage.unchanged()?;
         let n = input.len() / width;
-        if tensor.dtype == 1 {
+        if rounded {
             cpu::round_f16(input, &mut work.operand[..input.len()])?;
-        } else if quant::is_packed(tensor.dtype) {
+        } else if packed {
             for (i, row) in input.chunks_exact(width).enumerate() {
                 if i == 0 {
                     work.quantized.prepare(row, tensor.dtype)?;
@@ -186,7 +194,7 @@ pub(crate) fn matmul_cooperative(
                 data + tensor.offset + (start * row_bytes) as u64,
                 &mut work.io[..bytes],
             )?;
-            if !quant::is_packed(tensor.dtype) {
+            if !packed {
                 cpu::decode(
                     &work.io[..bytes],
                     tensor.dtype,
@@ -199,14 +207,14 @@ pub(crate) fn matmul_cooperative(
                     cancel.check()?;
                     for (j, value) in outputs.iter_mut().enumerate() {
                         let row = group * 8 + j;
-                        *value = if quant::is_packed(tensor.dtype) {
+                        *value = if packed {
                             quant::dot(
                                 &work.io[row * row_bytes..(row + 1) * row_bytes],
                                 tensor.dtype,
                                 work.activation(index),
                             )?
                         } else {
-                            let source = if tensor.dtype == 1 {
+                            let source = if rounded {
                                 &work.operand[index * width..(index + 1) * width]
                             } else {
                                 &input[index * width..(index + 1) * width]
@@ -229,7 +237,7 @@ pub(crate) fn matmul_cooperative(
                             .try_for_each(|(i, dst)| compute_row(i, dst))
                     })?;
                 } else if count >= pool.current_num_threads() * 8 {
-                    let source = if tensor.dtype == 1 {
+                    let source = if rounded {
                         &work.operand[..width]
                     } else {
                         input
@@ -242,7 +250,7 @@ pub(crate) fn matmul_cooperative(
                                 cancel.check()?;
                                 for (j, value) in dst.iter_mut().enumerate() {
                                     let row = group * 8 + j;
-                                    *value = if quant::is_packed(tensor.dtype) {
+                                    *value = if packed {
                                         quant::dot(
                                             &work.io[row * row_bytes..(row + 1) * row_bytes],
                                             tensor.dtype,
@@ -316,6 +324,17 @@ pub(crate) fn matmul_batch_cooperative(
     if width == 0 || rows == 0 {
         return Err(Error::invalid("empty matrix"));
     }
+    let f32_operands = vectors[0].workspace.f32_operands;
+    if vectors
+        .iter()
+        .any(|v| v.workspace.f32_operands != f32_operands)
+    {
+        return Err(Error::request(
+            "mixed operand precision in a native matrix batch",
+        ));
+    }
+    let packed = quant::is_packed(tensor.dtype) && !f32_operands;
+    let rounded = tensor.dtype == 1 && !f32_operands;
     let row_bytes = quant::row_bytes(tensor.dtype, width)?;
     for vector in vectors.iter_mut() {
         if vector.error.is_some() {
@@ -329,9 +348,9 @@ pub(crate) fn matmul_batch_cooperative(
             {
                 return Err(Error::invalid("batch matrix vector shape mismatch"));
             }
-            if tensor.dtype == 1 {
+            if rounded {
                 cpu::round_f16(vector.input, &mut vector.workspace.operand[..width])?;
-            } else if quant::is_packed(tensor.dtype) {
+            } else if packed {
                 vector
                     .workspace
                     .quantized
@@ -348,7 +367,7 @@ pub(crate) fn matmul_batch_cooperative(
     let mut io = std::mem::take(&mut vectors[0].workspace.io);
     let mut floats = std::mem::take(&mut vectors[0].workspace.floats);
     let result = (|| {
-        let chunk_rows = (io.len() / row_bytes).min(if quant::is_packed(tensor.dtype) {
+        let chunk_rows = (io.len() / row_bytes).min(if packed {
             usize::MAX
         } else {
             floats.len() / width
@@ -377,12 +396,12 @@ pub(crate) fn matmul_batch_cooperative(
             )?;
             stats.tiles += 1;
             stats.bytes += bytes as u64;
-            if !quant::is_packed(tensor.dtype) {
+            if !packed {
                 cpu::decode(&io[..bytes], tensor.dtype, &mut floats[..count * width])?;
             }
             for vector in vectors.iter_mut().filter(|v| v.error.is_none()) {
                 let work = &*vector.workspace;
-                let source = if tensor.dtype == 1 {
+                let source = if rounded {
                     &work.operand[..width]
                 } else {
                     vector.input
@@ -392,7 +411,7 @@ pub(crate) fn matmul_batch_cooperative(
                     cancel.check()?;
                     for (j, value) in dst.iter_mut().enumerate() {
                         let row = group * 8 + j;
-                        *value = if quant::is_packed(tensor.dtype) {
+                        *value = if packed {
                             quant::dot(
                                 &io[row * row_bytes..(row + 1) * row_bytes],
                                 tensor.dtype,
@@ -440,10 +459,130 @@ mod batch_tests {
     use super::*;
     use crate::inference::cache_model_fixture as fixture;
     #[test]
-    fn shared_tiles_match_independent_float_and_packed_matvecs_and_isolate_cancelled_lane() {
-        let cases: serde_json::Value =
+    fn source_f32_operands_preserve_precision_without_changing_legacy_half_rounding() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("half");
+        std::fs::write(&path, half::f16::ONE.to_bits().to_le_bytes()).unwrap();
+        let storage = Storage::from_tensor_file(std::fs::File::open(path).unwrap()).unwrap();
+        let tensor = Tensor {
+            name: "test".into(),
+            dimensions: vec![1, 1],
+            dtype: 1,
+            offset: 0,
+            bytes: 2,
+        };
+        let input = [1.0001];
+        let mut output = [0.];
+        let mut work = Workspace::new(1, 4096, 1, 1).unwrap();
+        matmul(
+            &storage,
+            0,
+            &tensor,
+            &input,
+            &mut output,
+            &mut work,
+            &Cancellation::default(),
+        )
+        .unwrap();
+        assert_eq!(output, [1.]);
+        work.preserve_f32_operands();
+        matmul(
+            &storage,
+            0,
+            &tensor,
+            &input,
+            &mut output,
+            &mut work,
+            &Cancellation::default(),
+        )
+        .unwrap();
+        assert_eq!(output, input);
+    }
+    #[test]
+    fn packed_source_precision_matches_independent_decoded_weight_fixtures_in_single_and_batch_paths()
+     {
+        let mut cases: serde_json::Value =
             serde_json::from_str(include_str!("../../../fixtures/quantized/kernels.json")).unwrap();
-        for dtype in [0, 1, 2, 6, 8, 12, 14] {
+        let q5: serde_json::Value =
+            serde_json::from_str(include_str!("../../../fixtures/quantized/q5_k-v1.json")).unwrap();
+        cases["cases"]
+            .as_array_mut()
+            .unwrap()
+            .extend(q5["cases"].as_array().unwrap().iter().cloned());
+        for case in cases["cases"].as_array().unwrap() {
+            let directory = tempfile::tempdir().unwrap();
+            let path = directory.path().join("block");
+            let bytes: Vec<u8> = case["bytes"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|x| x.as_u64().unwrap() as u8)
+                .collect();
+            std::fs::write(&path, &bytes).unwrap();
+            let storage = Storage::from_tensor_file(std::fs::File::open(path).unwrap()).unwrap();
+            let input: Vec<f32> = case["input"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|x| x.as_f64().unwrap() as f32)
+                .collect();
+            let decoded: Vec<f32> = case["decoded"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|x| x.as_f64().unwrap() as f32)
+                .collect();
+            let expected = decoded
+                .iter()
+                .zip(&input)
+                .map(|(a, b)| f64::from(a * b))
+                .sum::<f64>() as f32;
+            let tensor = Tensor {
+                name: "block".into(),
+                dimensions: vec![input.len() as u64, 1],
+                dtype: case["dtype"].as_u64().unwrap() as u32,
+                offset: 0,
+                bytes: bytes.len() as u64,
+            };
+            let mut work = Workspace::new(input.len(), 4096, 1, 1).unwrap();
+            work.preserve_f32_operands();
+            let mut output = [0.];
+            matmul(
+                &storage,
+                0,
+                &tensor,
+                &input,
+                &mut output,
+                &mut work,
+                &Cancellation::default(),
+            )
+            .unwrap();
+            assert!((output[0] - expected).abs() <= 1e-5 + expected.abs() * 1e-6);
+            let mut error = None;
+            let cancel = Cancellation::default();
+            let mut vector = BatchVector {
+                input: &input,
+                output: &mut output,
+                workspace: &mut work,
+                cancel: &cancel,
+                error: &mut error,
+            };
+            matmul_batch(&storage, 0, &tensor, std::slice::from_mut(&mut vector)).unwrap();
+            assert!(error.is_none());
+            assert!((output[0] - expected).abs() <= 1e-5 + expected.abs() * 1e-6);
+        }
+    }
+    #[test]
+    fn shared_tiles_match_independent_float_and_packed_matvecs_and_isolate_cancelled_lane() {
+        let mut cases: serde_json::Value =
+            serde_json::from_str(include_str!("../../../fixtures/quantized/kernels.json")).unwrap();
+        let q5: serde_json::Value =
+            serde_json::from_str(include_str!("../../../fixtures/quantized/q5_k-v1.json")).unwrap();
+        cases["cases"]
+            .as_array_mut()
+            .unwrap()
+            .extend(q5["cases"].as_array().unwrap().iter().cloned());
+        for dtype in [0, 1, 2, 6, 8, 12, 13, 14] {
             let directory = tempfile::tempdir().unwrap();
             let path = directory.path().join("weights.gguf");
             let mut bytes = fixture::packed_model(dtype);

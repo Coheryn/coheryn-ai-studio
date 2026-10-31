@@ -1,0 +1,572 @@
+{
+  "schema_version": 1,
+  "kind": "modern-cpu-local-verification",
+  "outcome": "pass",
+  "classification": "experimental selected-profile evidence",
+  "production_ready": false,
+  "target": "aarch64-apple-darwin",
+  "compiler": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: aarch64-apple-darwin\nrelease: 1.99.1\nLLVM version: 23.1.1\n",
+  "current_native_checks": {
+    "path": "fixtures/qualification/cpu-modern-native-v4.json",
+    "sha256": "2ca7799a6919adb1d44fb13db8431b5eb5f16483d0a74d9d4528aa400a75ccaf",
+    "bytes": 51276
+  },
+  "current_package": {
+    "path": "fixtures/qualification/cpu-modern-package-v4.json",
+    "sha256": "e2e35a36080e1e3718a4cb7b2f2a57bd7ee5d4fde5b6cb4abb3b9b04e2736f8c",
+    "bytes": 67123
+  },
+  "current_guarded_native_driver": {
+    "path": "fixtures/qualification/cpu-modern-guarded-native-driver-v1.json",
+    "sha256": "fc028849dab3be6677fbfbd976c6967e88f3067f16ffc621ff0697fe7f75fe1e",
+    "bytes": 49013
+  },
+  "reference_bundle": {
+    "path": "fixtures/cpu-qualification/modern-reference-bundle-v1.json",
+    "sha256": "7afcb830291b5bc891b0d46913b5d4d930878d208d6a9a305fd5c11fca1c80c2",
+    "bytes": 243
+  },
+  "compatibility": {
+    "path": "fixtures/compatibility.json",
+    "sha256": "7270a2294c2960dd10bcfba9b43ec4c582b590c17bc6a90a09fe4908712cecfd",
+    "bytes": 41424
+  },
+  "quantization_quality": {
+    "path": "fixtures/qwen35/gguf/quantization-quality-v1.json",
+    "sha256": "85bee39521744199df3448805efd660717ecf8e7109d9bc0f885eee9fcbadeeb",
+    "bytes": 3910
+  },
+  "observer_byte_equivalence": {
+    "path": "fixtures/qualification/cpu-modern-trace-equivalence-v1.json",
+    "sha256": "7eb5293235cbd4e4d7899273f559ea86b668bde918c387879c6ed3704b7c25ef",
+    "bytes": 61081
+  },
+  "host_interruption_assessment": {
+    "path": "fixtures/qualification/cpu-modern-host-interruption-v1.json",
+    "sha256": "f96c1403eba9438e292f5a0a3a4f7bf447e78ac438fa002b14d70b8aab6078a7",
+    "bytes": 3399
+  },
+  "collection_procedure": {
+    "path": "fixtures/qualification/collect-modern-guarded-verification.py",
+    "sha256": "62097625f1cb26eab1c5f3285e43d8a0e5f155afa02acc155c8f32af0c780b8b",
+    "bytes": 13477
+  },
+  "summary": {
+    "suites": 14,
+    "current_guarded_suites": 5,
+    "historical_completed_components": 9,
+    "full_array_comparisons": 1369,
+    "full_array_values": 85452160,
+    "individual_embedding_vectors": 12,
+    "http_requests": 62
+  },
+  "suites": {
+    "qwen35-gguf-f16-image": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "evidence_scope": "historical revalidation",
+      "original_complete_source_matches_current": false,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 140,
+      "full_array_values": 14194688,
+      "individual_embedding_vectors": 0,
+      "batch_configurations": [],
+      "http_requests": 4,
+      "http_routes": [
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/chat/completions"
+      ],
+      "host_observations": null,
+      "publisher_framework_parity": false
+    },
+    "qwen35-gguf-q4_k_m-image": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "evidence_scope": "historical revalidation",
+      "original_complete_source_matches_current": false,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 140,
+      "full_array_values": 14194688,
+      "individual_embedding_vectors": 0,
+      "batch_configurations": [],
+      "http_requests": 4,
+      "http_routes": [
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/chat/completions"
+      ],
+      "host_observations": null,
+      "publisher_framework_parity": false
+    },
+    "qwen35-sharded-image": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "evidence_scope": "historical revalidation",
+      "original_complete_source_matches_current": false,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 140,
+      "full_array_values": 14194688,
+      "individual_embedding_vectors": 0,
+      "batch_configurations": [],
+      "http_requests": 4,
+      "http_routes": [
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/chat/completions"
+      ],
+      "host_observations": null,
+      "publisher_framework_parity": false
+    },
+    "qwen35-image": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "evidence_scope": "historical revalidation",
+      "original_complete_source_matches_current": false,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 140,
+      "full_array_values": 14194688,
+      "individual_embedding_vectors": 0,
+      "batch_configurations": [],
+      "http_requests": 4,
+      "http_routes": [
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/chat/completions"
+      ],
+      "host_observations": null,
+      "publisher_framework_parity": false
+    },
+    "qwen35-gguf-f16-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-models-v3-recovered.json",
+        "sha256": "945d424668cc72731b436587b054053499109ab01a8f2dd48e7be9887c3ba406",
+        "bytes": 295800
+      },
+      "evidence_scope": "historical revalidation",
+      "original_complete_source_matches_current": false,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 112,
+      "full_array_values": 4071424,
+      "individual_embedding_vectors": 0,
+      "batch_configurations": [],
+      "http_requests": 5,
+      "http_routes": [
+        "/api/v1/generate",
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/chat/completions"
+      ],
+      "host_observations": null,
+      "publisher_framework_parity": false
+    },
+    "qwen35-gguf-q8_0-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-qwen35-gguf-q8_0-text-v3.json",
+        "sha256": "8d2eec2e364cfe36caffe4c84fbaa7f9b198b65d7c8072a7b8f932bf4901d72c",
+        "bytes": 97862
+      },
+      "evidence_scope": "historical execution",
+      "original_complete_source_matches_current": false,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 112,
+      "full_array_values": 4071424,
+      "individual_embedding_vectors": 0,
+      "batch_configurations": [],
+      "http_requests": 5,
+      "http_routes": [
+        "/api/v1/generate",
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/chat/completions"
+      ],
+      "host_observations": null,
+      "publisher_framework_parity": false
+    },
+    "qwen35-gguf-q4_0-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-qwen35-gguf-q4_0-text-v3.json",
+        "sha256": "cf1391a381c006b66d82cf314050ab6fe63cbb23dcb2abebc5bc9f8f4b6702d6",
+        "bytes": 97852
+      },
+      "evidence_scope": "historical execution",
+      "original_complete_source_matches_current": false,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 112,
+      "full_array_values": 4071424,
+      "individual_embedding_vectors": 0,
+      "batch_configurations": [],
+      "http_requests": 5,
+      "http_routes": [
+        "/api/v1/generate",
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/chat/completions"
+      ],
+      "host_observations": null,
+      "publisher_framework_parity": false
+    },
+    "qwen35-gguf-q4_k_m-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-retained-components-v1.json",
+        "sha256": "adbc38ab551c2a351b40bd8a50ca25b92d5b1cfa07a7eebe865eb53df9f9c20c",
+        "bytes": 93087
+      },
+      "evidence_scope": "retained completed components",
+      "original_complete_source_matches_current": false,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 112,
+      "full_array_values": 4071424,
+      "individual_embedding_vectors": 0,
+      "batch_configurations": [],
+      "http_requests": 5,
+      "http_routes": [
+        "/api/v1/generate",
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/chat/completions"
+      ],
+      "host_observations": null,
+      "publisher_framework_parity": false
+    },
+    "qwen35-sharded-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-retained-components-v1.json",
+        "sha256": "adbc38ab551c2a351b40bd8a50ca25b92d5b1cfa07a7eebe865eb53df9f9c20c",
+        "bytes": 93087
+      },
+      "evidence_scope": "retained completed components",
+      "original_complete_source_matches_current": false,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 112,
+      "full_array_values": 4071424,
+      "individual_embedding_vectors": 0,
+      "batch_configurations": [],
+      "http_requests": 5,
+      "http_routes": [
+        "/api/v1/generate",
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/chat/completions"
+      ],
+      "host_observations": null,
+      "publisher_framework_parity": false
+    },
+    "qwen35-gguf-q6_k_m-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-qwen35-gguf-q6_k_m-text-v4.json",
+        "sha256": "b283e4eb2b0854c9ae89ac31b23cca67b84ba853994c242b86b1f7831b25bbb0",
+        "bytes": 99212
+      },
+      "evidence_scope": "current guarded execution",
+      "original_complete_source_matches_current": true,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 112,
+      "full_array_values": 4071424,
+      "individual_embedding_vectors": 0,
+      "batch_configurations": [],
+      "http_requests": 5,
+      "http_routes": [
+        "/api/v1/generate",
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/chat/completions"
+      ],
+      "host_observations": {
+        "samples": 233,
+        "minimum_available_memory_bytes": 1913094144,
+        "minimum_disk_free_bytes": 11302473728,
+        "maximum_compressed_memory_bytes": 2892316672,
+        "thermal_states": [
+          "fair",
+          "nominal"
+        ],
+        "maximum_load_1m": 14.22412109375,
+        "log_sha256": "54e12580f8155edeeff2b79b66c9bd07f4bbb7e6efd42e81f715a8e17352c0b6"
+      },
+      "publisher_framework_parity": false
+    },
+    "qwen35-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-qwen35-text-v5.json",
+        "sha256": "2023d5973c9d681b0eb5017747be76190008af1d789a5ea667951bef96ff06be",
+        "bytes": 100533
+      },
+      "evidence_scope": "current guarded execution",
+      "original_complete_source_matches_current": true,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 112,
+      "full_array_values": 4071424,
+      "individual_embedding_vectors": 0,
+      "batch_configurations": [],
+      "http_requests": 5,
+      "http_routes": [
+        "/api/v1/generate",
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/chat/completions"
+      ],
+      "host_observations": {
+        "samples": 106,
+        "minimum_available_memory_bytes": 2020622336,
+        "minimum_disk_free_bytes": 12994461696,
+        "maximum_compressed_memory_bytes": 2837397504,
+        "thermal_states": [
+          "fair",
+          "nominal"
+        ],
+        "maximum_load_1m": 4.22900390625,
+        "log_sha256": "36ec351e825559db43edc53471b11e7f3c1e61dc56f1a6b1155f4138ac40cd77"
+      },
+      "publisher_framework_parity": false,
+      "resume": {
+        "source_record": "fixtures/qualification/cpu-modern-qwen35-text-v4.json",
+        "source_record_sha256": "fac00a103cb21851b378320aa964ffe7d6fb867337050fd30359ae34c26e0ddd",
+        "source_outcome": "fail",
+        "retained_children": [
+          "qwen35-text-cli-english",
+          "qwen35-text-english-1",
+          "qwen35-text-english-2"
+        ],
+        "scope": "Revalidate completed English outputs; rerun interrupted Unicode children and all HTTP checks. Original host-cutoff campaign remains failed."
+      }
+    },
+    "gguf-text": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-gguf-text-v4.json",
+        "sha256": "55c79a37663b73b0eaf388928364ec7a7d296358c89d39db8168e25d552ea788",
+        "bytes": 73542
+      },
+      "evidence_scope": "current guarded execution",
+      "original_complete_source_matches_current": true,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 25,
+      "full_array_values": 173440,
+      "individual_embedding_vectors": 0,
+      "batch_configurations": [],
+      "http_requests": 5,
+      "http_routes": [
+        "/api/v1/generate",
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/completions"
+      ],
+      "host_observations": {
+        "samples": 111,
+        "minimum_available_memory_bytes": 2100248576,
+        "minimum_disk_free_bytes": 13205671936,
+        "maximum_compressed_memory_bytes": 2685206528,
+        "thermal_states": [
+          "fair"
+        ],
+        "maximum_load_1m": 3.009765625,
+        "log_sha256": "4426f343b0120af8c032ba1f3b87645a935f35a7ab67a03c360c72a97f836f9e"
+      },
+      "publisher_framework_parity": false
+    },
+    "embedding-f16": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-embedding-f16-v4.json",
+        "sha256": "da938f632b354353081a6ac485badad73f26c80dcd2d5b8a7bb55e4c2c52c3ba",
+        "bytes": 65060
+      },
+      "evidence_scope": "current guarded execution",
+      "original_complete_source_matches_current": true,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 0,
+      "full_array_values": 0,
+      "individual_embedding_vectors": 6,
+      "batch_configurations": [
+        [
+          "reference",
+          1,
+          4
+        ],
+        [
+          "balanced",
+          2,
+          4
+        ],
+        [
+          "performance",
+          4,
+          4
+        ],
+        [
+          "low-memory",
+          1,
+          4
+        ],
+        [
+          "balanced",
+          2,
+          1
+        ]
+      ],
+      "http_requests": 3,
+      "http_routes": [
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/embeddings"
+      ],
+      "host_observations": {
+        "samples": 39,
+        "minimum_available_memory_bytes": 2507538432,
+        "minimum_disk_free_bytes": 14163181568,
+        "maximum_compressed_memory_bytes": 2491105280,
+        "thermal_states": [
+          "fair"
+        ],
+        "maximum_load_1m": 2.64990234375,
+        "log_sha256": "566684299b3bde7d035ffe5fa1b4ce43ebf07f3404c27c3a446d587d4707de88"
+      },
+      "publisher_framework_parity": false
+    },
+    "embedding-q8": {
+      "record": {
+        "path": "fixtures/qualification/cpu-modern-embedding-q8-v4.json",
+        "sha256": "f4e754de1a5bbdfdd92c72aca7191a9ee5bd92600cee0bfc95f52e361f5db604",
+        "bytes": 65021
+      },
+      "evidence_scope": "current guarded execution",
+      "original_complete_source_matches_current": true,
+      "runtime_binary_and_frozen_inputs_match_current": true,
+      "full_array_comparisons": 0,
+      "full_array_values": 0,
+      "individual_embedding_vectors": 6,
+      "batch_configurations": [
+        [
+          "reference",
+          1,
+          4
+        ],
+        [
+          "balanced",
+          2,
+          4
+        ],
+        [
+          "performance",
+          4,
+          4
+        ],
+        [
+          "low-memory",
+          1,
+          4
+        ],
+        [
+          "balanced",
+          2,
+          1
+        ]
+      ],
+      "http_requests": 3,
+      "http_routes": [
+        "/api/v1/models/load",
+        "/api/v1/models/unload",
+        "/v1/embeddings"
+      ],
+      "host_observations": {
+        "samples": 21,
+        "minimum_available_memory_bytes": 2469724160,
+        "minimum_disk_free_bytes": 14414172160,
+        "maximum_compressed_memory_bytes": 2420260864,
+        "thermal_states": [
+          "fair"
+        ],
+        "maximum_load_1m": 2.55615234375,
+        "log_sha256": "f4fba1aee146ad7ce262c85ca9695ce8f0d94865a4e49dce61c68c7e74f549ed"
+      },
+      "publisher_framework_parity": false
+    }
+  },
+  "guarded_host_observations": [
+    {
+      "samples": 233,
+      "minimum_available_memory_bytes": 1913094144,
+      "minimum_disk_free_bytes": 11302473728,
+      "maximum_compressed_memory_bytes": 2892316672,
+      "thermal_states": [
+        "fair",
+        "nominal"
+      ],
+      "maximum_load_1m": 14.22412109375,
+      "log_sha256": "54e12580f8155edeeff2b79b66c9bd07f4bbb7e6efd42e81f715a8e17352c0b6"
+    },
+    {
+      "samples": 106,
+      "minimum_available_memory_bytes": 2020622336,
+      "minimum_disk_free_bytes": 12994461696,
+      "maximum_compressed_memory_bytes": 2837397504,
+      "thermal_states": [
+        "fair",
+        "nominal"
+      ],
+      "maximum_load_1m": 4.22900390625,
+      "log_sha256": "36ec351e825559db43edc53471b11e7f3c1e61dc56f1a6b1155f4138ac40cd77"
+    },
+    {
+      "samples": 111,
+      "minimum_available_memory_bytes": 2100248576,
+      "minimum_disk_free_bytes": 13205671936,
+      "maximum_compressed_memory_bytes": 2685206528,
+      "thermal_states": [
+        "fair"
+      ],
+      "maximum_load_1m": 3.009765625,
+      "log_sha256": "4426f343b0120af8c032ba1f3b87645a935f35a7ab67a03c360c72a97f836f9e"
+    },
+    {
+      "samples": 39,
+      "minimum_available_memory_bytes": 2507538432,
+      "minimum_disk_free_bytes": 14163181568,
+      "maximum_compressed_memory_bytes": 2491105280,
+      "thermal_states": [
+        "fair"
+      ],
+      "maximum_load_1m": 2.64990234375,
+      "log_sha256": "566684299b3bde7d035ffe5fa1b4ce43ebf07f3404c27c3a446d587d4707de88"
+    },
+    {
+      "samples": 21,
+      "minimum_available_memory_bytes": 2469724160,
+      "minimum_disk_free_bytes": 14414172160,
+      "maximum_compressed_memory_bytes": 2420260864,
+      "thermal_states": [
+        "fair"
+      ],
+      "maximum_load_1m": 2.55615234375,
+      "log_sha256": "f4fba1aee146ad7ce262c85ca9695ce8f0d94865a4e49dce61c68c7e74f549ed"
+    }
+  ],
+  "release_readiness": {
+    "record": {
+      "path": "fixtures/qualification/cpu-modern-readiness-v4.json",
+      "sha256": "ba54617c1a72fe1e3e9d8a5a42a648033a0060e80aad968fe12a29e5c5f59ff7",
+      "bytes": 50353
+    },
+    "accepted": 1,
+    "blocked": 15
+  },
+  "limitations": [
+    "Historical completed components retain their original complete source snapshots; identical runtime/probe bytes, frozen inputs and numeric validators justify retaining those bounded results. Interrupted parent campaigns remain interrupted.",
+    "Only five unfinished profiles were executed with the revised host guard; historical image evidence does not retroactively qualify host monitoring. Polling does not guarantee prevention of OS/hardware faults.",
+    "Local macOS ARM64 CPU only; no actual Linux/Windows, GPU/Metal or publisher-framework qualification.",
+    "Short text/image fixtures at contexts 256/512. The three physical Safetensors shards are a lossless derivation, not a publisher multi-file release. Broad image/language semantics, larger configurations and all context sizes remain open.",
+    "Quantization quality is separate from executor correctness. Cache conditions uncontrolled; trace/observer overhead is not a performance benchmark. Peak RSS/private memory/faults/I/O are not qualified here.",
+    "Complete model/history, sustained resource, fuzz/security, dependency/signing and release review gates remain open."
+  ]
+}

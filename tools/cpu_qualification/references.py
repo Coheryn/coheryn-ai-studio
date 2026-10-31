@@ -9,9 +9,9 @@ import tempfile
 import license_notices
 from .common import ROOT, pinned, read, require, sha
 
-INVENTORY = ROOT / 'fixtures/cpu-qualification/references-v1.json'
-MAX_ARCHIVE = 128 << 20
-MAX_EXPANDED = 192 << 20
+INVENTORY = ROOT / 'fixtures/cpu-qualification/modern-references-v1.json'
+MAX_ARCHIVE = 192 << 20
+MAX_EXPANDED = 256 << 20
 
 
 def files():

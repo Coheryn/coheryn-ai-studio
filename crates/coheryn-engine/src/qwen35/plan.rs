@@ -171,6 +171,8 @@ mod cost_tests {
     #[test]
     fn loaded_and_unloaded_costs_match_and_profile_headroom_is_required() {
         let config = Config {
+            zero_centered_norms: true,
+            ssm_pre_exponentiated: false,
             hidden: 1024,
             intermediate: 3584,
             vocabulary: 248320,

@@ -10,7 +10,11 @@ use coheryn_engine::{
     *,
 };
 use serde_json::json;
-use std::{fs, io::Write, path::PathBuf};
+use std::{
+    fs,
+    io::{BufWriter, Write},
+    path::PathBuf,
+};
 fn main() -> Result<()> {
     let a: Vec<_> = std::env::args().skip(1).collect();
     if a.len() != 3 {
@@ -81,10 +85,14 @@ fn main() -> Result<()> {
     let mut image = 0;
     let mut captures = Vec::new();
     let mut save = |name: String, data: &[f32]| -> Result<()> {
-        let mut file = fs::File::create(directory.join(format!("{name}.f32")))?;
+        let mut file = BufWriter::with_capacity(
+            64 << 10,
+            fs::File::create(directory.join(format!("{name}.f32")))?,
+        );
         for value in data {
             file.write_all(&value.to_le_bytes())?;
         }
+        file.flush()?;
         captures.push(json!({"name":name,"length":data.len()}));
         Ok(())
     };

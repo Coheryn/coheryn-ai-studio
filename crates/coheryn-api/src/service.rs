@@ -250,7 +250,7 @@ impl Service {
                     let validation = budget.reserve(coheryn_engine::qwen35::RESIDENT_METADATA_BYTES)?;
                     manifest.verify(&root,true,&Default::default())?;
                     let inspection = manifest.bind(&root,&Default::default())?;
-                    if inspection.descriptor().architecture.as_deref() != Some("qwen3_5") {
+                    if !matches!(inspection.descriptor().architecture.as_deref(),Some("qwen3_5"|"qwen35")) {
                         return Err(Error::new(ErrorCode::UnsupportedModelArchitecture,"managed checkpoint graph is not implemented").into());
                     }
                     drop(inspection); drop(validation);

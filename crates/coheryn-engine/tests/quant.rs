@@ -30,6 +30,16 @@ fn independent_packed_block_activation_and_dot_fixtures() {
     let fixture: Fixture =
         serde_json::from_str(include_str!("../../../fixtures/quantized/kernels.json")).unwrap();
     assert_eq!(fixture.cases.len(), 100);
+    verify_cases(fixture);
+}
+#[test]
+fn independent_q5_k_blocks_activation_and_dot_match_reference() {
+    let fixture: Fixture =
+        serde_json::from_str(include_str!("../../../fixtures/quantized/q5_k-v1.json")).unwrap();
+    assert_eq!(fixture.cases.len(), 20);
+    verify_cases(fixture);
+}
+fn verify_cases(fixture: Fixture) {
     for (index, case) in fixture.cases.into_iter().enumerate() {
         let mut decoded = vec![0.; case.decoded.len()];
         cpu::decode(&case.bytes, case.dtype, &mut decoded).unwrap();
@@ -59,7 +69,7 @@ fn independent_packed_block_activation_and_dot_fixtures() {
 }
 #[test]
 fn hostile_shapes_scales_and_activation_reuse_fail_without_panics() {
-    for dtype in [2, 6, 8, 12, 14] {
+    for dtype in [2, 6, 8, 12, 13, 14] {
         let width = if dtype < 12 { 32 } else { 256 };
         let bytes = quant::row_bytes(dtype, width).unwrap();
         for length in 0..bytes {
@@ -89,7 +99,7 @@ fn packed_models_execute_with_bounded_tiles_workers_and_cancellation_cleanup() {
         Cancellation, FinishReason, GenerationOptions, Model, ResourceLimits,
         inference::ExecutionSettings,
     };
-    for dtype in [2, 6, 8, 12, 14] {
+    for dtype in [2, 6, 8, 12, 13, 14] {
         let directory = tempfile::tempdir().unwrap();
         let path = directory.path().join("packed.gguf");
         std::fs::write(&path, common::packed_model(dtype)).unwrap();

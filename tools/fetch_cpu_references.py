@@ -12,7 +12,7 @@ def main():
     parser.add_argument('--url', required=True)
     parser.add_argument('--output', required=True, type=Path)
     args = parser.parse_args()
-    item = read(ROOT / 'fixtures/cpu-qualification/reference-bundle-v1.json')
+    item = read(ROOT / 'fixtures/cpu-qualification/modern-reference-bundle-v1.json')
     require(item['inventory_sha256'] == sha(INVENTORY) and item['bytes'] <= MAX_ARCHIVE, 'reference descriptor changed')
     acquire(args.output.resolve(), item, args.url, True)
     print('PASS pinned reference-data acquisition')

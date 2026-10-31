@@ -3,9 +3,15 @@ import copy
 import json
 from pathlib import Path
 import tempfile
+import os
+import subprocess
+import sys
 import unittest
+from contextlib import nullcontext
+from unittest.mock import Mock, patch
+from cpu_qualification.host import stop_owned
 
-from run_cpu_soak import ROOT, SCENARIOS, summarize, validate_profile
+from run_cpu_soak import ROOT, SCENARIOS, model_copy_bytes, run_child, summarize, validate_profile, validate_sources
 
 
 class SoakEvidenceTests(unittest.TestCase):
@@ -133,6 +139,51 @@ class SoakEvidenceTests(unittest.TestCase):
                        {'require_rss': 'yes'}, {'max_rss_bytes': -1}, {'unknown': 1}):
             with self.subTest(change=change), self.assertRaises(ValueError):
                 validate_profile({**self.profile, **change})
+
+    def test_shared_modern_model_roles_are_explicit_and_legacy_contracts_still_validate(self):
+        for name in ('synthetic-models-v1.json', 'qwen35-nomic-models-v1.json', 'qwen35-shared-nomic-models-v2.json'):
+            validate_sources(json.loads((ROOT / 'fixtures/soak' / name).read_text()))
+        modern = json.loads((ROOT / 'fixtures/soak/qwen35-shared-nomic-models-v2.json').read_text())
+        for mutate in ('both-text', 'missing-text', 'old-schema', 'unknown-role', 'traversal', 'huge-prompt', 'weak-hash'):
+            source = copy.deepcopy(modern)
+            if mutate == 'both-text': source['text'] = copy.deepcopy(source['embedding'])
+            elif mutate == 'missing-text': source.pop('text_checkpoint')
+            elif mutate == 'old-schema': source['schema_version'] = 1
+            elif mutate == 'unknown-role': source['vision']['kind'] = 'auto'
+            elif mutate == 'traversal': source['text_checkpoint']['pinned_files']['../outside'] = '0' * 64
+            elif mutate == 'huge-prompt': source['workload']['image_prompt'] = '🙂' * 4096
+            else: source['text_checkpoint']['pinned_files']['config.json'] = 'bad'
+            with self.subTest(mutate=mutate), self.assertRaises(ValueError): validate_sources(source)
+
+    def test_shared_weight_disk_reservation_counts_one_physical_set(self):
+        source = json.loads((ROOT / 'fixtures/soak/qwen35-shared-nomic-models-v2.json').read_text())
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            (root / 'language.gguf').write_bytes(b'x' * 11)
+            (root / 'vision.gguf').write_bytes(b'y' * 13)
+            (root / 'embed.gguf').write_bytes(b'z' * 17)
+            source['text_checkpoint'] = {'path': str(root / 'language.gguf'),
+                                         'pinned_files': {'language.gguf': '0' * 64, 'vision.gguf': '1' * 64}}
+            source['embedding'] = {'path': str(root / 'embed.gguf'), 'sha256': '2' * 64}
+            self.assertEqual(model_copy_bytes(source), 11 + 13 + 17 + (128 << 20))
+            (root / 'vision.gguf').unlink()
+            with self.assertRaises(ValueError): model_copy_bytes(source)
+
+    def test_owned_driver_timeout_reaps_the_child_and_preserves_its_log(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            guard = Mock()
+            guard.owned.side_effect = lambda process: nullcontext(process)
+            guard.stop.side_effect = stop_owned
+            children = []
+            with self.assertRaises(subprocess.TimeoutExpired):
+                run_child([sys.executable, '-u', '-c', 'import time;print("started");time.sleep(30)'],
+                          root, dict(os.environ), root / 'driver.log', .2, guard, children.append)
+            guard.sample.assert_called_once_with()
+            process = guard.owned.call_args.args[0]
+            self.assertEqual(children, [process])
+            self.assertIsNotNone(process.poll())
+            self.assertIn('started', (root / 'driver.log').read_text())
 
 
 if __name__ == '__main__':

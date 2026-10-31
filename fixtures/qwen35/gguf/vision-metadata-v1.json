@@ -1,0 +1,54 @@
+{
+  "general.architecture": "clip",
+  "general.type": "mmproj",
+  "general.name": "Qwen3.5-0.8B",
+  "general.finetune": "2fc06364715b967f1860aea9cf38778875588b17",
+  "general.size_label": "101M",
+  "general.license": "apache-2.0",
+  "general.license.link": "https://huggingface.co/Qwen/Qwen3.5-0.8B/blob/main/LICENSE",
+  "general.base_model.count": 1,
+  "general.base_model.0.name": "Qwen3.5 0.8B Base",
+  "general.base_model.0.organization": "Qwen",
+  "general.base_model.0.repo_url": "https://huggingface.co/Qwen/Qwen3.5-0.8B-Base",
+  "general.tags": [
+    "image-text-to-text"
+  ],
+  "general.file_type": 1,
+  "clip.has_vision_encoder": true,
+  "clip.vision.projection_dim": 1024,
+  "clip.vision.image_size": 768,
+  "clip.vision.patch_size": 16,
+  "clip.vision.embedding_length": 768,
+  "clip.vision.feed_forward_length": 3072,
+  "clip.vision.block_count": 12,
+  "clip.vision.attention.head_count": 12,
+  "clip.vision.image_mean": [
+    0.5,
+    0.5,
+    0.5
+  ],
+  "clip.vision.image_std": [
+    0.5,
+    0.5,
+    0.5
+  ],
+  "clip.projector_type": "qwen3vl_merger",
+  "clip.use_gelu": true,
+  "clip.vision.spatial_merge_size": 2,
+  "clip.vision.attention.layer_norm_epsilon": 9.999999974752427e-07,
+  "clip.vision.is_deepstack_layers": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "general.quantization_version": 2
+}

@@ -9,7 +9,7 @@ import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGETS = ('aarch64-apple-darwin', 'x86_64-unknown-linux-gnu', 'x86_64-pc-windows-msvc')
-PROFILES = ('qwen2-gguf-text', 'nomic-bert-gguf-embedding', 'qwen2vl-gguf-paired-image', 'qwen35-safetensors-text-image')
+PROFILES = ('qwen2-gguf-text', 'nomic-bert-gguf-embedding', 'qwen2vl-gguf-paired-image', 'qwen35-safetensors-text-image', 'qwen35-gguf-text-image', 'qwen35-real-shards')
 REQUIREMENTS = {'native-checks': True, 'model-matrix': True, 'resource-soak': True,
                 'offline-package': True, 'fuzz-security': False,
                 'dependency-review': False, 'release-review': False}
@@ -20,6 +20,7 @@ COMMANDS = (
     ('cargo', 'build', '--release', '--workspace', '--locked'),
     ('python', 'tools/test_cpu_release.py'),
     ('python', 'tools/test_cpu_qualification.py'),
+    ('python', 'tools/test_cpu_shards.py'),
     ('python', 'tools/license_notices.py'),
     ('python', 'tools/check_repository_policy.py'),
     ('python', 'tools/check_independence.py', '--report', 'target/cpu-independence.json'),

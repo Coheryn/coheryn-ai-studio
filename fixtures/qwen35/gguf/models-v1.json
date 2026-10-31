@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "repository": "Mungert/Qwen3.5-0.8B-GGUF",
+  "revision": "d14363a822a02a44beac55ece87b7f140cdff714",
+  "supplier": "Community conversion of the publisher checkpoint; not an official Qwen GGUF release.",
+  "base_repository": "Qwen/Qwen3.5-0.8B",
+  "base_revision": "2fc06364715b967f1860aea9cf38778875588b17",
+  "license": "Apache-2.0",
+  "cache_directory": ".cache/qwen35-gguf",
+  "files": [
+    {
+      "file": "Qwen3.5-0.8B-f16.gguf",
+      "bytes": 1516744800,
+      "sha256": "6c35d4b660649e9d9d71cb6d277aaf79f4ed31277c783558c5a1bcd14be097bb",
+      "role": "language",
+      "label": "f16"
+    },
+    {
+      "file": "Qwen3.5-0.8B-q8_0.gguf",
+      "bytes": 813576288,
+      "sha256": "5ce2161539487212b8cc32fc907f1dfe8e38fa9c1d480cc775d1ca96ab93e9ed",
+      "role": "language",
+      "label": "q8_0"
+    },
+    {
+      "file": "Qwen3.5-0.8B-q4_0.gguf",
+      "bytes": 437924224,
+      "sha256": "eb33287bd8ae5fa4fd84a3fb0d8b26ad565c5bdb6af99ef5009b01800adbe9d4",
+      "role": "language",
+      "label": "q4_0"
+    },
+    {
+      "file": "Qwen3.5-0.8B-q4_k_m.gguf",
+      "bytes": 533614976,
+      "sha256": "8bd70fa4eb6015c7b28a60d8f16322c5313cbcddd11f2dac20fff72d70a4c8a8",
+      "role": "language",
+      "label": "q4_k_m"
+    },
+    {
+      "file": "Qwen3.5-0.8B-q6_k_m.gguf",
+      "bytes": 631619968,
+      "sha256": "8259453fc0eba6abb9f26e2de1ba91b04422580feae706aa51c160eeece57c98",
+      "role": "language",
+      "label": "q6_k_m"
+    },
+    {
+      "file": "Qwen3.5-0.8B-f16.mmproj",
+      "bytes": 204987104,
+      "sha256": "6fa142e463f5c0f02e3d5663f594b2641a303b26bff5fb1a6811288f2473c10a",
+      "role": "vision",
+      "label": "f16",
+      "cache_file": "vision.gguf"
+    }
+  ],
+  "qualification": "inputs-pinned-not-execution-qualified",
+  "notes": [
+    "Labels do not authorize execution. Actual tensor inventories and model components must pass structural and independent numerical qualification.",
+    "Quantization quality is separate from executor correctness."
+  ]
+}

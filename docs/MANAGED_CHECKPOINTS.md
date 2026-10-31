@@ -60,3 +60,7 @@ python3 tools/check_managed_checkpoint.py \
 It refuses to overwrite an existing report, checks original model hashes, imports one private copy, tests exact native/CLI/chat/SSE outputs, planning/admission, unsupported controls, live cancellation, unload/restart and same-length payload corruption, then removes that copy. It invokes no external inference runtime. The report records binary/model/reference identities and scoped results; uncontrolled file-cache conditions are not called cold.
 
 `preprocessor_config.json` is an optional bounded inert checkpoint asset. Its complete bytes participate in source-set identity when present. Missing/unsupported processors retain compatible text behavior and reject image requests before acquiring attachments. See [QWEN35.md](QWEN35.md) for still-image scope and the socket-free HTTP qualification target.
+
+## Modern GGUF model sets
+
+The same bounded checkpoint transport accepts the native Qwen3.5 GGUF adapter, using an explicit language-file entrypoint, associated `vision.gguf` and qualified source assets. Exact file hashes and adapter identity are bound together; extra unselected weight files are rejected. Other GGUF architectures retain their existing import routes. [MODERN_MODELS.md](MODERN_MODELS.md) describes preparation and declared scope.

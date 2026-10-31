@@ -11,6 +11,8 @@ The [legal records](resources/licensing/README.md) include:
 
 The LLaVA research configuration is covered separately by its publisher-declared custom model terms. It is not represented as Apache-licensed Coheryn code. No model weights or external comparator binaries are distributed here. Small procedural image inputs are original project fixtures; their provenance is in `fixtures/vlm/images/manifest.json`.
 
+Modern GGUF numerical references use an isolated, versioned reader/dequantizer during independent assessment. Its original MIT license is retained in the supplemental upstream records. That assessment package is excluded from production dependencies and native qualification execution. Qwen3.5 source files and community conversions retain their publisher/model terms and distinct provenance; no model weights are distributed.
+
 Retain `LICENSE`, `NOTICE`, this file and the complete `resources/licensing/` directory when distributing the source or native binaries. Run `python3 tools/license_notices.py` after dependency/asset changes. Stage these notices for a native release with `python3 tools/license_notices.py --bundle target/distribution`; include the staged files in the actual archive or installer.
 
 This inventory records license evidence and packaging obligations. It does not grant rights to third-party trademarks or certify ownership of contributed code. Optional Python clients and externally acquired models/tools are separate installations with their own terms.

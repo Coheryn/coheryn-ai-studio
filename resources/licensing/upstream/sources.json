@@ -168,6 +168,24 @@
       "path": "resources/licensing/upstream/winapi-project-MIT.txt",
       "sha256": "ce7bc3499fee93d5022ef430d5e4201e79a6d9154f3974e42f41349f0569e09b",
       "bytes": 1073
+    },
+    {
+      "id": "gguf-reader-assessment@0.19.0",
+      "url": "https://files.pythonhosted.org/packages/b3/bb/d71d6da82763528c2c2ed6b59a9d6142c6595545a4c448e2085d155e88c2/gguf-0.19.0-py3-none-any.whl",
+      "archive_member": "gguf-0.19.0.dist-info/licenses/LICENSE",
+      "archive_sha256": "70bcd10edfe697fb2dad6e40af2234b9d8ece9a41a99761405121ebda1c3c1cd",
+      "path": "resources/licensing/upstream/gguf-assessment-0.19.0-LICENSE.txt",
+      "sha256": "ef78c7e6659e34c798194f0d344e807c722de70cbca1359ef54772661e11ca38",
+      "bytes": 1072,
+      "scope": "Independent assessment reader/dequantizer only; no production inference dependency or executable is distributed."
+    },
+    {
+      "id": "Qwen3.5-0.8B-model-source-license",
+      "url": "https://huggingface.co/Qwen/Qwen3.5-0.8B/resolve/2fc06364715b967f1860aea9cf38778875588b17/LICENSE",
+      "path": "resources/licensing/upstream/qwen35-LICENSE.txt",
+      "sha256": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a",
+      "bytes": 11544,
+      "scope": "Publisher model terms for separately acquired native source and community GGUF conversions; weights not distributed."
     }
   ],
   "dependency_supplements": {

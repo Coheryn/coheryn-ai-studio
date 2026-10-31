@@ -295,7 +295,7 @@ impl Graph {
                         &mut s.hidden,
                         &mut s.work,
                     )
-                    .map_err(crate::safetensors::source_error)
+                    .map_err(|error| set.source_error(error))
                 }
             })();
             if let Err(e) = result {
@@ -312,7 +312,7 @@ impl Graph {
                     &s.hidden,
                     &layer.input_norm,
                     c.epsilon,
-                    true,
+                    c.zero_centered_norms,
                     &mut s.normalized,
                 )
             });
@@ -380,8 +380,11 @@ impl Graph {
                                 .copy_from_slice(&s.q[source..source + c.key_dim]);
                             s.delta_k[destination..destination + c.key_dim]
                                 .copy_from_slice(&s.q[keys + source..keys + source + c.key_dim]);
-                            s.a[head] =
-                                -a_log[head].exp() * kernels::softplus(s.a[head] + dt[head]);
+                            s.a[head] = (if c.ssm_pre_exponentiated {
+                                a_log[head]
+                            } else {
+                                -a_log[head].exp()
+                            }) * kernels::softplus(s.a[head] + dt[head]);
                             s.b[head] = kernels::sigmoid(s.b[head]);
                         }
                         delta.step(
@@ -444,7 +447,7 @@ impl Graph {
                                 &s.mixed[base..base + c.head_dim],
                                 q_norm,
                                 c.epsilon,
-                                true,
+                                c.zero_centered_norms,
                                 &mut s.q[h * c.head_dim..(h + 1) * c.head_dim],
                             )?;
                             s.z[h * c.head_dim..(h + 1) * c.head_dim].copy_from_slice(
@@ -479,7 +482,7 @@ impl Graph {
                                 row,
                                 k_norm,
                                 c.epsilon,
-                                true,
+                                c.zero_centered_norms,
                                 &mut s.norm_head[..c.head_dim],
                             )?;
                             row.copy_from_slice(&s.norm_head[..c.head_dim]);
@@ -534,7 +537,7 @@ impl Graph {
                     &s.hidden,
                     &layer.post_norm,
                     c.epsilon,
-                    true,
+                    c.zero_centered_norms,
                     &mut s.normalized,
                 )
             });
@@ -580,7 +583,13 @@ impl Graph {
             }
         }
         each(lanes, |s, _, _| {
-            kernels::norm(&s.hidden, &self.norm, c.epsilon, true, &mut s.final_norm)
+            kernels::norm(
+                &s.hidden,
+                &self.norm,
+                c.epsilon,
+                c.zero_centered_norms,
+                &mut s.final_norm,
+            )
         });
         // Non-final prefill rows avoid the vocabulary projection.
         matrix_selected(
@@ -669,7 +678,7 @@ fn matrix_selected(
     }
     let (storage, tensor) = set.bound(binding)?;
     let io = tensor::matmul_batch_cooperative(storage, 0, tensor, &mut vectors, cooperate)
-        .map_err(crate::safetensors::source_error)?;
+        .map_err(|error| set.source_error(error))?;
     stats.matrix_tiles += io.tiles;
     stats.matrix_bytes += io.bytes;
     Ok(())
@@ -786,15 +795,17 @@ impl Session {
         let channels = keys * 2 + values;
         let query_width = c.heads * c.head_dim;
         let layers = Self::states(c, context)?;
+        let mut work = Workspace::new(
+            c.hidden.max(c.intermediate).max(values).max(query_width),
+            256 << 10,
+            threads,
+            1,
+        )?;
+        work.preserve_f32_operands();
         Ok(Self {
             layers,
             logits: memory::zeros(c.vocabulary)?,
-            work: Workspace::new(
-                c.hidden.max(c.intermediate).max(values).max(query_width),
-                256 << 10,
-                threads,
-                1,
-            )?,
+            work,
             hidden: memory::zeros(c.hidden)?,
             normalized: memory::zeros(c.hidden)?,
             mixed: memory::zeros(channels.max(2 * query_width))?,

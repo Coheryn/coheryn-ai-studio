@@ -100,7 +100,7 @@ See [implementation plan](docs/IMPLEMENTATION_PLAN.md), [validation evidence](do
 
 Development now prioritizes [qualifying the existing CPU capabilities](docs/CPU_RELEASE.md) before additional architectures or GPU execution. Reproducible candidate archives and native startup checks are distinct from production qualification. See [operation and recovery procedures](docs/OPERATIONS.md); the production label stays blocked until the required model, platform, security and operational evidence is reviewed.
 
-The [pinned real-model CPU runner](docs/CPU_QUALIFICATION.md) combines independent numerical fixtures, extracted CLI and authenticated TCP/SSE checks. A manual workflow targets macOS ARM64, Linux x86-64 and Windows x86-64; successful execution evidence is required separately on each platform.
+The [pinned real-model CPU runner](docs/CPU_QUALIFICATION.md) covers [modern Qwen3.5 formats](docs/MODERN_MODELS.md), including packed GGUF, paired vision components and losslessly derived real Safetensors shards, with independent numerical fixtures, extracted CLI and authenticated TCP/SSE checks. A manual workflow targets macOS ARM64, Linux x86-64 and Windows x86-64; successful execution evidence is required separately on each platform.
 
 ## Managed text sessions
 

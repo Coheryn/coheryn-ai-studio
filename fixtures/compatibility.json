@@ -302,7 +302,7 @@
   "context_note": "Each entry records its tested context. Reservation capacities 128/512/4096 are measured only where linked evidence lists them; these short prompts do not qualify populated long-context inference. The primary greedy corpus reaches 49 prompt tokens plus eight generated tokens.",
   "unsupported_execution": {
     "tensor_encodings": [
-      "all encodings except F32, F16, Q4_0, Q5_0, Q8_0, Q4_K, Q6_K"
+      "all encodings except F32, F16, Q4_0, Q5_0, Q8_0, Q4_K, Q5_K, Q6_K"
     ],
     "backends": [
       "Metal",
@@ -563,6 +563,7 @@
     "Q5_0",
     "Q8_0",
     "Q4_K",
+    "Q5_K",
     "Q6_K"
   ],
   "managed_sessions": {
@@ -698,6 +699,7 @@
       "Q5_0",
       "Q8_0",
       "Q4_K",
+      "Q5_K",
       "Q6_K"
     ],
     "mixed_task_fairness": "FIFO text token batches, embedding microbatches and cooperative image tensor/decoder units; image delivery releases compute. Initial ordinary and pinned-model evidence is separate from weighted fairness/tail-latency qualification.",
@@ -761,7 +763,7 @@
         "managed_image_sessions": true,
         "image_planning": true
       },
-      "notes": "Pinned source text and validated still-image processor/encoder/merger on native CPU. MTP remains inactive. Independent array-equation precision is separate from publisher-framework parity; image qualification uses authored constant-color PNGs and short greedy continuations. One physical shard; real multi-shard, broad semantics, GPU and other-platform qualification remain open.",
+      "notes": "Pinned native source and validated still-image encoder/merger. Independent array equations remain separate from publisher-framework parity. Original single/indexed source plus a losslessly derived three-physical-shard model are selected for qualification. Broad semantics, other dimensions, GPU and other platforms require separate evidence.",
       "qualified_layouts": [
         "single-file",
         "indexed-one-shard"
@@ -789,7 +791,74 @@
         "session_evidence": "fixtures/qualification/b4-image-sessions-runtime.json"
       },
       "hybrid_runtime_evidence": "fixtures/qualification/b3-http-runtime.json",
-      "hybrid_text_evidence": "fixtures/qualification/b3-native-text.json"
+      "hybrid_text_evidence": "fixtures/qualification/b3-native-text.json",
+      "derived_real_shards": {
+        "manifest": "fixtures/qwen35/sharded-layout-v1.json",
+        "physical_files": 3,
+        "numeric_conversion": false,
+        "publisher_sharded_artifact": false,
+        "evidence": "fixtures/qualification/cpu-modern-verification.json",
+        "scope": "Actual named tensor bytes from the pinned publisher model; source/layout identity distinct from the original."
+      }
+    },
+    {
+      "adapter": "qwen35-gguf-cpu-v1",
+      "architecture": "qwen35",
+      "model": "Qwen/Qwen3.5-0.8B",
+      "format": "gguf",
+      "backend": "native-cpu",
+      "status": "experimental-native-shared-graph",
+      "source_manifest": "fixtures/qwen35/gguf/models-v1.json",
+      "layouts": [
+        "single-language-file-with-assets",
+        "paired-language-vision-with-assets"
+      ],
+      "tensor_encodings_implemented": [
+        "F32",
+        "F16",
+        "BF16",
+        "Q4_0",
+        "Q8_0",
+        "Q4_K",
+        "Q5_K",
+        "Q6_K"
+      ],
+      "selected_text_files": [
+        "f16",
+        "q8_0",
+        "q4_0",
+        "q4_k_m",
+        "q6_k_m"
+      ],
+      "selected_image_pairs": [
+        "f16 + vision-f16",
+        "q4_k_m + vision-f16"
+      ],
+      "precision": "Stored GGUF folded coefficients; F32 operands/products, wide reductions, transient bounded packed-weight tiles.",
+      "context_runtime_limit": 8192,
+      "qualification_context": 256,
+      "qualification_platforms_recorded_separately": true,
+      "source_assets": [
+        "config.json",
+        "tokenizer.json",
+        "chat_template.jinja",
+        "preprocessor_config.json",
+        "vision.gguf"
+      ],
+      "notes": "Community conversion provenance is distinct from the publisher source. Tokenizer/template inventories and all relevant graph/vision metadata are validated. Structural compatibility does not establish exact-file or universal model qualification.",
+      "qualification_guide": "docs/MODERN_MODELS.md",
+      "qualification_evidence": "fixtures/qualification/cpu-modern-verification.json",
+      "capabilities": {
+        "standalone": true,
+        "managed_api": true,
+        "greedy": true,
+        "images": true,
+        "continuous_batching": true,
+        "managed_sessions": true,
+        "tools": false,
+        "constraints": false,
+        "metal": false
+      }
     }
   ],
   "local_metadata": {
@@ -805,13 +874,14 @@
     "inspection": "bounded headers/index and selected source assets; no tensor payload scan or execution model/session construction",
     "local_text_planning": [
       "qwen2-gguf-cpu-v1",
-      "qwen35-safetensors-cpu-v1"
+      "qwen35-safetensors-cpu-v1",
+      "qwen35-gguf-cpu-v1"
     ],
     "embedding_inspection": "existing Nomic GGUF task/configuration preserved; generic local embedding planning remains unsupported",
     "metadata_identity": "header/selected-index/asset/profile fingerprint only; excludes payloads and cannot authorize model/cache/session identity reuse",
     "qualification": "structural compatibility and candidate resource admission remain separate from full integrity/exact numerical evidence",
     "evidence": "fixtures/qualification/a1-metadata-runtime.json",
-    "remaining": "task-wide executable adapter unification, real multi-shard and full model/backend/platform qualification",
+    "remaining": "Task-wide adapter unification, larger publisher-sharded configurations and complete model/backend/platform qualification.",
     "runtime_admission": {
       "qwen35_standalone": "shared estimator; full request/session/profile-headroom reserved atomically before tokenization/session construction",
       "evidence": "fixtures/qualification/a2-admission-runtime.json",
@@ -854,7 +924,7 @@
       "persistent-image-restart",
       "portable-original-image-export-import"
     ],
-    "scope": "macos-arm64 native CPU greedy text and validated still images; pinned indexed source has one physical shard",
+    "scope": "Experimental native CPU Qwen3.5 source sets, including an explicit GGUF language entrypoint and paired vision assets. Publisher source and losslessly derived physical shard layouts retain distinct identities and exact qualification records.",
     "unsupported": [
       "tools",
       "schema-constraints",
@@ -867,6 +937,22 @@
     "session_execution": "optional full-attention KV/recurrent/convolution exact-prefix snapshot; model/context/thread/budget identity; bounded caps and explicit reuse metrics",
     "session_evidence": "fixtures/qualification/b2-managed-sessions-runtime.json",
     "hybrid_runtime_evidence": "fixtures/qualification/b3-http-runtime.json",
-    "image_session_evidence": "fixtures/qualification/b4-image-sessions-runtime.json"
-  }
+    "image_session_evidence": "fixtures/qualification/b4-image-sessions-runtime.json",
+    "adapters": [
+      "qwen35-safetensors-cpu-v1",
+      "qwen35-gguf-cpu-v1"
+    ]
+  },
+  "modern_qualification": {
+    "profiles": "tools/cpu_qualification/profiles.py",
+    "reference_inventory": "fixtures/cpu-qualification/modern-references-v1.json",
+    "reference_archive": "fixtures/cpu-qualification/modern-reference-bundle-v1.json",
+    "execution_evidence": "fixtures/qualification/cpu-modern-verification.json",
+    "qualification_is_per_combination": true,
+    "production_ready": false,
+    "quantization_quality_observations": "fixtures/qwen35/gguf/quantization-quality-v1.json"
+  },
+  "additional_quantized_kernel_evidence": [
+    "fixtures/quantized/q5_k-v1.json"
+  ]
 }
