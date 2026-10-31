@@ -40,6 +40,8 @@ jobs:
       - run: python tools/test_license_notices.py
       - run: python tools/test_cpu_soak.py
       - run: python tools/test_cpu_qualification.py
+      - name: Admit synthetic smoke after build load settles
+        run: python tools/check_cpu_host.py --wait-for-load-seconds 300 --report .cache/cpu-smoke-host.json
       - run: python tools/run_cpu_soak.py --profile fixtures/soak/cpu-smoke-v1.json --report .cache/cpu-soak-smoke.json
       - run: python tools/check_release_strings.py --report target/cpu-release-strings.json
       - run: python tools/package_cpu_release.py --target ${{ matrix.target }} --build-record .cache/cpu-native-checks.json --report target/cpu-package.json
@@ -58,6 +60,7 @@ jobs:
             .cache/cpu-native-checks.json
             .cache/cpu-checks/**
             .cache/cpu-soak-smoke.json
+            .cache/cpu-smoke-host.json
             .cache/cpu-soak/cpu-soak-smoke/**
             resources/policy/artifact-findings.json
             target/cpu-release-strings.json

@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import sys
 import unicodedata
+from binary_sections import BinaryLayoutError, data_ranges, instruction_ranges
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -26,7 +27,7 @@ def load_policy(root=ROOT):
 def scan(root, policy, artifact=False, legal_payload=None):
     root = Path(root).resolve()
     patterns = [re.compile(p) for p in policy['patterns']]
-    issues, excluded, binary_assets = [], [], []
+    issues, excluded, binary_assets, encoding_scopes = [], [], [], []
     seen = set()
     files = 0
     if artifact and legal_payload is None:
@@ -97,22 +98,44 @@ def scan(root, policy, artifact=False, legal_payload=None):
                 if size > policy['maximum_text_bytes'] and not artifact:
                     issue(path, 'oversized-unclassified-file'); continue
                 if artifact:
-                    # Stream bounded overlapping chunks; control labels may be embedded in binaries.
+                    # UTF-8 is checked throughout the file. Instructions are not
+                    # UTF-16 text: interpreting relative operands as Unicode can
+                    # normalize arithmetic bytes into unrelated short labels.
+                    try:
+                        instructions = instruction_ranges(full)
+                    except BinaryLayoutError:
+                        issue(path, 'invalid-executable-layout')
+                        instructions = []
+                    if instructions:
+                        encoding_scopes.append({'path': path.as_posix(),
+                                                'utf16_instruction_ranges': instructions,
+                                                'utf8': 'complete file'})
                     with full.open('rb') as f:
                         tail = b''
                         while chunk := f.read(1 << 20):
                             data = tail + chunk
                             match(path, data.decode('utf-8', errors='replace'), 'artifact-string')
-                            for encoding in ('utf-16-le', 'utf-16-be'):
-                                for offset in (0, 1):
-                                    match(path, data[offset:].decode(encoding, errors='replace'), 'artifact-string')
                             tail = data[-4096:]
+                        for start, end in data_ranges(size, instructions):
+                            f.seek(start)
+                            remaining, tail = end - start, b''
+                            while remaining:
+                                chunk = f.read(min(1 << 20, remaining))
+                                if not chunk:
+                                    raise OSError('artifact changed during text inspection')
+                                remaining -= len(chunk)
+                                data = tail + chunk
+                                for encoding in ('utf-16-le', 'utf-16-be'):
+                                    for offset in (0, 1):
+                                        match(path, data[offset:].decode(encoding, errors='replace'), 'artifact-string')
+                                tail = data[-4096:]
                 else:
                     match(path, full.read_text(encoding='utf-8'), 'text')
                 files += 1
             except (OSError, UnicodeError) as error:
                 issue(path, 'unreadable-or-unclassified-' + type(error).__name__)
-    return {'files_checked': files, 'issues': issues, 'excluded': excluded, 'binary_assets': binary_assets}
+    return {'files_checked': files, 'issues': issues, 'excluded': excluded, 'binary_assets': binary_assets,
+            'encoding_scopes': encoding_scopes}
 
 
 def main():
