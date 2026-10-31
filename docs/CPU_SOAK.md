@@ -112,13 +112,15 @@ python3 tools/license_notices.py --tracked
 python3 tools/check_cpu_soak.py --report .cache/cpu-soak-checks.json
 python3 tools/run_cpu_soak.py --profile fixtures/soak/cpu-smoke-v1.json \
   --report .cache/cpu-soak-synthetic.json --timeout-seconds 300
-python3 tools/prepare_cpu_soak.py --fetch --report .cache/cpu-soak-inputs.json
+python3 tools/prepare_cpu_soak.py --fetch --download-attempts 2 --report .cache/cpu-soak-inputs.json
 python3 tools/run_cpu_soak.py --profile fixtures/soak/cpu-modern-shared-smoke-v1.json \
   --models fixtures/soak/qwen35-shared-nomic-models-v2.json \
   --report .cache/cpu-soak-modern.json --timeout-seconds 7200
 ```
 
 These commands also work on another supported development machine. Omit `--fetch` when all pinned inputs are already cached. Preparation acquires only the Q4_K_M language file, F16 vision component, required source sidecars and Nomic Q8_0 file; it does not download other encodings or the full source-weight checkpoint. It checks the exact frozen soak inventory with bounded streaming reads and verifies pending managed-copy disk headroom. Preparation is byte validation, not inference qualification.
+
+The hosted preparation explicitly permits at most two attempts for a transient timeout, connection failure or selected retryable HTTP status. Every attempt and the active pinned input are retained in the report. Backoff defaults to one second; a numeric server `Retry-After` is honored up to the five-second bound, and unsupported/longer delays fail rather than being ignored. Completed cached files are reverified, unpublished partial files are removed, and the existing download size, socket timeout, per-file deadline, atomic publication and host limits remain enforced. Integrity failures, unsafe paths, certificate failures and host rejections do not retry. The default remains one attempt, and native inference or failed qualification scenarios are never retried automatically.
 
 The guarded Rust checker records actual Cargo/compiler versions, the native target, source/lockfile/input identities, complete diagnostic logs and test totals. Empty, filtered or failed test runs cannot pass. Both tests and strict Clippy use the workspace dependency feature set, retaining cache reuse with workspace builds. All builds use one Cargo job. A failed preflight starts no compiler; cutoff, interruption and incomplete shutdown preserve failed reports. Concurrent shutdown calls cannot signal a successfully retired owned group twice. Permission failures and Windows tree-termination failures remain explicit; they never imply confirmed descendant cleanup.
 

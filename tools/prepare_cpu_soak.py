@@ -5,6 +5,8 @@ import hashlib
 import os
 from pathlib import Path
 import signal
+import time
+import urllib.error
 
 from check_cpu_release import ROOT, sha, source_identity
 from cpu_qualification.assets import models
@@ -14,6 +16,26 @@ from run_cpu_soak import load, model_copy_bytes, validate_sources
 
 MODEL_SET = ROOT / 'fixtures/soak/qwen35-shared-nomic-models-v2.json'
 SUITES = ('embedding-q8', 'qwen35-gguf-q4_k_m-image')
+
+
+def transient_download(error):
+    if isinstance(error, urllib.error.HTTPError):
+        return error.code in (408, 429, 500, 502, 503, 504)
+    if isinstance(error, urllib.error.URLError):
+        return isinstance(error.reason, (TimeoutError, ConnectionError))
+    return isinstance(error, (TimeoutError, ConnectionError))
+
+
+def download_retry_delay(error):
+    if not transient_download(error):
+        return None
+    if isinstance(error, urllib.error.HTTPError):
+        value = (error.headers or {}).get('Retry-After')
+        if value is not None:
+            try: seconds = int(value)
+            except (ValueError, TypeError): return None
+            return max(1, seconds) if 0 <= seconds <= 5 else None
+    return 1
 
 
 def verify_sources(sources, guard):
@@ -46,6 +68,8 @@ def verify_sources(sources, guard):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--fetch', action='store_true', help='explicitly allow revision-pinned HTTPS acquisition')
+    parser.add_argument('--download-attempts', type=int, choices=(1, 2), default=1,
+                        help='explicit preparation attempt limit for transient network failures only')
     parser.add_argument('--report', type=Path, required=True)
     args = parser.parse_args()
     if args.report.exists(): raise FileExistsError(args.report)
@@ -57,7 +81,9 @@ def main():
     source = source_identity()
     result = {'schema_version': 1, 'kind': 'cpu-soak-input-preparation', 'outcome': 'running',
               'production_ready': False, 'execution_qualification': False, 'source_snapshot': source,
-              'models_sha256': sha(MODEL_SET), 'selected_suites': list(SUITES)}
+              'models_sha256': sha(MODEL_SET), 'selected_suites': list(SUITES),
+              'download_attempt_limit': args.download_attempts, 'download_retry_max_delay_seconds': 5,
+              'download_attempts': []}
     guard = None
     checkpoint(args.report, result)
     try:
@@ -65,7 +91,28 @@ def main():
         guard.start()
         sources = load(MODEL_SET)
         validate_sources(sources)
-        _, result['acquired_inputs'] = models(SUITES, args.fetch, guard)
+        for number in range(1, args.download_attempts + 1):
+            attempt = {'attempt': number, 'outcome': 'running'}
+            result['download_attempts'].append(attempt)
+            def current_input(path, item):
+                attempt['current_input'] = {'path': path.relative_to(ROOT).as_posix(),
+                                             'bytes': item['bytes'], 'sha256': item['sha256']}
+                checkpoint(args.report, result)
+            try:
+                _, result['acquired_inputs'] = models(SUITES, args.fetch, guard, on_input=current_input)
+                attempt['outcome'] = 'pass'
+                break
+            except Exception as error:
+                attempt.update(outcome='fail', error=str(error), error_type=type(error).__name__)
+                checkpoint(args.report, result)
+                delay = download_retry_delay(error)
+                if not args.fetch or number == args.download_attempts or delay is None:
+                    raise
+                attempt['retry_delay_seconds'] = delay
+                checkpoint(args.report, result)
+                guard.check()
+                time.sleep(delay)
+                guard.check()
         result['verified_inputs'] = verify_sources(sources, guard)
         result['managed_copy_reservation_bytes'] = model_copy_bytes(sources)
         guard.sample(disk_reservation=result['managed_copy_reservation_bytes'])

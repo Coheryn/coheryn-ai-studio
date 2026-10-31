@@ -58,7 +58,7 @@ jobs:
         run: python tools/run_cpu_soak.py --profile fixtures/soak/cpu-smoke-v1.json --report .cache/cpu-soak-synthetic.json --timeout-seconds 300
       - name: Acquire and verify only pinned modern soak inputs
         if: ${{ github.event_name == 'push' || inputs.modern_models }}
-        run: python tools/prepare_cpu_soak.py --fetch --report .cache/cpu-soak-inputs.json
+        run: python tools/prepare_cpu_soak.py --fetch --download-attempts 2 --report .cache/cpu-soak-inputs.json
       - name: Shared modern text, vision and embedding smoke
         if: ${{ github.event_name == 'push' || inputs.modern_models }}
         run: python tools/run_cpu_soak.py --profile fixtures/soak/cpu-modern-shared-smoke-v1.json --models fixtures/soak/qwen35-shared-nomic-models-v2.json --report .cache/cpu-soak-modern.json --timeout-seconds 7200

@@ -64,8 +64,12 @@ def acquire(path, item, url, fetch, guard=None):
         Path(temporary).unlink(missing_ok=True)
 
 
-def models(suites, fetch, guard=None):
+def models(suites, fetch, guard=None, *, on_input=None):
     results, identities = {}, []
+    def acquire_input(path, item, url):
+        if on_input:
+            on_input(path, item)
+        return acquire(path, item, url, fetch, guard)
     entries = []
     if 'gguf-text' in suites:
         entries.append(('gguf-text', read(ROOT / 'fixtures/models.json')['models'][0]))
@@ -76,7 +80,7 @@ def models(suites, fetch, guard=None):
         require(re.fullmatch('[0-9a-f]{40}', entry['revision']) is not None, 'unpinned repository revision')
         require(re.fullmatch('[A-Za-z0-9_.-]+', entry['file']) is not None, 'unsafe asset name')
         url = f"https://huggingface.co/{entry['repository']}/resolve/{entry['revision']}/{entry['file']}"
-        results[suite] = acquire(ROOT / '.cache/models' / entry['file'], entry, url, fetch, guard)
+        results[suite] = acquire_input(ROOT / '.cache/models' / entry['file'], entry, url)
         identities.append({k: entry[k] for k in ('repository', 'revision', 'file', 'bytes', 'sha256')})
     qwen = [s for s in suites if PROFILES[s]['family'] == 'qwen35']
     if qwen:
@@ -88,7 +92,7 @@ def models(suites, fetch, guard=None):
                 continue
             require(re.fullmatch('[A-Za-z0-9_.-]+', item['file']) is not None, 'unsafe checkpoint name')
             url = f"https://huggingface.co/{manifest['repository']}/resolve/{manifest['revision']}/{item['file']}"
-            acquire(directory / item['file'], item, url, fetch, guard)
+            acquire_input(directory / item['file'], item, url)
             identities.append({**item, 'repository': manifest['repository'], 'revision': manifest['revision']})
         for name in qwen:
             if PROFILES[name]['layout'] == 'publisher': results[name] = directory
@@ -118,7 +122,7 @@ def models(suites, fetch, guard=None):
                 for name in (item['file'], item.get('cache_file', item['file'])):
                     require(re.fullmatch('[A-Za-z0-9_.-]+', name) is not None and name not in ('.', '..'), 'unsafe GGUF asset name')
                 url = f"https://huggingface.co/{gguf['repository']}/resolve/{gguf['revision']}/{item['file']}"
-                acquire(target / item.get('cache_file', item['file']), item, url, fetch, guard)
+                acquire_input(target / item.get('cache_file', item['file']), item, url)
                 identities.append({**item, 'repository': gguf['repository'], 'revision': gguf['revision']})
             for item in manifest['files']:
                 if item['file'] not in ('config.json', 'tokenizer.json', 'chat_template.jinja', 'preprocessor_config.json', 'tokenizer_config.json', 'LICENSE'): continue

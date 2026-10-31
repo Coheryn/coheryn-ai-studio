@@ -3,6 +3,7 @@ import hashlib
 import json
 from pathlib import Path
 import sys
+import ssl
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
@@ -10,7 +11,9 @@ from unittest.mock import Mock, patch
 import check_cpu_soak as runner
 import prepare_cpu_soak as preparation
 from cpu_qualification.host import Guard
+from cpu_qualification.host import HostLimitError
 import test_cpu_qualification as qualification_tests
+import urllib.error
 
 
 class SoakRunnerTests(unittest.TestCase):
@@ -179,6 +182,52 @@ class SoakRunnerTests(unittest.TestCase):
             self.assertEqual(len(result['verified_inputs']), 4)
             self.assertEqual(result['managed_copy_reservation_bytes'], (128 << 20) + 23)
             self.assertFalse(result['execution_qualification'])
+
+    def test_only_explicit_transient_download_attempts_can_recover(self):
+        for error, expected_calls in ((TimeoutError('read timed out'), 2),
+                                      (ValueError('download identity mismatch'), 1),
+                                      (HostLimitError('memory pressure'), 1),
+                                      (ssl.SSLCertVerificationError('certificate failure'), 1)):
+            with self.subTest(error=type(error).__name__), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary).resolve()
+                model_set = root / 'models.json'
+                model_set.write_text(json.dumps(self.input_fixture(root)))
+                report = root / 'result.json'
+                calls = []
+                def acquire(suites, fetch, guard, *, on_input):
+                    calls.append(suites)
+                    on_input(root / 'embed.gguf', {'bytes': 9, 'sha256': '0' * 64})
+                    if len(calls) == 1: raise error
+                    return {}, []
+                make_guard = lambda directory: Guard(directory, sampler=qualification_tests.QualificationTests.healthy_host)
+                with patch.object(preparation, 'ROOT', root), patch.object(preparation, 'MODEL_SET', model_set), \
+                     patch.object(preparation, 'source_identity', return_value={'models.json': 'frozen'}), \
+                     patch.object(preparation, 'Guard', side_effect=make_guard), \
+                     patch.object(preparation, 'models', side_effect=acquire), \
+                     patch.object(preparation.time, 'sleep') as sleep, patch.object(preparation.signal, 'signal'), \
+                     patch('builtins.print'), patch.object(sys, 'argv', ['prepare', '--fetch', '--download-attempts', '2', '--report', str(report)]):
+                    with self.assertRaises(SystemExit) as done: preparation.main()
+                self.assertEqual(len(calls), expected_calls)
+                result = json.loads(report.read_text())
+                self.assertEqual(len(result['download_attempts']), expected_calls)
+                self.assertEqual(result['download_attempts'][0]['outcome'], 'fail')
+                self.assertEqual(result['download_attempts'][0]['current_input']['path'], 'embed.gguf')
+                self.assertFalse(result['execution_qualification'])
+                if expected_calls == 2:
+                    self.assertEqual(done.exception.code, 0)
+                    self.assertEqual(result['download_attempts'][1]['outcome'], 'pass')
+                    sleep.assert_called_once_with(1)
+                else:
+                    self.assertEqual(done.exception.code, 1)
+                    sleep.assert_not_called()
+
+    def test_retryable_http_status_respects_bounded_server_backoff(self):
+        for status, delay in ((503, 1), (429, 1), (403, None), (404, None)):
+            error = urllib.error.HTTPError('https://example.test/weights', status, 'status', {}, None)
+            self.assertEqual(preparation.download_retry_delay(error), delay)
+        for value, expected in (('3', 3), ('0', 1), ('60', None), ('-1', None), ('invalid', None)):
+            error = urllib.error.HTTPError('https://example.test/weights', 429, 'rate limited', {'Retry-After': value}, None)
+            self.assertEqual(preparation.download_retry_delay(error), expected)
 
 
 if __name__ == '__main__':

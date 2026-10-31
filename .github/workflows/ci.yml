@@ -49,6 +49,8 @@ jobs:
         if: always()
         with:
           name: cpu-candidate-${{ matrix.target }}
+          include-hidden-files: true
+          if-no-files-found: error
           path: |
             target/cpu-release/*
             target/cpu-package.json
@@ -76,5 +78,3 @@ jobs:
             NOTICE
             THIRD_PARTY_NOTICES.md
             resources/licensing/**
-          include-hidden-files: true
-          if-no-files-found: error
