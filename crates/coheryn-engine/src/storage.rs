@@ -61,7 +61,10 @@ impl WeightFile {
             file.read_exact(output)
         };
         result.map_err(|error| {
-            Error::new(ErrorCode::ModelChanged, format!("weight read failed: {error}"))
+            Error::new(
+                ErrorCode::ModelChanged,
+                format!("weight read failed: {error}"),
+            )
         })
     }
 }
@@ -344,7 +347,10 @@ mod tests {
             source.read(7, &mut tail).unwrap_err().code,
             ErrorCode::ModelChanged
         );
-        assert_eq!(source.unchanged().unwrap_err().code, ErrorCode::ModelChanged);
+        assert_eq!(
+            source.unchanged().unwrap_err().code,
+            ErrorCode::ModelChanged
+        );
     }
 
     #[test]
