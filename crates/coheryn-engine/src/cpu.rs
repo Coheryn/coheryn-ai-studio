@@ -1,4 +1,4 @@
-//! Coheryn-owned scalar kernels; GGML matrix order is [input, output].
+//! Coheryn-owned CPU kernels; GGML matrix order is [input, output].
 use crate::{Error, Result};
 use half::f16;
 
@@ -29,9 +29,193 @@ pub fn decode(bytes: &[u8], dtype: u32, output: &mut [f32]) -> Result<()> {
     Ok(())
 }
 pub fn dot(a: &[f32], b: &[f32]) -> f32 {
+    let count = a.len().min(b.len());
+    if (256..=1 << 20).contains(&count)
+        && let Some(value) = certified_dot(&a[..count], &b[..count])
+    {
+        return value;
+    }
+    reference_dot(a, b)
+}
+fn reference_dot(a: &[f32], b: &[f32]) -> f32 {
     // F32 products with a wide scalar reference reduction, rounded back to F32.
-    // Optimized F32 accumulators must qualify against this independent baseline.
     a.iter().zip(b).map(|(x, y)| (*x * *y) as f64).sum::<f64>() as f32
+}
+/// Independent reduction lanes expose parallel arithmetic to the compiler. Accept
+/// only when an outward-rounded interval proves the original F32 result unchanged.
+/// See docs/CPU_KERNELS.md for the error bound and domain; no FMA or fast-math.
+fn certified_dot(a: &[f32], b: &[f32]) -> Option<f32> {
+    debug_assert_eq!(a.len(), b.len());
+    debug_assert!((256..=1 << 20).contains(&a.len()));
+    let mut sums = [0f64; 4];
+    let mut magnitudes = [0f64; 4];
+    let mut left = a.chunks_exact(4);
+    let mut right = b.chunks_exact(4);
+    for (a, b) in left.by_ref().zip(right.by_ref()) {
+        for lane in 0..4 {
+            // Round each product to F32 before its exact widening to F64.
+            let product = f64::from(a[lane] * b[lane]);
+            sums[lane] += product;
+            magnitudes[lane] += product.abs();
+        }
+    }
+    let mut sum = (sums[0] + sums[1]) + (sums[2] + sums[3]);
+    let mut magnitude = (magnitudes[0] + magnitudes[1]) + (magnitudes[2] + magnitudes[3]);
+    for (a, b) in left.remainder().iter().zip(right.remainder()) {
+        let product = f64::from(*a * *b);
+        sum += product;
+        magnitude += product.abs();
+    }
+    if !sum.is_finite() || !magnitude.is_finite() {
+        return None;
+    }
+    // For n <= 2^20, this conservatively covers both reductions' roundoff and
+    // the error in the positive magnitude reduction. F32 products widened to
+    // F64 cannot underflow/overflow the F64 sums in this domain.
+    let error = (16. * a.len() as f64 * f64::EPSILON) * magnitude;
+    let lower = (sum - error).next_down() as f32;
+    let upper = (sum + error).next_up() as f32;
+    (lower.to_bits() == upper.to_bits()).then_some(lower)
+}
+
+#[cfg(test)]
+mod certified_dot_tests {
+    use super::*;
+
+    fn check(a: &[f32], b: &[f32]) {
+        let expected = reference_dot(a, b);
+        let actual = dot(a, b);
+        if expected.is_nan() {
+            assert!(actual.is_nan());
+        } else {
+            assert_eq!(
+                actual.to_bits(),
+                expected.to_bits(),
+                "lengths {}/{}",
+                a.len(),
+                b.len()
+            );
+        }
+    }
+
+    fn value(state: &mut u64) -> f32 {
+        *state ^= *state << 13;
+        *state ^= *state >> 7;
+        *state ^= *state << 17;
+        let bits = *state as u32;
+        let exponent = 67 + ((*state >> 32) as u32 % 121);
+        f32::from_bits((bits & 0x807f_ffff) | exponent << 23)
+    }
+
+    #[test]
+    fn certified_dot_preserves_reference_bits_for_shapes_tails_and_broad_finite_products() {
+        let mut state = 0x37d8_1fa0_6673_6e01;
+        for count in [
+            0,
+            1,
+            2,
+            3,
+            4,
+            127,
+            255,
+            256,
+            257,
+            258,
+            259,
+            260,
+            511,
+            512,
+            1023,
+            1024,
+            3584,
+            4096,
+            4864,
+            8960,
+            65535,
+            1 << 20,
+            (1 << 20) + 1,
+        ] {
+            let a: Vec<_> = (0..count).map(|_| value(&mut state)).collect();
+            let b: Vec<_> = (0..count).map(|_| value(&mut state)).collect();
+            check(&a, &b);
+            if count > 0 {
+                check(&a[..count - 1], &b);
+                check(&a, &b[..count - 1]);
+            }
+        }
+        for count in 256..512 {
+            let a: Vec<_> = (0..count).map(|_| value(&mut state)).collect();
+            let b: Vec<_> = (0..count).map(|_| value(&mut state)).collect();
+            check(&a, &b);
+        }
+    }
+
+    #[test]
+    fn certified_dot_accepts_unambiguous_results_and_falls_back_at_rounding_boundaries() {
+        let b = [1.; 256];
+        let exact = [1.; 256];
+        assert_eq!(certified_dot(&exact, &b), Some(256.));
+        let mut halfway = [0.; 256];
+        for (base, half, expected) in [
+            (1., 2f32.powi(-24), 1.),
+            (
+                f32::from_bits(1f32.to_bits() + 1),
+                2f32.powi(-24),
+                f32::from_bits(1f32.to_bits() + 2),
+            ),
+            (-1., -2f32.powi(-24), -1.),
+        ] {
+            halfway[0] = base;
+            halfway[1] = half;
+            assert!(certified_dot(&halfway, &b).is_none());
+            assert_eq!(dot(&halfway, &b).to_bits(), expected.to_bits());
+        }
+        let mut cancellation = [0.; 256];
+        cancellation[..4].copy_from_slice(&[1e30, 1., -1e30, 1.]);
+        assert!(certified_dot(&cancellation, &b).is_none());
+        assert_eq!(dot(&cancellation, &b), 1.);
+        let mut products = [0.; 256];
+        let mut operands = [1.; 256];
+        products[0] = 1. + f32::EPSILON;
+        operands[0] = products[0];
+        products[1] = -(1. + 2. * f32::EPSILON);
+        // Widening the operands before multiplying would incorrectly retain 2^-46.
+        assert_eq!(dot(&products, &operands).to_bits(), 0f32.to_bits());
+    }
+
+    #[test]
+    fn certified_dot_preserves_zero_subnormals_nonfinite_and_overflow_behavior() {
+        for (left, right) in [
+            (0., 1.),
+            (-0., 1.),
+            (0., -1.),
+            (-0., -1.),
+            (f32::from_bits(1), 1.),
+            (-f32::from_bits(1), 1.),
+            (f32::from_bits(1), 0.5),
+            (f32::MIN_POSITIVE, 0.5),
+            (f32::MAX, 1.),
+            (f32::MAX, 2.),
+            (f32::INFINITY, 0.),
+            (f32::INFINITY, 1.),
+            (f32::NEG_INFINITY, 1.),
+            (f32::NAN, 1.),
+        ] {
+            check(&[left; 259], &[right; 259]);
+        }
+        for exceptional in [f32::NAN, f32::INFINITY, f32::NEG_INFINITY, f32::MAX] {
+            for position in [0, 1, 2, 3, 255, 256, 258] {
+                let mut a = [1.; 259];
+                a[position] = exceptional;
+                check(&a, &[2.; 259]);
+            }
+        }
+        let mut mixed = [1.; 256];
+        mixed[0] = f32::INFINITY;
+        mixed[3] = f32::NEG_INFINITY;
+        check(&mixed, &[1.; 256]);
+        assert!(certified_dot(&[-0.; 256], &[1.; 256]).is_none());
+    }
 }
 /// FP16 matvec contract: binary16 operands, F32 products and output, wide reduction.
 pub fn round_f16(input: &[f32], output: &mut [f32]) -> Result<()> {
