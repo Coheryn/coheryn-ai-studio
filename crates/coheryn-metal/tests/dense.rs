@@ -114,7 +114,9 @@ fn independent_dense_references_admission_cancellation_and_cleanup() {
                 let right = scope.spawn(move || {
                     barrier.wait();
                     let mut result = vec![0.; shape.rows * batch];
-                    right.multiply(matrix, &scaled, &mut result, || false).unwrap();
+                    right
+                        .multiply(matrix, &scaled, &mut result, || false)
+                        .unwrap();
                     result
                 });
                 (left.join().unwrap(), right.join().unwrap())

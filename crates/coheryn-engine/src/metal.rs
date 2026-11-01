@@ -3,10 +3,10 @@
 use crate::{
     Cancellation, Error, ErrorCode, Result, gguf::Tensor, memory::Budget, storage::Storage,
 };
+pub use coheryn_metal::WorkspaceLimits;
 use coheryn_metal::{
     Device, Matrix, MatrixShape, MemoryBudget, MemoryLease, WeightType, Workspace,
 };
-pub use coheryn_metal::WorkspaceLimits;
 use std::sync::Arc;
 
 fn engine_error(error: coheryn_metal::Error) -> Error {
