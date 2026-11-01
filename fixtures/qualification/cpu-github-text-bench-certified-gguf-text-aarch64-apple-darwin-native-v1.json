@@ -1,0 +1,604 @@
+{
+  "architecture": "aarch64",
+  "available_cpus": 3,
+  "cases": 2,
+  "inputs": [
+    {
+      "bytes": 1266425696,
+      "path": ".cache/models/qwen2.5-0.5b-instruct-fp16.gguf",
+      "sha256": "8e0ae26000627ed62de0e78e41860af70094558b9d2913385c842a6aa06cf3fc"
+    }
+  ],
+  "os": "macos",
+  "outcome": "pass",
+  "runs": [
+    {
+      "benchmark": {
+        "adapter": {
+          "adapter": "qwen2-gguf-cpu-v1",
+          "architecture": "qwen2",
+          "continuous_batching": true,
+          "format": "gguf",
+          "images": false,
+          "managed_api": true,
+          "qualification": "exact-file-evidence-required",
+          "text_generation": true
+        },
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 675.579375,
+        "mode": "standalone",
+        "profile": "balanced",
+        "requested_threads": 1,
+        "runs": [
+          {
+            "batching": {
+              "batched_forward_units": 0,
+              "forward_units": 8,
+              "maximum_batch_width": 1,
+              "prefilled_tokens": 1,
+              "profile": "coheryn-cpu-batch-v1",
+              "scheduler_wait_ms": 0.0,
+              "strategy": "single-sequence"
+            },
+            "completion_tokens": 8,
+            "decode_ms": 4875.7646669999995,
+            "finish_reason": "length",
+            "first_token_ms": 1126.6101660000002,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 275578327,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.005542,
+            "prefill_ms": 1120.998416,
+            "prompt_tokens": 1,
+            "reused_prompt_tokens": 0,
+            "sampling_metadata": {
+              "backend": "native-cpu",
+              "cache_dtype": "f32",
+              "engine_version": "0.1.0-dev",
+              "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+              "penalties": {
+                "frequency_penalty": 0.0,
+                "presence_penalty": 0.0,
+                "repetition_penalty": 1.0
+              },
+              "prefill_chunk_tokens": 16,
+              "profile": "coheryn-sampling-v2",
+              "sampling_ms": 6.652584,
+              "settings": {
+                "seed": 0,
+                "temperature": 0.0,
+                "top_k": 0,
+                "top_p": 1.0
+              },
+              "threads": 1,
+              "tokenizer_fingerprint": "1bdb17cd46489fd1bde410073ce0e405974b88831fcc5d24e2dba8c3a9a0a306"
+            },
+            "text": "\n\nI am trying to create a program",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              2025
+            ],
+            "tokenization_ms": 2.9332920000000002
+          },
+          {
+            "batching": {
+              "batched_forward_units": 0,
+              "forward_units": 8,
+              "maximum_batch_width": 1,
+              "prefilled_tokens": 1,
+              "profile": "coheryn-cpu-batch-v1",
+              "scheduler_wait_ms": 0.0,
+              "strategy": "single-sequence"
+            },
+            "completion_tokens": 8,
+            "decode_ms": 4328.403124,
+            "finish_reason": "length",
+            "first_token_ms": 743.2356249999999,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 275578327,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.007043,
+            "prefill_ms": 741.358458,
+            "prompt_tokens": 1,
+            "reused_prompt_tokens": 0,
+            "sampling_metadata": {
+              "backend": "native-cpu",
+              "cache_dtype": "f32",
+              "engine_version": "0.1.0-dev",
+              "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+              "penalties": {
+                "frequency_penalty": 0.0,
+                "presence_penalty": 0.0,
+                "repetition_penalty": 1.0
+              },
+              "prefill_chunk_tokens": 16,
+              "profile": "coheryn-sampling-v2",
+              "sampling_ms": 6.643917000000001,
+              "settings": {
+                "seed": 0,
+                "temperature": 0.0,
+                "top_k": 0,
+                "top_p": 1.0
+              },
+              "threads": 1,
+              "tokenizer_fingerprint": "1bdb17cd46489fd1bde410073ce0e405974b88831fcc5d24e2dba8c3a9a0a306"
+            },
+            "text": "\n\nI am trying to create a program",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              2025
+            ],
+            "tokenization_ms": 0.436125
+          }
+        ]
+      },
+      "case": "english",
+      "entrypoint": 0,
+      "workers": 1
+    },
+    {
+      "benchmark": {
+        "adapter": {
+          "adapter": "qwen2-gguf-cpu-v1",
+          "architecture": "qwen2",
+          "continuous_batching": true,
+          "format": "gguf",
+          "images": false,
+          "managed_api": true,
+          "qualification": "exact-file-evidence-required",
+          "text_generation": true
+        },
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 264.346042,
+        "mode": "standalone",
+        "profile": "balanced",
+        "requested_threads": 2,
+        "runs": [
+          {
+            "batching": {
+              "batched_forward_units": 0,
+              "forward_units": 8,
+              "maximum_batch_width": 1,
+              "prefilled_tokens": 1,
+              "profile": "coheryn-cpu-batch-v1",
+              "scheduler_wait_ms": 0.0,
+              "strategy": "single-sequence"
+            },
+            "completion_tokens": 8,
+            "decode_ms": 6776.108831999999,
+            "finish_reason": "length",
+            "first_token_ms": 905.717584,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 276875940,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.0076679999999999995,
+            "prefill_ms": 903.327125,
+            "prompt_tokens": 1,
+            "reused_prompt_tokens": 0,
+            "sampling_metadata": {
+              "backend": "native-cpu",
+              "cache_dtype": "f32",
+              "engine_version": "0.1.0-dev",
+              "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+              "penalties": {
+                "frequency_penalty": 0.0,
+                "presence_penalty": 0.0,
+                "repetition_penalty": 1.0
+              },
+              "prefill_chunk_tokens": 16,
+              "profile": "coheryn-sampling-v2",
+              "sampling_ms": 6.710876000000001,
+              "settings": {
+                "seed": 0,
+                "temperature": 0.0,
+                "top_k": 0,
+                "top_p": 1.0
+              },
+              "threads": 2,
+              "tokenizer_fingerprint": "1bdb17cd46489fd1bde410073ce0e405974b88831fcc5d24e2dba8c3a9a0a306"
+            },
+            "text": "\n\nI am trying to create a program",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              2025
+            ],
+            "tokenization_ms": 1.283709
+          },
+          {
+            "batching": {
+              "batched_forward_units": 0,
+              "forward_units": 8,
+              "maximum_batch_width": 1,
+              "prefilled_tokens": 1,
+              "profile": "coheryn-cpu-batch-v1",
+              "scheduler_wait_ms": 0.0,
+              "strategy": "single-sequence"
+            },
+            "completion_tokens": 8,
+            "decode_ms": 6547.734624999999,
+            "finish_reason": "length",
+            "first_token_ms": 800.715875,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 276875940,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.011333,
+            "prefill_ms": 799.25775,
+            "prompt_tokens": 1,
+            "reused_prompt_tokens": 0,
+            "sampling_metadata": {
+              "backend": "native-cpu",
+              "cache_dtype": "f32",
+              "engine_version": "0.1.0-dev",
+              "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+              "penalties": {
+                "frequency_penalty": 0.0,
+                "presence_penalty": 0.0,
+                "repetition_penalty": 1.0
+              },
+              "prefill_chunk_tokens": 16,
+              "profile": "coheryn-sampling-v2",
+              "sampling_ms": 6.879668,
+              "settings": {
+                "seed": 0,
+                "temperature": 0.0,
+                "top_k": 0,
+                "top_p": 1.0
+              },
+              "threads": 2,
+              "tokenizer_fingerprint": "1bdb17cd46489fd1bde410073ce0e405974b88831fcc5d24e2dba8c3a9a0a306"
+            },
+            "text": "\n\nI am trying to create a program",
+            "token_ids": [
+              271,
+              40,
+              1079,
+              4460,
+              311,
+              1855,
+              264,
+              2025
+            ],
+            "tokenization_ms": 0.39670900000000003
+          }
+        ]
+      },
+      "case": "english",
+      "entrypoint": 0,
+      "workers": 2
+    },
+    {
+      "benchmark": {
+        "adapter": {
+          "adapter": "qwen2-gguf-cpu-v1",
+          "architecture": "qwen2",
+          "continuous_batching": true,
+          "format": "gguf",
+          "images": false,
+          "managed_api": true,
+          "qualification": "exact-file-evidence-required",
+          "text_generation": true
+        },
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 282.126333,
+        "mode": "standalone",
+        "profile": "balanced",
+        "requested_threads": 1,
+        "runs": [
+          {
+            "batching": {
+              "batched_forward_units": 0,
+              "forward_units": 26,
+              "maximum_batch_width": 1,
+              "prefilled_tokens": 19,
+              "profile": "coheryn-cpu-batch-v1",
+              "scheduler_wait_ms": 0.0,
+              "strategy": "single-sequence"
+            },
+            "completion_tokens": 8,
+            "decode_ms": 4508.998541,
+            "finish_reason": "length",
+            "first_token_ms": 14040.453208,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 275578327,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.010627000000000003,
+            "prefill_ms": 14037.572583000001,
+            "prompt_tokens": 19,
+            "reused_prompt_tokens": 0,
+            "sampling_metadata": {
+              "backend": "native-cpu",
+              "cache_dtype": "f32",
+              "engine_version": "0.1.0-dev",
+              "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+              "penalties": {
+                "frequency_penalty": 0.0,
+                "presence_penalty": 0.0,
+                "repetition_penalty": 1.0
+              },
+              "prefill_chunk_tokens": 16,
+              "profile": "coheryn-sampling-v2",
+              "sampling_ms": 6.630209,
+              "settings": {
+                "seed": 0,
+                "temperature": 0.0,
+                "top_k": 0,
+                "top_p": 1.0
+              },
+              "threads": 1,
+              "tokenizer_fingerprint": "1bdb17cd46489fd1bde410073ce0e405974b88831fcc5d24e2dba8c3a9a0a306"
+            },
+            "text": " সময় স",
+            "token_ids": [
+              35178,
+              116,
+              146415,
+              146834,
+              11125,
+              120,
+              35178,
+              116
+            ],
+            "tokenization_ms": 1.365
+          },
+          {
+            "batching": {
+              "batched_forward_units": 0,
+              "forward_units": 26,
+              "maximum_batch_width": 1,
+              "prefilled_tokens": 19,
+              "profile": "coheryn-cpu-batch-v1",
+              "scheduler_wait_ms": 0.0,
+              "strategy": "single-sequence"
+            },
+            "completion_tokens": 8,
+            "decode_ms": 4949.211792,
+            "finish_reason": "length",
+            "first_token_ms": 12515.017915999999,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 275578327,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.006584,
+            "prefill_ms": 12512.746001,
+            "prompt_tokens": 19,
+            "reused_prompt_tokens": 0,
+            "sampling_metadata": {
+              "backend": "native-cpu",
+              "cache_dtype": "f32",
+              "engine_version": "0.1.0-dev",
+              "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+              "penalties": {
+                "frequency_penalty": 0.0,
+                "presence_penalty": 0.0,
+                "repetition_penalty": 1.0
+              },
+              "prefill_chunk_tokens": 16,
+              "profile": "coheryn-sampling-v2",
+              "sampling_ms": 6.645166,
+              "settings": {
+                "seed": 0,
+                "temperature": 0.0,
+                "top_k": 0,
+                "top_p": 1.0
+              },
+              "threads": 1,
+              "tokenizer_fingerprint": "1bdb17cd46489fd1bde410073ce0e405974b88831fcc5d24e2dba8c3a9a0a306"
+            },
+            "text": " সময় স",
+            "token_ids": [
+              35178,
+              116,
+              146415,
+              146834,
+              11125,
+              120,
+              35178,
+              116
+            ],
+            "tokenization_ms": 0.8488330000000001
+          }
+        ]
+      },
+      "case": "bengali",
+      "entrypoint": 0,
+      "workers": 1
+    },
+    {
+      "benchmark": {
+        "adapter": {
+          "adapter": "qwen2-gguf-cpu-v1",
+          "architecture": "qwen2",
+          "continuous_batching": true,
+          "format": "gguf",
+          "images": false,
+          "managed_api": true,
+          "qualification": "exact-file-evidence-required",
+          "text_generation": true
+        },
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 247.280416,
+        "mode": "standalone",
+        "profile": "balanced",
+        "requested_threads": 2,
+        "runs": [
+          {
+            "batching": {
+              "batched_forward_units": 0,
+              "forward_units": 26,
+              "maximum_batch_width": 1,
+              "prefilled_tokens": 19,
+              "profile": "coheryn-cpu-batch-v1",
+              "scheduler_wait_ms": 0.0,
+              "strategy": "single-sequence"
+            },
+            "completion_tokens": 8,
+            "decode_ms": 6692.620250000001,
+            "finish_reason": "length",
+            "first_token_ms": 17255.8845,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 276875940,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.012582000000000003,
+            "prefill_ms": 17253.296500000004,
+            "prompt_tokens": 19,
+            "reused_prompt_tokens": 0,
+            "sampling_metadata": {
+              "backend": "native-cpu",
+              "cache_dtype": "f32",
+              "engine_version": "0.1.0-dev",
+              "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+              "penalties": {
+                "frequency_penalty": 0.0,
+                "presence_penalty": 0.0,
+                "repetition_penalty": 1.0
+              },
+              "prefill_chunk_tokens": 16,
+              "profile": "coheryn-sampling-v2",
+              "sampling_ms": 6.865458,
+              "settings": {
+                "seed": 0,
+                "temperature": 0.0,
+                "top_k": 0,
+                "top_p": 1.0
+              },
+              "threads": 2,
+              "tokenizer_fingerprint": "1bdb17cd46489fd1bde410073ce0e405974b88831fcc5d24e2dba8c3a9a0a306"
+            },
+            "text": " সময় স",
+            "token_ids": [
+              35178,
+              116,
+              146415,
+              146834,
+              11125,
+              120,
+              35178,
+              116
+            ],
+            "tokenization_ms": 1.154875
+          },
+          {
+            "batching": {
+              "batched_forward_units": 0,
+              "forward_units": 26,
+              "maximum_batch_width": 1,
+              "prefilled_tokens": 19,
+              "profile": "coheryn-cpu-batch-v1",
+              "scheduler_wait_ms": 0.0,
+              "strategy": "single-sequence"
+            },
+            "completion_tokens": 8,
+            "decode_ms": 6271.409374,
+            "finish_reason": "length",
+            "first_token_ms": 16957.750583999998,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 276875940,
+              "peak_session_buffer_capacity_bytes": 3060780,
+              "reserved": 250746368,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.012833,
+            "prefill_ms": 16954.748333,
+            "prompt_tokens": 19,
+            "reused_prompt_tokens": 0,
+            "sampling_metadata": {
+              "backend": "native-cpu",
+              "cache_dtype": "f32",
+              "engine_version": "0.1.0-dev",
+              "history_scope": "exact selected prompt plus generated token IDs, including control tokens",
+              "penalties": {
+                "frequency_penalty": 0.0,
+                "presence_penalty": 0.0,
+                "repetition_penalty": 1.0
+              },
+              "prefill_chunk_tokens": 16,
+              "profile": "coheryn-sampling-v2",
+              "sampling_ms": 7.055206,
+              "settings": {
+                "seed": 0,
+                "temperature": 0.0,
+                "top_k": 0,
+                "top_p": 1.0
+              },
+              "threads": 2,
+              "tokenizer_fingerprint": "1bdb17cd46489fd1bde410073ce0e405974b88831fcc5d24e2dba8c3a9a0a306"
+            },
+            "text": " সময় স",
+            "token_ids": [
+              35178,
+              116,
+              146415,
+              146834,
+              11125,
+              120,
+              35178,
+              116
+            ],
+            "tokenization_ms": 1.256166
+          }
+        ]
+      },
+      "case": "bengali",
+      "entrypoint": 0,
+      "workers": 2
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Pinned greedy/tokenizer and native benchmark routing; repeated fresh sessions. Timing observations under uncontrolled cache conditions; no full-array, performance-SLA or production qualification.",
+  "source_entrypoints": 1,
+  "suite": "gguf-text",
+  "threads": [
+    1,
+    2
+  ]
+}
