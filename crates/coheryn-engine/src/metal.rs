@@ -6,6 +6,7 @@ use crate::{
 use coheryn_metal::{
     Device, Matrix, MatrixShape, MemoryBudget, MemoryLease, WeightType, Workspace,
 };
+pub use coheryn_metal::WorkspaceLimits;
 use std::sync::Arc;
 
 fn engine_error(error: coheryn_metal::Error) -> Error {
@@ -105,6 +106,12 @@ impl MetalCompute {
     pub fn workspace(&self, matrix: &MetalMatrix, batch: usize) -> Result<MetalWorkspace> {
         self.0
             .workspace(matrix.raw.shape(), batch)
+            .map(MetalWorkspace)
+            .map_err(engine_error)
+    }
+    pub fn workspace_with_limits(&self, limits: WorkspaceLimits) -> Result<MetalWorkspace> {
+        self.0
+            .workspace_with_limits(limits)
             .map(MetalWorkspace)
             .map_err(engine_error)
     }

@@ -89,17 +89,38 @@ impl TryFrom<u32> for WeightType {
             13 => Ok(Self::Q5K),
             14 => Ok(Self::Q6K),
             30 => Ok(Self::Bf16),
-            _ => Err(Error::new(ErrorKind::Unsupported, "no Metal kernel for this tensor encoding")),
+            _ => Err(Error::new(
+                ErrorKind::Unsupported,
+                "no Metal kernel for this tensor encoding",
+            )),
         }
     }
 }
 
-/// Explicit safety ceilings for the first dense kernel; not a support matrix.
+/// Explicit safety ceilings for reference matrix kernels; not a support matrix.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct MatrixShape {
     pub width: usize,
     pub rows: usize,
     pub dtype: WeightType,
+}
+
+/// Per-request activation capacity, independent of each layer's weight encoding.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WorkspaceLimits {
+    pub width: usize,
+    pub rows: usize,
+    pub batch: usize,
+}
+impl WorkspaceLimits {
+    pub fn bytes(self) -> Result<usize> {
+        MatrixShape {
+            width: self.width,
+            rows: self.rows,
+            dtype: WeightType::F32,
+        }
+        .workspace_bytes(self.batch)
+    }
 }
 impl MatrixShape {
     pub fn row_bytes(self) -> Result<usize> {
@@ -111,13 +132,18 @@ impl MatrixShape {
         }
         let (block, bytes) = self.dtype.layout();
         if !self.width.is_multiple_of(block) {
-            return Err(Error::new(ErrorKind::InvalidInput, "GPU row is not quantization-block aligned"));
+            return Err(Error::new(
+                ErrorKind::InvalidInput,
+                "GPU row is not quantization-block aligned",
+            ));
         }
-        (self.width / block).checked_mul(bytes)
+        (self.width / block)
+            .checked_mul(bytes)
             .ok_or_else(|| Error::new(ErrorKind::InvalidInput, "GPU row size overflow"))
     }
     pub fn weight_bytes(self) -> Result<usize> {
-        self.row_bytes()?.checked_mul(self.rows)
+        self.row_bytes()?
+            .checked_mul(self.rows)
             .ok_or_else(|| Error::new(ErrorKind::InvalidInput, "GPU weight size overflow"))
     }
     pub fn workspace_bytes(self, batch: usize) -> Result<usize> {
@@ -177,16 +203,39 @@ mod tests {
 
     #[test]
     fn packed_layouts_reject_partial_blocks_and_unknown_encodings() {
-        for (encoding, block, bytes) in [(0, 1, 4), (1, 1, 2), (30, 1, 2), (2, 32, 18),
-            (6, 32, 22), (8, 32, 34), (12, 256, 144), (13, 256, 176), (14, 256, 210)] {
+        for (encoding, block, bytes) in [
+            (0, 1, 4),
+            (1, 1, 2),
+            (30, 1, 2),
+            (2, 32, 18),
+            (6, 32, 22),
+            (8, 32, 34),
+            (12, 256, 144),
+            (13, 256, 176),
+            (14, 256, 210),
+        ] {
             let dtype = WeightType::try_from(encoding).unwrap();
-            let shape = MatrixShape { width: 256, rows: 3, dtype };
+            let shape = MatrixShape {
+                width: 256,
+                rows: 3,
+                dtype,
+            };
             assert_eq!(shape.row_bytes().unwrap(), 256 / block * bytes);
             assert_eq!(shape.weight_bytes().unwrap(), 3 * 256 / block * bytes);
             if block > 1 {
-                assert!(MatrixShape { width: 255, ..shape }.weight_bytes().is_err());
+                assert!(
+                    MatrixShape {
+                        width: 255,
+                        ..shape
+                    }
+                    .weight_bytes()
+                    .is_err()
+                );
             }
         }
-        assert_eq!(WeightType::try_from(999).unwrap_err().kind, ErrorKind::Unsupported);
+        assert_eq!(
+            WeightType::try_from(999).unwrap_err().kind,
+            ErrorKind::Unsupported
+        );
     }
 }

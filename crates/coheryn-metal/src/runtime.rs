@@ -1,7 +1,7 @@
 //! Audited FFI boundary. Buffers are private, shared-storage and never exposed as
 //! pointers. CPU access happens before commit or after waitUntilCompleted. No
 //! fallible operations or callbacks occur between commit and retirement.
-use crate::{Error, ErrorKind, MatrixShape, MemoryLease, Result, SharedBudget};
+use crate::{Error, ErrorKind, MatrixShape, MemoryLease, Result, SharedBudget, WorkspaceLimits};
 use objc2::{
     rc::{Retained, autoreleasepool},
     runtime::ProtocolObject,
@@ -134,7 +134,7 @@ impl Device {
         Ok(Buffer { raw, _lease: lease })
     }
 
-    /// Upload canonical little-endian dense rows through a bounded reader.
+    /// Upload canonical little-endian dense or packed rows through a bounded reader.
     /// Reader errors/cancellation discard the incomplete private buffer. The
     /// caller remains responsible for validating immutable model-file identity.
     pub fn upload(
@@ -170,14 +170,23 @@ impl Device {
     /// Per-request reusable input/output storage; no shared mutable GPU scratch.
     pub fn workspace(self: &Arc<Self>, shape: MatrixShape, batch: usize) -> Result<Workspace> {
         shape.workspace_bytes(batch)?;
-        let input = self.allocate(shape.width * batch * 4)?;
-        let output = self.allocate(shape.rows * batch * 4)?;
+        self.workspace_with_limits(WorkspaceLimits {
+            width: shape.width,
+            rows: shape.rows,
+            batch,
+        })
+    }
+
+    /// Reuse one admitted activation allocation across validated layer shapes.
+    pub fn workspace_with_limits(self: &Arc<Self>, limits: WorkspaceLimits) -> Result<Workspace> {
+        limits.bytes()?;
+        let input = self.allocate(limits.width * limits.batch * 4)?;
+        let output = self.allocate(limits.rows * limits.batch * 4)?;
         Ok(Workspace {
             input,
             output,
             device: Arc::clone(self),
-            shape,
-            batch,
+            limits,
         })
     }
 }
@@ -201,15 +210,14 @@ pub struct Workspace {
     input: Buffer,
     output: Buffer,
     device: Arc<Device>,
-    shape: MatrixShape,
-    batch: usize,
+    limits: WorkspaceLimits,
 }
 impl Workspace {
     pub fn allocated_bytes(&self) -> u64 {
         self.input.raw.allocatedSize() as u64 + self.output.raw.allocatedSize() as u64
     }
 
-    /// Synchronous, bounded-dispatch dense execution. Cancellation discards all
+    /// Synchronous, bounded-dispatch matrix execution. Cancellation discards all
     /// partial GPU output and leaves caller output unchanged. Previously
     /// committed commands always retire before buffers or reservations release.
     pub fn multiply(
@@ -220,12 +228,14 @@ impl Workspace {
         cancel: impl Fn() -> bool,
     ) -> Result<()> {
         check(&cancel)?;
+        let shape = matrix.shape;
         if !Arc::ptr_eq(&self.device, &matrix.device)
-            || matrix.shape != self.shape
+            || shape.width > self.limits.width
+            || shape.rows > self.limits.rows
             || input.is_empty()
-            || !input.len().is_multiple_of(self.shape.width)
-            || input.len() / self.shape.width > self.batch
-            || output.len() != input.len() / self.shape.width * self.shape.rows
+            || !input.len().is_multiple_of(shape.width)
+            || input.len() / shape.width > self.limits.batch
+            || output.len() != input.len() / shape.width * shape.rows
             || input.iter().any(|value| !value.is_finite())
         {
             return Err(Error::new(
@@ -233,7 +243,7 @@ impl Workspace {
                 "GPU matrix/workspace/input mismatch",
             ));
         }
-        let batch = input.len() / self.shape.width;
+        let batch = input.len() / shape.width;
         // SAFETY: exclusively borrowed workspace, no pending GPU command,
         // shared buffer is large enough for the checked F32 input; source is a
         // distinct Rust slice and cannot alias the private Metal allocation.
@@ -244,11 +254,11 @@ impl Workspace {
                 input.len(),
             );
         }
-        let rows = (PRODUCTS_PER_DISPATCH / (self.shape.width * batch)).max(1);
-        for first in (0..self.shape.rows).step_by(rows) {
+        let rows = (PRODUCTS_PER_DISPATCH / (shape.width * batch)).max(1);
+        for first in (0..shape.rows).step_by(rows) {
             check(&cancel)?;
             autoreleasepool(|_| {
-                self.dispatch(matrix, batch, first, (self.shape.rows - first).min(rows))
+                self.dispatch(matrix, batch, first, (shape.rows - first).min(rows))
             })?;
             check(&cancel)?;
         }
@@ -283,10 +293,10 @@ impl Workspace {
             .ok_or_else(|| resource("Metal compute encoder allocation failed"))?;
         encoder.setComputePipelineState(&self.device.dense);
         let mut shape = [
-            self.shape.width as u32,
-            self.shape.rows as u32,
+            matrix.shape.width as u32,
+            matrix.shape.rows as u32,
             batch as u32,
-            self.shape.dtype as u32,
+            matrix.shape.dtype as u32,
             first as u32,
             rows as u32,
             row_bytes as u32,

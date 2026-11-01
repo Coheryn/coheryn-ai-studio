@@ -27,4 +27,3 @@ impl MemoryBudget for Budget {
         }))
     }
 }
-

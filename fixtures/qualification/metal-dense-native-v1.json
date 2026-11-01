@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "kind": "reviewed-metal-native-dense-primitives",
+  "outcome": "pass",
+  "production_ready": false,
+  "source_commit": "e6ff90bcc31a920c77144e3e1ee95a22711b58f0",
+  "workflow_run": 41303923282,
+  "workflow_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41303923282",
+  "native_target": "aarch64-apple-darwin",
+  "device_name": "Apple Paravirtual device",
+  "artifact": {
+    "id": 13083160721,
+    "name": "metal-primitives-1",
+    "bytes": 569342,
+    "sha256": "4f7e60a2f58f70e187259ef9fcb20175a2b3466500c39dc4d9e334bf0c4d09d6"
+  },
+  "report": {
+    "path": "fixtures/qualification/metal-dense-native-aarch64-v1.json",
+    "sha256": "229fb26db4d17db7b7764f9fcebea821465460d71c638efa29b2f28bc6afa82b"
+  },
+  "healthy_host_samples": 125,
+  "gpu_executed": true,
+  "metal_shader_compiled": true,
+  "metal_api_validation": true,
+  "metal_gpu_validation": true,
+  "scope": "Six frozen dense F32/F16/BF16 cases and native engine storage/admission/cancellation/mutation boundary on the named hosted Metal device; 61 ordinary engine and one platform library tests also passed.",
+  "physical_apple_m1_qualification": false,
+  "model_qualification": false,
+  "performance_qualification": false,
+  "remaining": [
+    "Packed GPU reference kernels and cross-layer workspace reuse",
+    "Native GPU architecture dispatch and model-level references",
+    "Physical device and broader CPU/GPU/task qualification",
+    "LLaVA/Gemma and broader format gates",
+    "Complete security and release qualification"
+  ]
+}
