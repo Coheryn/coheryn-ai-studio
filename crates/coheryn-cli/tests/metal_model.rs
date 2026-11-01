@@ -55,7 +55,11 @@ fn standalone_metal_cli_matches_frozen_outputs_and_rejects_unsupported_routes() 
     let mut streams = Vec::new();
     for expected in reference["cases"].as_array().unwrap() {
         let messages = directory.path().join("messages.json");
-        fs::write(&messages, serde_json::to_vec(&expected["messages"]).unwrap()).unwrap();
+        fs::write(
+            &messages,
+            serde_json::to_vec(&expected["messages"]).unwrap(),
+        )
+        .unwrap();
         let output = Command::new(env!("CARGO_BIN_EXE_coheryn"))
             .current_dir(&root)
             .args(["--json", "run"])
@@ -121,12 +125,22 @@ fn standalone_metal_cli_matches_frozen_outputs_and_rejects_unsupported_routes() 
             String::from_utf8_lossy(&streamed.stderr)
         );
         let text = String::from_utf8(streamed.stdout).unwrap();
-        assert_eq!(text, format!("{}\n", expected["greedy_text"].as_str().unwrap()));
+        assert_eq!(
+            text,
+            format!("{}\n", expected["greedy_text"].as_str().unwrap())
+        );
         streams.push(text);
     }
     let mut rejected = Vec::new();
     for arguments in [
-        vec!["run", "missing.gguf", "--backend", "metal", "--prompt", "hello"],
+        vec![
+            "run",
+            "missing.gguf",
+            "--backend",
+            "metal",
+            "--prompt",
+            "hello",
+        ],
         vec![
             "chat",
             "missing.gguf",
@@ -145,7 +159,15 @@ fn standalone_metal_cli_matches_frozen_outputs_and_rejects_unsupported_routes() 
             "--request",
             "missing.json",
         ],
-        vec!["chat", "missing.gguf", "--standalone", "--backend", "metal", "--session", "test"],
+        vec![
+            "chat",
+            "missing.gguf",
+            "--standalone",
+            "--backend",
+            "metal",
+            "--session",
+            "test",
+        ],
     ] {
         let output = Command::new(env!("CARGO_BIN_EXE_coheryn"))
             .current_dir(directory.path())

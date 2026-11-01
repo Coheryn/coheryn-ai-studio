@@ -32,6 +32,7 @@ def commands(gpu, cross_check=False):
         ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-metal', '--features', 'metal', '--lib', '--locked'),
         ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-engine', '--features', 'metal', '--lib', '--locked'),
         ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-cli', '--features', 'metal', '--bin', 'coheryn', '--locked'),
+        ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-api', '--features', 'metal', '--test', 'service', '--locked'),
     ]
     if cross_check:
         # Compile the macOS FFI and engine tests, never execute a foreign binary.
@@ -223,7 +224,10 @@ def main():
                 row['tests'] = counts = test_counts(log)
                 valid = valid and counts['passed'] > 0 and counts['failed'] == counts['filtered'] == 0
                 if '--test' in command:
-                    valid = valid and counts['passed'] == counts['suites'] == 1 and counts['ignored'] == 0
+                    target = command[command.index('--test') + 1]
+                    valid = valid and counts['ignored'] == 0
+                    if target != 'service':
+                        valid = valid and counts['passed'] == counts['suites'] == 1
             row['validated'] = valid
             checkpoint(args.report, report)
             print(('PASS' if valid else 'FAIL') + ' ' + ' '.join(command), flush=True)

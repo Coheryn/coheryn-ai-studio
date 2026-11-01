@@ -236,6 +236,8 @@ pub struct ModelRequest {
 #[serde(deny_unknown_fields)]
 pub struct LoadRequest {
     pub model: String,
+    #[serde(default)]
+    pub backend: coheryn_engine::adapters::Backend,
     #[serde(default = "default_context")]
     pub context: usize,
 }

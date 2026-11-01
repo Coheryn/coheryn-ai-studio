@@ -303,7 +303,10 @@ async fn resources(State(s): State<Arc<Service>>) -> Result<Json<Value>> {
 }
 async fn load(State(s): State<Arc<Service>>, request: Request) -> Result<Json<Value>> {
     let body: LoadRequest = json_body(request).await?;
-    Ok(Json(s.load(body.model, body.context).await?))
+    Ok(Json(
+        s.load_backend(body.model, body.context, body.backend)
+            .await?,
+    ))
 }
 async fn unload(State(s): State<Arc<Service>>, request: Request) -> Result<Json<Value>> {
     let body: ModelRequest = json_body(request).await?;

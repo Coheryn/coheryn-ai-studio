@@ -25,7 +25,8 @@ pub struct Execution<'a> {
     pub hardware: &'a HardwareSnapshot,
 }
 /// Explicit execution selection. Unsupported selections never fall back to CPU.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Backend {
     #[default]
     Cpu,
@@ -392,7 +393,6 @@ impl TextModel for crate::qwen35::Model {
             } else {
                 "qwen35-safetensors-metal-experimental-v1"
             };
-            result.managed_api = false;
             result.continuous_batching = false;
             result.qualification = "experimental-pretrained-metal-qualification-pending";
         }

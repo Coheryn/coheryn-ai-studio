@@ -99,6 +99,9 @@ enum Models {
     },
     Load {
         model: String,
+        /// Explicit daemon model backend; Metal requires a metal-enabled macOS server.
+        #[arg(long, default_value = "cpu", value_parser = ["cpu", "metal"])]
+        backend: String,
         #[arg(long, default_value_t = 4096)]
         context: usize,
     },
@@ -349,12 +352,18 @@ async fn execute(cli: &Cli) -> Result<()> {
                     )
                     .await?,
             ),
-            Models::Load { model, context } => print_json(
+            Models::Load {
+                model,
+                context,
+                backend,
+            } => print_json(
                 &daemon::client(cli)?
                     .json(
                         "POST",
                         "/api/v1/models/load",
-                        Some(serde_json::json!({"model":model,"context":context})),
+                        Some(
+                            serde_json::json!({"model":model,"context":context,"backend":backend}),
+                        ),
                         true,
                         &cancel,
                     )

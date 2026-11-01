@@ -7,6 +7,10 @@ license.workspace = true
 repository.workspace = true
 homepage.workspace = true
 
+[features]
+default = []
+metal = ["coheryn-engine/metal"]
+
 [dependencies]
 coheryn-engine.workspace = true
 serde.workspace = true

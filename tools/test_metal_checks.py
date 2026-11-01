@@ -63,7 +63,7 @@ class MetalChecksTests(unittest.TestCase):
     def test_live_mode_requires_exact_test_and_preserves_logs_scope_and_cleanup(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve())
-            self.assertEqual((code, calls), (0, 12))
+            self.assertEqual((code, calls), (0, 13))
             self.assertTrue(report['gpu_execution_required'])
             self.assertFalse(report['production_ready'])
             self.assertTrue(report['source_unchanged'] and report['owned_cleanup_confirmed'])
@@ -74,14 +74,15 @@ class MetalChecksTests(unittest.TestCase):
     def test_compile_mode_cannot_claim_gpu_execution(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve(), gpu=False)
-            self.assertEqual((code, calls), (0, 9))
+            self.assertEqual((code, calls), (0, 10))
             self.assertFalse(report['gpu_execution_required'])
-            self.assertTrue(all('--test' not in row['command'] for row in report['commands']))
+            self.assertTrue(all('--test' not in row['command'] or row['command'][row['command'].index('--test') + 1] == 'service'
+                                for row in report['commands']))
 
     def test_format_failure_retains_numeric_feedback_but_cannot_pass(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve(), 'format')
-            self.assertEqual((code, calls, report['outcome']), (1, 12, 'fail'))
+            self.assertEqual((code, calls, report['outcome']), (1, 13, 'fail'))
             self.assertFalse(report['commands'][0]['validated'])
             self.assertTrue(all(row['validated'] for row in report['commands'][1:]))
 

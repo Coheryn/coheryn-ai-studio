@@ -22,6 +22,67 @@ fn credentials() -> Credentials {
         admin_token: "a".repeat(64),
     }
 }
+#[tokio::test]
+async fn explicit_backend_load_keeps_authentication_cpu_defaults_and_atomic_state() {
+    let (_directory, service, app) = setup(1);
+    install(&service, "tiny").await;
+    let baseline = service.budget.stats().reserved;
+    let metal = json!({"model":"tiny","context":128,"backend":"metal"});
+    assert_eq!(
+        call(
+            &app,
+            "POST",
+            "/api/v1/models/load",
+            Some(false),
+            metal.clone()
+        )
+        .await
+        .0,
+        403
+    );
+    let (status, error) = call(&app, "POST", "/api/v1/models/load", Some(true), metal).await;
+    assert_eq!(status, 400);
+    assert_eq!(error["error"]["code"], "UNSUPPORTED_FEATURE");
+    assert_eq!(service.budget.stats().reserved, baseline);
+    assert_eq!(service.loaded().unwrap(), json!([]));
+    let (status, _) = call(
+        &app,
+        "POST",
+        "/api/v1/models/load",
+        Some(true),
+        json!({"model":"tiny","context":128,"backend":"automatic"}),
+    )
+    .await;
+    assert_eq!(status, 400);
+    let (status, _) = call(
+        &app,
+        "POST",
+        "/api/v1/models/load",
+        Some(true),
+        json!({"model":"tiny","context":128}),
+    )
+    .await;
+    assert_eq!(status, 200);
+    assert_eq!(service.loaded().unwrap()[0]["backend"], "cpu");
+    let baseline = service.budget.stats().reserved;
+    let error = service
+        .load_backend("tiny".into(), 128, coheryn_engine::adapters::Backend::Metal)
+        .await
+        .unwrap_err();
+    let expected = if coheryn_engine::adapters::Backend::Metal
+        .check_available()
+        .is_ok()
+    {
+        409
+    } else {
+        400
+    };
+    assert_eq!(error.status.as_u16(), expected);
+    assert_eq!(service.budget.stats().reserved, baseline);
+    assert_eq!(service.loaded().unwrap()[0]["backend"], "cpu");
+    service.unload("tiny").unwrap();
+    assert_eq!(service.budget.stats().reserved, 0);
+}
 fn constrained_request(stream: bool) -> Value {
     json!({"model":"tiny","prompt":"json","max_tokens":64,"stream":stream,
         "response_format":{"type":"json_schema","json_schema":{"name":"result","strict":true,"schema":{"type":"object","properties":{"answer":{"type":"string","const":"ok"}},"required":["answer"],"additionalProperties":false}}}})

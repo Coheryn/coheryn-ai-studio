@@ -57,7 +57,7 @@ All protected routes require `Authorization: Bearer TOKEN`. Administrative crede
 | `POST /api/v1/models/import-checkpoint?name=ID&sha256=HASH` | Admin | Bounded manifest-first native checkpoint stream; [contract](MANAGED_CHECKPOINTS.md) |
 | `POST /api/v1/models/pull` | Admin | `{"name":"ID","url":"https://...","sha256":"HASH"}` |
 | `POST /api/v1/models/register-pair` | Admin | `{"model":"ID","language":"LANGUAGE_ID","vision":"VISION_ID"}` |
-| `POST /api/v1/models/load` | Admin | `{"model":"ID","context":4096}` |
+| `POST /api/v1/models/load` | Admin | `{"model":"ID","context":4096,"backend":"cpu"}`; backend defaults to CPU |
 | `POST /api/v1/models/unload` | Admin | `{"model":"ID"}` |
 | `DELETE /api/v1/models/{id}` | Admin | Remove an unloaded model, including an orphaned managed file |
 | `POST /api/v1/plans/estimate` | Admin | `{"model":"ID","context":4096,"profile":"balanced","concurrency":1}` |

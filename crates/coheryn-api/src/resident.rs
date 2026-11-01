@@ -149,6 +149,12 @@ impl Resident {
             Self::Embedding(m) => m.model.context_limit(),
         }
     }
+    pub fn backend(&self) -> coheryn_engine::adapters::Backend {
+        match self {
+            Self::Qwen35(model) => model.backend(),
+            _ => coheryn_engine::adapters::Backend::Cpu,
+        }
+    }
     pub fn descriptor(&self) -> Option<&Descriptor> {
         match self {
             Self::Generation(m) => Some(&m.descriptor),

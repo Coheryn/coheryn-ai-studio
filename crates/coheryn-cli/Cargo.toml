@@ -9,7 +9,7 @@ homepage.workspace = true
 
 [features]
 default = []
-metal = ["coheryn-engine/metal"]
+metal = ["coheryn-engine/metal", "coheryn-api/metal"]
 
 [[bin]]
 name = "coheryn"

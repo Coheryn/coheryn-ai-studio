@@ -161,11 +161,11 @@ impl Service {
         }
     }
     pub fn loaded(&self) -> Result<Value> {
-        Ok(Value::Array(self.residents()?.iter().map(|(id,m)|json!({"id":id,"context":m.context(),"task":m.task(),"pinned":m.pinned(),"conversation":m.conversation_capabilities(),"embedding_space":match m {Resident::Embedding(m)=>Some(&m.space),_=>None}})).collect()))
+        Ok(Value::Array(self.residents()?.iter().map(|(id,m)|json!({"id":id,"context":m.context(),"backend":m.backend(),"task":m.task(),"pinned":m.pinned(),"conversation":m.conversation_capabilities(),"embedding_space":match m {Resident::Embedding(m)=>Some(&m.space),_=>None}})).collect()))
     }
     pub fn status(&self) -> Result<Value> {
         Ok(
-            json!({"stage":"experimental-G4-E2-S6","continuous_batching":true,"batching_profile":"coheryn-cpu-batch-v1","compute_policy":"fifo-text-token-batch-embedding-microbatch-vision-tile-layer","image_input":true,"vision_limits":self.config.vision,"vision_profile":"qwen2vl-still-f16-cpu-greedy","generation_resident_limit":self.scheduler.max_concurrency(),"placement":{"backend":"native-cpu","fallback":"disabled","reason":"CPU is the only qualified execution backend"},"session_image_assets":self.sessions.image_stats()?,"session_limits":self.config.sessions,"session_storage":if self.sessions.persistence_enabled(){"opt-in-embedded"}else{"ephemeral"},"persistence_limits":self.config.persistence,"session_kv_reuse":true,"tool_calling":true,"tool_profiles":["qwen-tools-v1"],"strict_tool_arguments":true,"schema_constraints":true,"constraint_profile":"coheryn-json-v1","strict_tool_mode":"single-required-or-named-no-parallel","sampling_profile":"coheryn-sampling-v2","cache":self.sessions.cache_stats()?,"embedding_limits":self.config.embeddings,"backend":"cpu-reference","scheduler":self.scheduler.counters.snapshot(),"memory":self.budget.stats(),"loaded_models":self.loaded()?,"queue_capacity":self.config.queue_capacity,"active_limit":2*self.scheduler.max_concurrency()+self.config.embeddings.concurrency,"vision_phase_limit":self.scheduler.max_concurrency(),"compute_unit_limit":1,"embedding_phase_limit":self.config.embeddings.concurrency,"configured_active_limit":self.config.max_concurrency,"shutting_down":self.shutdown.is_cancelled()}),
+            json!({"stage":"experimental-G4-E2-S6","continuous_batching":true,"batching_profile":"coheryn-cpu-batch-v1","compute_policy":"fifo-text-token-batch-embedding-microbatch-vision-tile-layer","image_input":true,"vision_limits":self.config.vision,"vision_profile":"qwen2vl-still-f16-cpu-greedy","generation_resident_limit":self.scheduler.max_concurrency(),"placement":{"default_backend":"native-cpu","experimental_metal_build":coheryn_engine::adapters::Backend::Metal.check_available().is_ok(),"fallback":"disabled","selection":"explicit per loaded model; Metal remains experimental"},"session_image_assets":self.sessions.image_stats()?,"session_limits":self.config.sessions,"session_storage":if self.sessions.persistence_enabled(){"opt-in-embedded"}else{"ephemeral"},"persistence_limits":self.config.persistence,"session_kv_reuse":true,"tool_calling":true,"tool_profiles":["qwen-tools-v1"],"strict_tool_arguments":true,"schema_constraints":true,"constraint_profile":"coheryn-json-v1","strict_tool_mode":"single-required-or-named-no-parallel","sampling_profile":"coheryn-sampling-v2","cache":self.sessions.cache_stats()?,"embedding_limits":self.config.embeddings,"backend":"per-model","scheduler":self.scheduler.counters.snapshot(),"memory":self.budget.stats(),"loaded_models":self.loaded()?,"queue_capacity":self.config.queue_capacity,"active_limit":2*self.scheduler.max_concurrency()+self.config.embeddings.concurrency,"vision_phase_limit":self.scheduler.max_concurrency(),"compute_unit_limit":1,"embedding_phase_limit":self.config.embeddings.concurrency,"configured_active_limit":self.config.max_concurrency,"shutting_down":self.shutdown.is_cancelled()}),
         )
     }
     pub fn unload(&self, id: &str) -> Result<()> {
@@ -212,6 +212,16 @@ impl Service {
         .await?
     }
     pub async fn load(self: &Arc<Self>, id: String, context: usize) -> Result<Value> {
+        self.load_backend(id, context, coheryn_engine::adapters::Backend::Cpu)
+            .await
+    }
+    pub async fn load_backend(
+        self: &Arc<Self>,
+        id: String,
+        context: usize,
+        backend: coheryn_engine::adapters::Backend,
+    ) -> Result<Value> {
+        backend.check_available()?;
         // The owned task finishes the transaction even if the HTTP caller disconnects.
         let service = self.clone();
         tokio::spawn(async move {
@@ -222,11 +232,15 @@ impl Service {
                 let residents=service.residents()?;
                 if let Some(model)=residents.get(&id) {
                     if model.context()!=context {return Err(ApiError::conflict("model already loaded with a different context; unload explicitly first"));}
-                    return Ok(json!({"model":id,"context":context,"loaded":true}));
+                    if model.backend()!=backend {return Err(ApiError::conflict("model already loaded with a different backend; unload explicitly first"));}
+                    return Ok(json!({"model":id,"context":context,"backend":backend,"loaded":true}));
                 }
                 if residents.len()>=service.config.max_loaded_models {return Err(Error::resource("resident model limit reached").into());}
             }
             let record=service.registry.get(&id)?;
+            if backend == coheryn_engine::adapters::Backend::Metal && record.checkpoint.is_none() {
+                return Err(Error::new(ErrorCode::UnsupportedFeature,"experimental Metal requires a supported Qwen3.5 managed checkpoint").into());
+            }
             if let Some(pair) = record.components.clone() {
                 let language = service.registry.model_path(&pair.language.model)?;
                 let vision = service.registry.model_path(&pair.vision.model)?;
@@ -255,10 +269,12 @@ impl Service {
                     }
                     drop(inspection); drop(validation);
                     let model = coheryn_engine::qwen35::Model::load_with_budget(root.join(&manifest.entrypoint), limits, budget, &Default::default())?;
+                    #[cfg(all(feature = "metal", target_os = "macos"))]
+                    let model = if backend == coheryn_engine::adapters::Backend::Metal { model.enable_metal(&Default::default())? } else { model };
                     Ok(Resident::Qwen35(Arc::new(model)))
                 }).await??;
                 service.residents()?.insert(id.clone(), model);
-                return Ok(json!({"model":id,"context":context,"loaded":true,"task":"text-generation","adapter":manifest_adapter(&record)}));
+                return Ok(json!({"model":id,"context":context,"backend":backend,"loaded":true,"task":"text-generation","adapter":if backend == coheryn_engine::adapters::Backend::Metal {"qwen35-metal-experimental-v1"} else {manifest_adapter(&record)}}));
             }
             let path=service.registry.model_path(&id)?;let budget=service.budget.clone();let max_memory=service.config.max_memory;
             let operation=service.budget.reserve(service.parser_limits().max_metadata_allocation)?;
@@ -295,6 +311,7 @@ impl Service {
         let record = self.registry.get(&id)?;
         if let Some(manifest) = record.checkpoint.clone() {
             let root = self.registry.checkpoint_root(&id)?;
+            let loaded_backend = self.residents()?.get(&id).map(Resident::backend);
             let reservation = self
                 .budget
                 .reserve(coheryn_engine::qwen35::RESIDENT_METADATA_BYTES)?;
@@ -303,7 +320,7 @@ impl Service {
                 if deep { manifest.verify(&root,true,&Default::default())?; }
                 let inspection = manifest.bind(&root,&Default::default())?;
                 if deep { inspection.deep_validate(&Default::default())?; }
-                Ok(json!({"descriptor":inspection.descriptor(),"compatibility":{"executable":true,"adapter":manifest.adapter,"managed_text":true,"images":inspection.descriptor().text_adapter.as_ref().is_some_and(|a|a.images),"image_sessions":inspection.descriptor().text_adapter.as_ref().is_some_and(|a|a.images),"image_planning":inspection.descriptor().text_adapter.as_ref().is_some_and(|a|a.images),"tools":false,"sessions":true,"prefix_kv_reuse":true,"recurrent_state_reuse":true,"continuous_batching":true},"source_set_sha256":record.sha256,"payload_integrity":if deep {"verified"}else{"not-rehashed"}}))
+                Ok(json!({"loaded_backend":loaded_backend,"compatibility_scope":"source CPU capabilities; consult loaded_models for selected execution restrictions","descriptor":inspection.descriptor(),"compatibility":{"executable":true,"adapter":manifest.adapter,"managed_text":true,"images":inspection.descriptor().text_adapter.as_ref().is_some_and(|a|a.images),"image_sessions":inspection.descriptor().text_adapter.as_ref().is_some_and(|a|a.images),"image_planning":inspection.descriptor().text_adapter.as_ref().is_some_and(|a|a.images),"tools":false,"sessions":true,"prefix_kv_reuse":true,"recurrent_state_reuse":true,"continuous_batching":true},"source_set_sha256":record.sha256,"payload_integrity":if deep {"verified"}else{"not-rehashed"}}))
             }).await?;
         }
         if record.components.is_some() {
@@ -410,15 +427,7 @@ impl Service {
             };
             let budget = self.budget.stats();
             let plan = if let Some(Resident::Qwen35(model)) = loaded {
-                coheryn_engine::qwen35::estimate_shared(
-                    model.configuration(),
-                    model.weight_bytes()?,
-                    &plan_request,
-                    &hardware,
-                    budget,
-                    true,
-                    self.scheduler.max_concurrency(),
-                )?
+                model.execution_plan(&plan_request, &hardware, self.scheduler.max_concurrency())?
             } else {
                 let inspection_memory = self
                     .budget

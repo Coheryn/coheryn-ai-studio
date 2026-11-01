@@ -245,12 +245,16 @@ impl Model {
         }
         Ok(0)
     }
-    fn execution_plan(
+    /// Pure loaded-model planning, including shared residency and selected-backend scratch.
+    pub fn execution_plan(
         &self,
         request: &crate::catalog::PlanRequest,
         hardware: &crate::planner::HardwareSnapshot,
         max_concurrency: usize,
     ) -> Result<crate::planner::ExecutionPlan> {
+        if request.context == 0 || request.context > self.limits.context {
+            return Err(Error::request("plan context exceeds loaded model capacity"));
+        }
         #[cfg(not(all(feature = "metal", target_os = "macos")))]
         let resident_bytes = 0;
         #[cfg(all(feature = "metal", target_os = "macos"))]
@@ -283,6 +287,13 @@ impl Model {
     }
     pub fn configuration(&self) -> &Config {
         &self.config
+    }
+    pub fn backend(&self) -> crate::adapters::Backend {
+        #[cfg(all(feature = "metal", target_os = "macos"))]
+        if self.gpu.is_some() {
+            return crate::adapters::Backend::Metal;
+        }
+        crate::adapters::Backend::Cpu
     }
     pub fn memory(&self) -> crate::memory::MemoryStats {
         self.budget.stats()
