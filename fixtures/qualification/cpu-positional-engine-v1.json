@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "kind": "reviewed-positional-storage-engine-checkpoint",
+  "outcome": "pass",
+  "production_ready": false,
+  "source_commit": "807fe55807f133d17a7f2e25d701fbd2b5197f20",
+  "source_snapshot_matches_worktree_at_review": true,
+  "run_id": 41279999547,
+  "run_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41279999547",
+  "reviewed": [
+    {
+      "target": "aarch64-apple-darwin",
+      "outcome": "pass",
+      "tests": {
+        "suites": 1,
+        "passed": 56,
+        "failed": 0,
+        "ignored": 4,
+        "filtered": 0
+      },
+      "storage_tests": [
+        "file_boundaries_overflow_and_truncation_remain_recoverable",
+        "shared_file_reads_keep_requested_offsets_under_worker_interleaving",
+        "short_positional_reads_retry_only_interruptions_and_advance_exactly",
+        "standard_sha256_vectors_and_file_fingerprints_remain_stable",
+        "temporal_patch_view_preserves_channel_time_order_and_fragmented_ranges"
+      ],
+      "report": {
+        "path": "fixtures/qualification/cpu-positional-engine-aarch64-apple-darwin-v1.json",
+        "bytes": 94661,
+        "sha256": "38400483761d4e65df6591ea3ae33218f59f6df385f362b927f6472139ec6fab"
+      },
+      "artifact": {
+        "id": 13073321394,
+        "name": "cpu-engine-aarch64-apple-darwin-1",
+        "digest": "sha256:5269fa81ce6c2c18a6519ab1c50db656351cca43905ee8b2ead5599a8e4a0351",
+        "size_in_bytes": 562404
+      }
+    },
+    {
+      "target": "x86_64-pc-windows-msvc",
+      "outcome": "pass",
+      "tests": {
+        "suites": 1,
+        "passed": 56,
+        "failed": 0,
+        "ignored": 4,
+        "filtered": 0
+      },
+      "storage_tests": [
+        "file_boundaries_overflow_and_truncation_remain_recoverable",
+        "shared_file_reads_keep_requested_offsets_under_worker_interleaving",
+        "short_positional_reads_retry_only_interruptions_and_advance_exactly",
+        "standard_sha256_vectors_and_file_fingerprints_remain_stable",
+        "temporal_patch_view_preserves_channel_time_order_and_fragmented_ranges"
+      ],
+      "report": {
+        "path": "fixtures/qualification/cpu-positional-engine-x86_64-pc-windows-msvc-v1.json",
+        "bytes": 95466,
+        "sha256": "0a850d5add25baf43e7ec95b7b1722f0e53c86b99af60017b320a505e4713916"
+      },
+      "artifact": {
+        "id": 13072728092,
+        "name": "cpu-engine-x86_64-pc-windows-msvc-1",
+        "digest": "sha256:8aa23de56151f9d553af62adb10d4943ecea811a942d0de638c5d1a1fc8e975c",
+        "size_in_bytes": 560384
+      }
+    },
+    {
+      "target": "x86_64-unknown-linux-gnu",
+      "outcome": "pass",
+      "tests": {
+        "suites": 1,
+        "passed": 56,
+        "failed": 0,
+        "ignored": 4,
+        "filtered": 0
+      },
+      "storage_tests": [
+        "file_boundaries_overflow_and_truncation_remain_recoverable",
+        "shared_file_reads_keep_requested_offsets_under_worker_interleaving",
+        "short_positional_reads_retry_only_interruptions_and_advance_exactly",
+        "standard_sha256_vectors_and_file_fingerprints_remain_stable",
+        "temporal_patch_view_preserves_channel_time_order_and_fragmented_ranges"
+      ],
+      "report": {
+        "path": "fixtures/qualification/cpu-positional-engine-x86_64-unknown-linux-gnu-v1.json",
+        "bytes": 94646,
+        "sha256": "dc5a8ac3027628e55cfeb82d21a9e17e9748e889f0b7af0488b3d9daa581eca9"
+      },
+      "artifact": {
+        "id": 13073355350,
+        "name": "cpu-engine-x86_64-unknown-linux-gnu-1",
+        "digest": "sha256:5f0c69691790fd1a1c6f9538c5b5e1f8d34c158a12dc3773b6975e4e61625e33",
+        "size_in_bytes": 559415
+      }
+    }
+  ],
+  "review": "Official ZIP lengths/digests verified before reading. Complete source snapshots match the recorded Git revision and review worktree. All command/compiler/test/observer logs and every healthy observation checked. Each of the five storage regressions explicitly completed on every target; ordinary engine test totals recomputed. Complete original legal payload verified and original report bytes preserved.",
+  "scope": "Guarded native workspace formatting, strict engine all-target Clippy and all ordinary release-profile engine library tests on macOS ARM64, Linux x86-64 and Windows x86-64.",
+  "gaps": [
+    "These engine-only records cannot qualify or package a full native release; full workspace/API/CLI checks remain separate.",
+    "Real-model benchmark/full-array, sustained resource/security and production qualification remain separate requirements.",
+    "No controlled file-I/O or end-to-end model speedup is established by these correctness checks."
+  ]
+}
