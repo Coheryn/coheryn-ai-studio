@@ -1,0 +1,261 @@
+{
+  "schema_version": 1,
+  "kind": "github-certified-dot-checkpoint",
+  "outcome": "incomplete",
+  "production_ready": false,
+  "source_commit": "360bac1489be2d9a32db733d5dd666bfbd27c991",
+  "run_id": 41270627438,
+  "run_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41270627438",
+  "reviewed": [
+    {
+      "target": "x86_64-pc-windows-msvc",
+      "outcome": "pass",
+      "reports": {
+        "native-checks": {
+          "path": "fixtures/qualification/cpu-certified-dot-github-x86_64-pc-windows-msvc-native-checks-v1.json",
+          "bytes": 53805,
+          "sha256": "89216455703b25834ed9629feea3c233170088f7a87551504407ffd2aa5b9f77"
+        },
+        "measurements": {
+          "path": "fixtures/qualification/cpu-certified-dot-github-x86_64-pc-windows-msvc-measurements-v1.json",
+          "bytes": 61622,
+          "sha256": "cb6ae652ce0fa05009044798de8ab97d9e8b500a89649405d66a584d7701aa81"
+        },
+        "observations": {
+          "path": "fixtures/qualification/cpu-certified-dot-github-x86_64-pc-windows-msvc-observations-v1.json",
+          "bytes": 4437,
+          "sha256": "0138c3e44700fea416c2b15c0576b6d03d2ccc4d362847abfb3073d104249006"
+        }
+      },
+      "tests": {
+        "suites": 40,
+        "passed": 260,
+        "failed": 0,
+        "ignored": 10,
+        "filtered": 0
+      },
+      "timing_observations": [
+        {
+          "width": 256,
+          "cancellation": false,
+          "reference_over_candidate": 0.9951219512195122
+        },
+        {
+          "width": 384,
+          "cancellation": false,
+          "reference_over_candidate": 1.7579408543263966
+        },
+        {
+          "width": 512,
+          "cancellation": false,
+          "reference_over_candidate": 1.622220412152806
+        },
+        {
+          "width": 768,
+          "cancellation": false,
+          "reference_over_candidate": 1.7504112541834478
+        },
+        {
+          "width": 896,
+          "cancellation": false,
+          "reference_over_candidate": 1.7373488147073055
+        },
+        {
+          "width": 1024,
+          "cancellation": false,
+          "reference_over_candidate": 1.9793779084006855
+        },
+        {
+          "width": 1536,
+          "cancellation": false,
+          "reference_over_candidate": 1.9574197155102802
+        },
+        {
+          "width": 3072,
+          "cancellation": false,
+          "reference_over_candidate": 1.97981364075956
+        },
+        {
+          "width": 3584,
+          "cancellation": false,
+          "reference_over_candidate": 1.9848335501846521
+        },
+        {
+          "width": 4864,
+          "cancellation": false,
+          "reference_over_candidate": 1.8312603722407608
+        },
+        {
+          "width": 8960,
+          "cancellation": false,
+          "reference_over_candidate": 1.9012946751348514
+        },
+        {
+          "width": 16384,
+          "cancellation": false,
+          "reference_over_candidate": 1.2988198307315033
+        },
+        {
+          "width": 32768,
+          "cancellation": false,
+          "reference_over_candidate": 1.0182445595441518
+        },
+        {
+          "width": 65536,
+          "cancellation": false,
+          "reference_over_candidate": 1.00309562912766
+        },
+        {
+          "width": 1024,
+          "cancellation": true,
+          "reference_over_candidate": 0.6827603305785124
+        }
+      ],
+      "artifact": {
+        "id": 13069667107,
+        "name": "cpu-candidate-x86_64-pc-windows-msvc",
+        "digest": "sha256:3c5d9dd1738d236835d8f6780faf41192a99f1281e182bd7b827b7f193114e15",
+        "size_in_bytes": 10448615
+      }
+    },
+    {
+      "target": "x86_64-unknown-linux-gnu",
+      "outcome": "pass",
+      "reports": {
+        "native-checks": {
+          "path": "fixtures/qualification/cpu-certified-dot-github-x86_64-unknown-linux-gnu-native-checks-v1.json",
+          "bytes": 53226,
+          "sha256": "67b6bb6418f7a9fd638f42bc5acc33d87ad566b5c7a14178868f5c7de83139d7"
+        },
+        "measurements": {
+          "path": "fixtures/qualification/cpu-certified-dot-github-x86_64-unknown-linux-gnu-measurements-v1.json",
+          "bytes": 61145,
+          "sha256": "6fa4125344d80af2ec0e0de4e9410b542b3d08f7de188866e02033ea1ab603e6"
+        },
+        "observations": {
+          "path": "fixtures/qualification/cpu-certified-dot-github-x86_64-unknown-linux-gnu-observations-v1.json",
+          "bytes": 4829,
+          "sha256": "8e19811854cf24cf5de86cdedfec0c5bcec29f43ce092c5d2cb65d018e8ebe80"
+        }
+      },
+      "tests": {
+        "suites": 40,
+        "passed": 264,
+        "failed": 0,
+        "ignored": 10,
+        "filtered": 0
+      },
+      "timing_observations": [
+        {
+          "width": 256,
+          "cancellation": false,
+          "reference_over_candidate": 1.0005786699235326
+        },
+        {
+          "width": 384,
+          "cancellation": false,
+          "reference_over_candidate": 2.500652674153561
+        },
+        {
+          "width": 512,
+          "cancellation": false,
+          "reference_over_candidate": 2.2286818737616354
+        },
+        {
+          "width": 768,
+          "cancellation": false,
+          "reference_over_candidate": 2.5355340061124574
+        },
+        {
+          "width": 896,
+          "cancellation": false,
+          "reference_over_candidate": 2.4791169903774404
+        },
+        {
+          "width": 1024,
+          "cancellation": false,
+          "reference_over_candidate": 2.9507052320412552
+        },
+        {
+          "width": 1536,
+          "cancellation": false,
+          "reference_over_candidate": 2.910012400214685
+        },
+        {
+          "width": 3072,
+          "cancellation": false,
+          "reference_over_candidate": 2.8098812091163765
+        },
+        {
+          "width": 3584,
+          "cancellation": false,
+          "reference_over_candidate": 2.822474607052689
+        },
+        {
+          "width": 4864,
+          "cancellation": false,
+          "reference_over_candidate": 2.5065717649030925
+        },
+        {
+          "width": 8960,
+          "cancellation": false,
+          "reference_over_candidate": 2.6279896432394176
+        },
+        {
+          "width": 16384,
+          "cancellation": false,
+          "reference_over_candidate": 1.5935720430170068
+        },
+        {
+          "width": 32768,
+          "cancellation": false,
+          "reference_over_candidate": 1.000620545897332
+        },
+        {
+          "width": 65536,
+          "cancellation": false,
+          "reference_over_candidate": 0.9997796798471852
+        },
+        {
+          "width": 1024,
+          "cancellation": true,
+          "reference_over_candidate": 0.7496394766690109
+        }
+      ],
+      "artifact": {
+        "id": 13069481997,
+        "name": "cpu-candidate-x86_64-unknown-linux-gnu",
+        "digest": "sha256:f96d7c606f6f0df927ee147d2218d4735f2cf44a0051c22195fc75ffe18effcb",
+        "size_in_bytes": 11432537
+      }
+    }
+  ],
+  "blocked": [
+    {
+      "target": "aarch64-apple-darwin",
+      "outcome": "fail",
+      "phase": "startup-host-admission",
+      "reason": "host load exceeds cutoff",
+      "execution_started": false,
+      "report": {
+        "path": "fixtures/qualification/cpu-certified-dot-github-aarch64-apple-darwin-host-v1.json",
+        "bytes": 34820,
+        "sha256": "dab63f7cf2942a49824668c4496dc21de71871f319a9f35588e99906709a3da8"
+      },
+      "artifact": {
+        "id": 13069197750,
+        "name": "cpu-candidate-aarch64-apple-darwin",
+        "digest": "sha256:fda8ae3a3012fe1d97648d9dda55173c24b2931590d678cf812ff12938033c22",
+        "size_in_bytes": 2841
+      }
+    }
+  ],
+  "review": "Official ZIP digest/length verified before reading. Source hashes match the actual Git revision; command/toolchain/observer logs and test totals checked. All fifteen kernel cases retain bitwise parity. Original reports preserved byte-for-byte.",
+  "scope": "Recorded-source Linux/Windows ordinary native workspace checks plus live-guarded release synthetic CPU dot observations. Earlier native-checks reports have no continuous guard; guarded full-suite checks were introduced later.",
+  "gaps": [
+    "macOS GitHub runner rejected startup load before compilation; a separate local M1 record covers only release libraries, strict Clippy and synthetic kernels.",
+    "Independent real-model full-array qualification and the model/platform matrix remain separate.",
+    "Synthetic warm timings with uncontrolled OS/cache pressure are not model-throughput gains or a service SLA.",
+    "Current-source reruns, GPU, security and production release qualification remain open."
+  ]
+}
