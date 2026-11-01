@@ -261,6 +261,7 @@ pub fn client(cli: &Cli) -> Result<Client> {
     Client::new(&cli.endpoint, inference, admin)
 }
 pub async fn run(cli: &Cli, args: &Run, cancel: &Cancellation) -> Result<()> {
+    let backend = requested_backend(&args.backend, args.standalone)?;
     coheryn_engine::planner::Profile::parse(&args.profile)?;
     let options = GenerationOptions {
         max_tokens: args.max_tokens,
@@ -279,9 +280,10 @@ pub async fn run(cli: &Cli, args: &Run, cancel: &Cancellation) -> Result<()> {
         Ok(())
     };
     let result = if args.standalone {
-        let model = coheryn_engine::adapters::Registry::default().load(
+        let model = coheryn_engine::adapters::Registry::default().load_backend(
             &args.model,
             args.resources.limits(),
+            backend,
             cancel,
         )?;
         let prompt = if let Some(messages) = messages {
@@ -339,6 +341,9 @@ pub async fn run(cli: &Cli, args: &Run, cancel: &Cancellation) -> Result<()> {
 
 #[derive(Args)]
 pub struct ChatArgs {
+    /// Explicit standalone text backend; Metal is experimental.
+    #[arg(long, default_value = "cpu", value_parser = ["cpu", "metal"])]
+    pub backend: String,
     /// Attach a local PNG/JPEG. Repeat for multiple images; model support is required.
     #[arg(long = "image", conflicts_with_all = ["request"])]
     pub images: Vec<PathBuf>,
@@ -379,6 +384,15 @@ pub struct ChatArgs {
     pub controls: crate::Controls,
 }
 pub async fn chat(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<()> {
+    let backend = requested_backend(&args.backend, args.standalone)?;
+    if backend == coheryn_engine::adapters::Backend::Metal
+        && (!args.images.is_empty() || args.request.is_some() || args.session.is_some())
+    {
+        return Err(Error::new(
+            ErrorCode::UnsupportedFeature,
+            "experimental Metal supports standalone text chat without --image, --request or --session",
+        ));
+    }
     if !args.images.is_empty() {
         return crate::image_chat::run(cli, args, cancel).await;
     }
@@ -396,9 +410,10 @@ pub async fn chat(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<(
     }
     let managed = crate::sessions::interactive_session(cli, args, cancel).await?;
     let model = if args.standalone {
-        Some(coheryn_engine::adapters::Registry::default().load(
+        Some(coheryn_engine::adapters::Registry::default().load_backend(
             &args.model,
             args.resources.limits(),
+            backend,
             cancel,
         )?)
     } else {
@@ -535,6 +550,22 @@ pub async fn chat(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<(
         }
     }
     Ok(())
+}
+
+fn requested_backend(value: &str, standalone: bool) -> Result<coheryn_engine::adapters::Backend> {
+    use coheryn_engine::adapters::Backend;
+    let backend = match value {
+        "cpu" => Backend::Cpu,
+        "metal" if standalone => Backend::Metal,
+        "metal" => {
+            return Err(Error::request(
+                "--backend metal currently requires --standalone",
+            ));
+        }
+        _ => return Err(Error::request("unsupported execution backend")),
+    };
+    backend.check_available()?;
+    Ok(backend)
 }
 #[derive(Args)]
 pub struct PlanArgs {
@@ -820,4 +851,21 @@ pub(crate) fn generate_local(
         cancel,
         &mut emit,
     )
+}
+
+#[cfg(test)]
+mod backend_tests {
+    use super::*;
+
+    #[test]
+    fn backend_selection_preserves_remote_routing_and_rejects_unknown_values() {
+        assert_eq!(
+            requested_backend("cpu", false).unwrap(),
+            coheryn_engine::adapters::Backend::Cpu
+        );
+        assert!(
+            matches!(requested_backend("metal", false), Err(error) if error.code == ErrorCode::InvalidRequest)
+        );
+        assert!(requested_backend("automatic", true).is_err());
+    }
 }

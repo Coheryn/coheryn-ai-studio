@@ -27,14 +27,17 @@ def commands(gpu, cross_check=False):
          '--features', 'metal', '--all-targets', '--locked', '--', '-D', 'warnings'),
         ('cargo', 'clippy', '--release', '-p', 'coheryn-engine',
          '--features', 'metal', '--all-targets', '--locked', '--', '-D', 'warnings'),
+        ('cargo', 'clippy', '--release', '-p', 'coheryn-cli',
+         '--features', 'metal', '--all-targets', '--locked', '--', '-D', 'warnings'),
         ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-metal', '--features', 'metal', '--lib', '--locked'),
         ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-engine', '--features', 'metal', '--lib', '--locked'),
+        ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-cli', '--features', 'metal', '--bin', 'coheryn', '--locked'),
     ]
     if cross_check:
         # Compile the macOS FFI and tests, never execute a foreign binary.
-        for index in (1, 2):
+        for index in (1, 2, 3):
             result[index] = (*result[index][:-3], '--target', 'aarch64-apple-darwin', *result[index][-3:])
-        return tuple(result[:3])
+        return tuple(result[:4])
     if gpu:
         result.append(('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-metal',
                        '--features', 'metal', '--test', 'dense', '--locked', '--', '--ignored', '--nocapture'))

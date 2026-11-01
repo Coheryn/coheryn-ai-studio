@@ -136,6 +136,9 @@ impl Resources {
 #[derive(Args)]
 struct Run {
     model: PathBuf,
+    /// Explicit standalone backend; Metal is experimental and requires a metal-enabled macOS build.
+    #[arg(long, default_value = "cpu", value_parser = ["cpu", "metal"])]
+    backend: String,
     #[arg(
         long,
         required_unless_present = "messages",

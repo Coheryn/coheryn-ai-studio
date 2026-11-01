@@ -7,6 +7,10 @@ license.workspace = true
 repository.workspace = true
 homepage.workspace = true
 
+[features]
+default = []
+metal = ["coheryn-engine/metal"]
+
 [[bin]]
 name = "coheryn"
 path = "src/main.rs"

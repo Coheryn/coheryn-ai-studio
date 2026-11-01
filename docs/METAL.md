@@ -1,10 +1,24 @@
 # Optional Metal backend
 
-Metal development now precedes additional architecture work. The optional `coheryn-metal` workspace crate and engine `metal` feature contain Coheryn-owned dense F32/F16/BF16 and packed Q4_0/Q5_0/Q8_0/Q4_K/Q5_K/Q6_K matrix kernels. CPU-only builds do not activate or link the platform bindings. Default architecture selection and CLI/API execution remain CPU. An explicit experimental Qwen3.5 library binding now routes language matrix operations through Metal; pretrained-model qualification is pending.
+Metal development now precedes additional architecture work. The optional `coheryn-metal` workspace crate and engine `metal` feature contain Coheryn-owned dense F32/F16/BF16 and packed Q4_0/Q5_0/Q8_0/Q4_K/Q5_K/Q6_K matrix kernels. CPU-only builds do not activate or link the platform bindings. Default execution and managed API requests remain CPU. Explicit experimental Qwen3.5 library and standalone CLI bindings route language matrix operations through Metal; pretrained-model qualification is pending.
 
 On an admitted native Mac, `qwen35::Model::enable_metal` consumes a loaded model and binds its validated graph matrices. Exact tied aliases share one encoded GPU allocation; CPU embedding lookup, attention, recurrent state, norms and sampling remain in the shared native graph. GPU residency is reserved atomically before upload, and a complete minimum request is checked before device compilation. Each request reserves CPU and private GPU buffers together, transferring the GPU portion to buffer-owned leases without double charging. A foreign or insufficient reservation fails before allocation. Switching execution invalidates previous cache/state ownership. The profile is text-only and rejects image execution explicitly.
 
 Model info reports device identity, encoded and driver-observed weight allocation, private workspace bytes and cumulative completed GPU dispatches separately. The planner includes shared GPU residency through the loaded budget and adds private GPU workspace once per admitted request. Unified allocations are not counted again as separate VRAM. Dynamic activation transfers and compiler/driver overhead are not inferred from logical reservations. Model inference never silently falls back after a GPU binding or execution failure.
+
+## Experimental standalone selection
+
+Build the CLI with `cargo build --release -p coheryn-cli --features metal` on an admitted macOS host. The default binary remains CPU-only. A development invocation for the pinned modern GGUF is:
+
+```sh
+./target/release/coheryn run .cache/qwen35-gguf/Qwen3.5-0.8B-q4_k_m.gguf \
+  --standalone --backend metal --prompt "Hello" --stream \
+  --context 128 --max-tokens 32 --threads 1 --max-memory 2147483648
+```
+
+Interactive text `chat` accepts the same `--standalone --backend metal` selection. GGUF and supported Safetensors Qwen3.5 sources use the shared registry. Unsupported builds fail before source inspection; unsupported architecture/backend combinations fail before weight loading. This profile rejects image attachments, tool-request files and managed sessions. Daemon/client Metal selection is not implemented and returns an explicit error. CPU selection retains the existing standalone/client routing. Generation metadata identifies the selected execution backend; capability reports identify the experimental Metal adapter and do not advertise managed API or continuous batching.
+
+This entrypoint enables development checks. It carries no throughput or production qualification claim. CPU graph stages and host/GPU activation transfers can dominate performance; matrix offload alone does not establish a speedup.
 
 The first kernel establishes a numerical baseline before optimization. [Frozen reference cases](../fixtures/gpu/metal-dense-v1.json) use an independent Python standard-library oracle: F32 products, sequential F64 accumulation and final F32 rounding. The GPU uses compensated F32 accumulation with fast math and contraction disabled. Acceptance checks every finite result against `2e-5 + 2e-5 * abs(expected)`. Cases cover cancellation-sensitive sums, rectangular shapes, batch lanes, tails, long reductions and F16 subnormals. This primitive precision contract does not replace architecture-level logit, activation, embedding or image comparisons.
 

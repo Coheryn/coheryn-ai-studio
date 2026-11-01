@@ -24,6 +24,24 @@ pub struct Execution<'a> {
     pub threads: Option<usize>,
     pub hardware: &'a HardwareSnapshot,
 }
+/// Explicit execution selection. Unsupported selections never fall back to CPU.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum Backend {
+    #[default]
+    Cpu,
+    Metal,
+}
+impl Backend {
+    pub fn check_available(self) -> Result<()> {
+        if self == Self::Metal && !cfg!(all(feature = "metal", target_os = "macos")) {
+            return Err(Error::new(
+                ErrorCode::UnsupportedFeature,
+                "Metal requires a macOS binary built with the metal feature",
+            ));
+        }
+        Ok(())
+    }
+}
 pub trait TextModel: Send + Sync {
     fn capabilities(&self) -> Capabilities;
     fn render(&self, messages: &[Message]) -> Result<String>;
@@ -55,6 +73,21 @@ pub trait TextAdapter: Send + Sync {
         limits: ResourceLimits,
         cancel: &Cancellation,
     ) -> Result<Box<dyn TextModel>>;
+    fn load_backend(
+        &self,
+        path: &Path,
+        limits: ResourceLimits,
+        backend: Backend,
+        cancel: &Cancellation,
+    ) -> Result<Box<dyn TextModel>> {
+        if backend != Backend::Cpu {
+            return Err(Error::new(
+                ErrorCode::UnsupportedFeature,
+                "selected native adapter does not implement the requested backend",
+            ));
+        }
+        self.load(path, limits, cancel)
+    }
 }
 pub struct Registry {
     adapters: BTreeMap<&'static str, Box<dyn TextAdapter>>,
@@ -82,6 +115,17 @@ impl Registry {
         limits: ResourceLimits,
         cancel: &Cancellation,
     ) -> Result<Box<dyn TextModel>> {
+        self.load_backend(path, limits, Backend::Cpu, cancel)
+    }
+    pub fn load_backend(
+        &self,
+        path: impl AsRef<Path>,
+        limits: ResourceLimits,
+        backend: Backend,
+        cancel: &Cancellation,
+    ) -> Result<Box<dyn TextModel>> {
+        cancel.check()?;
+        backend.check_available()?;
         let path = path.as_ref();
         let mut selected = None;
         for adapter in self.adapters.values() {
@@ -100,7 +144,7 @@ impl Registry {
                     "no native text adapter implements this model source",
                 )
             })?
-            .load(path, limits, cancel)
+            .load_backend(path, limits, backend, cancel)
     }
 }
 impl Default for Registry {
@@ -209,6 +253,25 @@ impl TextAdapter for Qwen2 {
     }
 }
 struct Qwen35;
+fn load_qwen35_backend(
+    path: &Path,
+    limits: ResourceLimits,
+    backend: Backend,
+    cancel: &Cancellation,
+) -> Result<Box<dyn TextModel>> {
+    backend.check_available()?;
+    let model = crate::qwen35::Model::load(path, limits, cancel)?;
+    if backend == Backend::Metal {
+        #[cfg(all(feature = "metal", target_os = "macos"))]
+        return Ok(Box::new(model.enable_metal(cancel)?));
+        #[cfg(not(all(feature = "metal", target_os = "macos")))]
+        return Err(Error::new(
+            ErrorCode::UnsupportedFeature,
+            "Metal unavailable",
+        ));
+    }
+    Ok(Box::new(model))
+}
 impl TextAdapter for Qwen35 {
     fn id(&self) -> &'static str {
         "qwen35-safetensors-cpu-v1"
@@ -253,7 +316,16 @@ impl TextAdapter for Qwen35 {
         limits: ResourceLimits,
         cancel: &Cancellation,
     ) -> Result<Box<dyn TextModel>> {
-        Ok(Box::new(crate::qwen35::Model::load(path, limits, cancel)?))
+        self.load_backend(path, limits, Backend::Cpu, cancel)
+    }
+    fn load_backend(
+        &self,
+        path: &Path,
+        limits: ResourceLimits,
+        backend: Backend,
+        cancel: &Cancellation,
+    ) -> Result<Box<dyn TextModel>> {
+        load_qwen35_backend(path, limits, backend, cancel)
     }
 }
 impl TextModel for Model {
@@ -314,6 +386,16 @@ impl TextModel for crate::qwen35::Model {
             qwen35_capabilities()
         };
         result.images = self.vision_configuration().is_ok();
+        if self.execution_backend() != "native-cpu" {
+            result.adapter = if self.is_gguf() {
+                "qwen35-gguf-metal-experimental-v1"
+            } else {
+                "qwen35-safetensors-metal-experimental-v1"
+            };
+            result.managed_api = false;
+            result.continuous_batching = false;
+            result.qualification = "experimental-pretrained-metal-qualification-pending";
+        }
         result
     }
     fn render(&self, messages: &[Message]) -> Result<String> {
@@ -470,7 +552,16 @@ impl TextAdapter for Qwen35Gguf {
         limits: ResourceLimits,
         cancel: &Cancellation,
     ) -> Result<Box<dyn TextModel>> {
-        Ok(Box::new(crate::qwen35::Model::load(path, limits, cancel)?))
+        self.load_backend(path, limits, Backend::Cpu, cancel)
+    }
+    fn load_backend(
+        &self,
+        path: &Path,
+        limits: ResourceLimits,
+        backend: Backend,
+        cancel: &Cancellation,
+    ) -> Result<Box<dyn TextModel>> {
+        load_qwen35_backend(path, limits, backend, cancel)
     }
 }
 fn qwen35_gguf_capabilities() -> Capabilities {
@@ -490,4 +581,32 @@ pub fn is_qwen35_gguf(path: &Path, cancel: &Cancellation) -> Result<bool> {
     let d = crate::inspect(path, crate::ParseLimits::default())?;
     cancel.check()?;
     Ok(d.architecture.as_deref() == Some("qwen35"))
+}
+
+#[cfg(test)]
+mod backend_tests {
+    use super::*;
+
+    #[test]
+    fn unsupported_adapter_rejects_backend_before_loading_any_weights() {
+        let result = Qwen2.load_backend(
+            Path::new("does-not-exist.gguf"),
+            ResourceLimits::default(),
+            Backend::Metal,
+            &Cancellation::default(),
+        );
+        assert!(matches!(result, Err(error) if error.code == ErrorCode::UnsupportedFeature));
+    }
+
+    #[cfg(not(all(feature = "metal", target_os = "macos")))]
+    #[test]
+    fn unavailable_backend_fails_before_source_inspection() {
+        let result = Registry::default().load_backend(
+            "does-not-exist.gguf",
+            ResourceLimits::default(),
+            Backend::Metal,
+            &Cancellation::default(),
+        );
+        assert!(matches!(result, Err(error) if error.code == ErrorCode::UnsupportedFeature));
+    }
 }
