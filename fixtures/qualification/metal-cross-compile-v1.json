@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "kind": "reviewed-metal-cross-compilation",
+  "outcome": "pass",
+  "production_ready": false,
+  "source_commit": "e6ff90bcc31a920c77144e3e1ee95a22711b58f0",
+  "workflow_run": 41303923282,
+  "workflow_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41303923282",
+  "host_target": "x86_64-unknown-linux-gnu",
+  "compile_target": "aarch64-apple-darwin",
+  "artifact": {
+    "id": 13082283772,
+    "name": "metal-cross-check-1",
+    "bytes": 559269,
+    "sha256": "159ea3c7d9f0e4122f3a0a1a6ab6617129a290e071154cc8490a1317bd4b3942"
+  },
+  "report": {
+    "path": "fixtures/qualification/metal-cross-compile-aarch64-v1.json",
+    "sha256": "5bd4ef8042122e1771419263c41a19873d8b275830ca888eaf5e30bfc30ecc09"
+  },
+  "healthy_host_samples": 36,
+  "scope": "Workspace formatting and strict all-target Clippy for optional Metal platform and engine bindings; independent fixtures embedded but not executed.",
+  "gpu_executed": false,
+  "metal_shader_compiled": false,
+  "model_qualification": false,
+  "remaining": [
+    "Native GPU numerical and storage-boundary execution",
+    "Packed GPU kernels and architecture dispatch",
+    "Model/backend numerical, lifecycle and throughput qualification",
+    "LLaVA/Gemma and broader format gates",
+    "Complete security and release qualification"
+  ]
+}
