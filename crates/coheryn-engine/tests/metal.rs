@@ -26,7 +26,12 @@ fn checked_tensor_storage_gpu_budget_and_mutation_boundary() {
     let gpu = MetalCompute::new(budget.clone()).unwrap();
     let cancel = Cancellation::default();
     let matrix = gpu
-        .upload(Arc::clone(&storage), descriptor.data_offset, tensor, &cancel)
+        .upload(
+            Arc::clone(&storage),
+            descriptor.data_offset,
+            tensor,
+            &cancel,
+        )
         .unwrap();
     let mut workspace = gpu.workspace(&matrix, 1).unwrap();
     let width = tensor.dimensions[0] as usize;
@@ -55,8 +60,13 @@ fn checked_tensor_storage_gpu_budget_and_mutation_boundary() {
     let mut invalid = tensor.clone();
     invalid.bytes -= 1;
     assert!(
-        gpu.upload(Arc::clone(&storage), descriptor.data_offset, &invalid, &cancel)
-            .is_err()
+        gpu.upload(
+            Arc::clone(&storage),
+            descriptor.data_offset,
+            &invalid,
+            &cancel
+        )
+        .is_err()
     );
     assert_eq!(budget.stats().reserved, held);
     cancel.cancel();
