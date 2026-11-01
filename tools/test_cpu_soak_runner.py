@@ -9,6 +9,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 import check_cpu_soak as runner
+from cpu_qualification import driver
 import prepare_cpu_soak as preparation
 from cpu_qualification.host import Guard
 from cpu_qualification.host import HostLimitError
@@ -28,6 +29,10 @@ class SoakRunnerTests(unittest.TestCase):
                 log.write_text('toolchain identity\n')
                 on_started(Mock(poll=Mock(return_value=0)))
                 return 0
+            if command[1] == 'build' and exit_code == 0:
+                binary = root / 'target/release/examples/cpu_soak'
+                binary.parent.mkdir(parents=True, exist_ok=True)
+                binary.write_bytes(b'\xcf\xfa\xed\xfe\x0c\x00\x00\x01' + b'checked example')
             log.write_text(output if output is not None else
                            'test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out\n')
             on_started(Mock(poll=Mock(return_value=exit_code)))
@@ -36,8 +41,7 @@ class SoakRunnerTests(unittest.TestCase):
              patch.object(runner, 'source_identity', side_effect=[source, {'example.rs': 'changed'}] if changed else [source, source]), \
              patch.object(runner, 'sha', return_value='0' * 64), \
              patch.object(runner, 'native_target', return_value='aarch64-apple-darwin'), \
-             patch.object(runner, 'driver_identity', return_value={'path': 'target/release/examples/cpu_soak',
-                                                                  'bytes': 1, 'sha256': '0' * 64}), \
+             patch.object(driver, 'ROOT', root), \
              patch.object(runner, 'Guard', side_effect=make_guard), \
              patch.object(runner, 'run_child', side_effect=child) as execute, \
              patch.object(runner.signal, 'signal'), \

@@ -41,8 +41,13 @@ def main():
     parser.add_argument('--report', type=Path, required=True)
     parser.add_argument('--wait-for-load-seconds', type=int, default=0,
                         help='bounded idle startup wait for load only; all cutoffs remain enforced')
+    parser.add_argument('--startup-load-per-cpu', type=float, default=2.,
+                        help='stricter startup load ceiling, at most 2; live workload guards remain unchanged')
     args = parser.parse_args()
-    policy = Policy()
+    try:
+        policy = Policy(max_load_per_cpu=args.startup_load_per_cpu)
+    except ValueError as error:
+        parser.error(str(error))
     report = {'schema_version': 1, 'kind': 'cpu-host-preflight', 'policy': asdict(policy),
               'production_ready': False, 'outcome': 'fail',
               'startup_load_wait_seconds': args.wait_for_load_seconds}

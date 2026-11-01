@@ -24,6 +24,7 @@ from run_cpu_qualification import Context, checkpoint, main
 from cpu_qualification.host import Guard, HostLimitError, Policy, bounded_text, mac_memory, rejection
 from cpu_qualification.profiles import PROFILES, selected
 from check_cpu_host import readiness
+import check_cpu_host
 
 
 class QualificationTests(unittest.TestCase):
@@ -59,6 +60,34 @@ class QualificationTests(unittest.TestCase):
         self.assertEqual(len(result['samples']), 2)
         self.assertEqual(result['samples'][0]['reason'], 'host load exceeds cutoff')
         self.assertEqual(tick[0], 5.)
+
+    def test_stricter_startup_admission_leaves_headroom_under_the_unchanged_live_limit(self):
+        tick = [0.]
+        busy = {**self.healthy_host(), 'cpu_count': 3, 'load_1m': 5.9}
+        idle = {**busy, 'load_1m': 2.9}
+        self.assertIsNone(rejection(busy, Policy()))
+        sample = Mock(side_effect=[busy, idle])
+        result = readiness(Policy(max_load_per_cpu=1.), sample, 10, now=lambda: tick[0],
+                           sleep=lambda seconds: tick.__setitem__(0, tick[0] + seconds))
+        self.assertEqual(result['outcome'], 'pass')
+        self.assertEqual(result['samples'][0]['reason'], 'host load exceeds cutoff')
+        self.assertEqual(tick[0], 5.)
+        self.assertEqual(Policy().max_load_per_cpu, 2.)
+
+    def test_startup_cli_records_stricter_policy_and_rejects_weakened_or_invalid_limits(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            for value in ('1', '0', '-1', '2.01', 'nan', 'inf'):
+                report = root / (value + '.json')
+                with patch.object(check_cpu_host, 'Sampler', return_value=self.healthy_host), \
+                     patch.object(sys, 'argv', ['host', '--report', str(report), '--startup-load-per-cpu', value]), \
+                     patch('builtins.print'), patch('sys.stderr', new_callable=io.StringIO):
+                    with self.assertRaises(SystemExit) as done: check_cpu_host.main()
+                self.assertEqual(done.exception.code, 0 if value == '1' else 2)
+                if value == '1':
+                    self.assertEqual(json.loads(report.read_text())['policy']['max_load_per_cpu'], 1.)
+                else:
+                    self.assertFalse(report.exists())
 
     def test_startup_wait_is_bounded_and_never_starts_work_on_an_unhealthy_host(self):
         tick = [0.]

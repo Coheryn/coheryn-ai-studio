@@ -14,6 +14,7 @@ from .host import Policy, rejection
 CHECK_COMMANDS = (
     ('cargo', 'test', '--release', '--workspace', '--example', 'cpu_soak', '--locked'),
     ('cargo', 'clippy', '--release', '--workspace', '--example', 'cpu_soak', '--tests', '--locked', '--', '-D', 'warnings'),
+    ('cargo', 'build', '--release', '--workspace', '--example', 'cpu_soak', '--locked'),
 )
 
 
