@@ -121,7 +121,7 @@ class ModelOutputTests(unittest.TestCase):
                         'request_workspace_bytes': 512, 'completed_model_dispatches': 1},
                 'memory_after_unload': {'reserved': 0, 'session_buffer_capacity_bytes': 0, 'peak_reserved': 2048, 'limit': 4096},
                 'trace_failure_cleanup': True, 'in_graph_cancellation_cleanup': True,
-                'unqualified_image_profile_rejected': True}
+                'unqualified_image_profile_rejected': True, 'gpu_plan_prepaid': True}
 
     def test_complete_model_contract_keeps_source_and_runtime_scope_separate(self):
         for suite in runner.MODEL_SUITES:
@@ -132,7 +132,7 @@ class ModelOutputTests(unittest.TestCase):
 
     def test_partial_wrong_backend_nonnumeric_or_unreclaimed_model_cannot_pass(self):
         base = self.fixture(runner.MODEL_SUITES[0])
-        for mutation in ('arrays', 'elements', 'samples', 'greedy', 'backend', 'dispatches', 'leak', 'boolean', 'cancel', 'empty'):
+        for mutation in ('arrays', 'elements', 'samples', 'greedy', 'backend', 'dispatches', 'leak', 'boolean', 'cancel', 'plan', 'missing_plan', 'empty'):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
                 value = copy.deepcopy(base)
                 if mutation == 'arrays': value['full_cpu_gpu_arrays'] -= 1
@@ -144,6 +144,8 @@ class ModelOutputTests(unittest.TestCase):
                 elif mutation == 'leak': value['memory_after_unload']['reserved'] = 1
                 elif mutation == 'boolean': value['gpu']['encoded_weight_bytes'] = True
                 elif mutation == 'cancel': value['in_graph_cancellation_cleanup'] = False
+                elif mutation == 'plan': value['gpu_plan_prepaid'] = False
+                elif mutation == 'missing_plan': del value['gpu_plan_prepaid']
                 elif mutation == 'empty': value = []
                 path = Path(temporary) / 'model.json'; path.write_text(json.dumps(value))
                 with self.assertRaises(ValueError): runner.validate_model(path, runner.MODEL_SUITES[0])

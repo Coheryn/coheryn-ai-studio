@@ -33,7 +33,7 @@ pub const TOKENIZER_SHA256: &str =
 pub const TEMPLATE_SHA256: &str =
     "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80";
 impl Config {
-    /// Uses the same checked reservation arithmetic as actual session construction.
+    /// Intrinsic native state; selected model/backend planning adds private GPU workspace.
     pub fn session_estimate(
         &self,
         context: usize,

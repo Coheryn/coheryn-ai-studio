@@ -135,6 +135,55 @@ fn native_qwen35_gpu_graph_matches_frozen_answers_and_cpu_arrays() {
     .unwrap();
     let model = cpu.enable_metal(&Cancellation::default()).unwrap();
     let baseline = budget.stats().reserved;
+    let hardware = coheryn_engine::planner::HardwareSnapshot {
+        os: std::env::consts::OS.into(),
+        architecture: std::env::consts::ARCH.into(),
+        logical_cpus: 1,
+        cpu_features: vec![],
+        ram_total_bytes: None,
+        ram_available_bytes: None,
+        swap_total_bytes: None,
+        swap_used_bytes: None,
+        observed_unix_ms: 0,
+        gpu_available_bytes: None,
+        gpu_backend_qualified: false,
+    };
+    let info = model.metal_info().unwrap().unwrap();
+    let prepared = model
+        .prepare_generation(
+            GenerationOptions {
+                max_tokens: 4,
+                ..Default::default()
+            },
+            128,
+            coheryn_engine::adapters::Execution {
+                profile: coheryn_engine::planner::Profile::Reference,
+                threads: Some(1),
+                hardware: &hardware,
+            },
+            1,
+        )
+        .unwrap();
+    assert_eq!(prepared.plan().backend, model.execution_backend());
+    assert_eq!(
+        prepared.plan().gpu_allocation_bytes,
+        info.encoded_weight_bytes + info.request_workspace_bytes
+    );
+    assert_eq!(
+        prepared.plan().session.total_bytes,
+        model
+            .configuration()
+            .session_estimate(128, 1)
+            .unwrap()
+            .total_bytes
+            + info.request_workspace_bytes
+    );
+    assert_eq!(
+        budget.stats().reserved,
+        baseline + prepared.request_reserved_bytes()
+    );
+    drop(prepared);
+    assert_eq!(budget.stats().reserved, baseline);
     let mut checked_arrays = 0;
     let mut checked_elements = 0;
     model
@@ -254,5 +303,6 @@ fn native_qwen35_gpu_graph_matches_frozen_answers_and_cpu_arrays() {
         "scope":"Selected native library text graph: frozen sampled checkpoints/teacher-forced logits and greedy answers; full CPU/GPU arrays at two positions; no CLI/API, throughput or full release claim",
         "full_cpu_gpu_arrays":checked_arrays,"full_cpu_gpu_elements":checked_elements,"independent_sampled_values":sampled_values,
         "cases":results,"gpu":info,"memory_after_unload":budget.stats(),
-        "trace_failure_cleanup":true,"in_graph_cancellation_cleanup":true,"unqualified_image_profile_rejected":true})).unwrap()).unwrap();
+        "trace_failure_cleanup":true,"in_graph_cancellation_cleanup":true,"unqualified_image_profile_rejected":true,
+        "gpu_plan_prepaid":true})).unwrap()).unwrap();
 }

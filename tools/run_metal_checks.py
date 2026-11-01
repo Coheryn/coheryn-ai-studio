@@ -83,7 +83,7 @@ def validate_model(path, suite):
             or type(memory.get('limit')) is not int
             or type(memory.get('peak_reserved')) is not int or not 0 < memory['peak_reserved'] <= memory.get('limit', 0)):
         raise ValueError('GPU model admission was not reclaimed')
-    if any(value.get(name) is not True for name in ('trace_failure_cleanup', 'in_graph_cancellation_cleanup', 'unqualified_image_profile_rejected')):
+    if any(value.get(name) is not True for name in ('trace_failure_cleanup', 'in_graph_cancellation_cleanup', 'unqualified_image_profile_rejected', 'gpu_plan_prepaid')):
         raise ValueError('GPU model lifecycle/profile checks missing')
     return value
 

@@ -1,6 +1,6 @@
 # CPU release readiness
 
-The immediate priority is qualifying the existing native CPU implementation before expanding architectures or GPU execution. It remains experimental. A CPU candidate is a narrower distribution than the full mandatory release described in [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md); all full-release requirements remain in force.
+This document tracks native CPU qualification, which remains required alongside the current Metal, architecture and format work in [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md). CPU remains experimental. A CPU candidate is a narrower distribution than the full mandatory release described in [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md); all full-release requirements remain in force.
 
 ## Candidate scope
 

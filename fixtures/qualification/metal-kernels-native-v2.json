@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "kind": "reviewed-metal-native-kernels",
+  "outcome": "pass",
+  "production_ready": false,
+  "source_commit": "73bcaad2eb5e75c61ce416a42f17b0f825e0bebf",
+  "workflow_run": 41306092007,
+  "workflow_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41306092007",
+  "native_target": "aarch64-apple-darwin",
+  "device_name": "Apple Paravirtual device",
+  "artifact": {
+    "id": 13082484600,
+    "name": "metal-primitives-1",
+    "bytes": 571168,
+    "sha256": "f3ea467514aa4adfd9c4fd4e5246d1c2a0c780b8a36900393c2ec94d9469d4d5"
+  },
+  "report": {
+    "path": "fixtures/qualification/metal-kernels-native-aarch64-v2.json",
+    "sha256": "24bb31b94c324fd89fedc9309a78a259c14f0a165949961ef17a6ae7d2e20d38"
+  },
+  "healthy_host_samples": 145,
+  "gpu_executed": true,
+  "metal_shader_compiled": true,
+  "metal_api_validation": true,
+  "metal_gpu_validation": true,
+  "coverage": {
+    "dense_cases": 6,
+    "packed_cases": 120,
+    "frozen_packed_outputs": 720,
+    "derived_single_row_outputs": 240,
+    "concurrent_workers": 2,
+    "private_workspace_reuse": true,
+    "capacity_rejection": true,
+    "storage_mutation_rejection": true
+  },
+  "scope": "Reference dense and packed kernels, private buffers, shared immutable weights, cancellation/admission/storage boundaries on the named hosted Metal device only.",
+  "physical_apple_m1_qualification": false,
+  "model_qualification": false,
+  "performance_qualification": false,
+  "remaining": [
+    "Prepaid resident/request integration and native GPU model references",
+    "CLI/API GPU selection and lifecycle",
+    "Physical devices and broader CPU/GPU/task qualification",
+    "LLaVA/Gemma and broader format gates",
+    "Complete security and release qualification"
+  ]
+}
