@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "kind": "reviewed-partial-native-metal-profiles-and-cli",
+  "outcome": "partial",
+  "production_ready": false,
+  "source_commit": "68c4c7c11df775e826bcdee68515ada9d7fe63e4",
+  "native_target": "aarch64-apple-darwin",
+  "device": "Apple M1",
+  "suite": "qwen35-gguf-q4_k_m-text",
+  "scope": "Both selected library kernel profiles and reference-kernel standalone CLI pass. Full campaign and isolated managed API fail host admission during execution; no API, performance or release qualification.",
+  "full_campaign_outcome": "fail",
+  "original_owned_cleanup_confirmed": false,
+  "model_file": {
+    "file": "Qwen3.5-0.8B-q4_k_m.gguf",
+    "bytes": 533614976,
+    "sha256": "8bd70fa4eb6015c7b28a60d8f16322c5313cbcddd11f2dac20fff72d70a4c8a8",
+    "role": "language",
+    "label": "q4_k_m",
+    "repository": "Mungert/Qwen3.5-0.8B-GGUF",
+    "revision": "d14363a822a02a44beac55ece87b7f140cdff714"
+  },
+  "profiles": [
+    {
+      "kernel_profile": "reference-f32-compensated-v1",
+      "outcome": "pass",
+      "full_cpu_gpu_arrays": 50,
+      "full_cpu_gpu_elements": 545792,
+      "independent_sampled_values": 3640,
+      "greedy_cases": 2,
+      "gpu": {
+        "completed_model_dispatches": 22610,
+        "device": "Apple M1",
+        "driver_weight_allocation_bytes": 520732672,
+        "encoded_weight_bytes": 520658944,
+        "kernel_profile": "reference-f32-compensated-v1",
+        "matrices": 187,
+        "qualification": "experimental-text-matrix-profile; model/backend qualification pending",
+        "request_workspace_bytes": 1007616
+      },
+      "memory_after_unload": {
+        "limit": 2147483648,
+        "peak_reserved": 837414912,
+        "peak_session_buffer_capacity_bytes": 26736760,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      }
+    },
+    {
+      "kernel_profile": "simd-f32-compensated-v1",
+      "outcome": "pass",
+      "full_cpu_gpu_arrays": 50,
+      "full_cpu_gpu_elements": 545792,
+      "independent_sampled_values": 3640,
+      "greedy_cases": 2,
+      "gpu": {
+        "completed_model_dispatches": 22610,
+        "device": "Apple M1",
+        "driver_weight_allocation_bytes": 520732672,
+        "encoded_weight_bytes": 520658944,
+        "kernel_profile": "simd-f32-compensated-v1",
+        "matrices": 187,
+        "qualification": "experimental-text-matrix-profile; model/backend qualification pending",
+        "request_workspace_bytes": 1007616
+      },
+      "memory_after_unload": {
+        "limit": 2147483648,
+        "peak_reserved": 837414912,
+        "peak_session_buffer_capacity_bytes": 26736760,
+        "reserved": 0,
+        "session_buffer_capacity_bytes": 0
+      }
+    }
+  ],
+  "cli": {
+    "outcome": "pass",
+    "kernel_profile": "reference-f32-compensated-v1",
+    "frozen_cases": 2,
+    "streams": 2,
+    "unsupported_routes": 4
+  },
+  "api": {
+    "outcome": "fail",
+    "full_campaign_stop_reason": "macOS memory pressure is not normal or is unavailable",
+    "isolated_stop_reason": "macOS compressed memory exceeds cutoff",
+    "original_isolated_cleanup_confirmed": false
+  },
+  "healthy_observations_before_api_cutoff": 419,
+  "metal_api_validation": true,
+  "metal_gpu_validation": true,
+  "records": {
+    "campaign": {
+      "path": "fixtures/qualification/metal-q35-profiles-m1-campaign-v2.json",
+      "sha256": "d641bb03f8ad2a20137beb0adcb44bca830e13e07c3855ec113848220c5563e5"
+    },
+    "reference": {
+      "path": "fixtures/qualification/metal-q35-profiles-m1-reference-v2.json",
+      "sha256": "41409d4e41693de5dad5861f5c5e7df222dc0a9a6fca60da974864b0d06c300c"
+    },
+    "simd": {
+      "path": "fixtures/qualification/metal-q35-profiles-m1-simd-v2.json",
+      "sha256": "acc43e942f4e33af5b0bb072c6ae7736766767bd090b71db62d77e3b530b6746"
+    },
+    "cli": {
+      "path": "fixtures/qualification/metal-q35-profiles-m1-cli-v2.json",
+      "sha256": "1f34bb996c10bff4c6992dd55b9bd5327cfd39f58f2feb4781693ba5cda62121"
+    },
+    "isolated-api": {
+      "path": "fixtures/qualification/metal-q35-profiles-m1-isolated-api-v2.json",
+      "sha256": "7c4d01aed73e67a7896ad8637b21b58f76533516f28fd2b6a55d3290e98e659b"
+    }
+  },
+  "local_evidence_archive": {
+    "path": ".cache/metal-q35-profiles-m1-evidence-v2.zip",
+    "sha256": "a9d692d90562ac09c85c2431e1a71929ed429dca656c304e7d900815334453cc",
+    "bytes": 626841,
+    "published": false,
+    "contains_model_weights": false,
+    "contains_reference_arrays": false,
+    "complete_legal_payload": true
+  },
+  "postflight_owned_group_checks": [
+    {
+      "observed_utc": "2026-11-01T22:15:44.482668+00:00",
+      "owned_process_group": 76909,
+      "matching_processes": [],
+      "scope": "Later read-only observation; original cleanup flags and failures remain unchanged."
+    },
+    {
+      "observed_utc": "2026-11-01T22:15:44.483595+00:00",
+      "owned_process_group": 77028,
+      "matching_processes": [],
+      "scope": "Later read-only observation; original cleanup flags and failures remain unchanged."
+    }
+  ],
+  "remaining": [
+    "Managed API complete numerical/lifecycle execution on an admitted host",
+    "Full campaign with confirmed owned cleanup",
+    "Cooperative profile CLI/API checks before default promotion",
+    "Other mandatory model/encoding/task/platform combinations",
+    "Performance/security/release qualification"
+  ]
+}
