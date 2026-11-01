@@ -117,8 +117,11 @@ def models(suites, fetch, guard=None, *, on_input=None):
             require(re.fullmatch('[0-9a-f]{40}', gguf['revision']) is not None, 'unpinned GGUF revision')
             target = ROOT / gguf['cache_directory']
             needed = {PROFILES[s]['label'] for s in qwen if PROFILES[s]['layout'] == 'gguf'}
+            vision_needed = any(PROFILES[s]['layout'] == 'gguf' and PROFILES[s]['image'] for s in qwen)
             for item in gguf['files']:
-                if item['role'] != 'vision' and item['label'] not in needed: continue
+                if item['role'] == 'vision':
+                    if not vision_needed: continue
+                elif item['label'] not in needed: continue
                 for name in (item['file'], item.get('cache_file', item['file'])):
                     require(re.fullmatch('[A-Za-z0-9_.-]+', name) is not None and name not in ('.', '..'), 'unsafe GGUF asset name')
                 url = f"https://huggingface.co/{gguf['repository']}/resolve/{gguf['revision']}/{item['file']}"

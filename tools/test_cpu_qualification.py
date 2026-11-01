@@ -17,6 +17,7 @@ from unittest.mock import Mock, patch
 
 from cpu_qualification import references
 from cpu_qualification import host
+from cpu_qualification import assets
 from cpu_qualification.assets import acquire, HTTPSRedirect
 from cpu_qualification.common import ROOT, compare, pinned, read, sha
 from cpu_qualification.transport import frames, image_content
@@ -300,6 +301,57 @@ class QualificationTests(unittest.TestCase):
         self.assertEqual({PROFILES[name]['label'] for name in selected('gguf-vision')}, {'f16', 'q4_k_m'})
         self.assertEqual(sum(PROFILES[name]['layout'] == 'sharded' for name in selected('safetensors')), 2)
         self.assertTrue(all(PROFILES[name]['family'] != 'qwen2' for group in ('safetensors', 'gguf-quantized', 'gguf-vision') for name in selected(group)))
+
+    def test_acquisition_selects_only_requested_gguf_components_and_keeps_image_pairs(self):
+        cases = [
+            (['qwen35-gguf-q4_k_m-text'], {'language-q4_k_m.gguf'}),
+            (['qwen35-gguf-f16-text', 'qwen35-gguf-q4_k_m-text'],
+             {'language-f16.gguf', 'language-q4_k_m.gguf'}),
+            (['qwen35-gguf-q4_k_m-image'], {'language-q4_k_m.gguf', 'vision.gguf'}),
+            (['qwen35-gguf-q4_k_m-text', 'qwen35-gguf-f16-image'],
+             {'language-f16.gguf', 'language-q4_k_m.gguf', 'vision.gguf'}),
+            (['qwen35-image', 'qwen35-gguf-q4_k_m-text'], {'language-q4_k_m.gguf'}),
+        ]
+        for suites, expected in cases:
+            with self.subTest(suites=suites), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary).resolve()
+                def entry(file, **extra):
+                    payload = file.encode()
+                    return {'file': file, 'bytes': len(payload), 'sha256': hashlib.sha256(payload).hexdigest(), **extra}
+                publisher = {'repository': 'example/source', 'revision': 'a' * 40,
+                             'cache_directory': '.cache/source',
+                             'files': [entry('config.json'), entry('LICENSE'), entry('model.safetensors')]}
+                gguf = {'repository': 'example/gguf', 'revision': 'b' * 40,
+                        'cache_directory': '.cache/gguf', 'files': [
+                            entry('language-f16.gguf', role='language', label='f16'),
+                            entry('language-q4_k_m.gguf', role='language', label='q4_k_m'),
+                            entry('projector.mmproj', role='vision', label='f16', cache_file='vision.gguf')]}
+                for relative, value in [('fixtures/embedding/models.json', {'models': []}),
+                                        ('fixtures/qwen35/model.json', publisher),
+                                        ('fixtures/qwen35/gguf/models-v1.json', gguf)]:
+                    path = root / relative; path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_text(json.dumps(value))
+                requested = []
+                def cached(path, item, url, fetch, guard):
+                    self.assertFalse(fetch)
+                    self.assertIn('/resolve/', url)
+                    path = Path(path); path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_bytes(item['file'].encode())
+                    requested.append(path)
+                    return pinned(path, item)
+                with patch.object(assets, 'ROOT', root), patch.object(assets, 'acquire', side_effect=cached), \
+                     patch.object(assets.urllib.request, 'build_opener') as network:
+                    paths, identities = assets.models(suites, False)
+                    network.assert_not_called()
+                self.assertEqual({p.name for p in requested if p.parent == root / '.cache/gguf'}, expected)
+                self.assertEqual(set(paths), set(suites))
+                self.assertEqual({i.get('cache_file', i['file']) for i in identities if i['repository'] == 'example/gguf'}, expected)
+                for suite, path in paths.items():
+                    self.assertTrue(path.exists())
+                    if PROFILES[suite]['layout'] == 'gguf':
+                        for sidecar in ('config.json', 'LICENSE'):
+                            self.assertEqual((path.parent / sidecar).read_bytes(), sidecar.encode())
+
     def test_numeric_tail_and_shapes_are_checked(self):
         expected = [0.0] * 1024
         actual = expected.copy()
