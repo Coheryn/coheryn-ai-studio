@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import re
 import shutil
 import signal
 import sys
@@ -60,6 +61,8 @@ CLI_MODEL_COMMAND = ('cargo', 'test', '--profile', 'qualification', '-p', 'coher
                      '--features', 'metal', '--test', 'metal_model', '--locked', '--', '--ignored', '--nocapture')
 API_MODEL_COMMAND = ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-api',
                      '--features', 'metal', '--test', 'metal_model', '--locked', '--', '--ignored', '--nocapture')
+SERVICE_NETWORK_TEST = 'pinned_public_https_download_follows_verified_redirects'
+SERVICE_BACKEND_TEST = 'explicit_backend_load_keeps_authentication_cpu_defaults_and_atomic_state'
 CLI_REJECTED_ARGUMENTS = [
     ['run', 'missing.gguf', '--backend', 'metal', '--prompt', 'hello'],
     ['chat', 'missing.gguf', '--standalone', '--backend', 'metal', '--image', 'missing.png'],
@@ -295,9 +298,15 @@ def main():
                 valid = valid and counts['passed'] > 0 and counts['failed'] == counts['filtered'] == 0
                 if '--test' in command:
                     target = command[command.index('--test') + 1]
-                    valid = valid and counts['ignored'] == 0
-                    if target != 'service':
-                        valid = valid and counts['passed'] == counts['suites'] == 1
+                    if target == 'service':
+                        text = log.read_text(encoding='utf-8')
+                        excluded = re.findall(r'^test (\S+) \.\.\. ignored\b.*$', text, re.MULTILINE)
+                        row['excluded_tests'] = excluded
+                        valid = (valid and counts['suites'] == 1 and counts['ignored'] == 1
+                                 and excluded == [SERVICE_NETWORK_TEST]
+                                 and f'test {SERVICE_BACKEND_TEST} ... ok' in text.splitlines())
+                    else:
+                        valid = valid and counts['passed'] == counts['suites'] == 1 and counts['ignored'] == 0
             row['validated'] = valid
             checkpoint(args.report, report)
             print(('PASS' if valid else 'FAIL') + ' ' + ' '.join(command), flush=True)

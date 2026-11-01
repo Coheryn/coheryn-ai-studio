@@ -36,10 +36,16 @@ class MetalChecksTests(unittest.TestCase):
                 log.write_text(f'rustc 1.99.1 (fixture)\nhost: {host}\n')
             elif command[1] == 'test':
                 live = '--test' in command
+                service = live and command[command.index('--test') + 1] == 'service'
                 passed = 0 if mutation == 'empty' else 1
-                ignored = int(live and mutation == 'skip')
+                ignored = int(service) + int(live and mutation == 'skip')
                 filtered = int(mutation == 'filtered')
                 log.write_text(f'test result: ok. {passed} passed; 0 failed; {ignored} ignored; 0 measured; {filtered} filtered out\n')
+                if service:
+                    with log.open('a') as stream:
+                        name = 'unexpected_skipped_test' if mutation == 'excluded' else runner.SERVICE_NETWORK_TEST
+                        stream.write(f'test {name} ... ignored, requires outbound HTTPS\n')
+                        if mutation != 'backend-test': stream.write(f'test {runner.SERVICE_BACKEND_TEST} ... ok\n')
                 if mutation == 'failed': return 1
             else:
                 log.write_text('controlled native preparation\n')
@@ -105,7 +111,7 @@ class MetalChecksTests(unittest.TestCase):
             self.assertTrue(all(row['command'][1] != 'test' for row in report['commands']))
 
     def test_skipped_filtered_failed_changed_or_unretired_work_cannot_pass(self):
-        for mutation in ('skip', 'empty', 'filtered', 'failed', 'source', 'source-error', 'cleanup', 'compiler'):
+        for mutation in ('skip', 'empty', 'filtered', 'failed', 'source', 'source-error', 'cleanup', 'compiler', 'excluded', 'backend-test'):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
                 report, code, _ = self.execute(Path(temporary).resolve(), mutation)
                 self.assertEqual((code, report['outcome']), (1, 'fail'))
