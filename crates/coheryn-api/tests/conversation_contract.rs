@@ -173,7 +173,7 @@ fn generic_history_rejects_overflow_cancel_and_unsupported_controls_without_losi
             .is_none()
     );
     let mut request = submit(4, "third", "hi");
-    request.settings.temperature = 0.5;
+    request.settings.stop.push("custom-stop".into());
     let BeginTurn::New(mut turn) = sessions.begin("owner", "history", request).unwrap() else {
         panic!("new turn expected")
     };
@@ -210,6 +210,42 @@ fn generic_history_rejects_overflow_cancel_and_unsupported_controls_without_losi
             .active_turn
             .is_none()
     );
+}
+
+#[test]
+fn generic_history_preserves_supported_sampling_and_penalties() {
+    let (sessions, budget) = setup(OverflowPolicy::Reject);
+    let mut request = submit(0, "sampled", "hi");
+    request.settings.temperature = 0.8;
+    request.settings.top_k = 8;
+    request.settings.top_p = 0.9;
+    request.settings.seed = 73;
+    request.settings.repetition_penalty = 1.1;
+    request.settings.frequency_penalty = 0.1;
+    request.settings.presence_penalty = 0.2;
+    let BeginTurn::New(mut turn) = sessions.begin("owner", "history", request).unwrap() else {
+        panic!("new turn expected")
+    };
+    let prepared = turn
+        .prepare_conversation(&Conversation, &Default::default())
+        .unwrap();
+    assert_eq!(prepared.temperature, 0.8);
+    assert_eq!(prepared.top_k, 8);
+    assert_eq!(prepared.top_p, 0.9);
+    assert_eq!(prepared.seed, 73);
+    assert_eq!(prepared.repetition_penalty, 1.1);
+    assert_eq!(prepared.frequency_penalty, 0.1);
+    assert_eq!(prepared.presence_penalty, 0.2);
+    drop(turn);
+    assert!(
+        sessions
+            .get("owner", "history")
+            .unwrap()
+            .active_turn
+            .is_none()
+    );
+    drop(sessions);
+    assert_eq!(budget.stats().reserved, 0);
 }
 
 #[test]

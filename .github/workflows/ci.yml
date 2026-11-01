@@ -60,9 +60,9 @@ jobs:
             NOTICE
             THIRD_PARTY_NOTICES.md
             resources/licensing/**
+      - run: python tools/run_cpu_checks.py --report .cache/cpu-native-checks.json
       - name: Prepare and test the reusable native soak driver
         run: python tools/check_cpu_soak.py --report .cache/cpu-driver-checks.json
-      - run: python tools/run_cpu_checks.py --report .cache/cpu-native-checks.json
       - run: python tools/test_license_notices.py
       - run: python tools/test_cpu_soak.py
       - run: python tools/test_cpu_qualification.py
