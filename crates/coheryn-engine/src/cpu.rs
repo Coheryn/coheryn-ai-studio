@@ -49,9 +49,9 @@ fn certified_dot(a: &[f32], b: &[f32]) -> Option<f32> {
     debug_assert!((256..=1 << 20).contains(&a.len()));
     let mut sums = [0f64; 4];
     let mut magnitudes = [0f64; 4];
-    let mut left = a.chunks_exact(4);
-    let mut right = b.chunks_exact(4);
-    for (a, b) in left.by_ref().zip(right.by_ref()) {
+    let (left, left_tail) = a.as_chunks::<4>();
+    let (right, right_tail) = b.as_chunks::<4>();
+    for (a, b) in left.iter().zip(right) {
         for lane in 0..4 {
             // Round each product to F32 before its exact widening to F64.
             let product = f64::from(a[lane] * b[lane]);
@@ -61,7 +61,7 @@ fn certified_dot(a: &[f32], b: &[f32]) -> Option<f32> {
     }
     let mut sum = (sums[0] + sums[1]) + (sums[2] + sums[3]);
     let mut magnitude = (magnitudes[0] + magnitudes[1]) + (magnitudes[2] + magnitudes[3]);
-    for (a, b) in left.remainder().iter().zip(right.remainder()) {
+    for (a, b) in left_tail.iter().zip(right_tail) {
         let product = f64::from(*a * *b);
         sum += product;
         magnitude += product.abs();
