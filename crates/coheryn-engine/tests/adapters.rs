@@ -43,6 +43,57 @@ fn limits() -> ResourceLimits {
     }
 }
 #[test]
+fn routing_hints_do_not_bypass_full_loader_validation() {
+    let mut bytes = b"GGUF".to_vec();
+    bytes.extend(3u32.to_le_bytes());
+    bytes.extend(0u64.to_le_bytes());
+    bytes.extend(2u64.to_le_bytes());
+    for text in ["general.architecture", "qwen2", "tokenizer.ggml.tokens"] {
+        if text == "qwen2" {
+            bytes.extend(8u32.to_le_bytes());
+        }
+        bytes.extend((text.len() as u64).to_le_bytes());
+        bytes.extend(text.as_bytes());
+    }
+    bytes.extend(9u32.to_le_bytes());
+    bytes.extend(8u32.to_le_bytes());
+    bytes.extend(u64::MAX.to_le_bytes());
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("bad.gguf");
+    std::fs::write(&path, bytes).unwrap();
+    let result = Registry::default().load(path, limits(), &Cancellation::default());
+    assert!(matches!(result, Err(error) if error.code == ErrorCode::InvalidGguf));
+}
+
+#[test]
+fn cancellation_during_a_custom_adapter_claim_prevents_loading() {
+    struct CancellingAdapter(Cancellation);
+    impl TextAdapter for CancellingAdapter {
+        fn id(&self) -> &'static str {
+            "cancel-in-claim"
+        }
+        fn accepts(&self, _: &Path, _: ResourceLimits) -> Result<bool> {
+            self.0.cancel();
+            Ok(true)
+        }
+        fn load(
+            &self,
+            _: &Path,
+            _: ResourceLimits,
+            _: &Cancellation,
+        ) -> Result<Box<dyn TextModel>> {
+            panic!("cancelled discovery must not load weights")
+        }
+    }
+    let cancel = Cancellation::default();
+    let mut registry = Registry::new();
+    registry
+        .register(Box::new(CancellingAdapter(cancel.clone())))
+        .unwrap();
+    let result = registry.load("unused", limits(), &cancel);
+    assert!(matches!(result, Err(error) if error.code == ErrorCode::Cancelled));
+}
+#[test]
 fn registry_rejects_duplicates_ambiguity_unknown_and_cancelled_loads() {
     let loads = Arc::new(AtomicUsize::new(0));
     let mut registry = Registry::new();

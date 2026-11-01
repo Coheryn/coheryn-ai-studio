@@ -41,7 +41,7 @@ jobs:
       - run: python tools/check_metal_packed_fixtures.py
       - run: python tools/test_metal_checks.py
       - run: python tools/check_cpu_host.py --wait-for-load-seconds 300 --startup-load-per-cpu 1 --report .cache/metal-cross-host.json
-      - name: Compile macOS bindings without claiming native GPU execution
+      - name: Check macOS bindings and native Linux routing without GPU claims
         run: python tools/run_metal_checks.py --cross-check --report .cache/metal-cross-check.json
       - uses: actions/upload-artifact@v7.0.2
         if: always()

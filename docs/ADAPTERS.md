@@ -4,6 +4,8 @@ Here, an adapter means a compiled architecture implementation and its dispatch i
 
 Standalone text `run` and interactive `chat` now load through the engine's `adapters::Registry`. The registry selects a compiled native factory using bounded format/configuration inspection. Callers use `TextModel` for rendering, generation, cancellation and token events. Existing Qwen2 GGUF execution and the initial [Qwen3.5 CPU text adapter](QWEN35.md) use that interface.
 
+GGUF text routing uses a cancellable architecture probe rather than constructing complete metadata/tokenizer snapshots for each candidate factory. It stops after `general.architecture`; earlier values are consumed with fixed-size scratch, shared header/string/array bounds and conservative aggregate allocation checks. Metadata order and byte order remain explicit. This is a routing hint: it does not validate the remaining container, tensor inventory or UTF-8 inside skipped values. The selected model loader still performs complete inspection and compatibility validation before inference. A positive hint never grants executable or qualified status. Custom adapters retain their existing `accepts` implementation and inherit cancellation checks around it, or implement the cancellable recognition hook.
+
 A compatible new checkpoint can reuse an implemented adapter when its configuration, tensor inventory, tokenizer/template and requested features pass validation. A new architecture needs its own graph/bindings and any missing operations. Adding that implementation and registering its factory avoids rewriting these CLI flows. Arbitrary future architectures cannot become executable from weight metadata alone.
 
 ```text

@@ -224,23 +224,90 @@ impl<R: Read + Seek> Reader<R> {
             u64::from_le_bytes(b)
         })
     }
-    fn string(&mut self, max: u64) -> Result<String> {
+    fn string_extent(&mut self, max: u64) -> Result<usize> {
         let n = self.u64()?;
         if n > max.min(self.limits.max_string_bytes) {
             return Err(Error::invalid("string length exceeds parser limit"));
         }
         self.guard(n)?;
-        self.charge(n + 24)?;
+        self.charge(
+            n.checked_add(24)
+                .ok_or_else(|| Error::resource("string allocation overflow"))?,
+        )?;
+        usize::try_from(n).map_err(|_| Error::resource("string extent exceeds address space"))
+    }
+    fn string(&mut self, max: u64) -> Result<String> {
+        let n = self.string_extent(max)?;
         let mut b = Vec::new();
-        b.try_reserve_exact(n as usize)
+        b.try_reserve_exact(n)
             .map_err(|_| Error::resource("string allocation failed"))?;
-        b.resize(n as usize, 0);
+        b.resize(n, 0);
         self.inner
             .read_exact(&mut b)
             .map_err(|_| Error::invalid("truncated string"))?;
         self.hasher.update(&b);
-        self.pos += n;
+        self.pos += n as u64;
         String::from_utf8(b).map_err(|_| Error::invalid("invalid UTF-8 string"))
+    }
+    fn array_header(&mut self, depth: u8) -> Result<(u32, u64)> {
+        if depth >= self.limits.max_depth {
+            return Err(Error::invalid("metadata nesting limit exceeded"));
+        }
+        let item_ty = self.u32()?;
+        if item_ty > 12 {
+            return Err(Error::invalid("unknown array element type"));
+        }
+        let n = self.u64()?;
+        if n > self.limits.max_array_items {
+            return Err(Error::invalid("array count exceeds parser limit"));
+        }
+        let minimum = match item_ty {
+            0 | 1 | 7 => 1,
+            2 | 3 => 2,
+            4..=6 => 4,
+            8 | 10 | 11 | 12 => 8,
+            9 => 12,
+            _ => unreachable!(),
+        };
+        self.guard(
+            n.checked_mul(minimum)
+                .ok_or_else(|| Error::invalid("array byte extent overflow"))?,
+        )?;
+        self.charge(
+            n.checked_mul(std::mem::size_of::<Value>() as u64)
+                .ok_or_else(|| Error::resource("array overflow"))?,
+        )?;
+        Ok((item_ty, n))
+    }
+    fn skip_value(&mut self, ty: u32, depth: u8, cancel: &crate::Cancellation) -> Result<()> {
+        cancel.check()?;
+        match ty {
+            8 => {
+                let mut remaining = self.string_extent(self.limits.max_string_bytes)?;
+                // Retain no tokenizer strings while selecting an architecture.
+                let mut buffer = [0; 4096];
+                while remaining != 0 {
+                    cancel.check()?;
+                    let count = remaining.min(buffer.len());
+                    self.inner
+                        .read_exact(&mut buffer[..count])
+                        .map_err(|_| Error::invalid("truncated string"))?;
+                    self.hasher.update(&buffer[..count]);
+                    self.pos += count as u64;
+                    remaining -= count;
+                }
+            }
+            9 => {
+                let (item_ty, n) = self.array_header(depth)?;
+                for _ in 0..n {
+                    self.skip_value(item_ty, depth + 1, cancel)?;
+                }
+            }
+            _ => {
+                self.value(ty, depth)?;
+            }
+        }
+        Ok(())
     }
     fn value(&mut self, ty: u32, depth: u8) -> Result<Value> {
         Ok(match ty {
@@ -258,33 +325,7 @@ impl<R: Read + Seek> Reader<R> {
             },
             8 => Value::String(self.string(self.limits.max_string_bytes)?),
             9 => {
-                if depth >= self.limits.max_depth {
-                    return Err(Error::invalid("metadata nesting limit exceeded"));
-                }
-                let item_ty = self.u32()?;
-                if item_ty > 12 {
-                    return Err(Error::invalid("unknown array element type"));
-                }
-                let n = self.u64()?;
-                if n > self.limits.max_array_items {
-                    return Err(Error::invalid("array count exceeds parser limit"));
-                }
-                let minimum = match item_ty {
-                    0 | 1 | 7 => 1,
-                    2 | 3 => 2,
-                    4..=6 => 4,
-                    8 | 10 | 11 | 12 => 8,
-                    9 => 12,
-                    _ => unreachable!(),
-                };
-                self.guard(
-                    n.checked_mul(minimum)
-                        .ok_or_else(|| Error::invalid("array byte extent overflow"))?,
-                )?;
-                self.charge(
-                    n.checked_mul(std::mem::size_of::<Value>() as u64)
-                        .ok_or_else(|| Error::resource("array overflow"))?,
-                )?;
+                let (item_ty, n) = self.array_header(depth)?;
                 let mut values = Vec::new();
                 values
                     .try_reserve_exact(n as usize)
@@ -308,7 +349,11 @@ pub fn inspect(path: impl AsRef<Path>, limits: ParseLimits) -> Result<Descriptor
     parse(BufReader::new(file), length, limits)
 }
 
-pub fn parse<R: Read + Seek>(inner: R, length: u64, limits: ParseLimits) -> Result<Descriptor> {
+fn header<R: Read + Seek>(
+    inner: R,
+    length: u64,
+    limits: ParseLimits,
+) -> Result<(Reader<R>, u32, u64, u64)> {
     let mut r = Reader {
         inner,
         length,
@@ -349,6 +394,44 @@ pub fn parse<R: Read + Seek>(inner: R, length: u64, limits: ParseLimits) -> Resu
             .checked_mul(128)
             .ok_or_else(|| Error::resource("metadata count overflow"))?,
     )?;
+    Ok((r, version, tensor_count, metadata_count))
+}
+
+/// Routing hint only: stops at architecture metadata and does not validate the
+/// remaining container, UTF-8 in skipped values, tensor ranges or executability.
+/// The selected loader must perform complete inspection before execution.
+pub fn probe_architecture<R: Read + Seek>(
+    inner: R,
+    length: u64,
+    limits: ParseLimits,
+    cancel: &crate::Cancellation,
+) -> Result<Option<String>> {
+    cancel.check()?;
+    let (mut r, _, _, count) = header(inner, length, limits)?;
+    for _ in 0..count {
+        cancel.check()?;
+        let key = r.string(65535)?;
+        if key.is_empty() || !key.is_ascii() {
+            return Err(Error::invalid("metadata key must be nonempty ASCII"));
+        }
+        let ty = r.u32()?;
+        if key == "general.architecture" {
+            if ty != 8 {
+                r.skip_value(ty, 0, cancel)?;
+                return Ok(None);
+            }
+            let architecture = r.string(r.limits.max_string_bytes)?;
+            cancel.check()?;
+            return Ok(Some(architecture));
+        }
+        r.skip_value(ty, 0, cancel)?;
+    }
+    cancel.check()?;
+    Ok(None)
+}
+
+pub fn parse<R: Read + Seek>(inner: R, length: u64, limits: ParseLimits) -> Result<Descriptor> {
+    let (mut r, version, tensor_count, metadata_count) = header(inner, length, limits)?;
     let mut metadata = BTreeMap::new();
     for _ in 0..metadata_count {
         let key = r.string(65535)?;

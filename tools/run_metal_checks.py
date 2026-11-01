@@ -36,6 +36,7 @@ def commands(gpu, cross_check=False):
         ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-engine', '--features', 'metal', '--lib', '--locked'),
         ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-cli', '--features', 'metal', '--bin', 'coheryn', '--locked'),
         ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-api', '--features', 'metal', '--test', 'service', '--locked'),
+        ROUTING_COMMAND,
     ]
     if cross_check:
         # Compile the macOS FFI and engine tests, never execute a foreign binary.
@@ -43,7 +44,7 @@ def commands(gpu, cross_check=False):
         # its platform-neutral routing natively here and its Metal build on Mac.
         for index in (1, 2):
             result[index] = (*result[index][:-3], '--target', 'aarch64-apple-darwin', *result[index][-3:])
-        return tuple(result[:5])
+        return (*result[:5], ROUTING_COMMAND)
     if gpu:
         result.append(('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-metal',
                        '--features', 'metal', '--test', 'dense', '--locked', '--', '--ignored', '--nocapture'))
@@ -55,6 +56,8 @@ def commands(gpu, cross_check=False):
 
 
 MODEL_SUITES = ('qwen35-gguf-q4_k_m-text', 'qwen35-text')
+ROUTING_COMMAND = ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-engine',
+                   '--features', 'metal', '--test', 'gguf', '--test', 'gguf_probe', '--test', 'adapters', '--locked')
 MODEL_COMMAND = ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-engine',
                  '--features', 'metal', '--test', 'metal_model', '--locked', '--', '--ignored', '--nocapture')
 CLI_MODEL_COMMAND = ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-cli',
@@ -229,7 +232,7 @@ def main():
     report = {'schema_version': 1, 'kind': 'metal-cross-check' if args.cross_check else 'metal-primitive-checks', 'outcome': 'running',
               'production_ready': False, 'gpu_execution_required': args.gpu,
               'compile_target': 'aarch64-apple-darwin', 'cross_check': args.cross_check,
-              'cli_compile_target': native_host, 'api_compile_target': native_host,
+              'cli_compile_target': native_host, 'api_compile_target': native_host, 'routing_execution_target': native_host,
               'source_snapshot': source, 'source_unchanged': False, 'commands': [],
               'toolchain': {},
               'fixture_sha256': sha(ROOT / 'fixtures/gpu/metal-dense-v1.json'),
@@ -298,7 +301,9 @@ def main():
                 valid = valid and counts['passed'] > 0 and counts['failed'] == counts['filtered'] == 0
                 if '--test' in command:
                     target = command[command.index('--test') + 1]
-                    if target == 'service':
+                    if command == ROUTING_COMMAND:
+                        valid = valid and counts['suites'] == 3 and counts['passed'] >= 21 and counts['ignored'] == 0
+                    elif target == 'service':
                         text = log.read_text(encoding='utf-8')
                         excluded = re.findall(r'^test (\S+) \.\.\. ignored\b.*$', text, re.MULTILINE)
                         row['excluded_tests'] = excluded

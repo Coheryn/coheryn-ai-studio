@@ -35,6 +35,15 @@ def corpus(target, guard):
         def string(value): return struct.pack('<Q', len(value)) + value
         metadata = string(b'general.architecture') + struct.pack('<I', 8) + string(b'qwen2')
         seeds.append(b'GGUF' + struct.pack('<IQQ', 3, 0, 1) + metadata)
+        for order in ('<', '>'):
+            def packed_string(value): return struct.pack(order + 'Q', len(value)) + value
+            # Reach the streaming skip path before an architecture declaration.
+            nested = (packed_string(b'extra.array') + struct.pack(order + 'IIQIQ', 9, 9, 1, 8, 2)
+                      + packed_string(b'one') + packed_string('বাংলা 😀'.encode()))
+            flag = packed_string(b'extra.boolean') + struct.pack(order + 'IB', 7, 1)
+            architecture = packed_string(b'general.architecture') + struct.pack(order + 'I', 8) + packed_string(b'qwen35')
+            seed = b'GGUF' + struct.pack(order + 'IQQ', 3, 0, 3) + nested + flag + architecture
+            seeds.append(seed + bytes(-len(seed) % 32))
     elif target == 'safetensors':
         for shape, payload in [([], b'\0' * 4), ([2], b'\0' * 8), ([0], b'')]:
             header = json.dumps({'x': {'dtype': 'F32', 'shape': shape, 'data_offsets': [0, len(payload)]}},

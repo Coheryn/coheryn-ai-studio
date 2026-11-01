@@ -37,10 +37,11 @@ class MetalChecksTests(unittest.TestCase):
             elif command[1] == 'test':
                 live = '--test' in command
                 service = live and command[command.index('--test') + 1] == 'service'
-                passed = 0 if mutation == 'empty' else 1
+                routing = tuple(command[1:]) == runner.ROUTING_COMMAND[1:]
+                passed = 0 if mutation == 'empty' else (7 if routing else 1)
                 ignored = int(service) + int(live and mutation == 'skip')
                 filtered = int(mutation == 'filtered')
-                log.write_text(f'test result: ok. {passed} passed; 0 failed; {ignored} ignored; 0 measured; {filtered} filtered out\n')
+                log.write_text(f'test result: ok. {passed} passed; 0 failed; {ignored} ignored; 0 measured; {filtered} filtered out\n' * (3 if routing else 1))
                 if service:
                     with log.open('a') as stream:
                         name = 'unexpected_skipped_test' if mutation == 'excluded' else runner.SERVICE_NETWORK_TEST
@@ -69,7 +70,7 @@ class MetalChecksTests(unittest.TestCase):
     def test_live_mode_requires_exact_test_and_preserves_logs_scope_and_cleanup(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve())
-            self.assertEqual((code, calls), (0, 14))
+            self.assertEqual((code, calls), (0, 15))
             self.assertTrue(report['gpu_execution_required'])
             self.assertFalse(report['production_ready'])
             self.assertTrue(report['source_unchanged'] and report['owned_cleanup_confirmed'])
@@ -80,15 +81,15 @@ class MetalChecksTests(unittest.TestCase):
     def test_compile_mode_cannot_claim_gpu_execution(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve(), gpu=False)
-            self.assertEqual((code, calls), (0, 11))
+            self.assertEqual((code, calls), (0, 12))
             self.assertFalse(report['gpu_execution_required'])
-            self.assertTrue(all('--test' not in row['command'] or row['command'][row['command'].index('--test') + 1] == 'service'
+            self.assertTrue(all('--test' not in row['command'] or tuple(row['command']) == runner.ROUTING_COMMAND or row['command'][row['command'].index('--test') + 1] == 'service'
                                 for row in report['commands']))
 
     def test_format_failure_retains_numeric_feedback_but_cannot_pass(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve(), 'format')
-            self.assertEqual((code, calls, report['outcome']), (1, 14, 'fail'))
+            self.assertEqual((code, calls, report['outcome']), (1, 15, 'fail'))
             self.assertFalse(report['commands'][0]['validated'])
             self.assertTrue(all(row['validated'] for row in report['commands'][1:]))
 
@@ -100,7 +101,7 @@ class MetalChecksTests(unittest.TestCase):
     def test_explicit_cross_check_compiles_foreign_target_without_executing_it(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve(), gpu=False, cross_check=True)
-            self.assertEqual((code, calls), (0, 7))
+            self.assertEqual((code, calls), (0, 8))
             self.assertEqual(report['kind'], 'metal-cross-check')
             self.assertFalse(report['gpu_execution_required'])
             self.assertTrue(report['cross_check'])
@@ -108,7 +109,9 @@ class MetalChecksTests(unittest.TestCase):
             self.assertEqual(report['cli_compile_target'], 'x86_64-unknown-linux-gnu')
             self.assertIn('coheryn-cli', report['commands'][3]['command'])
             self.assertNotIn('--target', report['commands'][3]['command'])
-            self.assertTrue(all(row['command'][1] != 'test' for row in report['commands']))
+            self.assertEqual(report['routing_execution_target'], 'x86_64-unknown-linux-gnu')
+            self.assertEqual(tuple(report['commands'][-1]['command']), runner.ROUTING_COMMAND)
+            self.assertNotIn('--target', report['commands'][-1]['command'])
 
     def test_skipped_filtered_failed_changed_or_unretired_work_cannot_pass(self):
         for mutation in ('skip', 'empty', 'filtered', 'failed', 'source', 'source-error', 'cleanup', 'compiler', 'excluded', 'backend-test'):

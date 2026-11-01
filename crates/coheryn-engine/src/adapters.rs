@@ -68,6 +68,17 @@ pub trait TextAdapter: Send + Sync {
 
     /// A positive claim must identify format/architecture, never a filename alias.
     fn accepts(&self, path: &Path, limits: ResourceLimits) -> Result<bool>;
+    fn accepts_cancellable(
+        &self,
+        path: &Path,
+        limits: ResourceLimits,
+        cancel: &Cancellation,
+    ) -> Result<bool> {
+        cancel.check()?;
+        let result = self.accepts(path, limits)?;
+        cancel.check()?;
+        Ok(result)
+    }
     fn load(
         &self,
         path: &Path,
@@ -131,7 +142,7 @@ impl Registry {
         let mut selected = None;
         for adapter in self.adapters.values() {
             cancel.check()?;
-            if adapter.accepts(path, limits)? {
+            if adapter.accepts_cancellable(path, limits, cancel)? {
                 if selected.is_some() {
                     return Err(Error::request("ambiguous native adapter selection"));
                 }
@@ -164,30 +175,47 @@ impl Default for Registry {
     }
 }
 struct Qwen2;
+fn gguf_architecture(
+    path: &Path,
+    limits: ResourceLimits,
+    cancel: &Cancellation,
+) -> Result<Option<String>> {
+    cancel.check()?;
+    if path.is_dir() {
+        return Ok(None);
+    }
+    let metadata = std::fs::symlink_metadata(path)?;
+    if !metadata.is_file() || metadata.file_type().is_symlink() {
+        return Err(Error::request(
+            "native adapter requires a regular model file",
+        ));
+    }
+    use std::io::{Read, Seek};
+    let mut file = std::fs::File::open(path)?;
+    let mut magic = [0; 4];
+    if file.read(&mut magic)? != 4 || !matches!(&magic, b"GGUF" | b"FUGG") {
+        return Ok(None);
+    }
+    let mut parser = crate::ParseLimits::default();
+    parser.max_metadata_allocation = parser.max_metadata_allocation.min(limits.max_memory / 2);
+    file.rewind()?;
+    let length = file.metadata()?.len();
+    crate::gguf::probe_architecture(std::io::BufReader::new(file), length, parser, cancel)
+}
 impl TextAdapter for Qwen2 {
     fn id(&self) -> &'static str {
         "qwen2-gguf-cpu-v1"
     }
     fn accepts(&self, path: &Path, limits: ResourceLimits) -> Result<bool> {
-        if path.is_dir() {
-            return Ok(false);
-        }
-        let metadata = std::fs::symlink_metadata(path)?;
-        if !metadata.is_file() || metadata.file_type().is_symlink() {
-            return Err(Error::request(
-                "native adapter requires a regular model file",
-            ));
-        }
-        use std::io::Read;
-        let mut file = std::fs::File::open(path)?;
-        let mut magic = [0; 4];
-        let n = file.read(&mut magic)?;
-        if n != 4 || (magic != *b"GGUF" && magic != *b"FUGG") {
-            return Ok(false);
-        }
-        let mut parser = crate::ParseLimits::default();
-        parser.max_metadata_allocation = parser.max_metadata_allocation.min(limits.max_memory / 2);
-        Ok(crate::inspect(path, parser)?.architecture.as_deref() == Some("qwen2"))
+        self.accepts_cancellable(path, limits, &Cancellation::default())
+    }
+    fn accepts_cancellable(
+        &self,
+        path: &Path,
+        limits: ResourceLimits,
+        cancel: &Cancellation,
+    ) -> Result<bool> {
+        Ok(gguf_architecture(path, limits, cancel)?.as_deref() == Some("qwen2"))
     }
     fn describe(
         &self,
@@ -525,14 +553,16 @@ impl TextAdapter for Qwen35Gguf {
     fn id(&self) -> &'static str {
         "qwen35-gguf-cpu-v1"
     }
-    fn accepts(&self, path: &Path, _limits: ResourceLimits) -> Result<bool> {
-        if !crate::qwen35::gguf::is_source(path)? {
-            return Ok(false);
-        }
-        Ok(crate::inspect(path, crate::ParseLimits::default())?
-            .architecture
-            .as_deref()
-            == Some("qwen35"))
+    fn accepts(&self, path: &Path, limits: ResourceLimits) -> Result<bool> {
+        self.accepts_cancellable(path, limits, &Cancellation::default())
+    }
+    fn accepts_cancellable(
+        &self,
+        path: &Path,
+        limits: ResourceLimits,
+        cancel: &Cancellation,
+    ) -> Result<bool> {
+        Ok(gguf_architecture(path, limits, cancel)?.as_deref() == Some("qwen35"))
     }
     fn describe(
         &self,
@@ -572,15 +602,9 @@ fn qwen35_gguf_capabilities() -> Capabilities {
     c
 }
 
-/// Bounded local container dispatch; no tokenizer/session or numeric payload is loaded.
+/// Bounded routing hint; the selected loader still validates the complete source.
 pub fn is_qwen35_gguf(path: &Path, cancel: &Cancellation) -> Result<bool> {
-    cancel.check()?;
-    if !crate::qwen35::gguf::is_source(path)? {
-        return Ok(false);
-    }
-    let d = crate::inspect(path, crate::ParseLimits::default())?;
-    cancel.check()?;
-    Ok(d.architecture.as_deref() == Some("qwen35"))
+    Ok(gguf_architecture(path, ResourceLimits::default(), cancel)?.as_deref() == Some("qwen35"))
 }
 
 #[cfg(test)]

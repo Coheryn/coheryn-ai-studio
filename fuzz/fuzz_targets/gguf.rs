@@ -10,9 +10,16 @@ fuzz_target!(|data: &[u8]| {
         max_string_bytes: 65536,
         max_depth: 3,
     };
+    let architecture = coheryn_engine::gguf::probe_architecture(
+        std::io::Cursor::new(data),
+        data.len() as u64,
+        limits,
+        &Default::default(),
+    );
     if let Ok(descriptor) =
         coheryn_engine::gguf::parse(std::io::Cursor::new(data), data.len() as u64, limits)
     {
+        assert_eq!(architecture.unwrap(), descriptor.architecture);
         // Exercise both decoder and encoder compatibility before execution allocation.
         let _ = coheryn_engine::validate(&descriptor);
         if descriptor.architecture.as_deref() == Some("qwen2vl") {
