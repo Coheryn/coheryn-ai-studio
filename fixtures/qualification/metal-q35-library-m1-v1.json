@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "kind": "reviewed-partial-native-metal-library",
+  "outcome": "partial",
+  "production_ready": false,
+  "source_commit": "1d474be8aee6c302d9ff7e742e8a097d77f8cb5f",
+  "native_target": "aarch64-apple-darwin",
+  "device": "Apple M1",
+  "suite": "qwen35-gguf-q4_k_m-text",
+  "library_model_stage": "pass",
+  "full_campaign_outcome": "fail",
+  "original_owned_cleanup_confirmed": false,
+  "scope": "Completed native library/primitive stages only. Later CLI host rejection and cleanup uncertainty remain failures; managed API was not executed.",
+  "model_file": {
+    "file": "Qwen3.5-0.8B-q4_k_m.gguf",
+    "bytes": 533614976,
+    "sha256": "8bd70fa4eb6015c7b28a60d8f16322c5313cbcddd11f2dac20fff72d70a4c8a8",
+    "role": "language",
+    "label": "q4_k_m",
+    "repository": "Mungert/Qwen3.5-0.8B-GGUF",
+    "revision": "d14363a822a02a44beac55ece87b7f140cdff714"
+  },
+  "full_cpu_gpu_arrays": 50,
+  "full_cpu_gpu_elements": 545792,
+  "independent_sampled_values": 3640,
+  "greedy_cases": 2,
+  "gpu": {
+    "completed_model_dispatches": 22610,
+    "device": "Apple M1",
+    "driver_weight_allocation_bytes": 520732672,
+    "encoded_weight_bytes": 520658944,
+    "matrices": 187,
+    "qualification": "experimental-text-matrix-profile; model/backend qualification pending",
+    "request_workspace_bytes": 1007616
+  },
+  "memory_after_library_unload": {
+    "limit": 2147483648,
+    "peak_reserved": 837414912,
+    "peak_session_buffer_capacity_bytes": 26736760,
+    "reserved": 0,
+    "session_buffer_capacity_bytes": 0
+  },
+  "metal_api_validation": true,
+  "metal_gpu_validation": true,
+  "healthy_observations_before_cli_cutoff": 208,
+  "campaign_report": {
+    "path": "fixtures/qualification/metal-q35-library-m1-campaign-v1.json",
+    "sha256": "00df8c7507d6f2de328ab7f696dbea8b1eb832c2301c4a7ef6c6c6890a75d975"
+  },
+  "library_report": {
+    "path": "fixtures/qualification/metal-q35-library-m1-data-v1.json",
+    "sha256": "10390c7bbe6332419d332dc1a695b88709748a4cee88ec1cdde06c41f03360f2"
+  },
+  "local_evidence_archive": {
+    "path": ".cache/metal-q35-library-m1-evidence-v1.zip",
+    "sha256": "6f44037ba4683d2c5762499f96292f5d7e8fee1d0672e579ce944aedfefcea8a",
+    "bytes": 575467,
+    "published": false,
+    "contains_model_weights": false,
+    "contains_reference_arrays": false,
+    "complete_legal_payload": true
+  },
+  "postflight_owned_group_check": {
+    "schema_version": 1,
+    "observed_utc": "2026-11-01T17:15:17.897237+00:00",
+    "owned_process_group": 70629,
+    "matching_processes": [],
+    "scope": "Later read-only observation; does not change the original failed cleanup/campaign result."
+  },
+  "remaining": [
+    "CLI and managed API GPU execution/cleanup",
+    "Full campaign with confirmed owned cleanup",
+    "Other mandatory model/encoding/task/platform combinations",
+    "Performance/security/release qualification"
+  ]
+}
