@@ -8,8 +8,9 @@ use objc2::{
 };
 use objc2_foundation::NSString;
 use objc2_metal::{
-    MTLBuffer, MTLCommandBuffer, MTLCommandBufferStatus, MTLCommandQueue, MTLCompileOptions,
-    MTLComputePipelineState, MTLCreateSystemDefaultDevice, MTLDevice, MTLResourceOptions, MTLSize,
+    MTLBuffer, MTLCommandBuffer, MTLCommandBufferStatus, MTLCommandEncoder, MTLCommandQueue,
+    MTLCompileOptions, MTLComputeCommandEncoder, MTLComputePipelineState,
+    MTLCreateSystemDefaultDevice, MTLDevice, MTLLibrary, MTLResource, MTLResourceOptions, MTLSize,
 };
 use std::{ffi::c_void, ptr::NonNull, sync::Arc};
 
