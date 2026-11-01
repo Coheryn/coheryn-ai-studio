@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Conservative all-feature/all-target workspace and fuzz graph; includes build/test dependencies. SPDX expressions are retained verbatim, not rewritten as blanket permission.",
   "lockfiles": {
-    "Cargo.lock": "83d8bc511536f9a5aa1ae7865ba6e6dc51fff1a9b107dcaac564a5281f7a66c8",
+    "Cargo.lock": "90ee89f557a92501609eb60684f606bc404173cc8d5d4363b20b21d08bcbfb84",
     "fuzz/Cargo.lock": "6749db7a7763be0837acd8b5036a2e971b94b93bed89e25a3c8481cfd59d55ba"
   },
   "packages": [
@@ -3288,6 +3288,27 @@
       ]
     },
     {
+      "name": "objc2-foundation",
+      "version": "0.3.2",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "package_checksum": "e3e0adef53c21f888deb4fa59fc59f7eb17404926ee8a6f59f5df0fd7f9f3272",
+      "license": "MIT",
+      "authors": [],
+      "repository": "https://github.com/madsmtm/objc2",
+      "documents": [
+        {
+          "original_path": "src/copying.rs",
+          "path": "resources/licensing/texts/259b22f571b54fed25f68ec5abd8eda223e7b0547a806f13ba797a0eabecd64f.txt",
+          "sha256": "259b22f571b54fed25f68ec5abd8eda223e7b0547a806f13ba797a0eabecd64f"
+        },
+        {
+          "original_path": "src/tests/copying.rs",
+          "path": "resources/licensing/texts/23d608079a47693a26dfc8a5cb01894ad0136a50714d46221d9380aa4a4b4423.txt",
+          "sha256": "23d608079a47693a26dfc8a5cb01894ad0136a50714d46221d9380aa4a4b4423"
+        }
+      ]
+    },
+    {
       "name": "objc2-io-kit",
       "version": "0.3.2",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
@@ -3298,6 +3319,30 @@
       "documents": [
         {
           "path": "resources/licensing/upstream/objc2-io-kit@0.3.2.txt",
+          "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+          "url": "https://raw.githubusercontent.com/madsmtm/objc2/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b/LICENSE.md",
+          "original_path": "upstream supplemental license record"
+        },
+        {
+          "path": "resources/licensing/upstream/MIT-standard-terms.txt",
+          "sha256": "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5",
+          "url": "https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/text/MIT.txt",
+          "original_path": "upstream supplemental license record",
+          "note": "Standard MIT terms linked by the upstream LICENSE.md; upstream author metadata is retained in the dependency inventory. No copyright holder or year has been invented."
+        }
+      ]
+    },
+    {
+      "name": "objc2-metal",
+      "version": "0.3.2",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "package_checksum": "a0125f776a10d00af4152d74616409f0d4a2053a6f57fa5b7d6aa2854ac04794",
+      "license": "Zlib OR Apache-2.0 OR MIT",
+      "authors": [],
+      "repository": "https://github.com/madsmtm/objc2",
+      "documents": [
+        {
+          "path": "resources/licensing/upstream/objc2-core-foundation@0.3.2.txt",
           "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
           "url": "https://raw.githubusercontent.com/madsmtm/objc2/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b/LICENSE.md",
           "original_path": "upstream supplemental license record"

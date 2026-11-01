@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/coheryn-engine", "crates/coheryn-api", "crates/coheryn-cli", "crates/coheryn-bench"]
+members = ["crates/coheryn-engine", "crates/coheryn-api", "crates/coheryn-cli", "crates/coheryn-bench", "crates/coheryn-metal"]
 resolver = "2"
 
 [workspace.package]

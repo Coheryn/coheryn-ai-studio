@@ -1,0 +1,58 @@
+name: Optional Metal primitives
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'crates/coheryn-metal/**'
+      - 'crates/coheryn-engine/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'rust-toolchain.toml'
+      - 'fixtures/gpu/**'
+      - 'tools/*metal*'
+      - '.github/workflows/metal.yml'
+  pull_request:
+    paths:
+      - 'crates/coheryn-metal/**'
+      - 'crates/coheryn-engine/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'rust-toolchain.toml'
+      - 'fixtures/gpu/**'
+      - 'tools/*metal*'
+      - '.github/workflows/metal.yml'
+permissions:
+  contents: read
+jobs:
+  metal:
+    # Standard runner only. Do not silently select a paid GPU runner.
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.x'
+          check-latest: true
+      - uses: dtolnay/rust-toolchain@1.99.1
+        with:
+          components: rustfmt, clippy
+      - run: cargo fetch --locked
+      - run: python tools/check_metal_fixtures.py
+      - name: Admit native build and GPU checks
+        run: python tools/check_cpu_host.py --wait-for-load-seconds 300 --startup-load-per-cpu 1 --report .cache/metal-host.json
+      - name: Require real GPU primitives under the unchanged host guard
+        run: python tools/run_metal_checks.py --gpu --report .cache/metal-primitives.json
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: metal-primitives-${{ github.run_attempt }}
+          include-hidden-files: true
+          if-no-files-found: error
+          path: |
+            .cache/metal-host.json
+            .cache/metal-primitives.json
+            .cache/metal-checks/**
+            LICENSE
+            NOTICE
+            THIRD_PARTY_NOTICES.md
+            resources/licensing/**

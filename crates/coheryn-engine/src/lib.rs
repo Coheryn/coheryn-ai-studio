@@ -9,6 +9,8 @@ pub mod error;
 pub mod gguf;
 pub mod inference;
 pub mod memory;
+#[cfg(all(feature = "metal", target_os = "macos"))]
+pub mod metal;
 pub mod multimodal;
 mod parallel;
 pub mod planner;

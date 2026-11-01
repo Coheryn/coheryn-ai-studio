@@ -1,0 +1,27 @@
+[package]
+name = "coheryn-metal"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Optional bounded Metal execution primitives for Coheryn"
+
+[features]
+default = []
+metal = ["dep:objc2", "dep:objc2-foundation", "dep:objc2-metal"]
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = { version = "0.6.5", optional = true, default-features = false, features = ["std"] }
+objc2-foundation = { version = "0.3.2", optional = true, default-features = false, features = ["std", "NSString", "NSError"] }
+objc2-metal = { version = "0.3.2", optional = true, default-features = false, features = ["std", "MTLAllocation", "MTLBuffer", "MTLDevice", "MTLCommandQueue", "MTLCommandBuffer", "MTLCommandEncoder", "MTLComputeCommandEncoder", "MTLComputePipeline", "MTLLibrary", "MTLResource", "MTLTypes"] }
+
+[dev-dependencies]
+serde_json.workspace = true
+
+# The rest of the workspace forbids unsafe code. Only this crate's private
+# platform module may cross the audited Metal FFI boundary.
+[lints.rust]
+unsafe_code = "deny"
+unsafe_op_in_unsafe_fn = "deny"

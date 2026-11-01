@@ -217,6 +217,21 @@ class NativeChecksTests(unittest.TestCase):
 
 
 class SourceIdentityTests(unittest.TestCase):
+    def test_metal_shader_changes_invalidate_source_bound_evidence(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            for name in ('Cargo.toml', 'Cargo.lock', 'rust-toolchain.toml', 'README.md',
+                         'LICENSE', 'NOTICE', 'THIRD_PARTY_NOTICES.md', 'AGENT.md', '.gitignore', '.gitattributes'):
+                (root / name).write_bytes(b'fixture')
+            shader = root / 'crates/backend/src/dense.metal'
+            shader.parent.mkdir(parents=True)
+            shader.write_bytes(b'original kernel')
+            with patch.object(gate, 'ROOT', root):
+                baseline = gate.source_identity()
+                self.assertIn('crates/backend/src/dense.metal', baseline)
+                shader.write_bytes(b'changed numeric kernel')
+                self.assertNotEqual(gate.source_identity(), baseline)
+
     def test_desktop_metadata_is_excluded_but_hidden_and_unknown_fixture_bytes_remain_bound(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()

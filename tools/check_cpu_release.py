@@ -41,7 +41,7 @@ def source_identity():
     files += [ROOT / '.cargo' / name for name in ('config', 'config.toml')
               if (ROOT / '.cargo' / name).is_file()]
     files += [p for p in (ROOT / 'resources/licensing').rglob('*') if p.is_file()]
-    for directory, suffixes in [('crates', ('.rs', '.toml')), ('tools', ('.py',)),
+    for directory, suffixes in [('crates', ('.rs', '.toml', '.metal')), ('tools', ('.py',)),
                                 ('docs', ('.md',)), ('fuzz', ('.rs', '.toml', '.lock')),
                                 ('.github/workflows', ('.yml', '.yaml'))]:
         files += [p for p in (ROOT / directory).rglob('*')

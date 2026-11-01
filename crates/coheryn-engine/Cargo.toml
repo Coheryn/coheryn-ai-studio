@@ -7,7 +7,12 @@ license.workspace = true
 repository.workspace = true
 homepage.workspace = true
 
+[features]
+default = []
+metal = ["dep:coheryn-metal", "coheryn-metal/metal"]
+
 [dependencies]
+coheryn-metal = { path = "../coheryn-metal", optional = true }
 serde.workspace = true
 serde_json.workspace = true
 sha2.workspace = true

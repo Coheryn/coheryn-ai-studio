@@ -1,5 +1,7 @@
 # Dependency maintenance
 
+The optional Metal backend adds `objc2-metal` 0.3.2 and `objc2-foundation` 0.3.2, with `objc2` 0.6.5. Official registry metadata and checksum-verified crate archives were inspected on 2026-11-01. Minimal framework features are activated only for the optional macOS backend; these bindings provide platform access, not model execution. The complete all-feature license inventory includes their original notices and the exact published source revision's supplemental license. [METAL.md](METAL.md) defines the backend's current qualification limits.
+
 The policy in [AGENT.md](../AGENT.md) requires the latest stable, non-yanked project packages. Versions were checked against crates.io, PyPI and the relevant official tool/action releases on 2026-10-26. All 21 directly managed external Rust packages now specify their latest stable release, and both the workspace and separate fuzz lockfiles have been refreshed.
 
 | Component | Previous resolved/pinned version | Updated version |
