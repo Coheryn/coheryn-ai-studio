@@ -177,18 +177,23 @@ impl VisionRequest {
         self.acquire_with_processor(limits, cancel, image::Processor::Qwen2VlStill)
             .await
     }
-    pub async fn acquire_with_processor(
-        self,
-        limits: &VisionLimits,
-        cancel: &Cancellation,
-        processor: image::Processor,
-    ) -> Result<(GenerationRequest, Vec<qwen2vl::ChatMessage>, Vec<Vec<u8>>)> {
+    /// Validate model-specific controls without reading weights or acquiring images.
+    pub fn validate_for_processor(&self, processor: image::Processor) -> Result<()> {
         if processor == image::Processor::Qwen35Still {
             validate_controls(&self.controls)?;
             coheryn_engine::qwen35::Model::check_options(&self.controls.options())?;
         } else {
             validate_qwen2_controls(&self.controls)?;
         }
+        Ok(())
+    }
+    pub async fn acquire_with_processor(
+        self,
+        limits: &VisionLimits,
+        cancel: &Cancellation,
+        processor: image::Processor,
+    ) -> Result<(GenerationRequest, Vec<qwen2vl::ChatMessage>, Vec<Vec<u8>>)> {
+        self.validate_for_processor(processor)?;
         let mut messages = Vec::with_capacity(self.messages.len());
         let mut images = Vec::new();
         let mut total = 0u64;
@@ -507,7 +512,11 @@ pub(crate) fn validate_controls(r: &GenerationRequest) -> Result<()> {
             .is_some_and(|s| !matches!(s,crate::wire::Stops::Many(v) if v.is_empty()))
         || !r.stop_tokens.is_empty()
     {
-        return Err(Error::new(ErrorCode::UnsupportedFeature, "image chat supports 1..=256 output tokens without tools, constraints or custom stops").into());
+        return Err(Error::new(
+            ErrorCode::UnsupportedFeature,
+            "image chat supports 1..=256 output tokens without tools, constraints or custom stops",
+        )
+        .into());
     }
     Ok(())
 }
@@ -521,7 +530,11 @@ pub(crate) fn validate_qwen2_controls(r: &GenerationRequest) -> Result<()> {
         || r.frequency_penalty != 0.
         || r.presence_penalty != 0.
     {
-        return Err(Error::new(ErrorCode::UnsupportedFeature, "Qwen2-VL image chat supports greedy decoding only").into());
+        return Err(Error::new(
+            ErrorCode::UnsupportedFeature,
+            "Qwen2-VL image chat supports greedy decoding only",
+        )
+        .into());
     }
     Ok(())
 }

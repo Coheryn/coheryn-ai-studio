@@ -232,18 +232,46 @@ fn native_text_adapters_benchmark_with_frozen_outputs_and_repeated_fresh_session
                     .arg("run")
                     .arg(model)
                     .args([
-                        "--standalone", "--context", "256", "--max-memory", "1073741824",
-                        "--profile", "reference", "--threads", "1", "--max-tokens", "4",
-                        "--temperature", "0.8", "--top-k", "8", "--top-p", "0.9", "--seed", "73",
-                        "--repetition-penalty", "1.1", "--frequency-penalty", "0.1",
-                        "--presence-penalty", "0.2", "--prompt",
+                        "--standalone",
+                        "--context",
+                        "256",
+                        "--max-memory",
+                        "1073741824",
+                        "--profile",
+                        "reference",
+                        "--threads",
+                        "1",
+                        "--max-tokens",
+                        "4",
+                        "--temperature",
+                        "0.8",
+                        "--top-k",
+                        "8",
+                        "--top-p",
+                        "0.9",
+                        "--seed",
+                        "73",
+                        "--repetition-penalty",
+                        "1.1",
+                        "--frequency-penalty",
+                        "0.1",
+                        "--presence-penalty",
+                        "0.2",
+                        "--prompt",
                         reference["cases"][0]["prompt"].as_str().unwrap(),
                     ])
                     .output()
                     .unwrap();
-                assert!(output.status.success(), "{}", String::from_utf8_lossy(&output.stderr));
+                assert!(
+                    output.status.success(),
+                    "{}",
+                    String::from_utf8_lossy(&output.stderr)
+                );
                 let result: Value = serde_json::from_slice(&output.stdout).unwrap();
-                assert_eq!(result["sampling_metadata"]["profile"], "coheryn-sampling-v2");
+                assert_eq!(
+                    result["sampling_metadata"]["profile"],
+                    "coheryn-sampling-v2"
+                );
                 assert_eq!(result["sampling_metadata"]["settings"]["seed"], 73);
                 assert!(result["memory"]["peak_reserved"].as_u64().unwrap() <= 1 << 30);
                 results.push(result);

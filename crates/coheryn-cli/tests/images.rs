@@ -21,6 +21,39 @@ fn run(endpoint: &str, data: &Path, args: &[&str]) -> Value {
     );
     serde_json::from_slice(&out.stdout).unwrap()
 }
+
+#[test]
+fn legacy_standalone_image_sampling_is_rejected_before_loading_weights() {
+    let directory = tempfile::tempdir().unwrap();
+    let image = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../fixtures/vlm/images/minimum.png");
+    let output = Command::new(env!("CARGO_BIN_EXE_coheryn"))
+        .arg("--json")
+        .arg("--data-dir")
+        .arg(directory.path())
+        .args([
+            "chat",
+            "missing-language.gguf",
+            "--standalone",
+            "--vision-model",
+            "missing-projector.gguf",
+            "--image",
+        ])
+        .arg(image)
+        .args([
+            "--prompt",
+            "Describe.",
+            "--max-tokens",
+            "2",
+            "--temperature",
+            "0.8",
+        ])
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    let error: Value = serde_json::from_slice(&output.stderr).unwrap();
+    assert_eq!(error["code"], "UNSUPPORTED_FEATURE");
+    assert!(error["message"].as_str().unwrap().contains("greedy"));
+}
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 async fn native_cli_model_pair_plan_images_and_stream_match_standalone() {
     let dir = tempfile::tempdir().unwrap();

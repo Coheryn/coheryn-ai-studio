@@ -159,14 +159,20 @@ async fn native_hybrid_router_cache_batch_images_and_cleanup() {
     let sampling = json!({"temperature":0.8,"top_k":8,"top_p":0.9,"seed":73,
         "repetition_penalty":1.1,"frequency_penalty":0.1,"presence_penalty":0.2});
     let mut sampled_body = body(&cases[0]);
-    sampled_body.as_object_mut().unwrap().extend(sampling.as_object().unwrap().clone());
+    sampled_body
+        .as_object_mut()
+        .unwrap()
+        .extend(sampling.as_object().unwrap().clone());
     let (sampled_a, sampled_b) = tokio::join!(
         call(&app, "POST", "/api/v1/generate", sampled_body.clone(), 200),
         call(&app, "POST", "/api/v1/generate", sampled_body.clone(), 200)
     );
     assert_eq!(sampled_a["token_ids"], sampled_b["token_ids"]);
     assert_eq!(sampled_a["text"], sampled_b["text"]);
-    assert_eq!(sampled_a["sampling_metadata"]["profile"], "coheryn-sampling-v2");
+    assert_eq!(
+        sampled_a["sampling_metadata"]["profile"],
+        "coheryn-sampling-v2"
+    );
     assert_eq!(sampled_a["sampling_metadata"]["settings"]["seed"], 73);
     let created = call(
         &app,
@@ -250,19 +256,32 @@ async fn native_hybrid_router_cache_batch_images_and_cleanup() {
         .collect();
     assert_eq!(joined, vision["cases"][0]["greedy_text"]);
     let mut sampled_image = image_body.clone();
-    sampled_image.as_object_mut().unwrap().extend(sampling.as_object().unwrap().clone());
-    let sampled_image_result = call(&app, "POST", "/api/v1/generate", sampled_image.clone(), 200).await;
+    sampled_image
+        .as_object_mut()
+        .unwrap()
+        .extend(sampling.as_object().unwrap().clone());
+    let sampled_image_result =
+        call(&app, "POST", "/api/v1/generate", sampled_image.clone(), 200).await;
     sampled_image["stream"] = json!(true);
-    let response = app.clone().oneshot(request("POST", "/v1/chat/completions", sampled_image)).await.unwrap();
+    let response = app
+        .clone()
+        .oneshot(request("POST", "/v1/chat/completions", sampled_image))
+        .await
+        .unwrap();
     assert_eq!(response.status(), 200);
     let stream = to_bytes(response.into_body(), 16 << 20).await.unwrap();
     let stream = std::str::from_utf8(&stream).unwrap();
     assert_eq!(stream.matches("data: [DONE]").count(), 1);
-    let sampled_text: String = stream.lines()
+    let sampled_text: String = stream
+        .lines()
         .filter_map(|line| line.strip_prefix("data: "))
         .filter(|line| *line != "[DONE]")
         .map(|line| serde_json::from_str::<Value>(line).unwrap())
-        .filter_map(|frame| frame["choices"][0]["delta"]["content"].as_str().map(str::to_owned))
+        .filter_map(|frame| {
+            frame["choices"][0]["delta"]["content"]
+                .as_str()
+                .map(str::to_owned)
+        })
         .collect();
     assert_eq!(sampled_text, sampled_image_result["text"]);
     // Drop an image response before computation completes. A healthy text lane must survive.

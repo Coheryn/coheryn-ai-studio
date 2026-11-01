@@ -115,7 +115,18 @@ pub async fn run(cli: &Cli, args: &ChatArgs, cancel: &Cancellation) -> Result<()
     messages.push(json!({"role":"user","content":parts}));
     let mut value = serde_json::to_value(&controls).map_err(|e| Error::request(e.to_string()))?;
     value["messages"] = json!(messages);
-    coheryn_api::vision::VisionRequest::from_value(value.clone()).map_err(|e| e.error)?;
+    let validated =
+        coheryn_api::vision::VisionRequest::from_value(value.clone()).map_err(|e| e.error)?;
+    if args.standalone {
+        let processor = if args.vision_model.is_some() {
+            coheryn_engine::multimodal::image::Processor::Qwen2VlStill
+        } else {
+            coheryn_engine::multimodal::image::Processor::Qwen35Still
+        };
+        validated
+            .validate_for_processor(processor)
+            .map_err(|e| e.error)?;
+    }
     let mut emit = |event: coheryn_engine::TokenEvent| -> Result<()> {
         if args.stream {
             if cli.json {
