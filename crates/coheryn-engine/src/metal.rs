@@ -3,10 +3,10 @@
 use crate::{
     Cancellation, Error, ErrorCode, Result, gguf::Tensor, memory::Budget, storage::Storage,
 };
-pub use coheryn_metal::WorkspaceLimits;
 use coheryn_metal::{
     Device, Matrix, MatrixShape, MemoryBudget, MemoryLease, WeightType, Workspace,
 };
+pub use coheryn_metal::{KernelProfile, WorkspaceLimits};
 use std::sync::{Arc, Mutex};
 
 mod resident;
@@ -16,6 +16,7 @@ pub(crate) type MatrixSource = (Arc<Storage>, u64, Tensor);
 #[derive(Debug, serde::Serialize)]
 pub struct ModelInfo {
     pub device: String,
+    pub kernel_profile: &'static str,
     pub matrices: usize,
     pub encoded_weight_bytes: u64,
     pub driver_weight_allocation_bytes: u64,
@@ -79,12 +80,18 @@ pub struct MetalCompute {
 }
 impl MetalCompute {
     pub fn new(budget: Budget) -> Result<Self> {
-        Device::new(Arc::new(SharedEngineBudget(budget.clone())))
+        Self::with_kernel_profile(budget, KernelProfile::Reference)
+    }
+    pub fn with_kernel_profile(budget: Budget, kernel: KernelProfile) -> Result<Self> {
+        Device::with_kernel_profile(Arc::new(SharedEngineBudget(budget.clone())), kernel)
             .map(|device| Self { device, budget })
             .map_err(engine_error)
     }
     pub fn name(&self) -> String {
         self.device.name()
+    }
+    pub fn kernel_profile(&self) -> KernelProfile {
+        self.device.kernel_profile()
     }
     /// Bind a validated dense/packed matrix without a full CPU heap copy.
     /// GGUF and Safetensors adapters share this canonical Tensor/Storage view.

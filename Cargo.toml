@@ -32,3 +32,8 @@ codegen-units = 1
 [profile.qualification]
 inherits = "release"
 lto = false
+
+# Partition the large engine's LLVM optimization work during test builds.
+# Production release compilation keeps its single codegen unit and thin LTO.
+[profile.qualification.package.coheryn-engine]
+codegen-units = 16

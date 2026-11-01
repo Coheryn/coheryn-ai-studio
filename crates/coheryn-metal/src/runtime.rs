@@ -1,7 +1,10 @@
 //! Audited FFI boundary. Buffers are private, shared-storage and never exposed as
 //! pointers. CPU access happens before commit or after waitUntilCompleted. No
 //! fallible operations or callbacks occur between commit and retirement.
-use crate::{Error, ErrorKind, MatrixShape, MemoryLease, Result, SharedBudget, WorkspaceLimits};
+use crate::{
+    Error, ErrorKind, KernelProfile, MatrixShape, MemoryLease, Result, SharedBudget,
+    WorkspaceLimits,
+};
 use objc2::{
     rc::{Retained, autoreleasepool},
     runtime::ProtocolObject,
@@ -52,6 +55,8 @@ pub struct Device {
     raw: Retained<ProtocolObject<dyn MTLDevice>>,
     queue: Retained<ProtocolObject<dyn MTLCommandQueue>>,
     dense: Retained<ProtocolObject<dyn MTLComputePipelineState>>,
+    kernel: KernelProfile,
+    simd_width: usize,
     budget: SharedBudget,
 }
 impl Device {
@@ -59,6 +64,10 @@ impl Device {
     /// Admission covers buffer requests; compiler/driver overhead is separately
     /// observed host memory and cannot be enforced by this allocation interface.
     pub fn new(budget: SharedBudget) -> Result<Arc<Self>> {
+        Self::with_kernel_profile(budget, KernelProfile::Reference)
+    }
+
+    pub fn with_kernel_profile(budget: SharedBudget, kernel: KernelProfile) -> Result<Arc<Self>> {
         autoreleasepool(|_| {
             let raw = MTLCreateSystemDefaultDevice().ok_or_else(|| {
                 Error::new(ErrorKind::Unsupported, "no Metal device is available")
@@ -77,19 +86,28 @@ impl Device {
             // Keep macOS 11 compatibility; mathMode requires newer OS releases.
             #[allow(deprecated)]
             options.setFastMathEnabled(false);
+            let source = match kernel {
+                KernelProfile::Reference => NSString::from_str(include_str!("dense.metal")),
+                KernelProfile::SimdCompensated => NSString::from_str(&format!(
+                    "{}\n{}",
+                    include_str!("dense.metal"),
+                    include_str!("simd.metal")
+                )),
+            };
             let library = raw
-                .newLibraryWithSource_options_error(
-                    &NSString::from_str(include_str!("dense.metal")),
-                    Some(&options),
-                )
+                .newLibraryWithSource_options_error(&source, Some(&options))
                 .map_err(|e| {
                     Error::new(
                         ErrorKind::Internal,
                         format!("Metal kernel compilation failed: {e}"),
                     )
                 })?;
+            let name = match kernel {
+                KernelProfile::Reference => "dense_reference",
+                KernelProfile::SimdCompensated => "dense_simd_compensated",
+            };
             let function = library
-                .newFunctionWithName(&NSString::from_str("dense_reference"))
+                .newFunctionWithName(&NSString::from_str(name))
                 .ok_or_else(|| {
                     Error::new(ErrorKind::Internal, "embedded Metal function is missing")
                 })?;
@@ -101,10 +119,23 @@ impl Device {
                         format!("Metal pipeline creation failed: {e}"),
                     )
                 })?;
+            let simd_width = dense.threadExecutionWidth();
+            if kernel == KernelProfile::SimdCompensated
+                && (!simd_width.is_power_of_two()
+                    || simd_width > 128
+                    || simd_width > dense.maxTotalThreadsPerThreadgroup())
+            {
+                return Err(Error::new(
+                    ErrorKind::Unsupported,
+                    "cooperative Metal kernel requires a complete power-of-two SIMD group",
+                ));
+            }
             Ok(Arc::new(Self {
                 raw,
                 queue,
                 dense,
+                kernel,
+                simd_width,
                 budget,
             }))
         })
@@ -112,6 +143,9 @@ impl Device {
 
     pub fn name(&self) -> String {
         self.raw.name().to_string()
+    }
+    pub fn kernel_profile(&self) -> KernelProfile {
+        self.kernel
     }
 
     fn allocate(&self, bytes: usize, budget: &SharedBudget) -> Result<Buffer> {
@@ -302,7 +336,13 @@ impl Workspace {
                 input.len(),
             );
         }
-        let rows = (PRODUCTS_PER_DISPATCH / (shape.width * batch)).max(1);
+        // Bound both products and launched SIMD lanes, including narrow rows
+        // where most lanes have no input columns but still join the reduction.
+        let unit_width = match self.device.kernel {
+            KernelProfile::Reference => shape.width,
+            KernelProfile::SimdCompensated => shape.width.max(self.device.simd_width),
+        };
+        let rows = (PRODUCTS_PER_DISPATCH / (unit_width * batch)).max(1);
         for first in (0..shape.rows).step_by(rows) {
             check(&cancel)?;
             autoreleasepool(|_| {
@@ -354,7 +394,7 @@ impl Workspace {
             rows as u32,
             row_bytes as u32,
         ];
-        // SAFETY: only the embedded dense_reference shader is dispatched.
+        // SAFETY: only the selected embedded first-party shader is dispatched.
         // Shape bounds were validated before allocation; buffers match its
         // declared scalar types and full index ranges. Bindings 0..=3 are fixed.
         // Input/weights are read-only, output is unique to this workspace;
@@ -369,20 +409,34 @@ impl Workspace {
                 std::mem::size_of_val(&shape),
                 3,
             );
-            encoder.dispatchThreads_threadsPerThreadgroup(
-                MTLSize {
-                    width: rows,
-                    height: batch,
-                    depth: 1,
-                },
-                MTLSize {
-                    width: rows
-                        .min(self.device.dense.maxTotalThreadsPerThreadgroup())
-                        .min(32),
-                    height: 1,
-                    depth: 1,
-                },
-            );
+            let grid = MTLSize {
+                width: rows,
+                height: batch,
+                depth: 1,
+            };
+            match self.device.kernel {
+                KernelProfile::Reference => encoder.dispatchThreads_threadsPerThreadgroup(
+                    grid,
+                    MTLSize {
+                        width: rows
+                            .min(self.device.dense.maxTotalThreadsPerThreadgroup())
+                            .min(32),
+                        height: 1,
+                        depth: 1,
+                    },
+                ),
+                // One complete hardware SIMD group cooperates on each output.
+                // The constructor checked its width against pipeline limits.
+                KernelProfile::SimdCompensated => encoder
+                    .dispatchThreadgroups_threadsPerThreadgroup(
+                        grid,
+                        MTLSize {
+                            width: self.device.simd_width,
+                            height: 1,
+                            depth: 1,
+                        },
+                    ),
+            }
         }
         encoder.endEncoding();
         // No callbacks/fallible work between commit and retirement. Driver

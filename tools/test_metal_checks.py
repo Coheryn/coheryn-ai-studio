@@ -70,7 +70,7 @@ class MetalChecksTests(unittest.TestCase):
     def test_live_mode_requires_exact_test_and_preserves_logs_scope_and_cleanup(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve())
-            self.assertEqual((code, calls), (0, 15))
+            self.assertEqual((code, calls), (0, 16))
             self.assertTrue(report['gpu_execution_required'])
             self.assertFalse(report['production_ready'])
             self.assertTrue(report['source_unchanged'] and report['owned_cleanup_confirmed'])
@@ -89,7 +89,7 @@ class MetalChecksTests(unittest.TestCase):
     def test_format_failure_retains_numeric_feedback_but_cannot_pass(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve(), 'format')
-            self.assertEqual((code, calls, report['outcome']), (1, 15, 'fail'))
+            self.assertEqual((code, calls, report['outcome']), (1, 16, 'fail'))
             self.assertFalse(report['commands'][0]['validated'])
             self.assertTrue(all(row['validated'] for row in report['commands'][1:]))
 
@@ -123,14 +123,14 @@ class MetalChecksTests(unittest.TestCase):
 class ModelOutputTests(unittest.TestCase):
     def fixture(self, suite):
         reference = json.loads((runner.ROOT / runner.PROFILES[suite]['reference']).read_text())
-        return {'schema_version': 1, 'outcome': 'pass', 'suite': suite,
+        return {'schema_version': 2, 'outcome': 'pass', 'suite': suite,
                 'full_cpu_gpu_arrays': 50, 'full_cpu_gpu_elements': 545792,
                 'independent_sampled_values': sum(len(checkpoint['indices']) for case in reference['cases']
                     for checkpoint in [*case['checkpoints'], *case['teacher_forced']]),
                 'cases': [{'token_ids': case['greedy_token_ids'], 'text': case['greedy_text'],
                            'completion_tokens': len(case['greedy_token_ids']),
                            'sampling_metadata': {'backend': 'native-metal-matmul-f32-reference'}} for case in reference['cases']],
-                'gpu': {'device': 'controlled test fixture', 'matrices': 1, 'encoded_weight_bytes': 1024,
+                'gpu': {'kernel_profile': 'reference-f32-compensated-v1', 'device': 'controlled test fixture', 'matrices': 1, 'encoded_weight_bytes': 1024,
                         'request_workspace_bytes': 512, 'completed_model_dispatches': 1},
                 'memory_after_unload': {'reserved': 0, 'session_buffer_capacity_bytes': 0, 'peak_reserved': 2048, 'limit': 4096},
                 'trace_failure_cleanup': True, 'in_graph_cancellation_cleanup': True,
@@ -145,7 +145,7 @@ class ModelOutputTests(unittest.TestCase):
 
     def test_partial_wrong_backend_nonnumeric_or_unreclaimed_model_cannot_pass(self):
         base = self.fixture(runner.MODEL_SUITES[0])
-        for mutation in ('arrays', 'elements', 'samples', 'greedy', 'backend', 'dispatches', 'leak', 'boolean', 'cancel', 'plan', 'missing_plan', 'empty'):
+        for mutation in ('arrays', 'elements', 'samples', 'greedy', 'backend', 'dispatches', 'leak', 'boolean', 'cancel', 'plan', 'missing_plan', 'kernel', 'schema', 'empty'):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
                 value = copy.deepcopy(base)
                 if mutation == 'arrays': value['full_cpu_gpu_arrays'] -= 1
@@ -159,9 +159,21 @@ class ModelOutputTests(unittest.TestCase):
                 elif mutation == 'cancel': value['in_graph_cancellation_cleanup'] = False
                 elif mutation == 'plan': value['gpu_plan_prepaid'] = False
                 elif mutation == 'missing_plan': del value['gpu_plan_prepaid']
+                elif mutation == 'kernel': value['gpu']['kernel_profile'] = 'simd-f32-compensated-v1'
+                elif mutation == 'schema': value['schema_version'] = 1
                 elif mutation == 'empty': value = []
                 path = Path(temporary) / 'model.json'; path.write_text(json.dumps(value))
                 with self.assertRaises(ValueError): runner.validate_model(path, runner.MODEL_SUITES[0])
+
+
+    def test_reference_and_simd_model_evidence_cannot_be_interchanged(self):
+        suite = runner.MODEL_SUITES[0]
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / 'model.json'; value = self.fixture(suite)
+            value['gpu']['kernel_profile'] = 'simd-f32-compensated-v1'
+            path.write_text(json.dumps(value))
+            self.assertEqual(runner.validate_model(path, suite, 'simd-f32-compensated-v1'), value)
+            with self.assertRaises(ValueError): runner.validate_model(path, suite)
 
 
 class CliOutputTests(unittest.TestCase):
@@ -217,7 +229,7 @@ class ApiOutputTests(unittest.TestCase):
                 'healthy_after_disconnect': copy.deepcopy(cases[0]),
                 'cached_result': cached, 'fresh_result': copy.deepcopy(cases[0]),
                 'plan': {'backend': 'native-metal-matmul-f32-reference', 'concurrency': 2, 'gpu_allocation_bytes': 640},
-                'gpu': {'device': 'fixture', 'matrices': 1, 'encoded_weight_bytes': 512,
+                'gpu': {'device': 'fixture', 'kernel_profile': 'reference-f32-compensated-v1', 'matrices': 1, 'encoded_weight_bytes': 512,
                         'driver_weight_allocation_bytes': 512, 'request_workspace_bytes': 64, 'completed_model_dispatches': 1},
                 'final_memory': {'reserved': 0, 'session_buffer_capacity_bytes': 0, 'peak_reserved': 2048, 'limit': 4096},
                 'post_unload_history_reserved': 512,

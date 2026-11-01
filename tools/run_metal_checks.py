@@ -50,6 +50,8 @@ def commands(gpu, cross_check=False):
                        '--features', 'metal', '--test', 'dense', '--locked', '--', '--ignored', '--nocapture'))
         result.append(('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-metal',
                        '--features', 'metal', '--test', 'packed', '--locked', '--', '--ignored', '--nocapture'))
+        result.append(('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-metal',
+                       '--features', 'metal', '--test', 'simd', '--locked', '--', '--ignored', '--nocapture'))
         result.append(('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-engine',
                        '--features', 'metal', '--test', 'metal', '--locked', '--', '--ignored', '--nocapture'))
     return tuple(result)
@@ -60,6 +62,8 @@ ROUTING_COMMAND = ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn
                    '--features', 'metal', '--test', 'gguf', '--test', 'gguf_probe', '--test', 'adapters', '--locked')
 MODEL_COMMAND = ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-engine',
                  '--features', 'metal', '--test', 'metal_model', '--locked', '--', '--ignored', '--nocapture')
+SIMD_MODEL_COMMAND = ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-engine',
+                      '--features', 'metal', '--test', 'metal_simd_model', '--locked', '--', '--ignored', '--nocapture')
 CLI_MODEL_COMMAND = ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-cli',
                      '--features', 'metal', '--test', 'metal_model', '--locked', '--', '--ignored', '--nocapture')
 API_MODEL_COMMAND = ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-api',
@@ -142,6 +146,7 @@ def validate_api(path, suite):
         raise ValueError('GPU API backend-aware plan missing')
     info = value.get('gpu', {})
     if (not isinstance(info, dict) or not isinstance(info.get('device'), str) or not 1 <= len(info['device']) <= 256
+            or info.get('kernel_profile') != 'reference-f32-compensated-v1'
             or any(type(info.get(name)) is not int or info[name] <= 0
                    for name in ('matrices', 'encoded_weight_bytes', 'driver_weight_allocation_bytes', 'request_workspace_bytes', 'completed_model_dispatches'))
             or info['driver_weight_allocation_bytes'] < info['encoded_weight_bytes']):
@@ -162,7 +167,7 @@ def validate_api(path, suite):
     return value
 
 
-def validate_model(path, suite):
+def validate_model(path, suite, kernel='reference-f32-compensated-v1'):
     if path.stat().st_size > 2 << 20:
         raise ValueError('GPU model output exceeds bound')
     value = json.loads(path.read_text())
@@ -171,7 +176,7 @@ def validate_model(path, suite):
     reference = json.loads((ROOT / PROFILES[suite]['reference']).read_text())
     expected_samples = sum(len(checkpoint['indices']) for case in reference['cases']
                            for checkpoint in [*case['checkpoints'], *case['teacher_forced']])
-    if (value.get('schema_version') != 1 or value.get('outcome') != 'pass' or value.get('suite') != suite
+    if (value.get('schema_version') != 2 or value.get('outcome') != 'pass' or value.get('suite') != suite
             or value.get('full_cpu_gpu_arrays') != 50 or value.get('full_cpu_gpu_elements') != 545792
             or value.get('independent_sampled_values') != expected_samples
             or not isinstance(value.get('cases'), list) or len(value['cases']) != len(reference['cases'])):
@@ -184,6 +189,8 @@ def validate_model(path, suite):
                 or result.get('sampling_metadata', {}).get('backend') != 'native-metal-matmul-f32-reference'):
             raise ValueError('GPU frozen output/backend mismatch')
     info = value.get('gpu', {})
+    if kernel not in ('reference-f32-compensated-v1', 'simd-f32-compensated-v1') or info.get('kernel_profile') != kernel:
+        raise ValueError('GPU model kernel profile mismatch')
     for name in ('matrices', 'encoded_weight_bytes', 'request_workspace_bytes', 'completed_model_dispatches'):
         if type(info.get(name)) is not int or info[name] <= 0:
             raise ValueError('missing GPU allocation/dispatch evidence')
@@ -237,6 +244,7 @@ def main():
               'toolchain': {},
               'fixture_sha256': sha(ROOT / 'fixtures/gpu/metal-dense-v1.json'),
               'packed_fixture_sha256': sha(ROOT / 'fixtures/gpu/metal-packed-v1.json'),
+              'simd_scope': 'Explicit component and library profiles are checked separately; CLI/API retain the reference kernel pending promotion.',
               'scope': 'Optional backend compile/lint and independent dense/packed primitives with F32 operands only; no Q8 activation dot, model, performance or release qualification.',
               'host': {'system': platform.system(), 'machine': platform.machine(), 'release': platform.release()}}
     if args.model_suite:
@@ -271,7 +279,7 @@ def main():
             if name == 'rustc' and f'\nhost: {native_host}\n' not in output:
                 raise ValueError('Metal compiler host differs from the declared check mode')
             report['toolchain'][name] = {'output': output, 'log': log.relative_to(ROOT).as_posix(), 'log_sha256': sha(log)}
-        inventory = (*commands(args.gpu, args.cross_check), *([MODEL_COMMAND, CLI_MODEL_COMMAND, API_MODEL_COMMAND] if args.model_suite else []))
+        inventory = (*commands(args.gpu, args.cross_check), *([MODEL_COMMAND, SIMD_MODEL_COMMAND, CLI_MODEL_COMMAND, API_MODEL_COMMAND] if args.model_suite else []))
         for number, command in enumerate(inventory):
             if command == MODEL_COMMAND:
                 _, report['model_inputs'] = models([args.model_suite], args.fetch, guard)
@@ -280,6 +288,8 @@ def main():
                 environment['COHERYN_METAL_CLI_REPORT'] = str(directory / 'cli-model.json')
                 environment['COHERYN_METAL_API_REPORT'] = str(directory / 'api-model.json')
                 checkpoint(args.report, report)
+            if command == SIMD_MODEL_COMMAND:
+                environment['COHERYN_METAL_MODEL_REPORT'] = str(directory / 'simd-model.json')
             if command == API_MODEL_COMMAND:
                 # The authenticated import creates a private managed model copy.
                 # Check its disk headroom before the child starts copying bytes.
@@ -322,6 +332,9 @@ def main():
             if command == MODEL_COMMAND:
                 report['model'] = validate_model(directory / 'model.json', args.model_suite)
                 report['model_output_sha256'] = sha(directory / 'model.json')
+            if command == SIMD_MODEL_COMMAND:
+                report['simd_model'] = validate_model(directory / 'simd-model.json', args.model_suite, 'simd-f32-compensated-v1')
+                report['simd_model_output_sha256'] = sha(directory / 'simd-model.json')
             if command == CLI_MODEL_COMMAND:
                 report['cli_model'] = validate_cli(directory / 'cli-model.json', args.model_suite)
                 report['cli_model_output_sha256'] = sha(directory / 'cli-model.json')

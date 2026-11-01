@@ -211,7 +211,17 @@ impl Model {
     }
     /// Explicit experimental text-only GPU binding. No compatibility fallback.
     #[cfg(all(feature = "metal", target_os = "macos"))]
-    pub fn enable_metal(mut self, cancel: &Cancellation) -> Result<Self> {
+    pub fn enable_metal(self, cancel: &Cancellation) -> Result<Self> {
+        self.enable_metal_with_kernel(crate::metal::KernelProfile::Reference, cancel)
+    }
+    /// Explicit experimental kernel selection; product loading retains the
+    /// reference default until the cooperative profile's gates are complete.
+    #[cfg(all(feature = "metal", target_os = "macos"))]
+    pub fn enable_metal_with_kernel(
+        mut self,
+        kernel: crate::metal::KernelProfile,
+        cancel: &Cancellation,
+    ) -> Result<Self> {
         if self.gpu.is_some() {
             return Err(Error::request("Metal is already bound"));
         }
@@ -221,6 +231,7 @@ impl Model {
             self.budget.clone(),
             cancel,
             self.generation_bytes(self.limits.context, 1)?,
+            kernel,
         )?;
         // States and idle caches from a previous backend cannot be reused.
         self.owner = std::sync::Arc::new(());

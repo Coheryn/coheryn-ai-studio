@@ -58,6 +58,7 @@ impl Resident {
         budget: Budget,
         cancel: &Cancellation,
         cpu_request_minimum: u64,
+        kernel: super::KernelProfile,
     ) -> Result<Arc<Self>> {
         if sources.is_empty() || sources.len() > 4096 {
             return Err(Error::request(
@@ -93,7 +94,7 @@ impl Resident {
             .checked_add(limits.bytes().map_err(engine_error)? as u64)
             .ok_or_else(|| Error::resource("GPU minimum request overflow"))?;
         drop(budget.reserve(request_minimum)?);
-        let compute = MetalCompute::new(budget)?;
+        let compute = MetalCompute::with_kernel_profile(budget, kernel)?;
         let mut matrices = HashMap::new();
         matrices
             .try_reserve(unique.len())
@@ -125,6 +126,7 @@ impl Resident {
     pub(crate) fn info(&self) -> Result<super::ModelInfo> {
         Ok(super::ModelInfo {
             device: self.compute.name(),
+            kernel_profile: self.compute.kernel_profile().label(),
             matrices: self.matrices.len(),
             encoded_weight_bytes: self.weight_bytes,
             driver_weight_allocation_bytes: self

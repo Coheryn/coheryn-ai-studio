@@ -183,9 +183,12 @@ class NativeChecksTests(unittest.TestCase):
             self.assertEqual(result['execution_settings']['test_profile'], 'qualification')
             self.assertFalse(result['production_ready'])
 
-    def test_qualification_profile_only_changes_link_time_optimization(self):
+    def test_qualification_profile_partitions_engine_codegen_and_preserves_release_settings(self):
         manifest = tomllib.loads((gate.ROOT / 'Cargo.toml').read_text())
-        self.assertEqual(manifest['profile']['qualification'], {'inherits': 'release', 'lto': False})
+        self.assertEqual(manifest['profile']['qualification'], {
+            'inherits': 'release', 'lto': False,
+            'package': {'coheryn-engine': {'codegen-units': 16}},
+        })
         self.assertEqual(manifest['profile']['release']['lto'], 'thin')
         self.assertEqual(manifest['profile']['release']['codegen-units'], 1)
         self.assertIn(('cargo', 'build', '--release', '--workspace', '--locked'), gate.COMMANDS)

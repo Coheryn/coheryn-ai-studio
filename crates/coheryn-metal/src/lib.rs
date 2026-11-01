@@ -10,6 +10,22 @@ mod runtime;
 #[cfg(all(feature = "metal", target_os = "macos"))]
 pub use runtime::{Device, Matrix, Workspace};
 
+/// Explicit owned-kernel choice. The cooperative implementation requires its
+/// own qualification; the established default remains the reference kernel.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum KernelProfile {
+    Reference,
+    SimdCompensated,
+}
+impl KernelProfile {
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::Reference => "reference-f32-compensated-v1",
+            Self::SimdCompensated => "simd-f32-compensated-v1",
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ErrorKind {
     Unsupported,
