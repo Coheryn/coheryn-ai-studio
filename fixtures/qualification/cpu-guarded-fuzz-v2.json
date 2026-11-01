@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "kind": "reviewed-guarded-sanitizer-checkpoint",
+  "outcome": "pass",
+  "production_ready": false,
+  "source_commit": "48977985e3e381ebee1d06879cf0d7a49c632cae",
+  "run_id": 41274552248,
+  "run_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41274552248",
+  "target": "x86_64-unknown-linux-gnu",
+  "campaigns": [
+    {
+      "target": "gguf",
+      "executed_iterations": 100000,
+      "edges": 561,
+      "features": 870,
+      "initial_corpus_files": 4,
+      "final_corpus_files": 103
+    },
+    {
+      "target": "safetensors",
+      "executed_iterations": 100000,
+      "edges": 1107,
+      "features": 1923,
+      "initial_corpus_files": 8,
+      "final_corpus_files": 376
+    },
+    {
+      "target": "images",
+      "executed_iterations": 100000,
+      "edges": 1404,
+      "features": 1730,
+      "initial_corpus_files": 10,
+      "final_corpus_files": 122
+    },
+    {
+      "target": "tools",
+      "executed_iterations": 100000,
+      "edges": 2250,
+      "features": 3771,
+      "initial_corpus_files": 5,
+      "final_corpus_files": 700
+    },
+    {
+      "target": "constraints",
+      "executed_iterations": 100000,
+      "edges": 1149,
+      "features": 2955,
+      "initial_corpus_files": 4,
+      "final_corpus_files": 671
+    }
+  ],
+  "measured_inputs": 500000,
+  "complete_legal_payload_files": 257,
+  "report": {
+    "path": "fixtures/qualification/cpu-guarded-fuzz-linux-v2.json",
+    "bytes": 345218,
+    "sha256": "808597861f8484096ed02fd17554e8e6354de6ed5014a3c3a6d62e41b9f508c5"
+  },
+  "artifact": {
+    "id": 13070821297,
+    "name": "cpu-instrumented-fuzz",
+    "digest": "sha256:815bf85aa01974c78c92d75b642b3ad914316749bacf8e2ebe14f0bbae2ba06d",
+    "size_in_bytes": 1287261
+  },
+  "review": "Official artifact digest/length verified before reading. Source hashes match the actual Git revision. Every preparation/probe/campaign log and every healthy guard observation verified; completion counts/coverage recomputed from logs. Initial/final corpus hashes and complete original legal payload verified. Original report bytes retained; complete legal/build-policy fingerprint membership explicitly checked.",
+  "scope": "Five 100,000-input native AddressSanitizer/edge-feedback campaigns on Linux, including guarded tool preparation and recoverable evidence lifecycle. No ignored findings or altered reference fixtures.",
+  "gaps": [
+    "Bounded parser/decoder/tool/constraint campaigns do not establish sustained security adequacy or absence of vulnerabilities.",
+    "API/path/download/authentication, other platforms/backends and independent release review remain separate requirements.",
+    "The report binds root NOTICE, Git attributes and the complete mirrored legal payload under the strengthened contract; later source revisions still need their own qualification.",
+    "The build-time maintenance advisory remains unresolved; no production release qualification is granted."
+  ]
+}
