@@ -761,7 +761,10 @@
         "prefix_kv_reuse": true,
         "recurrent_state_reuse": true,
         "managed_image_sessions": true,
-        "image_planning": true
+        "image_planning": true,
+        "seeded_sampling": true,
+        "sampling_penalties": true,
+        "sampling_profile": "coheryn-sampling-v2"
       },
       "notes": "Pinned native source and validated still-image encoder/merger. Independent array equations remain separate from publisher-framework parity. Original single/indexed source plus a losslessly derived three-physical-shard model are selected for qualification. Broad semantics, other dimensions, GPU and other platforms require separate evidence.",
       "qualified_layouts": [
@@ -799,7 +802,8 @@
         "publisher_sharded_artifact": false,
         "evidence": "fixtures/qualification/cpu-modern-verification.json",
         "scope": "Actual named tensor bytes from the pinned publisher model; source/layout identity distinct from the original."
-      }
+      },
+      "sampling_qualification": "implementation under guarded CI validation; historical model evidence covers greedy generation only"
     },
     {
       "adapter": "qwen35-gguf-cpu-v1",
@@ -857,8 +861,12 @@
         "managed_sessions": true,
         "tools": false,
         "constraints": false,
-        "metal": false
-      }
+        "metal": false,
+        "seeded_sampling": true,
+        "sampling_penalties": true,
+        "sampling_profile": "coheryn-sampling-v2"
+      },
+      "sampling_qualification": "implementation under guarded CI validation; historical model evidence covers greedy generation only"
     }
   ],
   "local_metadata": {
@@ -929,7 +937,6 @@
       "tools",
       "schema-constraints",
       "custom-stops",
-      "non-greedy-sampling",
       "checkpoint-url-pull",
       "gpu"
     ],

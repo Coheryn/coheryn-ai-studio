@@ -46,7 +46,7 @@ Managed Qwen3.5 models charge the daemon's shared `Budget`. Metadata-only loaded
 
 The model remains pinned by queued/active jobs and undrained response handles. Transport reservations stay with the handle, execution reservations stay with the worker, and cancellation waits for worker retirement. Load/unload/remove require existing admin credentials and reject conflicting residency/lifecycle operations. A removed source cannot invalidate an active request.
 
-`/v1/completions`, `/v1/chat/completions` and `/api/v1/generate` reuse existing bounded JSON/SSE framing, usage, errors and `[DONE]` behavior. Unsupported controls fail explicitly. The greedy-only profile supports continuous text batching while preserving independent request state. Managed text histories extend this CPU profile through [QWEN35_SESSIONS.md](QWEN35_SESSIONS.md). Managed Qwen3.5 image histories, broader multimodal/backend/platform and production qualification remain open.
+`/v1/completions`, `/v1/chat/completions` and `/api/v1/generate` reuse existing bounded JSON/SSE framing, usage, errors and `[DONE]` behavior. Unsupported controls fail explicitly. The CPU profile supports continuous text batching with greedy or [seeded sampling and penalties](QWEN35.md#native-sampling), preserving independent RNG/history and request state. Managed text histories extend this CPU profile through [QWEN35_SESSIONS.md](QWEN35_SESSIONS.md). Managed Qwen3.5 image histories, broader multimodal/backend/platform and production qualification remain open.
 
 ## Reproduction
 

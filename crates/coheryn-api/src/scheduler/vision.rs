@@ -40,7 +40,7 @@ impl Scheduler {
         request: &GenerationRequest,
     ) -> Result<qwen2vl::Options> {
         request.validate()?;
-        crate::vision::validate_controls(request)?;
+        crate::vision::validate_qwen2_controls(request)?;
         let profile = Profile::parse(&request.profile)?;
         let threads = planner::execution_threads(
             profile,

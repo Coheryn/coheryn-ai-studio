@@ -18,7 +18,7 @@ python3 tools/fetch_checkpoint.py
 
 `fetch_checkpoint.py --verify-only` checks already cached bytes offline. New acquisitions verify every pinned length/hash in private staging before renaming the complete directory. No generation request downloads assets. Use `chat CHECKPOINT --standalone` for interactive text. For daemon import/load/run and its stateless API subset, see [MANAGED_CHECKPOINTS.md](MANAGED_CHECKPOINTS.md). There is no silent fallback between daemon and standalone execution.
 
-The supported development subset is greedy text, at most 256 output tokens, an explicitly reserved context of 1–8192 tokens, bounded user/assistant/system messages and the exact qualified tokenizer/template with thinking disabled. Source dimensions, layer types, partial rotary settings, tied output representation and tensor shapes are validated rather than taken from the filename. Unsupported sampling, tools, schema constraints, custom stops and control delimiters fail explicitly. Unicode strings use the source tokenizer and incremental UTF-8 output; language quality remains dependent on the model.
+The supported development subset includes greedy and seeded temperature/top-k/top-p sampling with repetition, frequency and presence penalties, at most 256 output tokens, an explicitly reserved context of 1–8192 tokens, bounded user/assistant/system messages and the exact qualified tokenizer/template with thinking disabled. Source dimensions, layer types, partial rotary settings, tied output representation and tensor shapes are validated rather than taken from the filename. Invalid sampling settings, tools, schema constraints, custom stops and control delimiters fail explicitly. Temperature must be finite in [0,2], top-p in (0,1], and top-k within the model vocabulary; seed is an unsigned integer. Repetition penalty is finite in [0.01,10], frequency/presence penalties in [-2,2]. Unicode strings use the source tokenizer and incremental UTF-8 output; language quality remains dependent on the model.
 
 The graph implements zero-centered normalization, causal depthwise convolution, gated delta-rule recurrent state, gated full GQA attention, partial rotary positions, gated FFNs and tied output projection. CPU workers join before their reservation is released. Standalone profile admission now shares the metadata estimator and atomically reserves session/request capacity plus profile headroom before tokenization. Session KV/recurrent/convolution/scratch/output buffers are reserved before construction, reused within the request, observed by capacity accounting and reclaimed on errors/cancellation. The fixed 256 MiB resident metadata/tokenizer reservation is a conservative estimate, not a measurement of library allocations. Physical RAM, OS file cache and allocator overhead are separate from `--max-memory` admission.
 
@@ -41,7 +41,7 @@ Local metadata inspection/validation and standalone CAEP estimates are now avail
 
 Full publisher-framework comparison, broader prompts/EOS/long-context campaigns, checkpoint URL acquisition, broader multi-file qualification, broader image semantics, quantized source weights, GPU/Metal and other-platform qualification remain open. This checkpoint does not complete A0–A5, F0–F5 or the production release matrix. See [adapter boundaries](ADAPTERS.md), [format gates](SAFETENSORS.md) and the [release checklist](RELEASE_CHECKLIST.md).
 
-Managed source sets now bind every file hash and native profile, use the shared daemon budget, and reach stateless text/chat/SSE through cooperative CPU scheduling. Managed histories use optional exact-prefix hybrid snapshots through [QWEN35_SESSIONS.md](QWEN35_SESSIONS.md). Continuous text batches share decoded weight tiles. Additional sampler features remain unsupported. See [MANAGED_CHECKPOINTS.md](MANAGED_CHECKPOINTS.md) for the upload and lifecycle contract.
+Managed source sets now bind every file hash and native profile, use the shared daemon budget, and reach stateless text/chat/SSE through cooperative CPU scheduling. Managed histories use optional exact-prefix hybrid snapshots through [QWEN35_SESSIONS.md](QWEN35_SESSIONS.md). Continuous text batches share decoded weight tiles. Sampling uses the shared `coheryn-sampling-v2` contract described below. See [MANAGED_CHECKPOINTS.md](MANAGED_CHECKPOINTS.md) for the upload and lifecycle contract.
 
 ## Still-image input and scheduling
 
@@ -85,3 +85,20 @@ coheryn chat q35 --session photos --resume
 ```
 
 The first image-chat command creates an image session; a later resume reconstructs the same original attachments without resending them. Explicit creation also supports `sessions create q35 --task image-to-text --name photos --context 256 --persist`. Managed image contexts currently support at most 4096 tokens and must fit the loaded/server limits. Selected history can contain at most four images under the configured finite limits. Original assets, history ownership, revisions, idempotent receipts, persistence, portable format 3, whole-turn overflow policy, cancellation and cleanup share the existing image-session implementation. KV/recurrent state and projected image features remain request-local for image sessions.
+
+## Native sampling
+
+Text and still-image requests use the same native sampler through standalone CLI, managed API and sessions. Each resumable state owns its seed stream and token-frequency ledger, including when states share matrix tiles. Counts include the exact selected prompt and generated tokens; image requests replace the initial text ledger with their expanded image-token sequence before generation. Restored KV/recurrent prefixes never restore sampler state: every request starts its own seed and reconstructs its complete selected prompt history.
+
+```sh
+./target/release/coheryn chat .cache/qwen35-gguf/Qwen3.5-0.8B-q4_k_m.gguf \
+  --standalone --context 512 --max-tokens 64 --threads 1 \
+  --max-memory 1073741824 --temperature 0.8 --top-k 40 --top-p 0.9 \
+  --seed 73 --repetition-penalty 1.1
+```
+
+The same names use underscores in API requests and session settings. Greedy remains the default. Identical seeds are reproducible within the same weights, precision, prompt, settings and execution configuration; cross-device bitwise equality is not promised. Native results include sampling settings, history scope, tokenizer identity, precision/backend/worker configuration and sampler time.
+
+The planner conservatively reserves the full bounded vocabulary workspace even for greedy requests. This covers penalty counts, candidate IDs and probabilities (20 bytes per vocabulary entry on the supported 64-bit CPU targets); actual retained capacities are observed separately and scratch is reused across output tokens. No model-wide weight copy is added. Cancellation, failed admission, consumer errors and normal retirement release private scratch and reservations.
+
+The ordinary tests apply 72 unchanged independent scalar decisions through hybrid generation states and exercise tiny native-forward batch parity, image-history replacement and reservation/cancellation cleanup. Guarded pinned-model CLI repeatability and text/image HTTP/SSE regressions are configured in the benchmark workflow; their execution records must pass review before claiming real-model sampling qualification. Existing frozen greedy outputs and numerical thresholds remain unchanged.

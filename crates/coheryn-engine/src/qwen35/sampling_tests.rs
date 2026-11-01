@@ -85,18 +85,32 @@ fn model(vocabulary: usize) -> (tempfile::TempDir, Model) {
 fn begin(model: &Model, prompt: &str, options: GenerationOptions) -> GenerationState {
     let bytes = model.generation_bytes(128, 1).unwrap();
     let admission = plan::Admission::reserve(&model.budget, bytes, bytes, 1).unwrap();
-    GenerationState::begin(model, prompt, options, admission, 128, None, &Default::default())
-        .unwrap()
+    GenerationState::begin(
+        model,
+        prompt,
+        options,
+        admission,
+        128,
+        None,
+        &Default::default(),
+    )
+    .unwrap()
 }
 
 #[test]
 fn frozen_scalar_answers_survive_hybrid_state_history_and_incremental_decoding() {
     let fixture: serde_json::Value = serde_json::from_str(include_str!(
         "../../../../fixtures/constraints/sampling-v2.json"
-    )).unwrap();
+    ))
+    .unwrap();
     let mut decisions = 0;
     for case in fixture["cases"].as_array().unwrap() {
-        if case["allowed"].as_array().unwrap().iter().any(|v| v.as_bool() != Some(true)) {
+        if case["allowed"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|v| v.as_bool() != Some(true))
+        {
             continue; // Constraints/masks remain unsupported by this adapter.
         }
         let mut logits: Vec<f32> = serde_json::from_value(case["logits"].clone()).unwrap();
@@ -107,7 +121,10 @@ fn frozen_scalar_answers_survive_hybrid_state_history_and_incremental_decoding()
         let prompt = if history.is_empty() {
             ((b'a' + model.config.eos as u8) as char).to_string()
         } else {
-            history.iter().map(|id| (b'a' + *id as u8) as char).collect()
+            history
+                .iter()
+                .map(|id| (b'a' + *id as u8) as char)
+                .collect()
         };
         let options = GenerationOptions {
             max_tokens: case["expected_ids"].as_array().unwrap().len(),
@@ -117,21 +134,32 @@ fn frozen_scalar_answers_survive_hybrid_state_history_and_incremental_decoding()
         };
         let mut state = begin(&model, &prompt, options);
         state.cursor = state.tokens.len();
-        state.session.as_mut().unwrap().logits.copy_from_slice(&logits);
+        state
+            .session
+            .as_mut()
+            .unwrap()
+            .logits
+            .copy_from_slice(&logits);
         let mut streamed = String::new();
         for expected in case["expected_ids"].as_array().unwrap() {
             state.pending = None; // Injected frozen logits replace the next diagnostic forward.
             if let Some(event) = state.sample(&model).unwrap() {
                 streamed.push_str(&event.text);
             }
-            assert_eq!(state.ids.last().copied(), Some(expected.as_u64().unwrap() as u32));
+            assert_eq!(
+                state.ids.last().copied(),
+                Some(expected.as_u64().unwrap() as u32)
+            );
             decisions += 1;
         }
         let (result, cache) = model.finish_generation(state).unwrap();
         assert!(cache.is_none());
         assert_eq!(result.text, streamed);
         assert_eq!(result.finish_reason, FinishReason::Length);
-        assert_eq!(result.sampling_metadata.unwrap().profile, crate::sampling::PROFILE);
+        assert_eq!(
+            result.sampling_metadata.unwrap().profile,
+            crate::sampling::PROFILE
+        );
         assert_eq!(model.memory().reserved, RESIDENT_METADATA_BYTES);
         assert_eq!(model.memory().session_buffer_capacity_bytes, 0);
         drop(model);
@@ -145,20 +173,43 @@ fn seeded_native_forwards_match_batched_lanes_and_release_private_scratch() {
     let (_directory, model) = model(8);
     let options = |seed| GenerationOptions {
         max_tokens: 12,
-        sampling: Sampling { temperature: 0.8, top_k: 6, top_p: 0.85, seed },
-        penalties: Penalties { repetition_penalty: 1.15, frequency_penalty: 0.1, presence_penalty: 0.2 },
+        sampling: Sampling {
+            temperature: 0.8,
+            top_k: 6,
+            top_p: 0.85,
+            seed,
+        },
+        penalties: Penalties {
+            repetition_penalty: 1.15,
+            frequency_penalty: 0.1,
+            presence_penalty: 0.2,
+        },
         ..Default::default()
     };
     let prompts = ["abba", "ccd"];
     let mut expected = Vec::new();
     for (index, prompt) in prompts.iter().enumerate() {
-        let result = model.generate(prompt, &options(index as u64 + 7), 1, &Default::default(), &mut |_| Ok(())).unwrap();
+        let result = model
+            .generate(
+                prompt,
+                &options(index as u64 + 7),
+                1,
+                &Default::default(),
+                &mut |_| Ok(()),
+            )
+            .unwrap();
         expected.push(result.token_ids);
     }
-    let mut states: Vec<_> = prompts.iter().enumerate()
-        .map(|(index, prompt)| begin(&model, prompt, options(index as u64 + 7))).collect();
+    let mut states: Vec<_> = prompts
+        .iter()
+        .enumerate()
+        .map(|(index, prompt)| begin(&model, prompt, options(index as u64 + 7)))
+        .collect();
     while states.iter().any(|s| !s.is_done()) {
-        let mut live: Vec<_> = states.iter_mut().filter(|s| !s.is_done() && s.needs_forward()).collect();
+        let mut live: Vec<_> = states
+            .iter_mut()
+            .filter(|s| !s.is_done() && s.needs_forward())
+            .collect();
         if !live.is_empty() {
             model.step_batch(&mut live, None).unwrap();
         }
@@ -167,7 +218,10 @@ fn seeded_native_forwards_match_batched_lanes_and_release_private_scratch() {
         }
     }
     for (state, expected) in states.into_iter().zip(expected) {
-        assert_eq!(model.finish_generation(state).unwrap().0.token_ids, expected);
+        assert_eq!(
+            model.finish_generation(state).unwrap().0.token_ids,
+            expected
+        );
     }
     let state = begin(&model, "abba", options(7));
     assert!(model.memory().session_buffer_capacity_bytes > 0);
@@ -180,18 +234,42 @@ fn seeded_native_forwards_match_batched_lanes_and_release_private_scratch() {
 #[test]
 fn expanded_image_tokens_replace_text_penalty_history_before_sampling() {
     let (_directory, model) = model(5);
-    let mut state = begin(&model, "aaaa", GenerationOptions {
-        max_tokens: 1,
-        penalties: Penalties { repetition_penalty: 2., frequency_penalty: 0.25, presence_penalty: 0.5 },
-        ..Default::default()
-    });
-    state.set_images(vec![1, 1, 2], super::super::image_generation::Conditioning {
-        features: vec![], positions: vec![], spans: vec![], next_position: 3,
-        metadata: serde_json::from_value(json!({"profile":"test","language_sha256":"","vision_sha256":"",
-            "images":0,"vision_ms":0.,"effective_positions":3,"peak_request_reserved_bytes":0})).unwrap(),
-    }).unwrap();
+    let mut state = begin(
+        &model,
+        "aaaa",
+        GenerationOptions {
+            max_tokens: 1,
+            penalties: Penalties {
+                repetition_penalty: 2.,
+                frequency_penalty: 0.25,
+                presence_penalty: 0.5,
+            },
+            ..Default::default()
+        },
+    );
+    state
+        .set_images(
+            vec![1, 1, 2],
+            super::super::image_generation::Conditioning {
+                features: vec![],
+                positions: vec![],
+                spans: vec![],
+                next_position: 3,
+                metadata: serde_json::from_value(
+                    json!({"profile":"test","language_sha256":"","vision_sha256":"",
+            "images":0,"vision_ms":0.,"effective_positions":3,"peak_request_reserved_bytes":0}),
+                )
+                .unwrap(),
+            },
+        )
+        .unwrap();
     state.cursor = state.tokens.len();
-    state.session.as_mut().unwrap().logits.copy_from_slice(&[5., 4., 3., 2., -10000.]);
+    state
+        .session
+        .as_mut()
+        .unwrap()
+        .logits
+        .copy_from_slice(&[5., 4., 3., 2., -10000.]);
     state.sample(&model).unwrap();
     assert_eq!(state.ids, [0]); // Exact adjusted scores: [5, 1, .75, 2, -10000].
     drop(state);
@@ -203,22 +281,64 @@ fn invalid_settings_and_under_reserved_sampling_fail_without_leaking_admission()
     let (_directory, model) = model(8);
     let default = GenerationOptions::default();
     for options in [
-        GenerationOptions { sampling: Sampling { temperature: f32::NAN, ..Default::default() }, ..default.clone() },
-        GenerationOptions { sampling: Sampling { top_p: 0., ..Default::default() }, ..default.clone() },
-        GenerationOptions { penalties: Penalties { frequency_penalty: 3., ..Default::default() }, ..default.clone() },
-        GenerationOptions { stop: vec!["stop".into()], ..default.clone() },
+        GenerationOptions {
+            sampling: Sampling {
+                temperature: f32::NAN,
+                ..Default::default()
+            },
+            ..default.clone()
+        },
+        GenerationOptions {
+            sampling: Sampling {
+                top_p: 0.,
+                ..Default::default()
+            },
+            ..default.clone()
+        },
+        GenerationOptions {
+            penalties: Penalties {
+                frequency_penalty: 3.,
+                ..Default::default()
+            },
+            ..default.clone()
+        },
+        GenerationOptions {
+            stop: vec!["stop".into()],
+            ..default.clone()
+        },
     ] {
         assert!(Model::check_options(&options).is_err());
     }
-    assert!(model.check_request_options(&GenerationOptions {
-        sampling: Sampling { top_k: 9, ..Default::default() }, ..default.clone()
-    }).is_err());
+    assert!(
+        model
+            .check_request_options(&GenerationOptions {
+                sampling: Sampling {
+                    top_k: 9,
+                    ..Default::default()
+                },
+                ..default.clone()
+            })
+            .is_err()
+    );
     let too_small = Session::bytes(&model.config, 128, 1).unwrap() + crate::planner::REQUEST_BYTES;
     let admission = plan::Admission::reserve(&model.budget, too_small, too_small, 1).unwrap();
-    assert!(GenerationState::begin(&model, "ab", default, admission, 128, None, &Default::default()).is_err());
+    assert!(
+        GenerationState::begin(
+            &model,
+            "ab",
+            default,
+            admission,
+            128,
+            None,
+            &Default::default()
+        )
+        .is_err()
+    );
     assert_eq!(model.memory().reserved, RESIDENT_METADATA_BYTES);
     assert_eq!(model.memory().session_buffer_capacity_bytes, 0);
-    assert_eq!(model.config.session_estimate(128, 1).unwrap().total_bytes,
-        Session::bytes(&model.config, 128, 1).unwrap() + Sampler::workspace_bytes(8).unwrap());
+    assert_eq!(
+        model.config.session_estimate(128, 1).unwrap().total_bytes,
+        Session::bytes(&model.config, 128, 1).unwrap() + Sampler::workspace_bytes(8).unwrap()
+    );
     assert!(Sampler::workspace_bytes(usize::MAX).is_err());
 }

@@ -66,7 +66,7 @@ Authorization: Bearer TOKEN
 
 Send that body to `POST /coheryn/v1/sessions/scene/messages`. Image IDs retain array order ahead of the turn's text content. Omit `images` on subsequent questions. Image-only turns may omit text. References belong to one session; duplicate references within a turn, foreign IDs, text-only model sessions and unsupported image controls fail explicitly. Initial system instructions, Unicode text, revision checks, idempotent replay, native streaming, error receipts and single-writer protection retain their session contracts. Keep the exact submitted JSON and uploaded IDs for automated idempotent retries. Upload and turn submission are separate revision-checked operations.
 
-The current image profile supports greedy decoding with 1–256 output tokens. Tools, constrained output, custom stops and nondefault sampling are rejected. The maximum physical context is the loaded capacity, within the adapter's 4,096-position ceiling. The pair identity must still match before inference after restart/reload; no model substitution is automatic.
+The Qwen2-VL image profile supports greedy decoding with 1–256 output tokens and rejects nondefault sampling. Qwen3.5 image sessions support the [native seeded sampler and penalties](QWEN35.md#native-sampling), rebuilding history from the exact expanded image prompt. Both profiles reject tools, constrained output and custom stops. The maximum physical context is the loaded capacity, within the adapter's 4,096-position ceiling. The pair identity must still match before inference after restart/reload; no model substitution is automatic.
 
 ## Original assets, persistence and cleanup
 

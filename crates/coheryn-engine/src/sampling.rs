@@ -65,9 +65,8 @@ pub struct Sampler {
 impl Sampler {
     /// Maximum retained sampling scratch for a vocabulary, independent of settings.
     pub fn workspace_bytes(vocabulary: usize) -> Result<u64> {
-        let per_token = std::mem::size_of::<u32>()
-            + std::mem::size_of::<usize>()
-            + std::mem::size_of::<f64>();
+        let per_token =
+            std::mem::size_of::<u32>() + std::mem::size_of::<usize>() + std::mem::size_of::<f64>();
         crate::memory::product(&[vocabulary, per_token])?
             .try_into()
             .map_err(|_| Error::resource("sampling workspace byte overflow"))

@@ -6,6 +6,7 @@ on:
       - 'qualification/cpu-bench/**'
     paths:
       - 'crates/coheryn-engine/**'
+      - 'crates/coheryn-api/**'
       - 'crates/coheryn-cli/**'
       - 'Cargo.toml'
       - 'Cargo.lock'

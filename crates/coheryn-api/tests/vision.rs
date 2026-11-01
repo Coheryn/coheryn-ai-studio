@@ -110,6 +110,41 @@ fn input(streaming: bool, count: usize) -> Value {
     content.push(json!({"type":"text","text":"Describe. বাংলা 中文 العربية 🙂"}));
     json!({"model":"tiny-vlm","messages":[{"role":"user","content":content}],"max_tokens":2,"context":512,"threads":1,"stream":streaming})
 }
+
+#[tokio::test]
+async fn image_sampling_controls_are_model_specific_before_acquisition() {
+    use coheryn_api::vision::VisionRequest;
+    use coheryn_engine::multimodal::image::Processor;
+    let mut value = input(false, 1);
+    value["temperature"] = json!(0.8);
+    value["top_k"] = json!(4);
+    value["top_p"] = json!(0.9);
+    value["seed"] = json!(73);
+    value["presence_penalty"] = json!(0.2);
+    let legacy = VisionRequest::from_value(value.clone()).unwrap();
+    assert_eq!(
+        legacy
+            .acquire(&VisionLimits::default(), &Cancellation::default())
+            .await
+            .err()
+            .unwrap()
+            .error
+            .code,
+        ErrorCode::UnsupportedFeature
+    );
+    let modern = VisionRequest::from_value(value).unwrap();
+    let (controls, messages, images) = modern
+        .acquire_with_processor(
+            &VisionLimits::default(),
+            &Cancellation::default(),
+            Processor::Qwen35Still,
+        )
+        .await
+        .unwrap();
+    assert_eq!(controls.seed, 73);
+    assert_eq!(controls.top_k, 4);
+    assert_eq!((messages.len(), images.len()), (1, 1));
+}
 #[tokio::test]
 async fn pair_registry_plans_without_loading_and_protects_components() {
     let (_dir, service, app) = setup(Default::default());

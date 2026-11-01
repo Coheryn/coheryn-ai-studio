@@ -73,9 +73,12 @@ impl GenerationState {
         let mut sampler =
             crate::sampling::Sampler::with_penalties(options.sampling.clone(), options.penalties)?;
         sampler.history(model.config.vocabulary, &tokens)?;
-        let mut sampling_buffers = model
-            .budget
-            .track_buffers(crate::sampling::Sampler::workspace_bytes(model.config.vocabulary)?);
+        let mut sampling_buffers =
+            model
+                .budget
+                .track_buffers(crate::sampling::Sampler::workspace_bytes(
+                    model.config.vocabulary,
+                )?);
         sampling_buffers.grow(sampler.capacity_bytes())?;
         let mut session = Session::new(&model.config, context, threads)?;
         let mut buffers =
@@ -167,13 +170,10 @@ impl GenerationState {
             ));
         }
         self.tokens = tokens;
-        self.sampler
-            .as_mut()
-            .expect("live image sampler")
-            .history(
-                self.session.as_ref().expect("live session").logits.len(),
-                &self.tokens,
-            )?;
+        self.sampler.as_mut().expect("live image sampler").history(
+            self.session.as_ref().expect("live session").logits.len(),
+            &self.tokens,
+        )?;
         self.condition = Some(condition);
         self.cache = None;
         self.capture = 0;
@@ -274,7 +274,10 @@ impl GenerationState {
         let next = sampler.sample(&s.logits)?;
         sampler.observe(next)?;
         self.sampling_ms += sampling_start.elapsed().as_secs_f64() * 1000.;
-        let buffers = self.sampling_buffers.as_mut().expect("live sampling buffers");
+        let buffers = self
+            .sampling_buffers
+            .as_mut()
+            .expect("live sampling buffers");
         if sampler.capacity_bytes() > buffers.bytes() {
             buffers.grow(sampler.capacity_bytes() - buffers.bytes())?;
         }

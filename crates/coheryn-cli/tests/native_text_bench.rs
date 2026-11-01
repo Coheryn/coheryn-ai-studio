@@ -211,6 +211,48 @@ fn native_text_adapters_benchmark_with_frozen_outputs_and_repeated_fresh_session
             }
         }
     }
+    let mut sampling_runs = Vec::new();
+    if architecture != "qwen2" {
+        for (entry, model) in models.iter().enumerate() {
+            let mut results = Vec::new();
+            for _ in 0..2 {
+                let mut command = Command::new(env!("CARGO_BIN_EXE_coheryn"));
+                command.env_clear();
+                for key in ["SystemRoot", "WINDIR", "TMP", "TEMP", "TMPDIR"] {
+                    if let Some(value) = std::env::var_os(key) {
+                        command.env(key, value);
+                    }
+                }
+                let output = command
+                    .env("PATH", "")
+                    .env("COHERYN_ENDPOINT", "http://127.0.0.1:1")
+                    .arg("--json")
+                    .arg("--data-dir")
+                    .arg(temporary.path())
+                    .arg("run")
+                    .arg(model)
+                    .args([
+                        "--standalone", "--context", "256", "--max-memory", "1073741824",
+                        "--profile", "reference", "--threads", "1", "--max-tokens", "4",
+                        "--temperature", "0.8", "--top-k", "8", "--top-p", "0.9", "--seed", "73",
+                        "--repetition-penalty", "1.1", "--frequency-penalty", "0.1",
+                        "--presence-penalty", "0.2", "--prompt",
+                        reference["cases"][0]["prompt"].as_str().unwrap(),
+                    ])
+                    .output()
+                    .unwrap();
+                assert!(output.status.success(), "{}", String::from_utf8_lossy(&output.stderr));
+                let result: Value = serde_json::from_slice(&output.stdout).unwrap();
+                assert_eq!(result["sampling_metadata"]["profile"], "coheryn-sampling-v2");
+                assert_eq!(result["sampling_metadata"]["settings"]["seed"], 73);
+                assert!(result["memory"]["peak_reserved"].as_u64().unwrap() <= 1 << 30);
+                results.push(result);
+            }
+            assert_eq!(results[0]["token_ids"], results[1]["token_ids"]);
+            assert_eq!(results[0]["text"], results[1]["text"]);
+            sampling_runs.push(json!({"entrypoint":entry,"results":results}));
+        }
+    }
     for item in &inputs {
         assert_eq!(
             coheryn_engine::storage::sha256_file(root.join(item["path"].as_str().unwrap()))
@@ -227,6 +269,6 @@ fn native_text_adapters_benchmark_with_frozen_outputs_and_repeated_fresh_session
         .unwrap();
     serde_json::to_writer_pretty(file, &json!({"schema_version":1,"suite":suite,"outcome":"pass",
         "architecture":std::env::consts::ARCH,"os":std::env::consts::OS,"available_cpus":available,
-        "threads":threads,"inputs":inputs,"source_entrypoints":models.len(),"cases":2,"runs":runs,
-        "scope":"Pinned greedy/tokenizer and native benchmark routing; repeated fresh sessions. Timing observations under uncontrolled cache conditions; no full-array, performance-SLA or production qualification."})).unwrap();
+        "threads":threads,"inputs":inputs,"source_entrypoints":models.len(),"cases":2,"runs":runs,"sampling_runs":sampling_runs,
+        "scope":"Pinned greedy/tokenizer and native benchmark routing; repeated fresh sessions and Qwen3.5 seeded sampling repeatability. Timing observations under uncontrolled cache conditions; no full-array, performance-SLA or production qualification."})).unwrap();
 }

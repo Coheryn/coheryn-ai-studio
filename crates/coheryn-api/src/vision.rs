@@ -183,6 +183,12 @@ impl VisionRequest {
         cancel: &Cancellation,
         processor: image::Processor,
     ) -> Result<(GenerationRequest, Vec<qwen2vl::ChatMessage>, Vec<Vec<u8>>)> {
+        if processor == image::Processor::Qwen35Still {
+            validate_controls(&self.controls)?;
+            coheryn_engine::qwen35::Model::check_options(&self.controls.options())?;
+        } else {
+            validate_qwen2_controls(&self.controls)?;
+        }
         let mut messages = Vec::with_capacity(self.messages.len());
         let mut images = Vec::new();
         let mut total = 0u64;
@@ -490,13 +496,8 @@ pub(crate) async fn read_body(
 }
 
 pub(crate) fn validate_controls(r: &GenerationRequest) -> Result<()> {
+    r.validate()?;
     if r.max_tokens > 256
-        || r.temperature != 0.
-        || r.top_p != 1.
-        || r.top_k != 0
-        || r.repetition_penalty != 1.
-        || r.frequency_penalty != 0.
-        || r.presence_penalty != 0.
         || r.response_format.enabled()
         || r.tools.is_some()
         || r.tool_choice.is_some()
@@ -506,7 +507,21 @@ pub(crate) fn validate_controls(r: &GenerationRequest) -> Result<()> {
             .is_some_and(|s| !matches!(s,crate::wire::Stops::Many(v) if v.is_empty()))
         || !r.stop_tokens.is_empty()
     {
-        return Err(Error::new(ErrorCode::UnsupportedFeature, "image chat currently qualifies greedy decoding with 1..=256 output tokens; sampling, tools, constraints and custom stops are unsupported").into());
+        return Err(Error::new(ErrorCode::UnsupportedFeature, "image chat supports 1..=256 output tokens without tools, constraints or custom stops").into());
+    }
+    Ok(())
+}
+
+pub(crate) fn validate_qwen2_controls(r: &GenerationRequest) -> Result<()> {
+    validate_controls(r)?;
+    if r.temperature != 0.
+        || r.top_p != 1.
+        || r.top_k != 0
+        || r.repetition_penalty != 1.
+        || r.frequency_penalty != 0.
+        || r.presence_penalty != 0.
+    {
+        return Err(Error::new(ErrorCode::UnsupportedFeature, "Qwen2-VL image chat supports greedy decoding only").into());
     }
     Ok(())
 }

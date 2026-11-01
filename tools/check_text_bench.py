@@ -5,6 +5,7 @@ import json
 import math
 import os
 from pathlib import Path
+import re
 import signal
 import sys
 import time
@@ -19,6 +20,33 @@ from verify_cpu_package import executable_target, native_target
 
 SUITES = ('gguf-text', 'qwen35-gguf-q4_k_m-text', 'qwen35-text')
 COMMAND = ('test', '--release', '--workspace', '--test', 'native_text_bench', '--locked', '--', '--ignored')
+API_COMMAND = ('test', '--release', '-p', 'coheryn-api', '--test', 'qwen35_runtime', '--locked', '--', '--ignored')
+
+
+def validate_sampling_result(value):
+    if not isinstance(value, dict):
+        raise ValueError('missing native sampling result')
+    metadata = value.get('sampling_metadata')
+    if not isinstance(metadata, dict) or metadata.get('profile') != 'coheryn-sampling-v2':
+        raise ValueError('missing native sampling profile')
+    for group, expected in (('settings', {'temperature': 0.8, 'top_k': 8, 'top_p': 0.9, 'seed': 73}),
+                            ('penalties', {'repetition_penalty': 1.1, 'frequency_penalty': 0.1, 'presence_penalty': 0.2})):
+        fields = metadata.get(group)
+        if not isinstance(fields, dict):
+            raise ValueError('missing native sampling settings')
+        for key, expected_value in expected.items():
+            actual = fields.get(key)
+            if (type(actual) not in (int, float) or not math.isfinite(actual)
+                    or abs(actual - expected_value) > 1e-6):
+                raise ValueError('native sampling settings changed')
+    ids = value.get('token_ids')
+    if (not isinstance(ids, list) or not 1 <= len(ids) <= 4
+            or any(type(i) is not int or not 0 <= i < 1_000_000 for i in ids)
+            or type(value.get('completion_tokens')) is not int or value['completion_tokens'] != len(ids)
+            or not isinstance(value.get('text'), str)
+            or metadata.get('threads') != 1 or metadata.get('backend') != 'native-cpu'
+            or metadata.get('cache_dtype') != 'f32'):
+        raise ValueError('incomplete native sampling output')
 
 
 def validate_native(path, suite):
@@ -58,6 +86,47 @@ def validate_native(path, suite):
     expected = {(entry, case, worker) for entry in range(entries) for case in expected_cases for worker in threads}
     if actual != expected:
         raise ValueError('benchmark entrypoint/case/worker coverage changed')
+    sampling = value.get('sampling_runs')
+    count = 0 if suite == 'gguf-text' else entries
+    if not isinstance(sampling, list) or len(sampling) != count:
+        raise ValueError('incomplete seeded sampling entrypoint coverage')
+    for entry, row in enumerate(sampling):
+        if (not isinstance(row, dict) or type(row.get('entrypoint')) is not int
+                or row['entrypoint'] != entry or not isinstance(row.get('results'), list)
+                or len(row['results']) != 2):
+            raise ValueError('incomplete seeded sampling repeat coverage')
+        a, b = row['results']
+        validate_sampling_result(a)
+        validate_sampling_result(b)
+        if (a['token_ids'], a['text']) != (b['token_ids'], b['text']):
+            raise ValueError('seeded fresh requests disagree')
+    return value
+
+
+def validate_api(path):
+    with path.open('rb') as stream:
+        data = stream.read((2 << 20) + 1)
+    if len(data) > 2 << 20:
+        raise ValueError('native sampling API output exceeds limit')
+    value = json.loads(data)
+    if not isinstance(value, dict) or value.get('schema_version') != 1 or value.get('outcome') != 'pass':
+        raise ValueError('incomplete native sampling API output')
+    sampling = value.get('sampling')
+    if (not isinstance(sampling, dict) or sampling.get('image_stream_parity') is not True
+            or not isinstance(sampling.get('concurrent_results'), list) or len(sampling['concurrent_results']) != 2):
+        raise ValueError('incomplete sampling API coverage')
+    a, b = sampling['concurrent_results']
+    for result in (a, b, sampling.get('image_result')):
+        validate_sampling_result(result)
+    if (a['token_ids'], a['text']) != (b['token_ids'], b['text']):
+        raise ValueError('concurrent seeded requests disagree')
+    if (value.get('model_manifest_sha256') != sha(ROOT / 'fixtures/qwen35/model.json')
+            or value.get('image_reference_sha256') != sha(ROOT / 'fixtures/qwen35/vision/reference-v1.json')
+            or re.fullmatch('[0-9a-f]{64}', str(value.get('test_executable_sha256'))) is None
+            or value.get('external_executor_invoked') is not False
+            or value.get('final_memory', {}).get('reserved') != 0
+            or value['final_memory'].get('session_buffer_capacity_bytes') != 0):
+        raise ValueError('sampling API identity or cleanup evidence changed')
     return value
 
 
@@ -128,6 +197,25 @@ def main():
         record['validated'] = True
         result['benchmark'] = validate_native(native_output, args.suite)
         result['native_output_sha256'] = sha(native_output)
+        if args.suite == 'qwen35-text':
+            api_output = directory / 'api.json'
+            command = [cargo, *API_COMMAND]
+            log = directory / 'api-checks.log'
+            record = {'command': command, 'exit': None, 'validated': False, 'log': log.relative_to(ROOT).as_posix()}
+            result['commands'].append(record)
+            checkpoint(args.report, result)
+            try:
+                record['exit'] = run_child(command, ROOT, {**environment, 'COHERYN_Q35_REPORT': str(api_output)},
+                                           log, 3600, guard, children.append)
+            finally:
+                if log.exists(): record['log_sha256'] = sha(log)
+                checkpoint(args.report, result)
+            record['tests'] = counts = test_counts(log)
+            if record['exit'] != 0 or counts != dict(suites=1, passed=1, failed=0, ignored=0, filtered=0):
+                raise ValueError('native sampling API test did not execute completely')
+            result['sampling_api'] = validate_api(api_output)
+            result['sampling_api_output_sha256'] = sha(api_output)
+            record['validated'] = True
         binary = ROOT / 'target/release' / ('coheryn.exe' if target.endswith('msvc') else 'coheryn')
         executable_target(binary, target)
         result['binary_sha256'] = sha(binary)

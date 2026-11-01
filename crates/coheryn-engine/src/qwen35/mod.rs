@@ -395,7 +395,9 @@ impl Model {
         Ok(())
     }
     fn generation_bytes(&self, context: usize, threads: usize) -> Result<u64> {
-        self.config.session_estimate(context, threads)?.total_bytes
+        self.config
+            .session_estimate(context, threads)?
+            .total_bytes
             .checked_add(crate::planner::REQUEST_BYTES)
             .ok_or_else(|| Error::resource("generation request byte overflow"))
     }

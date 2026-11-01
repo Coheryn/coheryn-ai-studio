@@ -12,6 +12,22 @@ from cpu_qualification.host import Guard
 import test_cpu_qualification as qualification_tests
 
 
+def sampling_result():
+    return {'token_ids': [1, 2], 'text': 'sample', 'completion_tokens': 2,
+            'sampling_metadata': {'profile': 'coheryn-sampling-v2', 'threads': 1, 'backend': 'native-cpu', 'cache_dtype': 'f32',
+                'settings': {'temperature': 0.8, 'top_k': 8, 'top_p': 0.9, 'seed': 73},
+                'penalties': {'repetition_penalty': 1.1, 'frequency_penalty': 0.1, 'presence_penalty': 0.2}}}
+
+
+def api_result():
+    return {'schema_version': 1, 'outcome': 'pass',
+            'sampling': {'concurrent_results': [sampling_result(), sampling_result()],
+                         'image_result': sampling_result(), 'image_stream_parity': True},
+            'model_manifest_sha256': '0' * 64, 'image_reference_sha256': '0' * 64,
+            'test_executable_sha256': '1' * 64, 'external_executor_invoked': False,
+            'final_memory': {'reserved': 0, 'session_buffer_capacity_bytes': 0}}
+
+
 def native_result(suite):
     rows = []
     for entry in range(3 if suite == 'qwen35-text' else 1):
@@ -23,10 +39,48 @@ def native_result(suite):
                                            'runs': [copy.deepcopy(run), copy.deepcopy(run)]}})
     return {'schema_version': 1, 'outcome': 'pass', 'suite': suite,
             'source_entrypoints': 3 if suite == 'qwen35-text' else 1, 'cases': 2,
-            'threads': [1, 2], 'runs': rows}
+            'threads': [1, 2], 'runs': rows,
+            'sampling_runs': [{'entrypoint': i, 'results': [sampling_result(), sampling_result()]}
+                              for i in range(3 if suite == 'qwen35-text' else 1)] if suite != 'gguf-text' else []}
 
 
 class BenchmarkChecks(unittest.TestCase):
+    def test_seeded_sampling_requires_every_entrypoint_exact_controls_and_repeatability(self):
+        for mutation in ('missing', 'repeated', 'seed', 'nonfinite', 'tokens', 'negative', 'boolean', 'profile', 'settings', 'entry'):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
+                value = native_result('qwen35-text')
+                result = value['sampling_runs'][0]['results'][0]
+                if mutation == 'missing': value['sampling_runs'].pop()
+                elif mutation == 'repeated': result['text'] = 'different'
+                elif mutation == 'seed': result['sampling_metadata']['settings']['seed'] = 74
+                elif mutation == 'nonfinite': result['sampling_metadata']['settings']['top_p'] = float('nan')
+                elif mutation == 'tokens': result['completion_tokens'] = 3
+                elif mutation == 'negative': result['token_ids'][0] = -1
+                elif mutation == 'boolean': result['token_ids'][0] = True
+                elif mutation == 'profile': result['sampling_metadata']['profile'] = 'different'
+                elif mutation == 'settings': result['sampling_metadata'].pop('penalties')
+                else: value['sampling_runs'][0]['entrypoint'] = True
+                path = Path(temporary) / 'native.json'; path.write_text(json.dumps(value))
+                with self.assertRaises(ValueError): runner.validate_native(path, 'qwen35-text')
+
+    def test_sampling_api_requires_text_image_stream_identity_and_complete_cleanup(self):
+        with tempfile.TemporaryDirectory() as temporary, patch.object(runner, 'sha', return_value='0' * 64):
+            path = Path(temporary) / 'api.json'
+            value = api_result(); path.write_text(json.dumps(value))
+            self.assertEqual(runner.validate_api(path), value)
+            for mutation in ('status', 'missing', 'stream', 'identity', 'executable', 'cleanup', 'output', 'external'):
+                value = api_result()
+                if mutation == 'status': value['outcome'] = 'running'
+                elif mutation == 'missing': value['sampling'].pop('image_result')
+                elif mutation == 'stream': value['sampling']['image_stream_parity'] = False
+                elif mutation == 'identity': value['model_manifest_sha256'] = '1' * 64
+                elif mutation == 'executable': value['test_executable_sha256'] = ''
+                elif mutation == 'cleanup': value['final_memory']['session_buffer_capacity_bytes'] = 1
+                elif mutation == 'output': value['sampling']['concurrent_results'][0]['text'] = 'different'
+                else: value['external_executor_invoked'] = True
+                path.write_text(json.dumps(value))
+                with self.subTest(mutation=mutation), self.assertRaises(ValueError): runner.validate_api(path)
+
     def test_each_format_requires_complete_entrypoint_case_worker_and_iteration_coverage(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / 'native.json'
@@ -65,6 +119,10 @@ class BenchmarkChecks(unittest.TestCase):
             on_started(Mock(poll=Mock(return_value=0)))
             if command[1] in ('--version', '-vV'):
                 log.write_text('compiler identity\n'); return 0
+            if tuple(command[1:]) == runner.API_COMMAND:
+                log.write_text('test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out\n')
+                Path(environment['COHERYN_Q35_REPORT']).write_text(json.dumps(api_result()))
+                return 0
             self.assertEqual(tuple(command[1:]), runner.COMMAND)
             log.write_text(f'test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; {int(filtered)} filtered out\n')
             if not missing:
@@ -88,7 +146,7 @@ class BenchmarkChecks(unittest.TestCase):
     def test_complete_native_benchmark_evidence_preserves_exact_source_and_scope(self):
         with tempfile.TemporaryDirectory() as temporary:
             result, code, calls, acquisitions = self.execute(Path(temporary).resolve())
-            self.assertEqual((code, calls, acquisitions), (0, 3, 1))
+            self.assertEqual((code, calls, acquisitions), (0, 4, 1))
             self.assertEqual(result['outcome'], 'pass')
             self.assertFalse(result['production_ready'])
             self.assertTrue(result['owned_cleanup_confirmed'] and result['source_unchanged'])
