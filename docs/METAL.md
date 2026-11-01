@@ -19,4 +19,6 @@ python3 tools/run_metal_checks.py --gpu --report target/metal-checks-unique.json
 
 Use fresh report paths. The runner monitors the existing host limits during compilation and execution, retains logs and binds evidence to source, kernels and fixture bytes. `--gpu` requires actual GPU execution; unavailable devices fail. Without it, passing checks establish compilation/library tests only. The [workflow](../.github/workflows/metal.yml) uses the standard macOS runner and requests no paid GPU runner. Hosted GPU availability and capacity must pass the same checks.
 
+A separate Linux job uses `--cross-check` to compile the macOS bindings and tests for `aarch64-apple-darwin` under the host guard. It never executes foreign binaries, emits a distinct evidence kind and cannot satisfy native or GPU numerical acceptance. This provides compiler feedback when a macOS runner is not admitted.
+
 Remaining GPU work includes packed Q4_K/Q6_K/Q8 kernels, qualified accelerated architecture dispatch, planner placement and CLI/API selection, attention/vision/embedding coverage, buffer reuse and throughput tuning, and complete numerical/lifecycle/platform qualification. No model/backend combination or production release is promoted by this initial boundary.

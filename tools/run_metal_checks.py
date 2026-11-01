@@ -17,14 +17,21 @@ from run_cpu_qualification import checkpoint
 from run_cpu_soak import run_child
 
 
-def commands(gpu):
+def commands(gpu, cross_check=False):
     result = [
         ('cargo', 'fmt', '--all', '--', '--check'),
-        ('cargo', 'clippy', '--release', '-p', 'coheryn-metal', '-p', 'coheryn-engine',
-         '--features', 'coheryn-engine/metal,coheryn-metal/metal', '--all-targets', '--locked', '--', '-D', 'warnings'),
+        ('cargo', 'clippy', '--release', '-p', 'coheryn-metal',
+         '--features', 'metal', '--all-targets', '--locked', '--', '-D', 'warnings'),
+        ('cargo', 'clippy', '--release', '-p', 'coheryn-engine',
+         '--features', 'metal', '--all-targets', '--locked', '--', '-D', 'warnings'),
         ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-metal', '--features', 'metal', '--lib', '--locked'),
         ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-engine', '--features', 'metal', '--lib', '--locked'),
     ]
+    if cross_check:
+        # Compile the macOS FFI and tests, never execute a foreign binary.
+        for index in (1, 2):
+            result[index] = (*result[index][:-3], '--target', 'aarch64-apple-darwin', *result[index][-3:])
+        return tuple(result[:3])
     if gpu:
         result.append(('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-metal',
                        '--features', 'metal', '--test', 'dense', '--locked', '--', '--ignored', '--nocapture'))
@@ -34,11 +41,17 @@ def commands(gpu):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--report', type=Path, required=True)
-    parser.add_argument('--gpu', action='store_true', help='require real GPU numerical execution; absent devices fail')
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument('--gpu', action='store_true', help='require real GPU numerical execution; absent devices fail')
+    modes.add_argument('--cross-check', action='store_true', help='Linux-hosted macOS compilation only; cannot qualify GPU execution')
     args = parser.parse_args()
     if args.report.exists():
         parser.error('use a fresh Metal check report path')
-    if platform.system() != 'Darwin' or platform.machine().lower() not in ('arm64', 'aarch64'):
+    native_host = ('aarch64-apple-darwin' if not args.cross_check else 'x86_64-unknown-linux-gnu')
+    if args.cross_check:
+        if platform.system() != 'Linux' or platform.machine().lower() not in ('x86_64', 'amd64'):
+            parser.error('the explicit cross-check requires a Linux x86-64 host')
+    elif platform.system() != 'Darwin' or platform.machine().lower() not in ('arm64', 'aarch64'):
         parser.error('Metal qualification requires a native Apple Silicon Mac')
     if os.environ.get('CARGO_BUILD_TARGET'):
         parser.error('unset CARGO_BUILD_TARGET; qualification must execute natively')
@@ -48,8 +61,9 @@ def main():
     directory = ROOT / '.cache/metal-checks' / args.report.stem
     directory.mkdir(parents=True, exist_ok=False)
     source = source_identity()
-    report = {'schema_version': 1, 'kind': 'metal-primitive-checks', 'outcome': 'running',
+    report = {'schema_version': 1, 'kind': 'metal-cross-check' if args.cross_check else 'metal-primitive-checks', 'outcome': 'running',
               'production_ready': False, 'gpu_execution_required': args.gpu,
+              'compile_target': 'aarch64-apple-darwin', 'cross_check': args.cross_check,
               'source_snapshot': source, 'source_unchanged': False, 'commands': [],
               'toolchain': {},
               'fixture_sha256': sha(ROOT / 'fixtures/gpu/metal-dense-v1.json'),
@@ -80,10 +94,10 @@ def main():
             output = log.read_text(encoding='utf-8')
             if not output.startswith(f'{name} {version} '):
                 raise ValueError('native compiler differs from the pinned toolchain')
-            if name == 'rustc' and '\nhost: aarch64-apple-darwin\n' not in output:
-                raise ValueError('Metal compiler host is not native Apple Silicon')
+            if name == 'rustc' and f'\nhost: {native_host}\n' not in output:
+                raise ValueError('Metal compiler host differs from the declared check mode')
             report['toolchain'][name] = {'output': output, 'log': log.relative_to(ROOT).as_posix(), 'log_sha256': sha(log)}
-        for number, command in enumerate(commands(args.gpu)):
+        for number, command in enumerate(commands(args.gpu, args.cross_check)):
             log = directory / f'{number}.log'
             row = {'command': list(command), 'exit': None, 'validated': False, 'log': log.relative_to(ROOT).as_posix()}
             report['commands'].append(row)

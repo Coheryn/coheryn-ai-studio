@@ -24,6 +24,38 @@ on:
 permissions:
   contents: read
 jobs:
+  compile:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.x'
+          check-latest: true
+      - uses: dtolnay/rust-toolchain@1.99.1
+        with:
+          components: rustfmt, clippy
+          targets: aarch64-apple-darwin
+      - run: cargo fetch --locked
+      - run: python tools/check_metal_fixtures.py
+      - run: python tools/test_metal_checks.py
+      - run: python tools/check_cpu_host.py --wait-for-load-seconds 300 --startup-load-per-cpu 1 --report .cache/metal-cross-host.json
+      - name: Compile macOS bindings without claiming native GPU execution
+        run: python tools/run_metal_checks.py --cross-check --report .cache/metal-cross-check.json
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: metal-cross-check-${{ github.run_attempt }}
+          include-hidden-files: true
+          if-no-files-found: error
+          path: |
+            .cache/metal-cross-host.json
+            .cache/metal-cross-check.json
+            .cache/metal-checks/**
+            LICENSE
+            NOTICE
+            THIRD_PARTY_NOTICES.md
+            resources/licensing/**
   metal:
     # Standard runner only. Do not silently select a paid GPU runner.
     runs-on: macos-15
