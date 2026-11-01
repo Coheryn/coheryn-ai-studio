@@ -44,7 +44,9 @@ impl Config {
                 "Qwen3.5 context exceeds source/development limit",
             ));
         }
-        let total = Session::bytes(self, context, threads)?;
+        let total = Session::bytes(self, context, threads)?
+            .checked_add(crate::sampling::Sampler::workspace_bytes(self.vocabulary)?)
+            .ok_or_else(|| Error::resource("hybrid sampling reservation overflow"))?;
         let kv = crate::memory::product(&[
             self.layers.iter().filter(|v| **v).count(),
             context,
@@ -352,7 +354,7 @@ impl Model {
         cancel: &Cancellation,
         emit: &mut dyn FnMut(TokenEvent) -> Result<()>,
     ) -> Result<GenerationResult> {
-        Self::check_options(options)?;
+        self.check_request_options(options)?;
         let cancel = cancel.with_timeout(options.timeout_seconds)?;
         cancel.check()?;
         let minimum = self.generation_bytes(self.limits.context, threads)?;
@@ -370,28 +372,30 @@ impl Model {
         )
     }
     pub fn check_options(options: &GenerationOptions) -> Result<()> {
+        crate::sampling::Sampler::with_penalties(options.sampling.clone(), options.penalties)?;
         if options.max_tokens == 0
             || options.max_tokens > 256
-            || options.sampling.temperature != 0.
-            || options.sampling.top_k != 0
-            || options.sampling.top_p != 1.
             || !options.stop.is_empty()
             || !options.stop_tokens.is_empty()
-            || options.penalties.repetition_penalty != 1.
-            || options.penalties.frequency_penalty != 0.
-            || options.penalties.presence_penalty != 0.
             || options.response_format.enabled()
             || options.strict_tool
             || options.tool_markers
         {
             return Err(unsupported(
-                "Qwen3.5 initial CPU text profile supports bounded greedy generation without tools/constraints/custom stops",
+                "Qwen3.5 CPU generation supports 1..=256 output tokens without tools/constraints/custom stops",
             ));
         }
         Ok(())
     }
+    fn check_request_options(&self, options: &GenerationOptions) -> Result<()> {
+        Self::check_options(options)?;
+        if options.sampling.top_k > self.config.vocabulary {
+            return Err(Error::request("top_k exceeds model vocabulary"));
+        }
+        Ok(())
+    }
     fn generation_bytes(&self, context: usize, threads: usize) -> Result<u64> {
-        Session::bytes(&self.config, context, threads)?
+        self.config.session_estimate(context, threads)?.total_bytes
             .checked_add(crate::planner::REQUEST_BYTES)
             .ok_or_else(|| Error::resource("generation request byte overflow"))
     }
@@ -403,7 +407,7 @@ impl Model {
         cancel: &Cancellation,
         emit: &mut dyn FnMut(TokenEvent) -> Result<()>,
     ) -> Result<GenerationResult> {
-        Self::check_options(options)?;
+        self.check_request_options(options)?;
         let cancel = cancel.with_timeout(options.timeout_seconds)?;
         cancel.check()?;
         let request = crate::catalog::PlanRequest {
@@ -455,7 +459,7 @@ impl Model {
         execution: crate::adapters::Execution<'_>,
         max_concurrency: usize,
     ) -> Result<PreparedGeneration> {
-        Self::check_options(&options)?;
+        self.check_request_options(&options)?;
         if context == 0 || context > self.limits.context {
             return Err(Error::request("request context exceeds loaded capacity"));
         }

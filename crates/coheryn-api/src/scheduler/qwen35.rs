@@ -134,7 +134,7 @@ impl Scheduler {
         {
             return Err(Error::new(
                 ErrorCode::UnsupportedFeature,
-                "Qwen3.5 greedy text profile does not support tools or tool histories",
+                "Qwen3.5 text profile does not support tools or tool histories",
             )
             .into());
         }

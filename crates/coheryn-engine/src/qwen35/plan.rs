@@ -71,8 +71,8 @@ pub fn estimate_shared(
         io_buffer_bytes: 256 << 10,
     })?;
     plan.limitations = vec![
-        "Development CPU greedy text estimate; image workloads require the image planner; optional hybrid idle caches are separately reserved",
-        "Workspace includes bounded recurrent/convolution state, scratch, and worker allowances",
+        "Development CPU text estimate; image workloads require the image planner; optional hybrid idle caches are separately reserved",
+        "Workspace includes bounded recurrent/convolution state, private sampling/history scratch, and worker allowances",
         "Resident metadata/tokenizer bytes are an estimate, not observed library allocation/RSS",
         "Source weight bytes include all components as an advisory file-cache upper bound; buffered weights are not copied",
         "Concurrency projects independently admitted states; continuous text batching shares weight tiles without sharing request state",

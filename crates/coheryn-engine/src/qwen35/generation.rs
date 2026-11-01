@@ -8,7 +8,8 @@ use std::sync::{Arc, Weak};
 
 pub struct GenerationState {
     session: Option<Session>,
-    admission: Option<plan::Admission>,
+    sampler: Option<crate::sampling::Sampler>,
+    sampling_buffers: Option<BufferAccounting>,
     buffers: Option<BufferAccounting>,
     cache: Option<HybridCache>,
     owner: Weak<()>,
@@ -32,10 +33,13 @@ pub struct GenerationState {
     tokenization_ms: f64,
     prefill_ms: f64,
     decode_ms: f64,
+    sampling_ms: f64,
     delivery_ms: f64,
     first_token_ms: Option<f64>,
     started: Instant,
     batching: BatchingMetadata,
+    // Drop all request-owned buffers before releasing their atomic reservation.
+    admission: Option<plan::Admission>,
 }
 impl GenerationState {
     #[allow(clippy::too_many_arguments)]
@@ -51,6 +55,7 @@ impl GenerationState {
         let cancel = cancel.with_timeout(options.timeout_seconds)?;
         cancel.check()?;
         let threads = admission.threads;
+        model.check_request_options(&options)?;
         admission.check(&model.budget, model.generation_bytes(context, threads)?)?;
         let started = Instant::now();
         let tokens = model.encode(prompt)?;
@@ -65,6 +70,13 @@ impl GenerationState {
                 "prompt plus output reserve exceeds requested context",
             ));
         }
+        let mut sampler =
+            crate::sampling::Sampler::with_penalties(options.sampling.clone(), options.penalties)?;
+        sampler.history(model.config.vocabulary, &tokens)?;
+        let mut sampling_buffers = model
+            .budget
+            .track_buffers(crate::sampling::Sampler::workspace_bytes(model.config.vocabulary)?);
+        sampling_buffers.grow(sampler.capacity_bytes())?;
         let mut session = Session::new(&model.config, context, threads)?;
         let mut buffers =
             model
@@ -101,6 +113,8 @@ impl GenerationState {
         }
         Ok(Self {
             session: Some(session),
+            sampler: Some(sampler),
+            sampling_buffers: Some(sampling_buffers),
             admission: Some(admission),
             buffers: Some(buffers),
             cache,
@@ -125,6 +139,7 @@ impl GenerationState {
             tokenization_ms,
             prefill_ms: 0.,
             decode_ms: 0.,
+            sampling_ms: 0.,
             delivery_ms: 0.,
             first_token_ms: None,
             started,
@@ -152,6 +167,13 @@ impl GenerationState {
             ));
         }
         self.tokens = tokens;
+        self.sampler
+            .as_mut()
+            .expect("live image sampler")
+            .history(
+                self.session.as_ref().expect("live session").logits.len(),
+                &self.tokens,
+            )?;
         self.condition = Some(condition);
         self.cache = None;
         self.capture = 0;
@@ -247,13 +269,15 @@ impl GenerationState {
             .session
             .as_ref()
             .ok_or_else(|| Error::request("finished hybrid session"))?;
-        let next = s
-            .logits
-            .iter()
-            .enumerate()
-            .max_by(|(ai, a), (bi, b)| a.total_cmp(b).then_with(|| bi.cmp(ai)))
-            .map(|(i, _)| i as u32)
-            .ok_or_else(|| Error::request("empty logits"))?;
+        let sampling_start = Instant::now();
+        let sampler = self.sampler.as_mut().expect("live sampler");
+        let next = sampler.sample(&s.logits)?;
+        sampler.observe(next)?;
+        self.sampling_ms += sampling_start.elapsed().as_secs_f64() * 1000.;
+        let buffers = self.sampling_buffers.as_mut().expect("live sampling buffers");
+        if sampler.capacity_bytes() > buffers.bytes() {
+            buffers.grow(sampler.capacity_bytes() - buffers.bytes())?;
+        }
         let stop =
             next == model.config.eos || Some(next) == model.tokenizer.token_to_id("<|im_end|>");
         self.ids.push(next);
@@ -310,6 +334,10 @@ impl GenerationState {
         }))
     }
 }
+
+#[cfg(test)]
+#[path = "sampling_tests.rs"]
+mod sampling_tests;
 impl Model {
     pub fn begin_generation(
         &self,
@@ -446,6 +474,8 @@ impl Model {
             return Err(Error::request("hybrid generation is incomplete or foreign"));
         }
         drop(state.session.take());
+        drop(state.sampler.take());
+        drop(state.sampling_buffers.take());
         drop(state.buffers.take());
         drop(state.admission.take());
         let cache = state
@@ -460,7 +490,19 @@ impl Model {
             } else {
                 Some(Box::new(state.batching))
             },
-            sampling_metadata: None,
+            sampling_metadata: Some(Box::new(crate::inference::SamplingMetadata {
+                sampling_ms: state.sampling_ms,
+                profile: crate::sampling::PROFILE.into(),
+                settings: state.options.sampling,
+                penalties: state.options.penalties,
+                history_scope: "exact selected prompt plus generated token IDs, including control and expanded image tokens".into(),
+                tokenizer_fingerprint: TOKENIZER_SHA256.into(),
+                backend: "native-cpu".into(),
+                cache_dtype: "f32".into(),
+                threads: state.threads,
+                prefill_chunk_tokens: 1,
+                engine_version: env!("CARGO_PKG_VERSION").into(),
+            })),
             constraint_validation: None,
             tool_calls: vec![],
             text: state.text,
