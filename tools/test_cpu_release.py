@@ -131,7 +131,7 @@ class PackageTests(unittest.TestCase):
 
 
 class NativeChecksTests(unittest.TestCase):
-    def execute(self, root, *, unhealthy=False, failed=False, empty=False, filtered=False, changed=False):
+    def execute(self, root, *, unhealthy=False, failed=False, empty=False, filtered=False, changed=False, engine_only=False):
         source = {'owned.rs': 'frozen'}
         report = root / 'checks.json'
         (root / 'fixtures').mkdir()
@@ -139,7 +139,8 @@ class NativeChecksTests(unittest.TestCase):
         (root / 'rust-toolchain.toml').write_text('[toolchain]\nchannel="1.99.1"\n')
         binary_dir = root / 'target/release'; binary_dir.mkdir(parents=True)
         suffix = '.exe' if native_checks.os.name == 'nt' else ''
-        for name in ('coheryn', 'coheryn-bench'): (binary_dir / (name + suffix)).write_bytes(b'owned fixture')
+        if not engine_only:
+            for name in ('coheryn', 'coheryn-bench'): (binary_dir / (name + suffix)).write_bytes(b'owned fixture')
         def child(command, directory, environment, log, timeout, guard, on_started):
             self.assertEqual(environment['CARGO_BUILD_JOBS'], '1')
             self.assertEqual(environment['RUST_TEST_THREADS'], '1')
@@ -163,7 +164,7 @@ class NativeChecksTests(unittest.TestCase):
              patch.object(native_checks.shutil, 'which', return_value='virtual-rustc'), \
              patch.object(native_checks.signal, 'signal'), patch('builtins.print'), \
              patch.dict(native_checks.os.environ, {'CARGO_BUILD_TARGET': ''}), \
-             patch.object(native_checks.sys, 'argv', ['checks', '--report', str(report)]):
+             patch.object(native_checks.sys, 'argv', ['checks', '--report', str(report), *(['--engine-only'] if engine_only else [])]):
             with self.assertRaises(SystemExit) as outcome: native_checks.main()
         return json.loads(report.read_text()), outcome.exception.code, run.call_count
 
@@ -180,10 +181,21 @@ class NativeChecksTests(unittest.TestCase):
             self.assertFalse(result['production_ready'])
 
     def test_guard_rejection_starts_no_native_command(self):
+        for engine_only in (False, True):
+            with self.subTest(engine_only=engine_only), tempfile.TemporaryDirectory() as temporary:
+                result, code, calls = self.execute(Path(temporary).resolve(), unhealthy=True, engine_only=engine_only)
+                self.assertEqual((code, calls, result['outcome']), (1, 0, 'fail'))
+                self.assertIn('thermal', result['host_guard']['stop_reason'])
+
+    def test_engine_iteration_executes_all_library_tests_with_a_separate_evidence_kind(self):
         with tempfile.TemporaryDirectory() as temporary:
-            result, code, calls = self.execute(Path(temporary).resolve(), unhealthy=True)
-            self.assertEqual((code, calls, result['outcome']), (1, 0, 'fail'))
-            self.assertIn('thermal', result['host_guard']['stop_reason'])
+            result, code, calls = self.execute(Path(temporary).resolve(), engine_only=True)
+            self.assertEqual((code, calls), (0, 5))
+            self.assertEqual(result['kind'], 'cpu-engine-checks')
+            self.assertEqual([tuple(c['command']) for c in result['commands']], list(native_checks.ENGINE_COMMANDS))
+            self.assertEqual(result['commands'][2]['tests']['filtered'], 0)
+            self.assertEqual(result['binaries'], {})
+            self.assertTrue(result['source_unchanged'] and result['owned_cleanup_confirmed'])
 
     def test_empty_failed_filtered_or_source_changed_results_never_pass(self):
         for setting in ('empty', 'failed', 'filtered', 'changed'):
@@ -266,6 +278,24 @@ class ReadinessTests(unittest.TestCase):
         self.assertEqual(result['status'], 'blocked')
         self.assertFalse(result['production_ready'])
         self.assertTrue(any(c['id'] == 'model-matrix' and c['status'] == 'blocked' for c in result['checks']))
+
+    def test_engine_only_record_cannot_qualify_or_package_a_native_release(self):
+        with tempfile.TemporaryDirectory(dir=gate.ROOT / 'target') as temporary:
+            root = Path(temporary).resolve()
+            record = root / 'engine.json'
+            record.write_text(json.dumps({'kind': 'cpu-engine-checks', 'outcome': 'pass',
+                'source_unchanged': True, 'target': gate.TARGETS[0], 'source_snapshot': gate.source_identity(),
+                'compatibility_sha256': gate.sha(gate.ROOT / 'fixtures/compatibility.json'),
+                'commands': [{'command': list(command), 'exit': 0, 'validated': True} for command in gate.COMMANDS]}))
+            scope = self.scope()
+            scope['evidence'] = [{'id': 'native-checks', 'target': gate.TARGETS[0],
+                'path': record.relative_to(gate.ROOT).as_posix(), 'sha256': gate.sha(record)}]
+            result = gate.evaluate(scope)
+            native = next(check for check in result['checks'] if check['id'] == 'native-checks' and check['target'] == gate.TARGETS[0])
+            self.assertEqual(native['status'], 'blocked')
+            with self.assertRaisesRegex(ValueError, 'passing native checks'):
+                build(root, root / 'out', gate.TARGETS[0], record)
+            self.assertFalse((root / 'out').exists())
 
     def test_removing_or_duplicating_required_gate_cannot_shrink_release(self):
         for change in ('remove', 'duplicate'):

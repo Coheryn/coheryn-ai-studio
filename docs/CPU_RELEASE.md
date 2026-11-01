@@ -47,6 +47,8 @@ python3 tools/check_independence.py
 
 `tools/run_cpu_checks.py --report FRESH_PATH` executes the complete check inventory under the live host guard with one offline Cargo job and one test-harness thread. Explicit concurrency workloads inside individual tests remain unchanged. Release-profile lint/tests reuse the production dependency graph and exercise deployed arithmetic without building a second debug executable graph. Compiler versions, logs, test totals, execution settings, owned cleanup and host observations are retained; rejected or interrupted checks cannot pass.
 
+For engine iteration, `--engine-only` checks workspace formatting, strict engine lint and every ordinary engine library test under the same guard. CI runs it before building the complete executable graph. It emits a separate `cpu-engine-checks` record with no CLI executable qualification; release readiness and packaging reject that kind even if it claims passing commands. The default complete inventory and real-model opt-ins retain their separate requirements.
+
 Known desktop metadata (`.DS_Store`, `Thumbs.db`, `desktop.ini`) is excluded from source fingerprints. Other hidden and unknown fixture files remain bound, and model/reference inputs still have their explicit hash checks. Earlier snapshots retain their original scope and bytes.
 
 Source fingerprints also bind the root `NOTICE`, Git attributes, local Cargo build configuration when present, and every file in the mirrored legal payload. Adding, removing or changing a release notice invalidates earlier source-bound evidence. This extends the fingerprint contract; earlier reports remain attached to their recorded scope and are not relabeled for the stronger contract.

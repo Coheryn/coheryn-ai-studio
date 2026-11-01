@@ -42,6 +42,8 @@ jobs:
         run: python -c "import sys; sys.path.insert(0, 'tools'); from verify_cpu_package import native_target; assert native_target() == '${{ matrix.target }}'"
       - name: Admit guarded driver preparation
         run: python tools/check_cpu_host.py --wait-for-load-seconds 300 --startup-load-per-cpu 1 --report .cache/cpu-driver-host.json
+      - name: Check native engine before the complete executable graph
+        run: python tools/run_cpu_checks.py --engine-only --report .cache/cpu-engine-checks.json
       - name: Prepare and test the reusable native soak driver
         run: python tools/check_cpu_soak.py --report .cache/cpu-driver-checks.json
       - run: python tools/run_cpu_checks.py --report .cache/cpu-native-checks.json
@@ -67,6 +69,7 @@ jobs:
             target/cpu-package.json
             target/cpu-package-smoke.json
             .cache/cpu-native-checks.json
+            .cache/cpu-engine-checks.json
             .cache/cpu-driver-host.json
             .cache/cpu-driver-checks.json
             .cache/cpu-soak-checks/**

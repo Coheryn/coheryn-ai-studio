@@ -3,11 +3,97 @@ use crate::{Descriptor, Error, ErrorCode, Result};
 use sha2::{Digest, Sha256};
 use std::{
     fs::{File, Metadata},
-    io::{Read, Seek, SeekFrom},
+    io::Read,
     path::Path,
-    sync::{Arc, Mutex},
+    sync::Arc,
     time::SystemTime,
 };
+
+/// The owned handle has no cursor-relative readers after validation. Positional
+/// reads can therefore share it without a Coheryn seek/read lock. Windows updates
+/// the cursor internally, but every read supplies its own complete byte offset.
+struct WeightFile {
+    #[cfg(any(unix, windows))]
+    file: File,
+    #[cfg(not(any(unix, windows)))]
+    file: std::sync::Mutex<File>,
+}
+
+impl WeightFile {
+    fn new(file: File) -> Self {
+        #[cfg(not(any(unix, windows)))]
+        let file = std::sync::Mutex::new(file);
+        Self { file }
+    }
+
+    fn metadata(&self) -> Result<Metadata> {
+        #[cfg(not(any(unix, windows)))]
+        let file = self
+            .file
+            .lock()
+            .map_err(|_| Error::new(ErrorCode::Internal, "weight storage lock poisoned"))?;
+        #[cfg(any(unix, windows))]
+        let file = &self.file;
+        Ok(file.metadata()?)
+    }
+
+    fn read(&self, offset: u64, output: &mut [u8]) -> Result<()> {
+        #[cfg(unix)]
+        let result = {
+            use std::os::unix::fs::FileExt;
+            self.file.read_exact_at(output, offset)
+        };
+        #[cfg(windows)]
+        let result = {
+            use std::os::windows::fs::FileExt;
+            complete_read(output, offset, |buffer, position| {
+                self.file.seek_read(buffer, position)
+            })
+        };
+        #[cfg(not(any(unix, windows)))]
+        let result = {
+            use std::io::{Seek, SeekFrom};
+            let mut file = self
+                .file
+                .lock()
+                .map_err(|_| Error::new(ErrorCode::Internal, "weight storage lock poisoned"))?;
+            file.seek(SeekFrom::Start(offset))?;
+            file.read_exact(output)
+        };
+        result.map_err(|error| {
+            Error::new(ErrorCode::ModelChanged, format!("weight read failed: {error}"))
+        })
+    }
+}
+
+// Windows exposes short positional reads rather than read_exact_at. Retry only
+// interruptions, advance by bytes actually read, and reject EOF/offset overflow.
+#[cfg(any(windows, test))]
+fn complete_read(
+    mut output: &mut [u8],
+    mut offset: u64,
+    mut read: impl FnMut(&mut [u8], u64) -> std::io::Result<usize>,
+) -> std::io::Result<()> {
+    use std::io::ErrorKind;
+    while !output.is_empty() {
+        match read(output, offset) {
+            Ok(0) => return Err(ErrorKind::UnexpectedEof.into()),
+            Ok(count) => {
+                if count > output.len() {
+                    return Err(ErrorKind::InvalidData.into());
+                }
+                let Some(next_offset) = offset.checked_add(count as u64) else {
+                    return Err(ErrorKind::InvalidInput.into());
+                };
+                offset = next_offset;
+                output = &mut output[count..];
+            }
+            Err(error) if error.kind() == ErrorKind::Interrupted => {}
+            Err(error) => return Err(error),
+        }
+    }
+    Ok(())
+}
 
 /// Encode a SHA-256 output with the lowercase, zero-padded manifest representation.
 pub fn digest_hex(digest: [u8; 32]) -> String {
@@ -40,7 +126,7 @@ pub struct Storage {
     modified: Option<SystemTime>,
 }
 enum Source {
-    File(Mutex<File>),
+    File(WeightFile),
     // Two checked temporal kernels are exposed in source [channel,time,y,x]
     // order. This is a byte view, not dequantization or a merged model copy.
     TemporalPatch {
@@ -97,7 +183,7 @@ impl Storage {
             return Err(Error::invalid("tensor storage must be a regular file"));
         }
         Ok(Self {
-            source: Source::File(Mutex::new(file)),
+            source: Source::File(WeightFile::new(file)),
             bytes: meta.len(),
             modified: meta.modified().ok(),
         })
@@ -132,7 +218,7 @@ impl Storage {
             ));
         }
         Ok(Self {
-            source: Source::File(Mutex::new(file)),
+            source: Source::File(WeightFile::new(file)),
             bytes: meta.len(),
             modified: meta.modified().ok(),
         })
@@ -142,10 +228,7 @@ impl Storage {
             Source::TemporalPatch { source, .. } => return source.unchanged(),
             Source::File(file) => file,
         };
-        let m: Metadata = file
-            .lock()
-            .map_err(|_| Error::new(ErrorCode::Internal, "weight storage lock poisoned"))?
-            .metadata()?;
+        let m = file.metadata()?;
         if m.len() != self.bytes || m.modified().ok() != self.modified {
             return Err(Error::new(
                 ErrorCode::ModelChanged,
@@ -188,18 +271,133 @@ impl Storage {
             }
             Source::File(file) => file,
         };
-        let mut file = file
-            .lock()
-            .map_err(|_| Error::new(ErrorCode::Internal, "weight storage lock poisoned"))?;
-        file.seek(SeekFrom::Start(offset))?;
-        file.read_exact(output)
-            .map_err(|e| Error::new(ErrorCode::ModelChanged, format!("weight read failed: {e}")))
+        file.read(offset, output)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn shared_file_reads_keep_requested_offsets_under_worker_interleaving() {
+        use std::sync::Barrier;
+
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("interleaved-weights");
+        let bytes: Vec<u8> = (0..65549)
+            .map(|index: usize| ((index * 197 + (index >> 8)) % 251) as u8)
+            .collect();
+        std::fs::write(&path, &bytes).unwrap();
+        let source = Storage::from_tensor_file(File::open(&path).unwrap()).unwrap();
+        let barrier = Barrier::new(4);
+        std::thread::scope(|scope| {
+            for lane in 0..4 {
+                let source = &source;
+                let bytes = &bytes;
+                let barrier = &barrier;
+                scope.spawn(move || {
+                    let mut buffer = [0; 257];
+                    barrier.wait();
+                    for round in 0..512 {
+                        let count = (round * 31 + lane * 7) % (buffer.len() + 1);
+                        let offset = (round * 997 + lane * 16411) % (bytes.len() - count + 1);
+                        source.read(offset as u64, &mut buffer[..count]).unwrap();
+                        assert_eq!(&buffer[..count], &bytes[offset..offset + count]);
+                        if round % 16 == 0 {
+                            source.unchanged().unwrap();
+                            std::thread::yield_now();
+                        }
+                    }
+                });
+            }
+        });
+        source.unchanged().unwrap();
+    }
+
+    #[test]
+    fn file_boundaries_overflow_and_truncation_remain_recoverable() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("bounded-weights");
+        std::fs::write(&path, b"0123456789").unwrap();
+        let source = Storage::from_tensor_file(File::open(&path).unwrap()).unwrap();
+        let mut tail = [0; 3];
+        source.read(7, &mut tail).unwrap();
+        assert_eq!(&tail, b"789");
+        source.read(10, &mut []).unwrap();
+        for offset in [8, 10, 11, u64::MAX] {
+            let mut output = [0x5a; 3];
+            assert_eq!(
+                source.read(offset, &mut output).unwrap_err().code,
+                ErrorCode::InvalidGguf
+            );
+            assert_eq!(output, [0x5a; 3]);
+        }
+        assert!(source.read(11, &mut []).is_err());
+        File::options()
+            .write(true)
+            .open(&path)
+            .unwrap()
+            .set_len(3)
+            .unwrap();
+        assert_eq!(
+            source.read(7, &mut tail).unwrap_err().code,
+            ErrorCode::ModelChanged
+        );
+        assert_eq!(source.unchanged().unwrap_err().code, ErrorCode::ModelChanged);
+    }
+
+    #[test]
+    fn short_positional_reads_retry_only_interruptions_and_advance_exactly() {
+        use std::io::{Error as IoError, ErrorKind};
+
+        let mut output = [0; 5];
+        let mut offsets = Vec::new();
+        let mut calls = 0;
+        complete_read(&mut output, 41, |buffer, offset| {
+            offsets.push(offset);
+            calls += 1;
+            if matches!(calls, 1 | 3) {
+                return Err(IoError::from(ErrorKind::Interrupted));
+            }
+            let count = buffer.len().min(2);
+            for (index, byte) in buffer[..count].iter_mut().enumerate() {
+                *byte = (offset + index as u64) as u8;
+            }
+            Ok(count)
+        })
+        .unwrap();
+        assert_eq!(output, [41, 42, 43, 44, 45]);
+        assert_eq!(offsets, [41, 41, 43, 43, 45]);
+        complete_read(&mut [], u64::MAX, |_, _| panic!("empty read reached I/O")).unwrap();
+        for (offset, count, kind) in [
+            (0, 0, ErrorKind::UnexpectedEof),
+            (u64::MAX, 1, ErrorKind::InvalidInput),
+            (0, 2, ErrorKind::InvalidData),
+        ] {
+            assert_eq!(
+                complete_read(&mut [0], offset, |_, _| Ok(count))
+                    .unwrap_err()
+                    .kind(),
+                kind
+            );
+        }
+        let mut calls = 0;
+        assert_eq!(
+            complete_read(&mut [0; 3], 0, |_, _| {
+                calls += 1;
+                if calls == 1 {
+                    Ok(1)
+                } else {
+                    Err(IoError::from(ErrorKind::PermissionDenied))
+                }
+            })
+            .unwrap_err()
+            .kind(),
+            ErrorKind::PermissionDenied
+        );
+        assert_eq!(calls, 2);
+    }
 
     #[test]
     fn temporal_patch_view_preserves_channel_time_order_and_fragmented_ranges() {
