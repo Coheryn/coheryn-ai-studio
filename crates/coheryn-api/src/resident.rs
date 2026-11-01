@@ -155,6 +155,22 @@ impl Resident {
             _ => coheryn_engine::adapters::Backend::Cpu,
         }
     }
+    pub fn gpu_info(&self) -> coheryn_engine::Result<Option<serde_json::Value>> {
+        #[cfg(all(feature = "metal", target_os = "macos"))]
+        if let Self::Qwen35(model) = self {
+            return model
+                .metal_info()?
+                .map(serde_json::to_value)
+                .transpose()
+                .map_err(|error| {
+                    coheryn_engine::Error::new(
+                        coheryn_engine::ErrorCode::Internal,
+                        error.to_string(),
+                    )
+                });
+        }
+        Ok(None)
+    }
     pub fn descriptor(&self) -> Option<&Descriptor> {
         match self {
             Self::Generation(m) => Some(&m.descriptor),

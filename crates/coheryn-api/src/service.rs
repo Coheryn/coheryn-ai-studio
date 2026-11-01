@@ -161,7 +161,10 @@ impl Service {
         }
     }
     pub fn loaded(&self) -> Result<Value> {
-        Ok(Value::Array(self.residents()?.iter().map(|(id,m)|json!({"id":id,"context":m.context(),"backend":m.backend(),"task":m.task(),"pinned":m.pinned(),"conversation":m.conversation_capabilities(),"embedding_space":match m {Resident::Embedding(m)=>Some(&m.space),_=>None}})).collect()))
+        let values = self.residents()?.iter().map(|(id,m)| -> Result<Value> {
+            Ok(json!({"id":id,"context":m.context(),"backend":m.backend(),"gpu_execution":m.gpu_info()?,"task":m.task(),"pinned":m.pinned(),"conversation":m.conversation_capabilities(),"embedding_space":match m {Resident::Embedding(m)=>Some(&m.space),_=>None}}))
+        }).collect::<Result<Vec<_>>>()?;
+        Ok(Value::Array(values))
     }
     pub fn status(&self) -> Result<Value> {
         Ok(
@@ -274,7 +277,7 @@ impl Service {
                     Ok(Resident::Qwen35(Arc::new(model)))
                 }).await??;
                 service.residents()?.insert(id.clone(), model);
-                return Ok(json!({"model":id,"context":context,"backend":backend,"loaded":true,"task":"text-generation","adapter":if backend == coheryn_engine::adapters::Backend::Metal {"qwen35-metal-experimental-v1"} else {manifest_adapter(&record)}}));
+                return Ok(json!({"model":id,"context":context,"backend":backend,"loaded":true,"task":"text-generation","adapter":if backend == coheryn_engine::adapters::Backend::Metal {Some("qwen35-metal-experimental-v1")} else {manifest_adapter(&record)}}));
             }
             let path=service.registry.model_path(&id)?;let budget=service.budget.clone();let max_memory=service.config.max_memory;
             let operation=service.budget.reserve(service.parser_limits().max_metadata_allocation)?;

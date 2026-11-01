@@ -63,7 +63,7 @@ class MetalChecksTests(unittest.TestCase):
     def test_live_mode_requires_exact_test_and_preserves_logs_scope_and_cleanup(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve())
-            self.assertEqual((code, calls), (0, 13))
+            self.assertEqual((code, calls), (0, 14))
             self.assertTrue(report['gpu_execution_required'])
             self.assertFalse(report['production_ready'])
             self.assertTrue(report['source_unchanged'] and report['owned_cleanup_confirmed'])
@@ -74,7 +74,7 @@ class MetalChecksTests(unittest.TestCase):
     def test_compile_mode_cannot_claim_gpu_execution(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve(), gpu=False)
-            self.assertEqual((code, calls), (0, 10))
+            self.assertEqual((code, calls), (0, 11))
             self.assertFalse(report['gpu_execution_required'])
             self.assertTrue(all('--test' not in row['command'] or row['command'][row['command'].index('--test') + 1] == 'service'
                                 for row in report['commands']))
@@ -82,7 +82,7 @@ class MetalChecksTests(unittest.TestCase):
     def test_format_failure_retains_numeric_feedback_but_cannot_pass(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve(), 'format')
-            self.assertEqual((code, calls, report['outcome']), (1, 13, 'fail'))
+            self.assertEqual((code, calls, report['outcome']), (1, 14, 'fail'))
             self.assertFalse(report['commands'][0]['validated'])
             self.assertTrue(all(row['validated'] for row in report['commands'][1:]))
 
@@ -94,7 +94,7 @@ class MetalChecksTests(unittest.TestCase):
     def test_explicit_cross_check_compiles_foreign_target_without_executing_it(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve(), gpu=False, cross_check=True)
-            self.assertEqual((code, calls), (0, 6))
+            self.assertEqual((code, calls), (0, 7))
             self.assertEqual(report['kind'], 'metal-cross-check')
             self.assertFalse(report['gpu_execution_required'])
             self.assertTrue(report['cross_check'])
@@ -193,6 +193,65 @@ class CliOutputTests(unittest.TestCase):
                 elif mutation == 'empty': value = []
                 path = Path(temporary) / 'cli.json'; path.write_text(json.dumps(value))
                 with self.assertRaises(ValueError): runner.validate_cli(path, suite)
+
+
+class ApiOutputTests(unittest.TestCase):
+    def fixture(self, suite):
+        cli = CliOutputTests().fixture(suite)
+        cases = copy.deepcopy(cli['cases'])
+        cached = copy.deepcopy(cases[0]); cached['reused_prompt_tokens'] = 10
+        return {'schema_version': 1, 'outcome': 'pass', 'suite': suite, 'cases': cases,
+                'streams': [{'text': case['text'], 'done': 1,
+                             'finish': {'coheryn': {'sampling': case['sampling_metadata']}},
+                             'usage': {'prompt_tokens': case['prompt_tokens'], 'completion_tokens': case['completion_tokens']}}
+                            for case in cases],
+                'healthy_after_disconnect': copy.deepcopy(cases[0]),
+                'cached_result': cached, 'fresh_result': copy.deepcopy(cases[0]),
+                'plan': {'backend': 'native-metal-matmul-f32-reference', 'concurrency': 2, 'gpu_allocation_bytes': 640},
+                'gpu': {'device': 'fixture', 'matrices': 1, 'encoded_weight_bytes': 512,
+                        'driver_weight_allocation_bytes': 512, 'request_workspace_bytes': 64, 'completed_model_dispatches': 1},
+                'final_memory': {'reserved': 0, 'session_buffer_capacity_bytes': 0, 'peak_reserved': 2048, 'limit': 4096},
+                'post_unload_history_reserved': 512,
+                **{name: True for name in ('backend_conflict_rejected', 'pinned_unload_rejected',
+                                          'disconnect_cleanup', 'image_profile_rejected', 'plan_without_reservation', 'unload_cache_release', 'history_deleted')}}
+
+    def test_pinned_api_outputs_have_backend_stream_history_and_cleanup_evidence(self):
+        for suite in runner.MODEL_SUITES:
+            with self.subTest(suite=suite), tempfile.TemporaryDirectory() as temporary:
+                path = Path(temporary) / 'api.json'; value = self.fixture(suite)
+                path.write_text(json.dumps(value))
+                self.assertEqual(runner.validate_api(path, suite), value)
+
+    def test_partial_outputs_cpu_fallback_missing_lifecycle_or_leaks_cannot_pass(self):
+        suite = runner.MODEL_SUITES[0]
+        for mutation in ('partial', 'greedy', 'backend', 'stream', 'done', 'stream_backend', 'usage',
+                         'survival', 'cache', 'reuse', 'plan', 'accounting', 'concurrency', 'dispatch', 'device', 'driver', 'leak', 'buffers', 'peak', 'history', 'flag', 'empty'):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
+                value = self.fixture(suite)
+                if mutation == 'partial': value['cases'].pop()
+                elif mutation == 'greedy': value['cases'][0]['token_ids'] = []
+                elif mutation == 'backend': value['cases'][0]['sampling_metadata']['backend'] = 'native-cpu'
+                elif mutation == 'stream': value['streams'][0]['text'] = 'different'
+                elif mutation == 'done': value['streams'][0]['done'] = True
+                elif mutation == 'stream_backend': value['streams'][0]['finish']['coheryn']['sampling']['backend'] = 'native-cpu'
+                elif mutation == 'usage': value['streams'][0]['usage']['prompt_tokens'] += 1
+                elif mutation == 'survival': value['healthy_after_disconnect']['text'] = 'different'
+                elif mutation == 'cache': value['cached_result']['text'] = 'different'
+                elif mutation == 'reuse': value['cached_result']['reused_prompt_tokens'] = 0
+                elif mutation == 'plan': value['plan']['gpu_allocation_bytes'] = 0
+                elif mutation == 'accounting': value['plan']['gpu_allocation_bytes'] += 64
+                elif mutation == 'concurrency': value['plan']['concurrency'] = 1
+                elif mutation == 'dispatch': value['gpu']['completed_model_dispatches'] = 0
+                elif mutation == 'device': value['gpu']['device'] = ''
+                elif mutation == 'driver': value['gpu']['driver_weight_allocation_bytes'] = 1
+                elif mutation == 'leak': value['final_memory']['reserved'] = 1
+                elif mutation == 'buffers': value['final_memory']['session_buffer_capacity_bytes'] = 1
+                elif mutation == 'peak': value['final_memory']['peak_reserved'] = 4097
+                elif mutation == 'history': value['post_unload_history_reserved'] = 0
+                elif mutation == 'flag': value['disconnect_cleanup'] = False
+                elif mutation == 'empty': value = []
+                path = Path(temporary) / 'api.json'; path.write_text(json.dumps(value))
+                with self.assertRaises(ValueError): runner.validate_api(path, suite)
 
 
 if __name__ == '__main__':

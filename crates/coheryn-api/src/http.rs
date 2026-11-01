@@ -297,8 +297,8 @@ async fn resources(State(s): State<Arc<Service>>) -> Result<Json<Value>> {
         json!({"ram_total_bytes":hardware.ram_total_bytes,"ram_available_bytes":hardware.ram_available_bytes,
         "swap_total_bytes":hardware.swap_total_bytes,"swap_used_bytes":hardware.swap_used_bytes,
         "logical_cpus":hardware.logical_cpus,"hardware": hardware, "engine_memory": memory,
-        "mapped_weight_bytes":0,"gpu":null,
-        "note":"OS observations, session buffer capacities and estimated reservations are distinct; GPU counters are unavailable"}),
+        "mapped_weight_bytes":0,"gpu":null,"loaded_models":s.loaded()?,
+        "note":"OS observations, session buffer capacities and reservations are distinct; loaded GPU models expose logical allocations and driver resource sizes, while physical GPU residency counters are unavailable"}),
     ))
 }
 async fn load(State(s): State<Arc<Service>>, request: Request) -> Result<Json<Value>> {
