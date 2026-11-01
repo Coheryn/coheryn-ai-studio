@@ -98,6 +98,9 @@ class MetalChecksTests(unittest.TestCase):
             self.assertFalse(report['gpu_execution_required'])
             self.assertTrue(report['cross_check'])
             self.assertEqual(report['commands'][1]['command'][-5:], ['--target', 'aarch64-apple-darwin', '--', '-D', 'warnings'])
+            self.assertEqual(report['cli_compile_target'], 'x86_64-unknown-linux-gnu')
+            self.assertIn('coheryn-cli', report['commands'][3]['command'])
+            self.assertNotIn('--target', report['commands'][3]['command'])
             self.assertTrue(all(row['command'][1] != 'test' for row in report['commands']))
 
     def test_skipped_filtered_failed_changed_or_unretired_work_cannot_pass(self):
@@ -149,6 +152,46 @@ class ModelOutputTests(unittest.TestCase):
                 elif mutation == 'empty': value = []
                 path = Path(temporary) / 'model.json'; path.write_text(json.dumps(value))
                 with self.assertRaises(ValueError): runner.validate_model(path, runner.MODEL_SUITES[0])
+
+
+class CliOutputTests(unittest.TestCase):
+    def fixture(self, suite):
+        reference = json.loads((runner.ROOT / runner.PROFILES[suite]['reference']).read_text())
+        return {'schema_version': 1, 'outcome': 'pass', 'suite': suite,
+                'cases': [{'token_ids': case['greedy_token_ids'], 'text': case['greedy_text'],
+                           'prompt_tokens': len(case['prompt_token_ids']),
+                           'completion_tokens': len(case['greedy_token_ids']),
+                           'sampling_metadata': {'backend': 'native-metal-matmul-f32-reference'}}
+                          for case in reference['cases']],
+                'streams': [case['greedy_text'] + '\n' for case in reference['cases']],
+                'rejected': [{'arguments': arguments, 'exit': status, 'error': {'code': code}}
+                             for arguments, status, code in zip(runner.CLI_REJECTED_ARGUMENTS,
+                                 [2, 4, 4, 4], ['INVALID_REQUEST', *(['UNSUPPORTED_FEATURE'] * 3)], strict=True)]}
+
+    def test_all_pinned_suites_require_executable_outputs_and_route_errors(self):
+        for suite in runner.MODEL_SUITES:
+            with self.subTest(suite=suite), tempfile.TemporaryDirectory() as temporary:
+                path = Path(temporary) / 'cli.json'; value = self.fixture(suite)
+                path.write_text(json.dumps(value))
+                self.assertEqual(runner.validate_cli(path, suite), value)
+
+    def test_wrong_answers_backend_streams_status_or_routes_cannot_pass(self):
+        suite = runner.MODEL_SUITES[0]
+        for mutation in ('partial', 'greedy', 'backend', 'stream', 'prompt', 'status', 'route', 'error', 'boolean', 'empty'):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
+                value = self.fixture(suite)
+                if mutation == 'partial': value['cases'].pop()
+                elif mutation == 'greedy': value['cases'][0]['token_ids'] = []
+                elif mutation == 'backend': value['cases'][0]['sampling_metadata']['backend'] = 'native-cpu'
+                elif mutation == 'stream': value['streams'][0] = 'different'
+                elif mutation == 'prompt': value['cases'][0]['prompt_tokens'] += 1
+                elif mutation == 'status': value['rejected'][0]['exit'] = 0
+                elif mutation == 'route': value['rejected'][1]['arguments'] = value['rejected'][2]['arguments']
+                elif mutation == 'error': value['rejected'][0]['error']['code'] = 'IO'
+                elif mutation == 'boolean': value['rejected'][0]['exit'] = True
+                elif mutation == 'empty': value = []
+                path = Path(temporary) / 'cli.json'; path.write_text(json.dumps(value))
+                with self.assertRaises(ValueError): runner.validate_cli(path, suite)
 
 
 if __name__ == '__main__':

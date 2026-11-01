@@ -34,8 +34,10 @@ def commands(gpu, cross_check=False):
         ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-cli', '--features', 'metal', '--bin', 'coheryn', '--locked'),
     ]
     if cross_check:
-        # Compile the macOS FFI and tests, never execute a foreign binary.
-        for index in (1, 2, 3):
+        # Compile the macOS FFI and engine tests, never execute a foreign binary.
+        # The HTTP CLI includes C TLS dependencies requiring an Apple SDK; check
+        # its platform-neutral routing natively here and its Metal build on Mac.
+        for index in (1, 2):
             result[index] = (*result[index][:-3], '--target', 'aarch64-apple-darwin', *result[index][-3:])
         return tuple(result[:4])
     if gpu:
@@ -51,6 +53,43 @@ def commands(gpu, cross_check=False):
 MODEL_SUITES = ('qwen35-gguf-q4_k_m-text', 'qwen35-text')
 MODEL_COMMAND = ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-engine',
                  '--features', 'metal', '--test', 'metal_model', '--locked', '--', '--ignored', '--nocapture')
+CLI_MODEL_COMMAND = ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-cli',
+                     '--features', 'metal', '--test', 'metal_model', '--locked', '--', '--ignored', '--nocapture')
+CLI_REJECTED_ARGUMENTS = [
+    ['run', 'missing.gguf', '--backend', 'metal', '--prompt', 'hello'],
+    ['chat', 'missing.gguf', '--standalone', '--backend', 'metal', '--image', 'missing.png'],
+    ['chat', 'missing.gguf', '--standalone', '--backend', 'metal', '--request', 'missing.json'],
+    ['chat', 'missing.gguf', '--standalone', '--backend', 'metal', '--session', 'test'],
+]
+
+
+def validate_cli(path, suite):
+    if path.stat().st_size > 2 << 20:
+        raise ValueError('GPU CLI output exceeds bound')
+    value = json.loads(path.read_text())
+    reference = json.loads((ROOT / PROFILES[suite]['reference']).read_text())
+    if (not isinstance(value, dict) or value.get('schema_version') != 1
+            or value.get('outcome') != 'pass' or value.get('suite') != suite
+            or not isinstance(value.get('cases'), list) or len(value['cases']) != len(reference['cases'])):
+        raise ValueError('incomplete GPU CLI output coverage')
+    for result, expected in zip(value['cases'], reference['cases'], strict=True):
+        if (not isinstance(result, dict) or result.get('token_ids') != expected['greedy_token_ids']
+                or result.get('text') != expected['greedy_text']
+                or result.get('prompt_tokens') != len(expected['prompt_token_ids'])
+                or result.get('completion_tokens') != len(expected['greedy_token_ids'])
+                or result.get('sampling_metadata', {}).get('backend') != 'native-metal-matmul-f32-reference'):
+            raise ValueError('GPU CLI frozen output/backend mismatch')
+    if value.get('streams') != [case['greedy_text'] + '\n' for case in reference['cases']]:
+        raise ValueError('GPU CLI streaming reconstruction mismatch')
+    rejected = value.get('rejected')
+    expected_codes = ['INVALID_REQUEST', *(['UNSUPPORTED_FEATURE'] * 3)]
+    if (not isinstance(rejected, list) or len(rejected) != 4
+            or any(not isinstance(row, dict) or type(row.get('exit')) is not int or row['exit'] != status
+                   or row.get('arguments') != arguments
+                   or row.get('error', {}).get('code') != code
+                   for row, code, status, arguments in zip(rejected, expected_codes, [2, 4, 4, 4], CLI_REJECTED_ARGUMENTS, strict=True))):
+        raise ValueError('GPU CLI rejection coverage missing')
+    return value
 
 
 def validate_model(path, suite):
@@ -123,6 +162,7 @@ def main():
     report = {'schema_version': 1, 'kind': 'metal-cross-check' if args.cross_check else 'metal-primitive-checks', 'outcome': 'running',
               'production_ready': False, 'gpu_execution_required': args.gpu,
               'compile_target': 'aarch64-apple-darwin', 'cross_check': args.cross_check,
+              'cli_compile_target': native_host,
               'source_snapshot': source, 'source_unchanged': False, 'commands': [],
               'toolchain': {},
               'fixture_sha256': sha(ROOT / 'fixtures/gpu/metal-dense-v1.json'),
@@ -132,7 +172,7 @@ def main():
     if args.model_suite:
         report['kind'] = 'metal-model-checks'
         report['model_suite'] = args.model_suite
-        report['scope'] = 'Selected pretrained native library text graph and primitive checks only; no CLI/API, performance or release qualification.'
+        report['scope'] = 'Selected pretrained native library and standalone CLI text checks; no managed API, performance or release qualification.'
     environment = {**os.environ, 'CARGO_BUILD_JOBS': '1', 'CARGO_INCREMENTAL': '0',
                    'RUST_TEST_THREADS': '1', 'CARGO_NET_OFFLINE': 'true',
                    'CARGO_TARGET_DIR': str(ROOT / 'target'),
@@ -161,12 +201,13 @@ def main():
             if name == 'rustc' and f'\nhost: {native_host}\n' not in output:
                 raise ValueError('Metal compiler host differs from the declared check mode')
             report['toolchain'][name] = {'output': output, 'log': log.relative_to(ROOT).as_posix(), 'log_sha256': sha(log)}
-        inventory = (*commands(args.gpu, args.cross_check), *([MODEL_COMMAND] if args.model_suite else []))
+        inventory = (*commands(args.gpu, args.cross_check), *([MODEL_COMMAND, CLI_MODEL_COMMAND] if args.model_suite else []))
         for number, command in enumerate(inventory):
             if command == MODEL_COMMAND:
                 _, report['model_inputs'] = models([args.model_suite], args.fetch, guard)
                 environment['COHERYN_METAL_MODEL_SUITE'] = args.model_suite
                 environment['COHERYN_METAL_MODEL_REPORT'] = str(directory / 'model.json')
+                environment['COHERYN_METAL_CLI_REPORT'] = str(directory / 'cli-model.json')
                 checkpoint(args.report, report)
             log = directory / f'{number}.log'
             row = {'command': list(command), 'exit': None, 'validated': False, 'log': log.relative_to(ROOT).as_posix()}
@@ -193,6 +234,9 @@ def main():
             if command == MODEL_COMMAND:
                 report['model'] = validate_model(directory / 'model.json', args.model_suite)
                 report['model_output_sha256'] = sha(directory / 'model.json')
+            if command == CLI_MODEL_COMMAND:
+                report['cli_model'] = validate_cli(directory / 'cli-model.json', args.model_suite)
+                report['cli_model_output_sha256'] = sha(directory / 'cli-model.json')
         if any(not row['validated'] for row in report['commands']):
             raise ValueError('Metal formatting failed; other guarded check results retained')
         report['outcome'] = 'pass'
