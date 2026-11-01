@@ -36,6 +36,8 @@ class SoakRunnerTests(unittest.TestCase):
              patch.object(runner, 'source_identity', side_effect=[source, {'example.rs': 'changed'}] if changed else [source, source]), \
              patch.object(runner, 'sha', return_value='0' * 64), \
              patch.object(runner, 'native_target', return_value='aarch64-apple-darwin'), \
+             patch.object(runner, 'driver_identity', return_value={'path': 'target/release/examples/cpu_soak',
+                                                                  'bytes': 1, 'sha256': '0' * 64}), \
              patch.object(runner, 'Guard', side_effect=make_guard), \
              patch.object(runner, 'run_child', side_effect=child) as execute, \
              patch.object(runner.signal, 'signal'), \
@@ -56,6 +58,7 @@ class SoakRunnerTests(unittest.TestCase):
             self.assertTrue(all(c['validated'] for c in result['commands']))
             self.assertTrue(result['source_unchanged'] and result['owned_cleanup_confirmed'])
             self.assertEqual(set(result['toolchain']), {'cargo', 'rustc'})
+            self.assertEqual(result['binary']['path'], 'target/release/examples/cpu_soak')
 
     def test_compile_failure_preserves_log_and_prevents_later_commands(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -100,6 +103,7 @@ class SoakRunnerTests(unittest.TestCase):
                 ['cargo', 'fetch', '--locked', '--manifest-path', 'fuzz/Cargo.toml']])
             self.assertTrue(all(c['validated'] and 'tests' not in c for c in result['commands']))
             self.assertFalse(result['production_ready'])
+            self.assertNotIn('binary', result)
 
     @staticmethod
     def input_fixture(root):

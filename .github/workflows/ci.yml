@@ -28,6 +28,7 @@ jobs:
       - run: python tools/check_tool_fixtures.py
       - run: python tools/check_constraint_fixtures.py
       - run: python tools/test_repository_policy.py
+      - run: python tools/test_cpu_driver.py
       - run: python tools/check_repository_policy.py
       - uses: dtolnay/rust-toolchain@1.99.1
         with:
@@ -36,13 +37,17 @@ jobs:
       - run: cargo fetch --locked --manifest-path fuzz/Cargo.toml
       - name: Check native runner identity
         run: python -c "import sys; sys.path.insert(0, 'tools'); from verify_cpu_package import native_target; assert native_target() == '${{ matrix.target }}'"
+      - name: Admit guarded driver preparation
+        run: python tools/check_cpu_host.py --wait-for-load-seconds 300 --report .cache/cpu-driver-host.json
+      - name: Prepare and test the reusable native soak driver
+        run: python tools/check_cpu_soak.py --report .cache/cpu-driver-checks.json
       - run: python tools/run_cpu_checks.py --report .cache/cpu-native-checks.json
       - run: python tools/test_license_notices.py
       - run: python tools/test_cpu_soak.py
       - run: python tools/test_cpu_qualification.py
       - name: Admit synthetic smoke after build load settles
         run: python tools/check_cpu_host.py --wait-for-load-seconds 300 --report .cache/cpu-smoke-host.json
-      - run: python tools/run_cpu_soak.py --profile fixtures/soak/cpu-smoke-v1.json --report .cache/cpu-soak-smoke.json
+      - run: python tools/run_cpu_soak.py --profile fixtures/soak/cpu-smoke-v1.json --report .cache/cpu-soak-smoke.json --build-record .cache/cpu-driver-checks.json
       - run: python tools/check_release_strings.py --report target/cpu-release-strings.json
       - run: python tools/package_cpu_release.py --target ${{ matrix.target }} --build-record .cache/cpu-native-checks.json --report target/cpu-package.json
       - name: Verify and execute the extracted native candidate
@@ -58,6 +63,9 @@ jobs:
             target/cpu-package.json
             target/cpu-package-smoke.json
             .cache/cpu-native-checks.json
+            .cache/cpu-driver-host.json
+            .cache/cpu-driver-checks.json
+            .cache/cpu-soak-checks/**
             .cache/cpu-checks/**
             .cache/cpu-soak-smoke.json
             .cache/cpu-smoke-host.json

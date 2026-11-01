@@ -171,3 +171,11 @@ python3 tools/run_cpu_soak.py --profile fixtures/soak/cpu-modern-shared-soak-v1.
 ```
 
 Campaign execution and review are required before claiming a result. This workload does not close independent numerical parity, broader pretrained concurrency/profile/context coverage, TCP/TLS, security, signing or production review. The approved numerical reference location remains pending.
+
+## Reusing a checked driver
+
+`check_cpu_soak.py` now records the native example executable's path, size and SHA-256 after its complete release tests and strict Clippy checks. A subsequent run can use `run_cpu_soak.py --build-record PATH`. Reuse requires the exact current source snapshot and native target, passing unfiltered/nonignored tests, checked command-log hashes, successful owned-process cleanup, a healthy completed observer and the unchanged executable. Missing, stale, failed, linked or modified inputs fail before native execution; no fallback compilation occurs.
+
+The standard, smoke and sustained workflows prepare this driver once and reuse it for each workload. Standard native builds also use one Cargo job. The macOS smoke stop on source `bbeb1bd` happened during additional example compilation when load reached 6.0337 on three CPUs, beyond the unchanged cutoff of 6. Avoiding that extra build removes its source of load without weakening admission or the running observer. Current-source execution evidence is still required after this change.
+
+A run with a build record reports `driver_preparation.mode: verified-record` and binds the record and executable hashes. It omits `build_exit` because that run performed no build. Without `--build-record`, the existing guarded build path remains available. Neither mode changes frozen workloads, timeouts, memory ceilings or model correctness criteria.

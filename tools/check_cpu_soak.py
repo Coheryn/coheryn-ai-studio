@@ -4,37 +4,22 @@ import argparse
 import os
 from pathlib import Path
 import platform
-import re
 import signal
 import sys
 import time
 
 from check_cpu_release import ROOT, sha, source_identity
 from cpu_qualification.host import Guard
+from cpu_qualification.driver import CHECK_COMMANDS, driver_identity, test_counts
 from run_cpu_qualification import checkpoint
 from run_cpu_soak import run_child
 from verify_cpu_package import native_target
 
-COMMANDS = (
-    ('cargo', 'test', '--release', '--workspace', '--example', 'cpu_soak', '--locked'),
-    ('cargo', 'clippy', '--release', '--workspace', '--example', 'cpu_soak', '--tests', '--locked', '--', '-D', 'warnings'),
-)
+COMMANDS = CHECK_COMMANDS
 FETCH_COMMANDS = (
     ('cargo', 'fetch', '--locked'),
     ('cargo', 'fetch', '--locked', '--manifest-path', 'fuzz/Cargo.toml'),
 )
-
-
-def test_counts(path):
-    totals = dict(suites=0, passed=0, failed=0, ignored=0, filtered=0)
-    with path.open(encoding='utf-8', errors='replace') as stream:
-        for line in stream:
-            match = re.search(r'test result: (?:ok|FAILED)\. (\d+) passed; (\d+) failed; (\d+) ignored; \d+ measured; (\d+) filtered out', line)
-            if match:
-                totals['suites'] += 1
-                for key, value in zip(('passed', 'failed', 'ignored', 'filtered'), match.groups()):
-                    totals[key] += int(value)
-    return totals
 
 
 def main():
@@ -103,6 +88,9 @@ def main():
             finally:
                 if log.exists(): record['log_sha256'] = sha(log)
                 checkpoint(args.report, result)
+        if not args.fetch_only:
+            guard.check()
+            result['binary'] = driver_identity(target)
         result['outcome'] = 'pass'
     except (Exception, KeyboardInterrupt) as error:
         result['outcome'], result['error'] = 'fail', str(error)

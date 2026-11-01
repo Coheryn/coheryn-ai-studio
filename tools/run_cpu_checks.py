@@ -26,7 +26,7 @@ def main():
     directory = ROOT / '.cache/cpu-checks' / args.report.stem
     directory.mkdir(parents=True, exist_ok=True)
     cargo = str(ROOT / 'tools/cargo') if os.name != 'nt' and (ROOT / '.cache/cargo/bin/cargo').exists() else 'cargo'
-    environment = {**os.environ, 'CARGO_BUILD_JOBS': '2', 'CARGO_INCREMENTAL': '0',
+    environment = {**os.environ, 'CARGO_BUILD_JOBS': '1', 'CARGO_INCREMENTAL': '0',
                    'CARGO_PROFILE_DEV_DEBUG': '0', 'CARGO_PROFILE_TEST_DEBUG': '0'}
     records = []
     for number, command in enumerate(COMMANDS):

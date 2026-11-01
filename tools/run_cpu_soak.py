@@ -15,6 +15,8 @@ import time
 
 from check_cpu_release import ROOT, sha, source_identity
 from cpu_qualification.host import Guard, child_options
+from cpu_qualification.driver import driver_path, prepared_driver
+from verify_cpu_package import native_target
 from run_cpu_qualification import checkpoint
 
 SCENARIOS = {'queue_saturation_and_disconnect', 'slow_consumer_timeout',
@@ -312,6 +314,8 @@ def main():
     parser.add_argument('--profile', type=Path, default=ROOT / 'fixtures/soak/cpu-synthetic-v1.json')
     parser.add_argument('--models', type=Path, default=ROOT / 'fixtures/soak/synthetic-models-v1.json')
     parser.add_argument('--report', type=Path, required=True)
+    parser.add_argument('--build-record', type=Path,
+                        help='reuse the exact driver from passing current-source guarded checks; never rebuild on mismatch')
     parser.add_argument('--timeout-seconds', type=int, default=3600,
                         help='hard process deadline; timeout records failure and kills the owned driver')
     args = parser.parse_args()
@@ -346,15 +350,20 @@ def main():
     children = []
     checkpoint(args.report, result)
     try:
+        prepared = prepared_driver(args.build_record, source, native_target()) if args.build_record else None
+        result['driver_preparation'] = prepared or {'mode': 'guarded-current-build'}
         guard = Guard(run)
         guard.start()
-        build = run_child(command, ROOT, environment, run / 'build.log', 1800, guard, children.append)
-        result['build_exit'] = build
-        checkpoint(args.report, result)
-        if build:
-            raise ValueError('optimized driver build failed; inspect build.log')
-        binary = ROOT / 'target/release/examples' / ('cpu_soak.exe' if os.name == 'nt' else 'cpu_soak')
+        if prepared is None:
+            build = run_child(command, ROOT, environment, run / 'build.log', 1800, guard, children.append)
+            result['build_exit'] = build
+            checkpoint(args.report, result)
+            if build:
+                raise ValueError('optimized driver build failed; inspect build.log')
+        binary = driver_path(native_target())
         result['binary_sha256'] = sha(binary)
+        if prepared and result['binary_sha256'] != prepared['binary']['sha256']:
+            raise ValueError('prepared native soak driver changed before execution')
         guard.sample(disk_reservation=model_copy_bytes(sources))
         # Freeze exact inputs under this exclusive run directory before execution.
         for name, value in [('profile.json', profile), ('models.json', sources)]:

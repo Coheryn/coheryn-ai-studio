@@ -46,6 +46,7 @@ jobs:
         run: python tools/test_cpu_soak_runner.py
       - run: python tools/test_cpu_qualification.py
       - run: python tools/test_cpu_soak.py
+      - run: python tools/test_cpu_driver.py
       - run: python tools/test_cpu_shards.py
       - name: Prepare locked dependency graphs for offline license checks
         run: python tools/check_cpu_soak.py --fetch-only --report .cache/cpu-soak-dependencies.json
@@ -55,13 +56,13 @@ jobs:
       - name: Guarded Rust tests and strict Clippy
         run: python tools/check_cpu_soak.py --report .cache/cpu-soak-checks.json
       - name: Synthetic operational smoke
-        run: python tools/run_cpu_soak.py --profile fixtures/soak/cpu-smoke-v1.json --report .cache/cpu-soak-synthetic.json --timeout-seconds 300
+        run: python tools/run_cpu_soak.py --profile fixtures/soak/cpu-smoke-v1.json --report .cache/cpu-soak-synthetic.json --timeout-seconds 300 --build-record .cache/cpu-soak-checks.json
       - name: Acquire and verify only pinned modern soak inputs
         if: ${{ github.event_name == 'push' || inputs.modern_models }}
         run: python tools/prepare_cpu_soak.py --fetch --download-attempts 2 --report .cache/cpu-soak-inputs.json
       - name: Shared modern text, vision and embedding smoke
         if: ${{ github.event_name == 'push' || inputs.modern_models }}
-        run: python tools/run_cpu_soak.py --profile fixtures/soak/cpu-modern-shared-smoke-v1.json --models fixtures/soak/qwen35-shared-nomic-models-v2.json --report .cache/cpu-soak-modern.json --timeout-seconds 7200
+        run: python tools/run_cpu_soak.py --profile fixtures/soak/cpu-modern-shared-smoke-v1.json --models fixtures/soak/qwen35-shared-nomic-models-v2.json --report .cache/cpu-soak-modern.json --timeout-seconds 7200 --build-record .cache/cpu-soak-checks.json
       - uses: actions/upload-artifact@v7.0.2
         if: always()
         with:
