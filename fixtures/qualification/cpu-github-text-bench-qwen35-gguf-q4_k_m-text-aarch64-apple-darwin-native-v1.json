@@ -1,0 +1,354 @@
+{
+  "architecture": "aarch64",
+  "available_cpus": 3,
+  "cases": 2,
+  "inputs": [
+    {
+      "bytes": 11544,
+      "path": ".cache/qwen35-gguf/LICENSE",
+      "sha256": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a"
+    },
+    {
+      "bytes": 7755,
+      "path": ".cache/qwen35-gguf/chat_template.jinja",
+      "sha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80"
+    },
+    {
+      "bytes": 2907,
+      "path": ".cache/qwen35-gguf/config.json",
+      "sha256": "b90b86f35c8e6925ef74ee04d0e758f0a845c83a42089ad82bbaa948de9b4204"
+    },
+    {
+      "bytes": 390,
+      "path": ".cache/qwen35-gguf/preprocessor_config.json",
+      "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516"
+    },
+    {
+      "bytes": 12807982,
+      "path": ".cache/qwen35-gguf/tokenizer.json",
+      "sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42"
+    },
+    {
+      "bytes": 16709,
+      "path": ".cache/qwen35-gguf/tokenizer_config.json",
+      "sha256": "49e2b6e395f959f077f1e992b338919c0d4a9732fc6e613995e06557f843500c"
+    },
+    {
+      "bytes": 533614976,
+      "path": ".cache/qwen35-gguf/Qwen3.5-0.8B-q4_k_m.gguf",
+      "sha256": "8bd70fa4eb6015c7b28a60d8f16322c5313cbcddd11f2dac20fff72d70a4c8a8"
+    }
+  ],
+  "os": "macos",
+  "outcome": "pass",
+  "runs": [
+    {
+      "benchmark": {
+        "adapter": {
+          "adapter": "qwen35-gguf-cpu-v1",
+          "architecture": "qwen35",
+          "continuous_batching": true,
+          "format": "gguf",
+          "images": true,
+          "managed_api": true,
+          "qualification": "experimental-cpu-text-and-still-image",
+          "text_generation": true
+        },
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 692.739875,
+        "mode": "standalone",
+        "profile": "balanced",
+        "requested_threads": 1,
+        "runs": [
+          {
+            "completion_tokens": 4,
+            "decode_ms": 4284.940667,
+            "finish_reason": "length",
+            "first_token_ms": 12624.666333000001,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 318476903,
+              "peak_session_buffer_capacity_bytes": 28874872,
+              "reserved": 268435456,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.001251,
+            "prefill_ms": 12619.783123999998,
+            "prompt_tokens": 15,
+            "reused_prompt_tokens": 0,
+            "text": "Hello! How can",
+            "token_ids": [
+              9419,
+              0,
+              2500,
+              628
+            ],
+            "tokenization_ms": 1.729167
+          },
+          {
+            "completion_tokens": 4,
+            "decode_ms": 5112.20746,
+            "finish_reason": "length",
+            "first_token_ms": 12849.477584,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 318476903,
+              "peak_session_buffer_capacity_bytes": 28874872,
+              "reserved": 268435456,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.0070420000000000005,
+            "prefill_ms": 12844.924957,
+            "prompt_tokens": 15,
+            "reused_prompt_tokens": 0,
+            "text": "Hello! How can",
+            "token_ids": [
+              9419,
+              0,
+              2500,
+              628
+            ],
+            "tokenization_ms": 0.100167
+          }
+        ]
+      },
+      "case": "english",
+      "entrypoint": 0,
+      "workers": 1
+    },
+    {
+      "benchmark": {
+        "adapter": {
+          "adapter": "qwen35-gguf-cpu-v1",
+          "architecture": "qwen35",
+          "continuous_batching": true,
+          "format": "gguf",
+          "images": true,
+          "managed_api": true,
+          "qualification": "experimental-cpu-text-and-still-image",
+          "text_generation": true
+        },
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 667.97275,
+        "mode": "standalone",
+        "profile": "balanced",
+        "requested_threads": 2,
+        "runs": [
+          {
+            "completion_tokens": 4,
+            "decode_ms": 6273.804667,
+            "finish_reason": "length",
+            "first_token_ms": 16506.921708,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 319774516,
+              "peak_session_buffer_capacity_bytes": 28874872,
+              "reserved": 268435456,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.009542,
+            "prefill_ms": 16501.971168,
+            "prompt_tokens": 15,
+            "reused_prompt_tokens": 0,
+            "text": "Hello! How can",
+            "token_ids": [
+              9419,
+              0,
+              2500,
+              628
+            ],
+            "tokenization_ms": 1.217958
+          },
+          {
+            "completion_tokens": 4,
+            "decode_ms": 5913.571376000001,
+            "finish_reason": "length",
+            "first_token_ms": 17781.886333,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 319774516,
+              "peak_session_buffer_capacity_bytes": 28874872,
+              "reserved": 268435456,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.010542,
+            "prefill_ms": 17770.57525,
+            "prompt_tokens": 15,
+            "reused_prompt_tokens": 0,
+            "text": "Hello! How can",
+            "token_ids": [
+              9419,
+              0,
+              2500,
+              628
+            ],
+            "tokenization_ms": 0.423875
+          }
+        ]
+      },
+      "case": "english",
+      "entrypoint": 0,
+      "workers": 2
+    },
+    {
+      "benchmark": {
+        "adapter": {
+          "adapter": "qwen35-gguf-cpu-v1",
+          "architecture": "qwen35",
+          "continuous_batching": true,
+          "format": "gguf",
+          "images": true,
+          "managed_api": true,
+          "qualification": "experimental-cpu-text-and-still-image",
+          "text_generation": true
+        },
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 660.9388339999999,
+        "mode": "standalone",
+        "profile": "balanced",
+        "requested_threads": 1,
+        "runs": [
+          {
+            "completion_tokens": 4,
+            "decode_ms": 5172.032042,
+            "finish_reason": "length",
+            "first_token_ms": 25096.879208000002,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 318476903,
+              "peak_session_buffer_capacity_bytes": 28874872,
+              "reserved": 268435456,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.012,
+            "prefill_ms": 25091.020000999997,
+            "prompt_tokens": 25,
+            "reused_prompt_tokens": 0,
+            "text": "হ্যালো!",
+            "token_ids": [
+              151318,
+              212488,
+              148885,
+              0
+            ],
+            "tokenization_ms": 1.26725
+          },
+          {
+            "completion_tokens": 4,
+            "decode_ms": 5164.799751,
+            "finish_reason": "length",
+            "first_token_ms": 23821.000334,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 318476903,
+              "peak_session_buffer_capacity_bytes": 28874872,
+              "reserved": 268435456,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.013626,
+            "prefill_ms": 23807.050581,
+            "prompt_tokens": 25,
+            "reused_prompt_tokens": 0,
+            "text": "হ্যালো!",
+            "token_ids": [
+              151318,
+              212488,
+              148885,
+              0
+            ],
+            "tokenization_ms": 0.538125
+          }
+        ]
+      },
+      "case": "unicode",
+      "entrypoint": 0,
+      "workers": 1
+    },
+    {
+      "benchmark": {
+        "adapter": {
+          "adapter": "qwen35-gguf-cpu-v1",
+          "architecture": "qwen35",
+          "continuous_batching": true,
+          "format": "gguf",
+          "images": true,
+          "managed_api": true,
+          "qualification": "experimental-cpu-text-and-still-image",
+          "text_generation": true
+        },
+        "backend": "cpu-reference",
+        "cache_condition": "uncontrolled",
+        "load_ms": 802.2335830000001,
+        "mode": "standalone",
+        "profile": "balanced",
+        "requested_threads": 2,
+        "runs": [
+          {
+            "completion_tokens": 4,
+            "decode_ms": 5649.229501,
+            "finish_reason": "length",
+            "first_token_ms": 28939.3035,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 319774516,
+              "peak_session_buffer_capacity_bytes": 28874872,
+              "reserved": 268435456,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.130417,
+            "prefill_ms": 28930.129960000002,
+            "prompt_tokens": 25,
+            "reused_prompt_tokens": 0,
+            "text": "হ্যালো!",
+            "token_ids": [
+              151318,
+              212488,
+              148885,
+              0
+            ],
+            "tokenization_ms": 1.70075
+          },
+          {
+            "completion_tokens": 4,
+            "decode_ms": 5686.890291,
+            "finish_reason": "length",
+            "first_token_ms": 27911.531417,
+            "memory": {
+              "limit": 1073741824,
+              "peak_reserved": 319774516,
+              "peak_session_buffer_capacity_bytes": 28874872,
+              "reserved": 268435456,
+              "session_buffer_capacity_bytes": 0
+            },
+            "output_delivery_ms": 0.011875,
+            "prefill_ms": 27894.354330999995,
+            "prompt_tokens": 25,
+            "reused_prompt_tokens": 0,
+            "text": "হ্যালো!",
+            "token_ids": [
+              151318,
+              212488,
+              148885,
+              0
+            ],
+            "tokenization_ms": 0.688084
+          }
+        ]
+      },
+      "case": "unicode",
+      "entrypoint": 0,
+      "workers": 2
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Pinned greedy/tokenizer and native benchmark routing; repeated fresh sessions. Timing observations under uncontrolled cache conditions; no full-array, performance-SLA or production qualification.",
+  "source_entrypoints": 1,
+  "suite": "qwen35-gguf-q4_k_m-text",
+  "threads": [
+    1,
+    2
+  ]
+}

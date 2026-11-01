@@ -1,0 +1,1006 @@
+{
+  "schema_version": 1,
+  "kind": "cpu-host-preflight",
+  "policy": {
+    "min_free_disk_bytes": 8589934592,
+    "min_available_memory_bytes": 1073741824,
+    "max_compressed_fraction": 0.35,
+    "max_load_per_cpu": 1.0,
+    "sample_seconds": 2.0,
+    "max_samples": 16384
+  },
+  "production_ready": false,
+  "outcome": "fail",
+  "startup_load_wait_seconds": 300,
+  "observation": {
+    "system": "Darwin",
+    "disk_free_bytes": 45288390656,
+    "cpu_count": 3,
+    "thermal_state": "nominal",
+    "compressed_memory_bytes": 384303104,
+    "memory_pressure_level": 1,
+    "load_1m": 8.67529296875,
+    "physical_memory_bytes": 7516192768,
+    "available_memory_bytes": 3213672448,
+    "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+  },
+  "reason": "host load exceeds cutoff",
+  "samples": [
+    {
+      "elapsed_seconds": 0.009749333000002025,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45889085440,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 276299776,
+        "memory_pressure_level": 1,
+        "load_1m": 27.7275390625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3509993472,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 5.088564457999993,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45878247424,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 274874368,
+        "memory_pressure_level": 1,
+        "load_1m": 26.9482421875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3334848512,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 10.153779125,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45878251520,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 274464768,
+        "memory_pressure_level": 1,
+        "load_1m": 26.1513671875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3244818432,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 15.235514542000004,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45878235136,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 272646144,
+        "memory_pressure_level": 1,
+        "load_1m": 24.13720703125,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3220078592,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 20.268024833,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45855678464,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 272203776,
+        "memory_pressure_level": 1,
+        "load_1m": 22.3642578125,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3332243456,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 25.326527041999995,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45844418560,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 272203776,
+        "memory_pressure_level": 1,
+        "load_1m": 20.5732421875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3213803520,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 30.391187291999984,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45835808768,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 271040512,
+        "memory_pressure_level": 1,
+        "load_1m": 19.88623046875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3276537856,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 35.44427454199999,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45814910976,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 270925824,
+        "memory_pressure_level": 1,
+        "load_1m": 18.69384765625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3214573568,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 40.492404083,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45801480192,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 267059200,
+        "memory_pressure_level": 1,
+        "load_1m": 17.27685546875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3241197568,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 45.55649162500001,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45800013824,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 288849920,
+        "memory_pressure_level": 1,
+        "load_1m": 15.97314453125,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3214524416,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 50.653373749999986,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45797167104,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 287916032,
+        "memory_pressure_level": 1,
+        "load_1m": 14.85400390625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3225075712,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 55.703038375000006,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45797195776,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 287522816,
+        "memory_pressure_level": 1,
+        "load_1m": 13.82421875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3218374656,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 60.78606041699999,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45797412864,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 285196288,
+        "memory_pressure_level": 1,
+        "load_1m": 12.716796875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3241672704,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 65.87351791699999,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45788037120,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 285114368,
+        "memory_pressure_level": 1,
+        "load_1m": 11.6982421875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3197681664,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 70.90772625,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45788041216,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 285097984,
+        "memory_pressure_level": 1,
+        "load_1m": 10.92138671875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3208822784,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 75.988779292,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45787754496,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 284639232,
+        "memory_pressure_level": 1,
+        "load_1m": 10.20654296875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3230482432,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 81.071511792,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45795270656,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 284606464,
+        "memory_pressure_level": 1,
+        "load_1m": 9.62939453125,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3273834496,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 86.11142525,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45803024384,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 284606464,
+        "memory_pressure_level": 1,
+        "load_1m": 9.01806640625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3199008768,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 91.18121812499999,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45803065344,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 283066368,
+        "memory_pressure_level": 1,
+        "load_1m": 8.4560546875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3202809856,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 96.20266625,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45782335488,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 285720576,
+        "memory_pressure_level": 1,
+        "load_1m": 8.01904296875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3237216256,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 101.249057292,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45768810496,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 288325632,
+        "memory_pressure_level": 1,
+        "load_1m": 7.37646484375,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3221274624,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 106.323219333,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45768847360,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 288178176,
+        "memory_pressure_level": 1,
+        "load_1m": 6.86572265625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3204464640,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 111.34065445799999,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45765754880,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 288047104,
+        "memory_pressure_level": 1,
+        "load_1m": 6.47607421875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3199975424,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 116.35491300000001,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45765865472,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 288047104,
+        "memory_pressure_level": 1,
+        "load_1m": 6.037109375,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3199156224,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 121.46040987500001,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45761712128,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 287916032,
+        "memory_pressure_level": 1,
+        "load_1m": 5.63330078125,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3200172032,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 126.53223045799999,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45761675264,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 288653312,
+        "memory_pressure_level": 1,
+        "load_1m": 5.18212890625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3210264576,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 131.591777417,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45761609728,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 288489472,
+        "memory_pressure_level": 1,
+        "load_1m": 5.56787109375,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3200106496,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 136.619656417,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45761462272,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 288276480,
+        "memory_pressure_level": 1,
+        "load_1m": 5.36181640625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3219816448,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 141.709220208,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45760159744,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 293208064,
+        "memory_pressure_level": 1,
+        "load_1m": 5.81298828125,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3233464320,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 146.75343924999999,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45760188416,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 294780928,
+        "memory_pressure_level": 1,
+        "load_1m": 5.50732421875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3206955008,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 151.84974075,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45759049728,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 297222144,
+        "memory_pressure_level": 1,
+        "load_1m": 5.38623046875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3202940928,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 156.89571299999997,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45759107072,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 299253760,
+        "memory_pressure_level": 1,
+        "load_1m": 4.95458984375,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3198468096,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 161.973148833,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45754228736,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 323780608,
+        "memory_pressure_level": 1,
+        "load_1m": 4.7177734375,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3185786880,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 167.067599875,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45735161856,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 322895872,
+        "memory_pressure_level": 1,
+        "load_1m": 4.5,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3187490816,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 172.0861555,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45716467712,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 322830336,
+        "memory_pressure_level": 1,
+        "load_1m": 4.2998046875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3213115392,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 177.1704875,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45718495232,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 322453504,
+        "memory_pressure_level": 1,
+        "load_1m": 4.03515625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3213754368,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 182.22273145799997,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45715042304,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 321323008,
+        "memory_pressure_level": 1,
+        "load_1m": 5.3134765625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3192815616,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 187.31802508299998,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45715066880,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 321273856,
+        "memory_pressure_level": 1,
+        "load_1m": 5.0478515625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3216523264,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 192.406432792,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45685985280,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 321978368,
+        "memory_pressure_level": 1,
+        "load_1m": 4.7236328125,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3209953280,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 197.50848416699998,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45685989376,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 322027520,
+        "memory_pressure_level": 1,
+        "load_1m": 4.34521484375,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3198746624,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 202.59003625,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45685354496,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 321847296,
+        "memory_pressure_level": 1,
+        "load_1m": 3.9970703125,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3194454016,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 207.62327087499997,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45685485568,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 329744384,
+        "memory_pressure_level": 1,
+        "load_1m": 4.5576171875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3245899776,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 212.716121292,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45637787648,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 332005376,
+        "memory_pressure_level": 1,
+        "load_1m": 4.2724609375,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3219357696,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 217.76845258299997,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45562966016,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 337543168,
+        "memory_pressure_level": 1,
+        "load_1m": 5.77197265625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3182919680,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 222.871782417,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45529210880,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 326516736,
+        "memory_pressure_level": 1,
+        "load_1m": 5.7900390625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3203694592,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 227.96028425,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45529346048,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 326582272,
+        "memory_pressure_level": 1,
+        "load_1m": 5.486328125,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3194748928,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 233.01056670799997,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45526208512,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 327172096,
+        "memory_pressure_level": 1,
+        "load_1m": 5.126953125,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3189948416,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 238.170429708,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45526437888,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 340131840,
+        "memory_pressure_level": 1,
+        "load_1m": 6.63818359375,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3204825088,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 243.258288292,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45514047488,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 338116608,
+        "memory_pressure_level": 1,
+        "load_1m": 6.5869140625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3189522432,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 248.34678158300002,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45497413632,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 344473600,
+        "memory_pressure_level": 1,
+        "load_1m": 6.29931640625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3180347392,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 253.50566595799998,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45412691968,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 350109696,
+        "memory_pressure_level": 1,
+        "load_1m": 7.31591796875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3182968832,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 258.616280792,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45410136064,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 349978624,
+        "memory_pressure_level": 1,
+        "load_1m": 6.97021484375,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3190063104,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 263.72723233299996,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45409337344,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 349175808,
+        "memory_pressure_level": 1,
+        "load_1m": 8.01318359375,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3248996352,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 268.874199458,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45407756288,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 349093888,
+        "memory_pressure_level": 1,
+        "load_1m": 7.69140625,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3209216000,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 273.921271458,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45407715328,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 354369536,
+        "memory_pressure_level": 1,
+        "load_1m": 8.9970703125,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3184361472,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 278.95248845799995,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45404327936,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 372637696,
+        "memory_pressure_level": 1,
+        "load_1m": 8.6767578125,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3162243072,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 284.08481495800004,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45403492352,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 371900416,
+        "memory_pressure_level": 1,
+        "load_1m": 8.22216796875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3169763328,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 289.21328637500005,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45402902528,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 371539968,
+        "memory_pressure_level": 1,
+        "load_1m": 7.7236328125,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3162587136,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 294.352095417,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45315993600,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 371703808,
+        "memory_pressure_level": 1,
+        "load_1m": 8.38623046875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3163504640,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 299.500563542,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45288390656,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 384368640,
+        "memory_pressure_level": 1,
+        "load_1m": 8.67529296875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3177955328,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    },
+    {
+      "elapsed_seconds": 300.087846208,
+      "observation": {
+        "system": "Darwin",
+        "disk_free_bytes": 45288390656,
+        "cpu_count": 3,
+        "thermal_state": "nominal",
+        "compressed_memory_bytes": 384303104,
+        "memory_pressure_level": 1,
+        "load_1m": 8.67529296875,
+        "physical_memory_bytes": 7516192768,
+        "available_memory_bytes": 3213672448,
+        "available_memory_kind": "free + inactive + speculative estimate; not a reservation"
+      },
+      "reason": "host load exceeds cutoff"
+    }
+  ]
+}

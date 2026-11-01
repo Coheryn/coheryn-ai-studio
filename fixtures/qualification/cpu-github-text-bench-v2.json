@@ -1,0 +1,296 @@
+{
+  "schema_version": 1,
+  "kind": "github-native-text-benchmark-checkpoint",
+  "outcome": "incomplete",
+  "production_ready": false,
+  "source_commit": "6c58bb5bfd881551d2743f45e678afeaee3e4e51",
+  "run_id": 41266587467,
+  "run_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41266587467",
+  "expected_matrix": {
+    "targets": [
+      "aarch64-apple-darwin",
+      "x86_64-unknown-linux-gnu",
+      "x86_64-pc-windows-msvc"
+    ],
+    "suites": [
+      "gguf-text",
+      "qwen35-gguf-q4_k_m-text",
+      "qwen35-text"
+    ]
+  },
+  "reviewed": [
+    {
+      "target": "aarch64-apple-darwin",
+      "suite": "gguf-text",
+      "outcome": "pass",
+      "generations": 8,
+      "workers": [
+        1,
+        2
+      ],
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-text-bench-gguf-text-aarch64-apple-darwin-checks-v1.json",
+          "bytes": 73694,
+          "sha256": "80df53f54a6716aa508214fff36828e98f03c112771e760cee5e49ed315571a5"
+        },
+        "native": {
+          "path": "fixtures/qualification/cpu-github-text-bench-gguf-text-aarch64-apple-darwin-native-v1.json",
+          "bytes": 20199,
+          "sha256": "f1d16d332784b72726d7bf202cb6737cf1cae1f7e27511fd5d16c2a1858f3952"
+        }
+      },
+      "acquired_unused_assets": [],
+      "artifact": {
+        "id": 13068120763,
+        "name": "text-benchmark-aarch64-apple-darwin-gguf-text-1",
+        "digest": "sha256:71e3f15caaa3dc72e830beeb109b2cfeaad4f34c97e09093ac51fc5f3d70350b",
+        "size_in_bytes": 63837
+      }
+    },
+    {
+      "target": "x86_64-pc-windows-msvc",
+      "suite": "gguf-text",
+      "outcome": "pass",
+      "generations": 12,
+      "workers": [
+        1,
+        2,
+        4
+      ],
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-text-bench-gguf-text-x86_64-pc-windows-msvc-checks-v1.json",
+          "bytes": 85352,
+          "sha256": "a94bd7d16ee43c422f325af102098dd4b04cd340c99c35c7ac227b14e7a18c0c"
+        },
+        "native": {
+          "path": "fixtures/qualification/cpu-github-text-bench-gguf-text-x86_64-pc-windows-msvc-native-v1.json",
+          "bytes": 29925,
+          "sha256": "e30daaec2b580d8bd7befe76191ff0e8355607ae5f476badd315fb088cd32559"
+        }
+      },
+      "acquired_unused_assets": [],
+      "artifact": {
+        "id": 13068231026,
+        "name": "text-benchmark-x86_64-pc-windows-msvc-gguf-text-1",
+        "digest": "sha256:03e183fc3e68458ffc589249f35c6ed11ab7f2d5d0395d8d02cf05035a0cf324",
+        "size_in_bytes": 66327
+      }
+    },
+    {
+      "target": "x86_64-unknown-linux-gnu",
+      "suite": "gguf-text",
+      "outcome": "pass",
+      "generations": 12,
+      "workers": [
+        1,
+        2,
+        4
+      ],
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-text-bench-gguf-text-x86_64-unknown-linux-gnu-checks-v1.json",
+          "bytes": 84031,
+          "sha256": "192330fd349751cc1a8797511b3b37584832af9c945ff0aba9c51ff96992986b"
+        },
+        "native": {
+          "path": "fixtures/qualification/cpu-github-text-bench-gguf-text-x86_64-unknown-linux-gnu-native-v1.json",
+          "bytes": 29979,
+          "sha256": "e1fe3a4229033cfd555c59771d85269b26ec04d0e33a5a3cb167caebb32ad6d0"
+        }
+      },
+      "acquired_unused_assets": [],
+      "artifact": {
+        "id": 13067219239,
+        "name": "text-benchmark-x86_64-unknown-linux-gnu-gguf-text-1",
+        "digest": "sha256:0dff0612d3713d73f48a18c108d9f6ad1e6abfee7d443d30c7863d498584c2d0",
+        "size_in_bytes": 66219
+      }
+    },
+    {
+      "target": "aarch64-apple-darwin",
+      "suite": "qwen35-gguf-q4_k_m-text",
+      "outcome": "pass",
+      "generations": 8,
+      "workers": [
+        1,
+        2
+      ],
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-text-bench-qwen35-gguf-q4_k_m-text-aarch64-apple-darwin-checks-v1.json",
+          "bytes": 65990,
+          "sha256": "afed28dcd34c6e4f4d547f1c9f4724aa647db549180720c4489bdf2151cb0aad"
+        },
+        "native": {
+          "path": "fixtures/qualification/cpu-github-text-bench-qwen35-gguf-q4_k_m-text-aarch64-apple-darwin-native-v1.json",
+          "bytes": 10870,
+          "sha256": "3d8e87295129ea663af7671de6dce7a97b7e77ae6b21bc348209889bcc88de63"
+        }
+      },
+      "acquired_unused_assets": [
+        "Qwen3.5-0.8B-f16.mmproj"
+      ],
+      "artifact": {
+        "id": 13068178546,
+        "name": "text-benchmark-aarch64-apple-darwin-qwen35-gguf-q4_k_m-text-1",
+        "digest": "sha256:990978242e650bc8d1cc07cc6375b63c7d4c9bf695341083cc2dadce50ad29d5",
+        "size_in_bytes": 66406
+      }
+    },
+    {
+      "target": "x86_64-pc-windows-msvc",
+      "suite": "qwen35-gguf-q4_k_m-text",
+      "outcome": "pass",
+      "generations": 12,
+      "workers": [
+        1,
+        2,
+        4
+      ],
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-text-bench-qwen35-gguf-q4_k_m-text-x86_64-pc-windows-msvc-checks-v1.json",
+          "bytes": 71924,
+          "sha256": "c7a26e84092d5ac431ff4ce6408708e030e3bd404a674fbe4d4991e4517f24d6"
+        },
+        "native": {
+          "path": "fixtures/qualification/cpu-github-text-bench-qwen35-gguf-q4_k_m-text-x86_64-pc-windows-msvc-native-v1.json",
+          "bytes": 15485,
+          "sha256": "97346d6452c93aa08c89424add628841e225cee662e41c85cf398a1896bfeb13"
+        }
+      },
+      "acquired_unused_assets": [
+        "Qwen3.5-0.8B-f16.mmproj"
+      ],
+      "artifact": {
+        "id": 13067409236,
+        "name": "text-benchmark-x86_64-pc-windows-msvc-qwen35-gguf-q4_k_m-text-1",
+        "digest": "sha256:d7d5ce5edf6c6bfe67221ca2c04116b8e997ff02c3b3beb2989cae956326d690",
+        "size_in_bytes": 67954
+      }
+    },
+    {
+      "target": "x86_64-unknown-linux-gnu",
+      "suite": "qwen35-gguf-q4_k_m-text",
+      "outcome": "pass",
+      "generations": 12,
+      "workers": [
+        1,
+        2,
+        4
+      ],
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-text-bench-qwen35-gguf-q4_k_m-text-x86_64-unknown-linux-gnu-checks-v1.json",
+          "bytes": 70927,
+          "sha256": "e329ee27df68d2510f348770524fa177c1a4f3321a11eb310cfabe65645197d6"
+        },
+        "native": {
+          "path": "fixtures/qualification/cpu-github-text-bench-qwen35-gguf-q4_k_m-text-x86_64-unknown-linux-gnu-native-v1.json",
+          "bytes": 15525,
+          "sha256": "a75237ff7a9c851c6f9ad15a114b16df6993a6372b1cf025f8b0c71a751cc8bf"
+        }
+      },
+      "acquired_unused_assets": [
+        "Qwen3.5-0.8B-f16.mmproj"
+      ],
+      "artifact": {
+        "id": 13068510228,
+        "name": "text-benchmark-x86_64-unknown-linux-gnu-qwen35-gguf-q4_k_m-text-1",
+        "digest": "sha256:888f6d4e3141aae8644efb5e68f79ccd29ace97820cc87cb56f02f7f7f4ef1a1",
+        "size_in_bytes": 65725
+      }
+    },
+    {
+      "target": "x86_64-pc-windows-msvc",
+      "suite": "qwen35-text",
+      "outcome": "pass",
+      "generations": 36,
+      "workers": [
+        1,
+        2,
+        4
+      ],
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-text-bench-qwen35-text-x86_64-pc-windows-msvc-checks-v1.json",
+          "bytes": 104053,
+          "sha256": "67d18ccfc5e9742f061666eaf62558031aa54a5b1b628d1e92116f0571189ddd"
+        },
+        "native": {
+          "path": "fixtures/qualification/cpu-github-text-bench-qwen35-text-x86_64-pc-windows-msvc-native-v1.json",
+          "bytes": 44042,
+          "sha256": "34ff90098b5bc0b6090be22ca8ba42714a3f684a493687fdf9c91acf21a428f7"
+        }
+      },
+      "acquired_unused_assets": [],
+      "artifact": {
+        "id": 13068926837,
+        "name": "text-benchmark-x86_64-pc-windows-msvc-qwen35-text-1",
+        "digest": "sha256:378d7a39a4f3cec495c11f5f6b75064959d5a79b9670a12f13beabc0fad56a1d",
+        "size_in_bytes": 69316
+      }
+    },
+    {
+      "target": "x86_64-unknown-linux-gnu",
+      "suite": "qwen35-text",
+      "outcome": "pass",
+      "generations": 36,
+      "workers": [
+        1,
+        2,
+        4
+      ],
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-text-bench-qwen35-text-x86_64-unknown-linux-gnu-checks-v1.json",
+          "bytes": 102513,
+          "sha256": "1cba8fcedc5040f8ddc5e79fa1626201b757bcda60275630b2004103257bf866"
+        },
+        "native": {
+          "path": "fixtures/qualification/cpu-github-text-bench-qwen35-text-x86_64-unknown-linux-gnu-native-v1.json",
+          "bytes": 44488,
+          "sha256": "93bc81cc36958b3ad69a505ffdeefa47343c112cd3d3125887872b2c3859d0a7"
+        }
+      },
+      "acquired_unused_assets": [],
+      "artifact": {
+        "id": 13068886874,
+        "name": "text-benchmark-x86_64-unknown-linux-gnu-qwen35-text-1",
+        "digest": "sha256:e86af31aea9af6a0c46cf64f1d880973d2f285311ff452abe5f1542d91288fcb",
+        "size_in_bytes": 73491
+      }
+    }
+  ],
+  "blocked": [
+    {
+      "target": "aarch64-apple-darwin",
+      "suite": "qwen35-text",
+      "outcome": "fail",
+      "phase": "startup-host-admission",
+      "reason": "host load exceeds cutoff",
+      "execution_started": false,
+      "report": {
+        "path": "fixtures/qualification/cpu-github-text-bench-qwen35-text-aarch64-apple-darwin-host-v1.json",
+        "bytes": 34850,
+        "sha256": "43a396037578812f0154759d1addb141e46a43418af37b5f86ee9c495fa2ec3d"
+      },
+      "artifact": {
+        "id": 13067903186,
+        "name": "text-benchmark-aarch64-apple-darwin-qwen35-text-1",
+        "digest": "sha256:b60c6cdc5ccd17b18653475aa25b231d0dd81f0c5acd2eca928de054f054855f",
+        "size_in_bytes": 2879
+      }
+    }
+  ],
+  "review": "Official ZIP hashes checked before reading; recorded source hashes match the actual Git revision. Command/toolchain/native-output/observer hashes, every host observation, matrix coverage and every frozen output checked. Original report bytes retained.",
+  "scope": "Selected native CLI routing, repeated fresh generation and frozen greedy-output evidence; timings are observations under uncontrolled cache conditions.",
+  "gaps": [
+    "Eight of nine benchmark cells passed review. macOS Safetensors was rejected before execution because of host load; it still requires a successful retry.",
+    "The original GGUF text acquisition also downloaded the pinned vision component; the Rust text test verified only its required text inputs. Unneeded acquisition was removed in a later commit.",
+    "This source has a strict-Clippy test-borrow diagnostic corrected in a later commit; these benchmark results do not establish passing ordinary native CI.",
+    "This checkpoint does not qualify full-array numerical parity, CPU production, GPU, controlled-cache performance or a service SLA."
+  ]
+}
