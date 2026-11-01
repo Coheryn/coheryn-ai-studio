@@ -20,7 +20,7 @@ impl Drop for Lease {
 impl MemoryBudget for Budget {
     fn reserve(&self, bytes: u64) -> Result<Box<dyn MemoryLease>> {
         self.0
-            .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |used| {
+            .try_update(Ordering::SeqCst, Ordering::SeqCst, |used| {
                 used.checked_add(bytes).filter(|v| *v <= 1 << 20)
             })
             .map_err(|_| Error::new(ErrorKind::ResourceExhausted, "test GPU budget exhausted"))?;

@@ -35,6 +35,8 @@ def commands(gpu, cross_check=False):
     if gpu:
         result.append(('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-metal',
                        '--features', 'metal', '--test', 'dense', '--locked', '--', '--ignored', '--nocapture'))
+        result.append(('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-engine',
+                       '--features', 'metal', '--test', 'metal', '--locked', '--', '--ignored', '--nocapture'))
     return tuple(result)
 
 

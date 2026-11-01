@@ -60,7 +60,7 @@ class MetalChecksTests(unittest.TestCase):
     def test_live_mode_requires_exact_test_and_preserves_logs_scope_and_cleanup(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve())
-            self.assertEqual((code, calls), (0, 8))
+            self.assertEqual((code, calls), (0, 9))
             self.assertTrue(report['gpu_execution_required'])
             self.assertFalse(report['production_ready'])
             self.assertTrue(report['source_unchanged'] and report['owned_cleanup_confirmed'])
