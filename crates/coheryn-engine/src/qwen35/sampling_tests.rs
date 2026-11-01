@@ -68,6 +68,8 @@ fn model(vocabulary: usize) -> (tempfile::TempDir, Model) {
     let budget = Budget::new(limits.max_memory);
     let resident = budget.reserve(RESIDENT_METADATA_BYTES).unwrap();
     let model = Model {
+        #[cfg(all(feature = "metal", target_os = "macos"))]
+        gpu: None,
         config,
         set,
         graph,

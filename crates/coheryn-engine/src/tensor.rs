@@ -2,6 +2,14 @@
 use crate::{Cancellation, Error, Result, cpu, gguf::Tensor, memory, quant, storage::Storage};
 use rayon::prelude::*;
 
+#[cfg(all(feature = "metal", target_os = "macos"))]
+struct GpuContext {
+    // CPU worker closures may borrow the enclosing workspace immutably. GPU
+    // execution still requires exclusive access; get_mut adds no runtime lock.
+    execution: std::sync::Mutex<crate::metal::Execution>,
+    bytes: usize,
+}
+
 pub(crate) struct Workspace {
     pub(crate) io: Vec<u8>,
     pub(crate) floats: Vec<f32>,
@@ -11,6 +19,8 @@ pub(crate) struct Workspace {
     tile_rows: usize,
     f32_operands: bool,
     pool: Option<crate::parallel::CpuPool>,
+    #[cfg(all(feature = "metal", target_os = "macos"))]
+    gpu: Option<GpuContext>,
 }
 impl Workspace {
     pub(crate) fn install<T: Send>(&self, work: impl FnOnce() -> T + Send) -> T {
@@ -46,6 +56,8 @@ impl Workspace {
             extra_quantized.push(quant::QuantizedInput::new(width)?);
         }
         Ok(Self {
+            #[cfg(all(feature = "metal", target_os = "macos"))]
+            gpu: None,
             io,
             floats: memory::zeros(io_bytes / 2)?,
             operand: memory::zeros(memory::product(&[width, tile_rows])?)?,
@@ -64,6 +76,17 @@ impl Workspace {
     pub(crate) fn preserve_f32_operands(&mut self) {
         self.f32_operands = true;
     }
+    #[cfg(all(feature = "metal", target_os = "macos"))]
+    pub(crate) fn attach_metal(&mut self, execution: crate::metal::Execution) -> Result<()> {
+        if !self.f32_operands || self.gpu.is_some() {
+            return Err(Error::request(
+                "GPU context requires an unbound F32-operand workspace",
+            ));
+        }
+        let bytes = execution.capacity_bytes();
+        self.gpu = Some(GpuContext { execution: std::sync::Mutex::new(execution), bytes });
+        Ok(())
+    }
     fn activation(&self, row: usize) -> &quant::QuantizedInput {
         if row == 0 {
             &self.quantized
@@ -72,7 +95,7 @@ impl Workspace {
         }
     }
     pub(crate) fn capacity_bytes(&self) -> usize {
-        self.io.capacity()
+        let bytes = self.io.capacity()
             + 4 * (self.floats.capacity() + self.operand.capacity())
             + self.quantized.capacity_bytes()
             + self
@@ -80,7 +103,10 @@ impl Workspace {
                 .iter()
                 .map(|q| q.capacity_bytes())
                 .sum::<usize>()
-            + self.extra_quantized.capacity() * std::mem::size_of::<quant::QuantizedInput>()
+            + self.extra_quantized.capacity() * std::mem::size_of::<quant::QuantizedInput>();
+        #[cfg(all(feature = "metal", target_os = "macos"))]
+        let bytes = bytes + self.gpu.as_ref().map_or(0, |gpu| gpu.bytes);
+        bytes
     }
 }
 
@@ -135,6 +161,11 @@ pub(crate) fn matmul_cooperative(
     cancel: &Cancellation,
     cooperate: &mut Option<&mut crate::multimodal::WorkYield<'_>>,
 ) -> Result<()> {
+    #[cfg(all(feature = "metal", target_os = "macos"))]
+    if let Some(gpu) = &mut work.gpu {
+        let gpu = gpu.execution.get_mut().map_err(|_| Error::resource("GPU workspace ownership poisoned"))?;
+        return gpu.multiply(storage, data, tensor, input, output, cancel, cooperate);
+    }
     if tensor.dimensions.len() != 2 {
         return Err(Error::invalid("matrix needs two dimensions"));
     }
@@ -316,6 +347,31 @@ pub(crate) fn matmul_batch_cooperative(
 ) -> Result<BatchIo> {
     if vectors.is_empty() || vectors.len() > 16 || tensor.dimensions.len() != 2 {
         return Err(Error::request("invalid native matrix batch"));
+    }
+    #[cfg(all(feature = "metal", target_os = "macos"))]
+    if vectors.iter().any(|vector| vector.workspace.gpu.is_some()) {
+        if vectors.iter().any(|vector| vector.workspace.gpu.is_none()) {
+            return Err(Error::request("mixed CPU/GPU contexts in a matrix batch"));
+        }
+        // Each lane retains private admitted buffers. The encoded weight
+        // allocation is shared; this profile does not claim fused GPU batching.
+        for vector in vectors.iter_mut().filter(|vector| vector.error.is_none()) {
+            let gpu = vector.workspace.gpu.as_mut().expect("checked GPU lane").execution.get_mut()
+                .map_err(|_| Error::resource("GPU workspace ownership poisoned"))?;
+            if let Err(error) = gpu.multiply(
+                storage,
+                data,
+                tensor,
+                vector.input,
+                vector.output,
+                vector.cancel,
+                cooperate,
+            ) {
+                *vector.error = Some(error);
+            }
+        }
+        // These counters describe file tile I/O, which GPU residency avoids.
+        return Ok(BatchIo::default());
     }
     let width = usize::try_from(tensor.dimensions[0])
         .map_err(|_| Error::invalid("matrix width overflow"))?;

@@ -1,5 +1,7 @@
 # Native model adapters
 
+Here, an adapter means a compiled architecture implementation and its dispatch interface over the shared engine. It is distinct from trained LoRA/PEFT parameters and from an API-provider connector. Compatible checkpoints reuse implemented semantics through metadata; a separate engine or adapter for every model file is unnecessary. File parsing, architecture execution and exact-model qualification remain separate capabilities.
+
 Standalone text `run` and interactive `chat` now load through the engine's `adapters::Registry`. The registry selects a compiled native factory using bounded format/configuration inspection. Callers use `TextModel` for rendering, generation, cancellation and token events. Existing Qwen2 GGUF execution and the initial [Qwen3.5 CPU text adapter](QWEN35.md) use that interface.
 
 A compatible new checkpoint can reuse an implemented adapter when its configuration, tensor inventory, tokenizer/template and requested features pass validation. A new architecture needs its own graph/bindings and any missing operations. Adding that implementation and registering its factory avoids rewriting these CLI flows. Arbitrary future architectures cannot become executable from weight metadata alone.

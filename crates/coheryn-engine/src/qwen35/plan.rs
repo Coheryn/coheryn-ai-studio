@@ -35,6 +35,33 @@ pub fn estimate_shared(
     loaded: bool,
     max_concurrency: usize,
 ) -> Result<ExecutionPlan> {
+    estimate_backend(
+        config,
+        weight_bytes,
+        request,
+        hardware,
+        budget,
+        loaded,
+        max_concurrency,
+        0,
+        "cpu-reference",
+        0,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(super) fn estimate_backend(
+    config: &Config,
+    weight_bytes: u64,
+    request: &PlanRequest,
+    hardware: &HardwareSnapshot,
+    budget: MemoryStats,
+    loaded: bool,
+    max_concurrency: usize,
+    gpu_workspace_bytes: u64,
+    backend: &'static str,
+    gpu_resident_bytes: u64,
+) -> Result<ExecutionPlan> {
     if request.constraints {
         return Err(Error::new(
             crate::ErrorCode::UnsupportedFeature,
@@ -52,7 +79,15 @@ pub fn estimate_shared(
         hardware.logical_cpus,
         max_concurrency,
     )?;
-    let session = config.session_estimate(request.context, threads)?;
+    let mut session = config.session_estimate(request.context, threads)?;
+    session.workspace_bytes = session
+        .workspace_bytes
+        .checked_add(gpu_workspace_bytes)
+        .ok_or_else(|| Error::resource("GPU session workspace estimate overflow"))?;
+    session.total_bytes = session
+        .total_bytes
+        .checked_add(gpu_workspace_bytes)
+        .ok_or_else(|| Error::resource("GPU session estimate overflow"))?;
     let mut plan = planner::estimate_prepared(planner::PreparedPlan {
         model: "local",
         profile: request.profile,
@@ -78,6 +113,22 @@ pub fn estimate_shared(
         "Concurrency projects independently admitted states; continuous text batching shares weight tiles without sharing request state",
         "Plans hold no reservation; execution must atomically reserve the full candidate request including profile headroom",
     ];
+    plan.backend = backend;
+    if gpu_workspace_bytes != 0 {
+        plan.weight_storage = "buffered-source+metal-resident";
+        plan.gpu_allocation_bytes = gpu_workspace_bytes
+            .checked_mul(request.concurrency as u64)
+            .and_then(|bytes| bytes.checked_add(gpu_resident_bytes))
+            .ok_or_else(|| Error::resource("GPU workload estimate overflow"))?;
+        plan.limitations = vec![
+            "Experimental Metal matrix execution; attention, recurrent state, norms, embedding lookup and sampling remain native CPU",
+            "Encoded GPU weights are reserved once in the loaded model budget; private GPU activation buffers are included in each atomic request admission",
+            "Unified GPU allocations are counted once; driver padding, compiler overhead and physical residency require separate observations",
+            "GPU transfer bytes exclude dynamic per-matrix activation delivery, which depends on actual prompt/output work; no bandwidth or throughput estimate is claimed",
+            "GPU lanes keep private buffers and share immutable weights; fused GPU continuous batching is not claimed",
+            "This execution estimate does not establish model/backend production qualification",
+        ];
+    }
     Ok(plan)
 }
 

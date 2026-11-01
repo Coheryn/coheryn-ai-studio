@@ -422,7 +422,7 @@ pub struct TensorSet {
     files: Vec<TensorFile>,
     lookup: BTreeMap<String, (usize, Tensor)>,
     owner: Arc<()>,
-    views: Vec<Storage>,
+    views: Vec<Arc<Storage>>,
     gguf: bool,
 }
 pub(crate) struct BoundTensor {
@@ -643,7 +643,7 @@ impl TensorSet {
             {
                 return Err(Error::invalid("unsupported split temporal patch layout"));
             }
-            views.push(Storage::temporal_patch(
+            views.push(Arc::new(Storage::temporal_patch(
                 files[file].storage.clone(),
                 [
                     descriptor.data_offset + left.offset,
@@ -653,7 +653,7 @@ impl TensorSet {
                 256,
                 3,
                 if left.dtype == 0 { 4 } else { 2 },
-            )?);
+            )?));
             logical.offset = 0;
             if lookup
                 .insert(logical.name.clone(), (files.len(), logical))
@@ -743,12 +743,27 @@ impl TensorSet {
         }
         Ok((self.storage(binding.file)?, &binding.tensor))
     }
+    #[cfg(all(feature = "metal", target_os = "macos"))]
+    pub(crate) fn bound_owned(&self, binding: &BoundTensor) -> Result<(Arc<Storage>, Tensor)> {
+        self.bound(binding)?;
+        let storage = if binding.file < self.files.len() {
+            Arc::clone(&self.files[binding.file].storage)
+        } else {
+            Arc::clone(
+                self.views
+                    .get(binding.file - self.files.len())
+                    .ok_or_else(|| invalid("invalid GPU storage view"))?,
+            )
+        };
+        Ok((storage, binding.tensor.clone()))
+    }
     fn storage(&self, index: usize) -> Result<&Storage> {
         if index < self.files.len() {
             Ok(self.files[index].storage.as_ref())
         } else {
             self.views
                 .get(index - self.files.len())
+                .map(Arc::as_ref)
                 .ok_or_else(|| invalid("invalid tensor storage view"))
         }
     }

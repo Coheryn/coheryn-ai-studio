@@ -47,7 +47,7 @@ impl GenerationState {
         model: &Model,
         prompt: &str,
         options: GenerationOptions,
-        admission: plan::Admission,
+        mut admission: plan::Admission,
         context: usize,
         cache_slot: Option<CacheSlot>,
         cancel: &Cancellation,
@@ -81,10 +81,10 @@ impl GenerationState {
                 )?);
         sampling_buffers.grow(sampler.capacity_bytes())?;
         let mut session = Session::new(&model.config, context, threads)?;
-        let mut buffers =
-            model
-                .budget
-                .track_buffers(Session::bytes(&model.config, context, threads)?);
+        model.attach_execution(&mut session, &mut admission.reservation)?;
+        let mut buffers = model.budget.track_buffers(
+            Session::bytes(&model.config, context, threads)? + model.gpu_session_bytes()?,
+        );
         buffers.grow(session.capacity_bytes())?;
         let capture = if cache_slot.is_some() {
             model.cache_boundary(prompt, &tokens)?
@@ -500,7 +500,7 @@ impl Model {
                 penalties: state.options.penalties,
                 history_scope: "exact selected prompt plus generated token IDs, including control and expanded image tokens".into(),
                 tokenizer_fingerprint: TOKENIZER_SHA256.into(),
-                backend: "native-cpu".into(),
+                backend: self.execution_backend().into(),
                 cache_dtype: "f32".into(),
                 threads: state.threads,
                 prefill_chunk_tokens: 1,

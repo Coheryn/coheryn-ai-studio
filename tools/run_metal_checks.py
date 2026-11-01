@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Guarded, source-bound optional Metal checks; never promotes a model release."""
 import argparse
+import json
 import os
 from pathlib import Path
 import platform
@@ -12,6 +13,8 @@ import tomllib
 
 from check_cpu_release import ROOT, sha, source_identity
 from cpu_qualification.driver import test_counts
+from cpu_qualification.assets import models
+from cpu_qualification.profiles import PROFILES
 from cpu_qualification.host import Guard
 from run_cpu_qualification import checkpoint
 from run_cpu_soak import run_child
@@ -42,13 +45,62 @@ def commands(gpu, cross_check=False):
     return tuple(result)
 
 
+MODEL_SUITES = ('qwen35-gguf-q4_k_m-text', 'qwen35-text')
+MODEL_COMMAND = ('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-engine',
+                 '--features', 'metal', '--test', 'metal_model', '--locked', '--', '--ignored', '--nocapture')
+
+
+def validate_model(path, suite):
+    if path.stat().st_size > 2 << 20:
+        raise ValueError('GPU model output exceeds bound')
+    value = json.loads(path.read_text())
+    if not isinstance(value, dict):
+        raise ValueError('GPU model output must be an object')
+    reference = json.loads((ROOT / PROFILES[suite]['reference']).read_text())
+    expected_samples = sum(len(checkpoint['indices']) for case in reference['cases']
+                           for checkpoint in [*case['checkpoints'], *case['teacher_forced']])
+    if (value.get('schema_version') != 1 or value.get('outcome') != 'pass' or value.get('suite') != suite
+            or value.get('full_cpu_gpu_arrays') != 50 or value.get('full_cpu_gpu_elements') != 545792
+            or value.get('independent_sampled_values') != expected_samples
+            or not isinstance(value.get('cases'), list) or len(value['cases']) != len(reference['cases'])):
+        raise ValueError('incomplete GPU model numerical coverage')
+    for result, expected in zip(value['cases'], reference['cases'], strict=True):
+        if (not isinstance(result, dict) or not isinstance(result.get('token_ids'), list)
+                or any(type(token) is not int for token in result['token_ids'])
+                or result.get('token_ids') != expected['greedy_token_ids'] or result.get('text') != expected['greedy_text']
+                or result.get('completion_tokens') != len(expected['greedy_token_ids'])
+                or result.get('sampling_metadata', {}).get('backend') != 'native-metal-matmul-f32-reference'):
+            raise ValueError('GPU frozen output/backend mismatch')
+    info = value.get('gpu', {})
+    for name in ('matrices', 'encoded_weight_bytes', 'request_workspace_bytes', 'completed_model_dispatches'):
+        if type(info.get(name)) is not int or info[name] <= 0:
+            raise ValueError('missing GPU allocation/dispatch evidence')
+    if not isinstance(info.get('device'), str) or not 1 <= len(info['device']) <= 256:
+        raise ValueError('missing Metal device identity')
+    memory = value.get('memory_after_unload', {})
+    if (type(memory.get('reserved')) is not int or memory['reserved'] != 0
+            or type(memory.get('session_buffer_capacity_bytes')) is not int or memory['session_buffer_capacity_bytes'] != 0
+            or type(memory.get('limit')) is not int
+            or type(memory.get('peak_reserved')) is not int or not 0 < memory['peak_reserved'] <= memory.get('limit', 0)):
+        raise ValueError('GPU model admission was not reclaimed')
+    if any(value.get(name) is not True for name in ('trace_failure_cleanup', 'in_graph_cancellation_cleanup', 'unqualified_image_profile_rejected')):
+        raise ValueError('GPU model lifecycle/profile checks missing')
+    return value
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--report', type=Path, required=True)
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument('--gpu', action='store_true', help='require real GPU numerical execution; absent devices fail')
     modes.add_argument('--cross-check', action='store_true', help='Linux-hosted macOS compilation only; cannot qualify GPU execution')
+    parser.add_argument('--model-suite', choices=MODEL_SUITES, help='also require pinned pretrained native GPU graph checks')
+    parser.add_argument('--fetch', action='store_true', help='explicitly acquire pinned model inputs under the host guard')
     args = parser.parse_args()
+    if args.model_suite and not args.gpu:
+        parser.error('pretrained model checks require explicit --gpu')
+    if args.fetch and not args.model_suite:
+        parser.error('--fetch requires a model suite')
     if args.report.exists():
         parser.error('use a fresh Metal check report path')
     native_host = ('aarch64-apple-darwin' if not args.cross_check else 'x86_64-unknown-linux-gnu')
@@ -74,6 +126,10 @@ def main():
               'packed_fixture_sha256': sha(ROOT / 'fixtures/gpu/metal-packed-v1.json'),
               'scope': 'Optional backend compile/lint and independent dense/packed primitives with F32 operands only; no Q8 activation dot, model, performance or release qualification.',
               'host': {'system': platform.system(), 'machine': platform.machine(), 'release': platform.release()}}
+    if args.model_suite:
+        report['kind'] = 'metal-model-checks'
+        report['model_suite'] = args.model_suite
+        report['scope'] = 'Selected pretrained native library text graph and primitive checks only; no CLI/API, performance or release qualification.'
     environment = {**os.environ, 'CARGO_BUILD_JOBS': '1', 'CARGO_INCREMENTAL': '0',
                    'RUST_TEST_THREADS': '1', 'CARGO_NET_OFFLINE': 'true',
                    'CARGO_TARGET_DIR': str(ROOT / 'target'),
@@ -102,7 +158,13 @@ def main():
             if name == 'rustc' and f'\nhost: {native_host}\n' not in output:
                 raise ValueError('Metal compiler host differs from the declared check mode')
             report['toolchain'][name] = {'output': output, 'log': log.relative_to(ROOT).as_posix(), 'log_sha256': sha(log)}
-        for number, command in enumerate(commands(args.gpu, args.cross_check)):
+        inventory = (*commands(args.gpu, args.cross_check), *([MODEL_COMMAND] if args.model_suite else []))
+        for number, command in enumerate(inventory):
+            if command == MODEL_COMMAND:
+                _, report['model_inputs'] = models([args.model_suite], args.fetch, guard)
+                environment['COHERYN_METAL_MODEL_SUITE'] = args.model_suite
+                environment['COHERYN_METAL_MODEL_REPORT'] = str(directory / 'model.json')
+                checkpoint(args.report, report)
             log = directory / f'{number}.log'
             row = {'command': list(command), 'exit': None, 'validated': False, 'log': log.relative_to(ROOT).as_posix()}
             report['commands'].append(row)
@@ -125,6 +187,9 @@ def main():
             # overall report still fails until every required command passes.
             if not valid and command[1] != 'fmt':
                 raise ValueError('Metal check failed: ' + ' '.join(command))
+            if command == MODEL_COMMAND:
+                report['model'] = validate_model(directory / 'model.json', args.model_suite)
+                report['model_output_sha256'] = sha(directory / 'model.json')
         if any(not row['validated'] for row in report['commands']):
             raise ValueError('Metal formatting failed; other guarded check results retained')
         report['outcome'] = 'pass'

@@ -48,6 +48,13 @@ impl PreparedImages {
 }
 impl Model {
     pub fn vision_configuration(&self) -> Result<&vision::VisionConfig> {
+        #[cfg(all(feature = "metal", target_os = "macos"))]
+        if self.gpu.is_some() {
+            return Err(Error::new(
+                ErrorCode::UnsupportedFeature,
+                "this experimental Metal profile supports text only",
+            ));
+        }
         self.vision.as_ref().ok_or_else(|| {
             Error::new(
                 ErrorCode::UnsupportedImageProcessor,

@@ -1,5 +1,6 @@
 """Offline failure-injection tests; no compiler or GPU is executed."""
 import json
+import copy
 from pathlib import Path
 import tempfile
 import unittest
@@ -104,6 +105,48 @@ class MetalChecksTests(unittest.TestCase):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
                 report, code, _ = self.execute(Path(temporary).resolve(), mutation)
                 self.assertEqual((code, report['outcome']), (1, 'fail'))
+
+
+class ModelOutputTests(unittest.TestCase):
+    def fixture(self, suite):
+        reference = json.loads((runner.ROOT / runner.PROFILES[suite]['reference']).read_text())
+        return {'schema_version': 1, 'outcome': 'pass', 'suite': suite,
+                'full_cpu_gpu_arrays': 50, 'full_cpu_gpu_elements': 545792,
+                'independent_sampled_values': sum(len(checkpoint['indices']) for case in reference['cases']
+                    for checkpoint in [*case['checkpoints'], *case['teacher_forced']]),
+                'cases': [{'token_ids': case['greedy_token_ids'], 'text': case['greedy_text'],
+                           'completion_tokens': len(case['greedy_token_ids']),
+                           'sampling_metadata': {'backend': 'native-metal-matmul-f32-reference'}} for case in reference['cases']],
+                'gpu': {'device': 'controlled test fixture', 'matrices': 1, 'encoded_weight_bytes': 1024,
+                        'request_workspace_bytes': 512, 'completed_model_dispatches': 1},
+                'memory_after_unload': {'reserved': 0, 'session_buffer_capacity_bytes': 0, 'peak_reserved': 2048, 'limit': 4096},
+                'trace_failure_cleanup': True, 'in_graph_cancellation_cleanup': True,
+                'unqualified_image_profile_rejected': True}
+
+    def test_complete_model_contract_keeps_source_and_runtime_scope_separate(self):
+        for suite in runner.MODEL_SUITES:
+            with self.subTest(suite=suite), tempfile.TemporaryDirectory() as temporary:
+                path = Path(temporary) / 'model.json'; value = self.fixture(suite)
+                path.write_text(json.dumps(value))
+                self.assertEqual(runner.validate_model(path, suite), value)
+
+    def test_partial_wrong_backend_nonnumeric_or_unreclaimed_model_cannot_pass(self):
+        base = self.fixture(runner.MODEL_SUITES[0])
+        for mutation in ('arrays', 'elements', 'samples', 'greedy', 'backend', 'dispatches', 'leak', 'boolean', 'cancel', 'empty'):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
+                value = copy.deepcopy(base)
+                if mutation == 'arrays': value['full_cpu_gpu_arrays'] -= 1
+                elif mutation == 'elements': value['full_cpu_gpu_elements'] = 0
+                elif mutation == 'samples': value['independent_sampled_values'] -= 1
+                elif mutation == 'greedy': value['cases'][0]['token_ids'][0] += 1
+                elif mutation == 'backend': value['cases'][0]['sampling_metadata']['backend'] = 'native-cpu'
+                elif mutation == 'dispatches': value['gpu']['completed_model_dispatches'] = 0
+                elif mutation == 'leak': value['memory_after_unload']['reserved'] = 1
+                elif mutation == 'boolean': value['gpu']['encoded_weight_bytes'] = True
+                elif mutation == 'cancel': value['in_graph_cancellation_cleanup'] = False
+                elif mutation == 'empty': value = []
+                path = Path(temporary) / 'model.json'; path.write_text(json.dumps(value))
+                with self.assertRaises(ValueError): runner.validate_model(path, runner.MODEL_SUITES[0])
 
 
 if __name__ == '__main__':

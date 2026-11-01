@@ -166,6 +166,42 @@ fn copy_states(destination: &mut [MixerState], source: &[MixerState]) -> Result<
     Ok(())
 }
 impl Graph {
+    #[cfg(all(feature = "metal", target_os = "macos"))]
+    pub(super) fn gpu_sources(
+        &self,
+        set: &TensorSet,
+    ) -> Result<Vec<crate::metal::MatrixSource>> {
+        let mut sources = Vec::new();
+        sources
+            .try_reserve_exact(self.layers.len() * 8 + 1)
+            .map_err(|_| crate::Error::resource("GPU graph bindings allocation failed"))?;
+        let mut add = |binding: &BoundTensor| -> Result<()> {
+            let (storage, tensor) = set.bound_owned(binding)?;
+            sources.push((storage, 0, tensor));
+            Ok(())
+        };
+        add(&self.output)?;
+        for layer in &self.layers {
+            for binding in [&layer.gate, &layer.up, &layer.down] {
+                add(binding)?;
+            }
+            match &layer.mixer {
+                Mixer::Full { q, k, v, out, .. } => {
+                    for binding in [q, k, v, out] {
+                        add(binding)?;
+                    }
+                }
+                Mixer::Linear {
+                    qkv, z, a, b, out, ..
+                } => {
+                    for binding in [qkv, z, a, b, out] {
+                        add(binding)?;
+                    }
+                }
+            }
+        }
+        Ok(sources)
+    }
     pub(crate) fn bind(set: &TensorSet, c: &Config) -> Result<Self> {
         let mut layers = Vec::new();
         for (i, full) in c.layers.iter().enumerate() {
@@ -685,6 +721,10 @@ fn matrix_selected(
 }
 
 impl Session {
+    #[cfg(all(feature = "metal", target_os = "macos"))]
+    pub(super) fn attach_metal(&mut self, gpu: crate::metal::Execution) -> Result<()> {
+        self.work.attach_metal(gpu)
+    }
     pub(super) fn context_capacity(&self) -> usize {
         self.capacity
     }

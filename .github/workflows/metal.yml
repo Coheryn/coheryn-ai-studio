@@ -76,7 +76,7 @@ jobs:
       - name: Admit native build and GPU checks
         run: python tools/check_cpu_host.py --wait-for-load-seconds 300 --startup-load-per-cpu 1 --report .cache/metal-host.json
       - name: Require real GPU primitives under the unchanged host guard
-        run: python tools/run_metal_checks.py --gpu --report .cache/metal-primitives.json
+        run: python tools/run_metal_checks.py --gpu --model-suite qwen35-gguf-q4_k_m-text --fetch --report .cache/metal-primitives.json
       - uses: actions/upload-artifact@v7.0.2
         if: always()
         with:

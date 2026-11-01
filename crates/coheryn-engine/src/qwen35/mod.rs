@@ -82,6 +82,8 @@ impl PreparedGeneration {
 }
 
 pub struct Model {
+    #[cfg(all(feature = "metal", target_os = "macos"))]
+    gpu: Option<std::sync::Arc<crate::metal::Resident>>,
     config: Config,
     set: TensorSet,
     graph: Graph,
@@ -190,6 +192,8 @@ impl Model {
         })?;
         cancel.check()?;
         Ok(Self {
+            #[cfg(all(feature = "metal", target_os = "macos"))]
+            gpu: None,
             config,
             set,
             graph,
@@ -204,6 +208,78 @@ impl Model {
     }
     pub fn is_gguf(&self) -> bool {
         self.set.is_gguf()
+    }
+    /// Explicit experimental text-only GPU binding. No compatibility fallback.
+    #[cfg(all(feature = "metal", target_os = "macos"))]
+    pub fn enable_metal(mut self, cancel: &Cancellation) -> Result<Self> {
+        if self.gpu.is_some() {
+            return Err(Error::request("Metal is already bound"));
+        }
+        let sources = self.graph.gpu_sources(&self.set)?;
+        let gpu = crate::metal::Resident::load(
+            sources,
+            self.budget.clone(),
+            cancel,
+            self.generation_bytes(self.limits.context, 1)?,
+        )?;
+        // States and idle caches from a previous backend cannot be reused.
+        self.owner = std::sync::Arc::new(());
+        self.gpu = Some(gpu);
+        Ok(self)
+    }
+    #[cfg(all(feature = "metal", target_os = "macos"))]
+    pub fn metal_info(&self) -> Result<Option<crate::metal::ModelInfo>> {
+        self.gpu.as_ref().map(|gpu| gpu.info()).transpose()
+    }
+    pub fn execution_backend(&self) -> &'static str {
+        #[cfg(all(feature = "metal", target_os = "macos"))]
+        if self.gpu.is_some() {
+            return "native-metal-matmul-f32-reference";
+        }
+        "native-cpu"
+    }
+    fn gpu_session_bytes(&self) -> Result<u64> {
+        #[cfg(all(feature = "metal", target_os = "macos"))]
+        if let Some(gpu) = &self.gpu {
+            return gpu.session_bytes();
+        }
+        Ok(0)
+    }
+    fn execution_plan(
+        &self,
+        request: &crate::catalog::PlanRequest,
+        hardware: &crate::planner::HardwareSnapshot,
+        max_concurrency: usize,
+    ) -> Result<crate::planner::ExecutionPlan> {
+        #[cfg(not(all(feature = "metal", target_os = "macos")))]
+        let resident_bytes = 0;
+        #[cfg(all(feature = "metal", target_os = "macos"))]
+        let resident_bytes = self.gpu.as_ref().map_or(0, |gpu| gpu.weight_bytes());
+        let gpu_bytes = self.gpu_session_bytes()?;
+        plan::estimate_backend(
+            &self.config,
+            self.set.tensor_bytes()?,
+            request,
+            hardware,
+            self.budget.stats(),
+            true,
+            max_concurrency,
+            gpu_bytes,
+            if gpu_bytes == 0 {
+                "cpu-reference"
+            } else {
+                self.execution_backend()
+            },
+            resident_bytes,
+        )
+    }
+    fn attach_execution(&self, session: &mut Session, reservation: &mut Reservation) -> Result<()> {
+        #[cfg(all(feature = "metal", target_os = "macos"))]
+        if let Some(gpu) = &self.gpu {
+            session.attach_metal(gpu.begin(reservation)?)?;
+        }
+        let _ = (session, reservation);
+        Ok(())
     }
     pub fn configuration(&self) -> &Config {
         &self.config
@@ -324,13 +400,13 @@ impl Model {
         {
             return Err(Error::request("invalid trace token/context range"));
         }
-        let _reservation =
-            self.budget
-                .reserve(Session::bytes(&self.config, self.limits.context, threads)?)?;
+        let bytes = Session::bytes(&self.config, self.limits.context, threads)?
+            .checked_add(self.gpu_session_bytes()?)
+            .ok_or_else(|| Error::resource("GPU trace reservation overflow"))?;
+        let mut reservation = self.budget.reserve(bytes)?;
+        let mut accounting = self.budget.track_buffers(bytes);
         let mut session = Session::new(&self.config, self.limits.context, threads)?;
-        let mut accounting =
-            self.budget
-                .track_buffers(Session::bytes(&self.config, self.limits.context, threads)?);
+        self.attach_execution(&mut session, &mut reservation)?;
         accounting.grow(session.capacity_bytes())?;
         for (position, token) in tokens.iter().enumerate() {
             self.graph.forward(
@@ -398,6 +474,8 @@ impl Model {
         self.config
             .session_estimate(context, threads)?
             .total_bytes
+            .checked_add(self.gpu_session_bytes()?)
+            .ok_or_else(|| Error::resource("GPU generation byte overflow"))?
             .checked_add(crate::planner::REQUEST_BYTES)
             .ok_or_else(|| Error::resource("generation request byte overflow"))
     }
@@ -420,14 +498,7 @@ impl Model {
             threads: execution.threads,
             constraints: false,
         };
-        let plan = estimate(
-            &self.config,
-            self.set.tensor_bytes()?,
-            &request,
-            execution.hardware,
-            self.budget.stats(),
-            true,
-        )?;
+        let plan = self.execution_plan(&request, execution.hardware, request.concurrency)?;
         plan.require_admission()?;
         cancel.check()?;
         let admission = plan::Admission::reserve(
@@ -473,15 +544,7 @@ impl Model {
             threads: execution.threads,
             constraints: false,
         };
-        let plan = estimate_shared(
-            &self.config,
-            self.set.tensor_bytes()?,
-            &request,
-            execution.hardware,
-            self.budget.stats(),
-            true,
-            max_concurrency,
-        )?;
+        let plan = self.execution_plan(&request, execution.hardware, max_concurrency)?;
         plan.require_admission()?;
         let admission = plan::Admission::reserve(
             &self.budget,

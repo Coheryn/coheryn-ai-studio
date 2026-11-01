@@ -114,13 +114,13 @@ impl Device {
         self.raw.name().to_string()
     }
 
-    fn allocate(&self, bytes: usize) -> Result<Buffer> {
+    fn allocate(&self, bytes: usize, budget: &SharedBudget) -> Result<Buffer> {
         if bytes == 0 || bytes > self.raw.maxBufferLength() {
             return Err(resource("GPU buffer exceeds device allocation limit"));
         }
         // Admission happens before asking Metal to allocate. Failure drops the
         // lease immediately; no temporarily unaccounted live GPU buffer exists.
-        let lease = self.budget.reserve(bytes as u64)?;
+        let lease = budget.reserve(bytes as u64)?;
         let raw = self
             .raw
             .newBufferWithLength_options(bytes, MTLResourceOptions::StorageModeShared)
@@ -140,12 +140,23 @@ impl Device {
     pub fn upload(
         self: &Arc<Self>,
         shape: MatrixShape,
+        read: impl FnMut(u64, &mut [u8]) -> Result<()>,
+        cancel: impl Fn() -> bool,
+    ) -> Result<Matrix> {
+        self.upload_with_budget(shape, read, cancel, &self.budget)
+    }
+
+    /// Use an already admitted allocator while preserving this device's identity.
+    pub fn upload_with_budget(
+        self: &Arc<Self>,
+        shape: MatrixShape,
         mut read: impl FnMut(u64, &mut [u8]) -> Result<()>,
         cancel: impl Fn() -> bool,
+        budget: &SharedBudget,
     ) -> Result<Matrix> {
         check(&cancel)?;
         let bytes = shape.weight_bytes()?;
-        let buffer = self.allocate(bytes)?;
+        let buffer = self.allocate(bytes, budget)?;
         for offset in (0..bytes).step_by(UPLOAD_CHUNK) {
             check(&cancel)?;
             let length = (bytes - offset).min(UPLOAD_CHUNK);
@@ -179,14 +190,23 @@ impl Device {
 
     /// Reuse one admitted activation allocation across validated layer shapes.
     pub fn workspace_with_limits(self: &Arc<Self>, limits: WorkspaceLimits) -> Result<Workspace> {
+        self.workspace_with_budget(limits, &self.budget)
+    }
+
+    pub fn workspace_with_budget(
+        self: &Arc<Self>,
+        limits: WorkspaceLimits,
+        budget: &SharedBudget,
+    ) -> Result<Workspace> {
         limits.bytes()?;
-        let input = self.allocate(limits.width * limits.batch * 4)?;
-        let output = self.allocate(limits.rows * limits.batch * 4)?;
+        let input = self.allocate(limits.width * limits.batch * 4, budget)?;
+        let output = self.allocate(limits.rows * limits.batch * 4, budget)?;
         Ok(Workspace {
             input,
             output,
             device: Arc::clone(self),
             limits,
+            dispatches: 0,
         })
     }
 }
@@ -220,12 +240,16 @@ pub struct Workspace {
     output: Buffer,
     device: Arc<Device>,
     limits: WorkspaceLimits,
+    dispatches: u64,
 }
 // SAFETY: private buffers can move between workers only while exclusively
 // owned. multiply requires &mut self and retires all commands before returning
 // or unwinding; an idle Workspace has no GPU access in flight. It is not Sync.
 unsafe impl Send for Workspace {}
 impl Workspace {
+    pub fn completed_dispatches(&self) -> u64 {
+        self.dispatches
+    }
     pub fn allocated_bytes(&self) -> u64 {
         self.input.raw.allocatedSize() as u64 + self.output.raw.allocatedSize() as u64
     }
@@ -239,6 +263,17 @@ impl Workspace {
         input: &[f32],
         output: &mut [f32],
         cancel: impl Fn() -> bool,
+    ) -> Result<()> {
+        self.multiply_cooperative(matrix, input, output, cancel, &mut || Ok(()))
+    }
+
+    pub fn multiply_cooperative(
+        &mut self,
+        matrix: &Matrix,
+        input: &[f32],
+        output: &mut [f32],
+        cancel: impl Fn() -> bool,
+        cooperate: &mut impl FnMut() -> Result<()>,
     ) -> Result<()> {
         check(&cancel)?;
         let shape = matrix.shape;
@@ -273,7 +308,12 @@ impl Workspace {
             autoreleasepool(|_| {
                 self.dispatch(matrix, batch, first, (shape.rows - first).min(rows))
             })?;
+            self.dispatches = self
+                .dispatches
+                .checked_add(1)
+                .ok_or_else(|| Error::new(ErrorKind::Internal, "GPU dispatch counter overflow"))?;
             check(&cancel)?;
+            cooperate()?;
         }
         // SAFETY: every requested output element was written by successful
         // commands and waitUntilCompleted retired all GPU writes. Workspace
