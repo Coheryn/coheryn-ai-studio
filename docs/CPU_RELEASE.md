@@ -36,7 +36,7 @@ The [mixed CPU workload soak](CPU_SOAK.md) adds fixed-limit text/image/embedding
 ```sh
 ./tools/cargo fmt --all -- --check
 ./tools/cargo clippy --release --workspace --all-targets --locked -- -D warnings
-./tools/cargo test --release --workspace --locked
+./tools/cargo test --profile qualification --workspace --locked
 ./tools/cargo build --release --workspace --locked
 python3 tools/test_cpu_release.py
 python3 tools/license_notices.py
@@ -45,7 +45,7 @@ python3 tools/check_independence.py
 
 `crash_recovery` kills a separate process after a committed receipt or while a durable writer is pending. Reopening must preserve completed output/idempotency and recover the interrupted writer as cancelled, without loading a model. This tests process termination, not power-loss durability or filesystem/hardware failure.
 
-`tools/run_cpu_checks.py --report FRESH_PATH` executes the complete check inventory under the live host guard with one offline Cargo job and one test-harness thread. Explicit concurrency workloads inside individual tests remain unchanged. Release-profile lint/tests reuse the production dependency graph and exercise deployed arithmetic without building a second debug executable graph. Compiler versions, logs, test totals, execution settings, owned cleanup and host observations are retained; rejected or interrupted checks cannot pass.
+`tools/run_cpu_checks.py --report FRESH_PATH` executes the complete check inventory under the live host guard with one offline Cargo job and one test-harness thread. Explicit concurrency workloads inside individual tests remain unchanged. Release-profile lint and optimized qualification-profile workspace tests use the production dependency graph. The qualification profile inherits release settings and overrides only LTO, avoiding repeated cross-crate optimization for each test executable; optimization level, arithmetic/assertion settings and the single code-generation unit retain release behavior. A prior Windows release-test build exceeded its command deadline during compilation before any tests began. The complete test inventory and deadline are retained, and `cargo build --release` still builds the shipped binaries separately. Compiler versions, logs, test totals, execution settings, owned cleanup and host observations are retained; rejected or interrupted checks cannot pass.
 
 For engine iteration, `--engine-only` checks workspace formatting, strict engine lint and every ordinary engine library test under the same guard. CI runs it before building the complete executable graph and immediately retains its report/logs with the complete legal payload. It emits a separate `cpu-engine-checks` record with no CLI executable qualification; release readiness and packaging reject that kind even if it claims passing commands. The default complete inventory and real-model opt-ins retain their separate requirements.
 

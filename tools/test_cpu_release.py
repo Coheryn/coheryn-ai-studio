@@ -6,6 +6,7 @@ from pathlib import Path
 import struct
 import tarfile
 import tempfile
+import tomllib
 import unittest
 from unittest.mock import Mock, patch
 
@@ -149,7 +150,8 @@ class NativeChecksTests(unittest.TestCase):
             if command[1:] == ['--version']: log.write_text('cargo 1.99.1 (fixture)\n')
             elif command[1:] == ['-vV']: log.write_text('rustc 1.99.1 (fixture)\n')
             elif command[1] == 'test':
-                self.assertIn('--release', command)
+                if engine_only: self.assertIn('--release', command)
+                else: self.assertEqual(command[2:4], ['--profile', 'qualification'])
                 log.write_text(f'test result: ok. {0 if empty else 7} passed; 0 failed; 2 ignored; 0 measured; {int(filtered)} filtered out\n')
                 return 1 if failed else 0
             else: log.write_text('native command complete\n')
@@ -168,7 +170,7 @@ class NativeChecksTests(unittest.TestCase):
             with self.assertRaises(SystemExit) as outcome: native_checks.main()
         return json.loads(report.read_text()), outcome.exception.code, run.call_count
 
-    def test_complete_inventory_preserves_release_profile_logs_and_owned_cleanup(self):
+    def test_complete_inventory_preserves_optimized_profile_logs_and_owned_cleanup(self):
         with tempfile.TemporaryDirectory() as temporary:
             result, code, calls = self.execute(Path(temporary).resolve())
             self.assertEqual((code, calls), (0, len(gate.COMMANDS) + 2))
@@ -178,7 +180,15 @@ class NativeChecksTests(unittest.TestCase):
             self.assertEqual(result['commands'][2]['tests']['ignored'], 2)
             self.assertTrue(result['source_unchanged'] and result['owned_cleanup_confirmed'])
             self.assertEqual(result['execution_settings']['rust_test_threads'], 1)
+            self.assertEqual(result['execution_settings']['test_profile'], 'qualification')
             self.assertFalse(result['production_ready'])
+
+    def test_qualification_profile_only_changes_link_time_optimization(self):
+        manifest = tomllib.loads((gate.ROOT / 'Cargo.toml').read_text())
+        self.assertEqual(manifest['profile']['qualification'], {'inherits': 'release', 'lto': False})
+        self.assertEqual(manifest['profile']['release']['lto'], 'thin')
+        self.assertEqual(manifest['profile']['release']['codegen-units'], 1)
+        self.assertIn(('cargo', 'build', '--release', '--workspace', '--locked'), gate.COMMANDS)
 
     def test_guard_rejection_starts_no_native_command(self):
         for engine_only in (False, True):
@@ -195,6 +205,7 @@ class NativeChecksTests(unittest.TestCase):
             self.assertEqual([tuple(c['command']) for c in result['commands']], list(native_checks.ENGINE_COMMANDS))
             self.assertEqual(result['commands'][2]['tests']['filtered'], 0)
             self.assertEqual(result['binaries'], {})
+            self.assertEqual(result['execution_settings']['test_profile'], 'release')
             self.assertTrue(result['source_unchanged'] and result['owned_cleanup_confirmed'])
 
     def test_empty_failed_filtered_or_source_changed_results_never_pass(self):

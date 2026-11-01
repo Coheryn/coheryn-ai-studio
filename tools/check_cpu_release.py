@@ -16,7 +16,7 @@ REQUIREMENTS = {'native-checks': True, 'model-matrix': True, 'resource-soak': Tr
 COMMANDS = (
     ('cargo', 'fmt', '--all', '--', '--check'),
     ('cargo', 'clippy', '--release', '--workspace', '--all-targets', '--locked', '--', '-D', 'warnings'),
-    ('cargo', 'test', '--release', '--workspace', '--locked'),
+    ('cargo', 'test', '--profile', 'qualification', '--workspace', '--locked'),
     ('cargo', 'build', '--release', '--workspace', '--locked'),
     ('python', 'tools/test_cpu_release.py'),
     ('python', 'tools/test_cpu_qualification.py'),

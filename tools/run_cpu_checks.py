@@ -54,7 +54,7 @@ def main():
               'source_snapshot': source, 'source_unchanged': False,
               'compatibility_sha256': sha(ROOT / 'fixtures/compatibility.json'),
               'execution_settings': {'cargo_build_jobs': 1, 'rust_test_threads': 1,
-                                     'test_profile': 'release', 'cargo_incremental': 0},
+                                     'test_profile': 'release' if args.engine_only else 'qualification', 'cargo_incremental': 0},
               'scope': 'Native automated checks only; no downloaded-model, security-review or production qualification claim.'}
     if args.engine_only:
         result['scope'] = 'Formatting, strict engine lint and ordinary engine library tests only; no complete workspace, executable, model or release qualification.'

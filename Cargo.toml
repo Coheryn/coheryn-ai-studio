@@ -26,3 +26,9 @@ unsafe_code = "forbid"
 [profile.release]
 lto = "thin"
 codegen-units = 1
+
+# Run the complete optimized test suite without repeating cross-crate LTO for
+# each test executable. Production binaries retain the release profile above.
+[profile.qualification]
+inherits = "release"
+lto = false
