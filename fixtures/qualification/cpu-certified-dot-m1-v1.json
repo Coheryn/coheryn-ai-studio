@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "kind": "native-m1-certified-dot-checkpoint",
+  "outcome": "pass",
+  "production_ready": false,
+  "source_commit": "360bac1489be2d9a32db733d5dd666bfbd27c991",
+  "target": "aarch64-apple-darwin",
+  "authored_source_matches_commit": true,
+  "snapshot_extra_os_metadata": [
+    "fixtures/.DS_Store",
+    "fixtures/vlm/.DS_Store"
+  ],
+  "reports": {
+    "libraries": {
+      "path": "fixtures/qualification/cpu-certified-dot-m1-libraries-v1.json",
+      "bytes": 51684,
+      "sha256": "877aac17eaf6335623049797b418c56fb60c44422456f24c745c4920e6103b03"
+    },
+    "measurements": {
+      "path": "fixtures/qualification/cpu-certified-dot-m1-measurements-v1.json",
+      "bytes": 61067,
+      "sha256": "e5c03717ef1081ad99bdc83d080f0b5e809b32eca773378c66bf3a373954e704"
+    },
+    "observations": {
+      "path": "fixtures/qualification/cpu-certified-dot-m1-observations-v1.json",
+      "bytes": 4735,
+      "sha256": "a9ba5a5c264b5316e6b2487cf38f08a25563d60871c4f594dc747c13c110894d"
+    }
+  },
+  "libraries": {
+    "passed": 68,
+    "ignored": 4,
+    "failed": 0,
+    "filtered": 0
+  },
+  "dispatch_interval": [
+    384,
+    16384
+  ],
+  "timing_observations": [
+    {
+      "width": 256,
+      "cancellation": false,
+      "eligible": false,
+      "reference_median_ms": 2.419375,
+      "candidate_median_ms": 2.4381250000000003,
+      "reference_over_candidate": 0.9923096641886695
+    },
+    {
+      "width": 384,
+      "cancellation": false,
+      "eligible": true,
+      "reference_median_ms": 2.71475,
+      "candidate_median_ms": 1.922333,
+      "reference_over_candidate": 1.4122163017541705
+    },
+    {
+      "width": 512,
+      "cancellation": false,
+      "eligible": true,
+      "reference_median_ms": 3.062917,
+      "candidate_median_ms": 2.222291,
+      "reference_over_candidate": 1.378269992543731
+    },
+    {
+      "width": 768,
+      "cancellation": false,
+      "eligible": true,
+      "reference_median_ms": 4.984334,
+      "candidate_median_ms": 3.0275,
+      "reference_over_candidate": 1.6463530966143682
+    },
+    {
+      "width": 896,
+      "cancellation": false,
+      "eligible": true,
+      "reference_median_ms": 5.978833,
+      "candidate_median_ms": 3.6419170000000003,
+      "reference_over_candidate": 1.6416719546326837
+    },
+    {
+      "width": 1024,
+      "cancellation": false,
+      "eligible": true,
+      "reference_median_ms": 6.951917,
+      "candidate_median_ms": 3.6549159999999996,
+      "reference_over_candidate": 1.9020729888183479
+    },
+    {
+      "width": 1536,
+      "cancellation": false,
+      "eligible": true,
+      "reference_median_ms": 10.904708000000001,
+      "candidate_median_ms": 5.67875,
+      "reference_over_candidate": 1.920265551397755
+    },
+    {
+      "width": 3072,
+      "cancellation": false,
+      "eligible": true,
+      "reference_median_ms": 22.7805,
+      "candidate_median_ms": 11.743458,
+      "reference_over_candidate": 1.9398459976609956
+    },
+    {
+      "width": 3584,
+      "cancellation": false,
+      "eligible": true,
+      "reference_median_ms": 26.701084,
+      "candidate_median_ms": 13.619292,
+      "reference_over_candidate": 1.9605339249646752
+    },
+    {
+      "width": 4864,
+      "cancellation": false,
+      "eligible": true,
+      "reference_median_ms": 36.625040999999996,
+      "candidate_median_ms": 20.378,
+      "reference_over_candidate": 1.7972833938561192
+    },
+    {
+      "width": 8960,
+      "cancellation": false,
+      "eligible": true,
+      "reference_median_ms": 68.174208,
+      "candidate_median_ms": 36.251833,
+      "reference_over_candidate": 1.8805727147645195
+    },
+    {
+      "width": 16384,
+      "cancellation": false,
+      "eligible": true,
+      "reference_median_ms": 125.48241600000001,
+      "candidate_median_ms": 97.960375,
+      "reference_over_candidate": 1.2809507517708054
+    },
+    {
+      "width": 32768,
+      "cancellation": false,
+      "eligible": false,
+      "reference_median_ms": 256.126209,
+      "candidate_median_ms": 258.803834,
+      "reference_over_candidate": 0.9896538433816248
+    },
+    {
+      "width": 65536,
+      "cancellation": false,
+      "eligible": false,
+      "reference_median_ms": 511.293667,
+      "candidate_median_ms": 513.299291,
+      "reference_over_candidate": 0.9960926811410694
+    },
+    {
+      "width": 1024,
+      "cancellation": true,
+      "eligible": true,
+      "reference_median_ms": 6.957625,
+      "candidate_median_ms": 11.343291,
+      "reference_over_candidate": 0.6133691712572656
+    }
+  ],
+  "review": "Original reports preserved byte-for-byte. Authored source/fixture hashes match the recorded Git revision; two additional Finder metadata hashes remain in the original snapshots and are explicitly listed. Command/toolchain/native-output logs, complete healthy observer streams, test totals and executable identity verified.",
+  "scope": "Recorded-source macOS ARM64 release library tests, all-target strict Clippy and alternating warm synthetic kernel measurements with reference-bit parity.",
+  "gaps": [
+    "Full workspace, packaged/transport, real-model and other CPU-platform qualification remain open for the optimized source.",
+    "Synthetic timing gains are not model-throughput or service-latency gains; hardware cache pressure and OS scheduling are uncontrolled.",
+    "Cancellation-heavy inputs show reference-fallback overhead; this is not a universal speed guarantee.",
+    "No GPU or production release qualification is established."
+  ]
+}
