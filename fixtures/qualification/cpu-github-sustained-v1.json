@@ -1,0 +1,594 @@
+{
+  "schema_version": 1,
+  "kind": "github-sustained-cpu-workload-evidence",
+  "outcome": "pass",
+  "production_ready": false,
+  "source_commit": "bbeb1bdc6a0763fe86a4550c8d384b87fee0abda",
+  "run_id": 41188411610,
+  "run_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41188411610",
+  "targets": [
+    {
+      "target": "aarch64-apple-darwin",
+      "artifact": {
+        "id": 13039674127,
+        "name": "cpu-sustained-evidence-aarch64-apple-darwin-1",
+        "digest": "sha256:fbffeabc5a2b84d369d83f5bd32f744dee477975823629f842f5c45ad2f48f3d",
+        "size_in_bytes": 588137
+      },
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-sustained-aarch64-apple-darwin-checks-v1.json",
+          "bytes": 51474,
+          "sha256": "0e5e05f0ba9d99c790daef5d2e330715db03bee093a105b2ab8f0e0ee59ccfc3"
+        },
+        "synthetic": {
+          "path": "fixtures/qualification/cpu-github-sustained-aarch64-apple-darwin-synthetic-v1.json",
+          "bytes": 59585,
+          "sha256": "ed7d0b1daf3115c64dcfc5ba3a42299b588a7e87b3ac575012cb4d94e00dd1ce"
+        },
+        "modern": {
+          "path": "fixtures/qualification/cpu-github-sustained-aarch64-apple-darwin-modern-v1.json",
+          "bytes": 58432,
+          "sha256": "38954e84ff5462091fc6a531792cab3c63317d5551eb12ade2d2b849ec8cf336"
+        }
+      },
+      "fault_phase_counts": {
+        "synthetic": {
+          "queue_saturation_and_disconnect": {
+            "warmup": 8,
+            "measured": 40
+          },
+          "resource_rejection_and_model_reload": {
+            "warmup": 8,
+            "measured": 40
+          },
+          "slow_consumer_timeout": {
+            "warmup": 8,
+            "measured": 40
+          },
+          "image_backpressure_peer_progress_and_drop": {
+            "warmup": 8,
+            "measured": 40
+          }
+        },
+        "modern": {
+          "queue_saturation_and_disconnect": {
+            "warmup": 2,
+            "measured": 5
+          },
+          "resource_rejection_and_model_reload": {
+            "warmup": 2,
+            "measured": 5
+          },
+          "slow_consumer_timeout": {
+            "warmup": 2,
+            "measured": 5
+          },
+          "image_backpressure_peer_progress_and_drop": {
+            "warmup": 2,
+            "measured": 5
+          }
+        }
+      },
+      "measurements": {
+        "synthetic": {
+          "measured_cycles": 400,
+          "service_epochs": 16,
+          "samples": 586,
+          "faults": {
+            "image_backpressure_peer_progress_and_drop": 48,
+            "resource_rejection_and_model_reload": 48,
+            "queue_saturation_and_disconnect": 48,
+            "slow_consumer_timeout": 48
+          },
+          "operations": {
+            "1/balanced/embedding": {
+              "count": 115,
+              "max_ms": 2.856708,
+              "path": "/v1/embeddings",
+              "mean_ms": 1.5415568608695653
+            },
+            "1/balanced/text": {
+              "count": 115,
+              "max_ms": 23.995666999999997,
+              "path": "/api/v1/generate",
+              "mean_ms": 12.693342000000005
+            },
+            "1/balanced/image": {
+              "count": 103,
+              "max_ms": 46.9715,
+              "path": "/api/v1/generate",
+              "mean_ms": 33.80467355339806
+            },
+            "1/low-memory/embedding": {
+              "count": 115,
+              "max_ms": 3.311333,
+              "path": "/v1/embeddings",
+              "mean_ms": 1.6345714000000002
+            },
+            "1/low-memory/text": {
+              "count": 115,
+              "max_ms": 41.279625,
+              "path": "/api/v1/generate",
+              "mean_ms": 13.589988765217399
+            },
+            "1/low-memory/image": {
+              "count": 103,
+              "max_ms": 59.642333,
+              "path": "/api/v1/generate",
+              "mean_ms": 35.337697378640776
+            },
+            "2/balanced/embedding": {
+              "count": 115,
+              "max_ms": 3.016584,
+              "path": "/v1/embeddings",
+              "mean_ms": 1.491097469565218
+            },
+            "2/balanced/text": {
+              "count": 115,
+              "max_ms": 21.387458000000002,
+              "path": "/api/v1/generate",
+              "mean_ms": 12.671393852173912
+            },
+            "2/balanced/image": {
+              "count": 103,
+              "max_ms": 42.515166,
+              "path": "/api/v1/generate",
+              "mean_ms": 33.92942679611651
+            },
+            "2/low-memory/embedding": {
+              "count": 115,
+              "max_ms": 3.1223750000000003,
+              "path": "/v1/embeddings",
+              "mean_ms": 1.4186760260869562
+            },
+            "2/low-memory/text": {
+              "count": 115,
+              "max_ms": 18.718124999999997,
+              "path": "/api/v1/generate",
+              "mean_ms": 11.970234078260873
+            },
+            "2/low-memory/image": {
+              "count": 103,
+              "max_ms": 42.325208,
+              "path": "/api/v1/generate",
+              "mean_ms": 32.65991299029126
+            }
+          },
+          "sampled_peak_rss_bytes": 31555584,
+          "max_drained_rss_growth_bytes": 3866624,
+          "peak_reserved_bytes": 286116512,
+          "peak_engine_buffer_bytes": 2647072,
+          "rss_acceptance": "evaluated"
+        },
+        "modern": {
+          "measured_cycles": 10,
+          "service_epochs": 2,
+          "samples": 23031,
+          "faults": {
+            "resource_rejection_and_model_reload": 7,
+            "queue_saturation_and_disconnect": 7,
+            "slow_consumer_timeout": 7,
+            "image_backpressure_peer_progress_and_drop": 7
+          },
+          "operations": {
+            "1/balanced/embedding": {
+              "count": 20,
+              "max_ms": 344.456292,
+              "path": "/v1/embeddings",
+              "mean_ms": 252.42462705000003
+            },
+            "1/balanced/text": {
+              "count": 20,
+              "max_ms": 59494.597084,
+              "path": "/api/v1/generate",
+              "mean_ms": 39285.835841600005
+            },
+            "1/balanced/image": {
+              "count": 13,
+              "max_ms": 205977.04025,
+              "path": "/api/v1/generate",
+              "mean_ms": 196290.38631746155
+            }
+          },
+          "sampled_peak_rss_bytes": 348717056,
+          "max_drained_rss_growth_bytes": 63504384,
+          "peak_reserved_bytes": 657346026,
+          "peak_engine_buffer_bytes": 71966224,
+          "rss_acceptance": "evaluated"
+        }
+      }
+    },
+    {
+      "target": "x86_64-unknown-linux-gnu",
+      "artifact": {
+        "id": 13039388780,
+        "name": "cpu-sustained-evidence-x86_64-unknown-linux-gnu-1",
+        "digest": "sha256:ffa6d0b35e6fded7bdfef90e21b1c45ae5b9477da7d2c9022f91f022c7809a3f",
+        "size_in_bytes": 898723
+      },
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-sustained-x86_64-unknown-linux-gnu-checks-v1.json",
+          "bytes": 51468,
+          "sha256": "6a9304daecc67c2cd8ade38871fe5047744ee4a69a1a95d714725dd46c5f6f14"
+        },
+        "synthetic": {
+          "path": "fixtures/qualification/cpu-github-sustained-x86_64-unknown-linux-gnu-synthetic-v1.json",
+          "bytes": 59550,
+          "sha256": "5af311f555eaef07c59b11ea727379c33a59869c32370e8d378e4a6f4f51770d"
+        },
+        "modern": {
+          "path": "fixtures/qualification/cpu-github-sustained-x86_64-unknown-linux-gnu-modern-v1.json",
+          "bytes": 58408,
+          "sha256": "7a717251fe92caf28a5c02becbf78b738561b801d03421016970cd8819998d94"
+        }
+      },
+      "fault_phase_counts": {
+        "synthetic": {
+          "queue_saturation_and_disconnect": {
+            "warmup": 8,
+            "measured": 40
+          },
+          "resource_rejection_and_model_reload": {
+            "warmup": 8,
+            "measured": 40
+          },
+          "slow_consumer_timeout": {
+            "warmup": 8,
+            "measured": 40
+          },
+          "image_backpressure_peer_progress_and_drop": {
+            "warmup": 8,
+            "measured": 40
+          }
+        },
+        "modern": {
+          "queue_saturation_and_disconnect": {
+            "warmup": 2,
+            "measured": 5
+          },
+          "resource_rejection_and_model_reload": {
+            "warmup": 2,
+            "measured": 5
+          },
+          "slow_consumer_timeout": {
+            "warmup": 2,
+            "measured": 5
+          },
+          "image_backpressure_peer_progress_and_drop": {
+            "warmup": 2,
+            "measured": 5
+          }
+        }
+      },
+      "measurements": {
+        "synthetic": {
+          "measured_cycles": 400,
+          "service_epochs": 16,
+          "samples": 1719,
+          "faults": {
+            "resource_rejection_and_model_reload": 48,
+            "image_backpressure_peer_progress_and_drop": 48,
+            "queue_saturation_and_disconnect": 48,
+            "slow_consumer_timeout": 48
+          },
+          "operations": {
+            "1/balanced/embedding": {
+              "count": 115,
+              "max_ms": 3.105745,
+              "path": "/v1/embeddings",
+              "mean_ms": 2.383802921739131
+            },
+            "1/balanced/text": {
+              "count": 115,
+              "max_ms": 28.872848,
+              "path": "/api/v1/generate",
+              "mean_ms": 24.55894146956522
+            },
+            "1/balanced/image": {
+              "count": 103,
+              "max_ms": 75.53384,
+              "path": "/api/v1/generate",
+              "mean_ms": 74.20404383495143
+            },
+            "1/low-memory/embedding": {
+              "count": 115,
+              "max_ms": 4.0507,
+              "path": "/v1/embeddings",
+              "mean_ms": 2.596475347826086
+            },
+            "1/low-memory/text": {
+              "count": 115,
+              "max_ms": 30.338945,
+              "path": "/api/v1/generate",
+              "mean_ms": 24.834544252173913
+            },
+            "1/low-memory/image": {
+              "count": 103,
+              "max_ms": 84.321491,
+              "path": "/api/v1/generate",
+              "mean_ms": 74.58416565048546
+            },
+            "2/balanced/embedding": {
+              "count": 115,
+              "max_ms": 5.441237,
+              "path": "/v1/embeddings",
+              "mean_ms": 2.506441513043477
+            },
+            "2/balanced/text": {
+              "count": 115,
+              "max_ms": 30.444758999999998,
+              "path": "/api/v1/generate",
+              "mean_ms": 24.87261258260868
+            },
+            "2/balanced/image": {
+              "count": 103,
+              "max_ms": 83.71469099999999,
+              "path": "/api/v1/generate",
+              "mean_ms": 74.70492300970872
+            },
+            "2/low-memory/embedding": {
+              "count": 115,
+              "max_ms": 3.7592429999999997,
+              "path": "/v1/embeddings",
+              "mean_ms": 2.619917330434783
+            },
+            "2/low-memory/text": {
+              "count": 115,
+              "max_ms": 38.404306,
+              "path": "/api/v1/generate",
+              "mean_ms": 25.314267495652157
+            },
+            "2/low-memory/image": {
+              "count": 103,
+              "max_ms": 83.559677,
+              "path": "/api/v1/generate",
+              "mean_ms": 75.1253837475728
+            }
+          },
+          "sampled_peak_rss_bytes": 34086912,
+          "max_drained_rss_growth_bytes": 2899968,
+          "peak_reserved_bytes": 286116608,
+          "peak_engine_buffer_bytes": 2647072,
+          "rss_acceptance": "evaluated"
+        },
+        "modern": {
+          "measured_cycles": 10,
+          "service_epochs": 2,
+          "samples": 44418,
+          "faults": {
+            "slow_consumer_timeout": 7,
+            "image_backpressure_peer_progress_and_drop": 7,
+            "queue_saturation_and_disconnect": 7,
+            "resource_rejection_and_model_reload": 7
+          },
+          "operations": {
+            "1/balanced/embedding": {
+              "count": 20,
+              "max_ms": 1135.673397,
+              "path": "/v1/embeddings",
+              "mean_ms": 1121.00479695
+            },
+            "1/balanced/text": {
+              "count": 20,
+              "max_ms": 60152.530238,
+              "path": "/api/v1/generate",
+              "mean_ms": 41409.61018235
+            },
+            "1/balanced/image": {
+              "count": 13,
+              "max_ms": 203793.499135,
+              "path": "/api/v1/generate",
+              "mean_ms": 202437.77437538462
+            }
+          },
+          "sampled_peak_rss_bytes": 437420032,
+          "max_drained_rss_growth_bytes": 87240704,
+          "peak_reserved_bytes": 657345850,
+          "peak_engine_buffer_bytes": 71966224,
+          "rss_acceptance": "evaluated"
+        }
+      }
+    },
+    {
+      "target": "x86_64-pc-windows-msvc",
+      "artifact": {
+        "id": 13039114852,
+        "name": "cpu-sustained-evidence-x86_64-pc-windows-msvc-1",
+        "digest": "sha256:a8a3f6c9694cab2db32a0dca1db6231d9a3c188fd3bcc6d502b85403bae3cf3c",
+        "size_in_bytes": 832224
+      },
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-sustained-x86_64-pc-windows-msvc-checks-v1.json",
+          "bytes": 51999,
+          "sha256": "cb82958bc19ceaa42356355754a759d55389de69a9cba0a735977db14b17d642"
+        },
+        "synthetic": {
+          "path": "fixtures/qualification/cpu-github-sustained-x86_64-pc-windows-msvc-synthetic-v1.json",
+          "bytes": 60352,
+          "sha256": "366756b40424428a9561b3e4caf0237e5ecdb525cc7ab6fa1cefa5f164a62b2d"
+        },
+        "modern": {
+          "path": "fixtures/qualification/cpu-github-sustained-x86_64-pc-windows-msvc-modern-v1.json",
+          "bytes": 59113,
+          "sha256": "603f5a4487e4ad8079a14d2b3dcdf5febbb5d6d4d3020c83c188c8e9a62bba6e"
+        }
+      },
+      "fault_phase_counts": {
+        "synthetic": {
+          "queue_saturation_and_disconnect": {
+            "warmup": 8,
+            "measured": 40
+          },
+          "resource_rejection_and_model_reload": {
+            "warmup": 8,
+            "measured": 40
+          },
+          "slow_consumer_timeout": {
+            "warmup": 8,
+            "measured": 40
+          },
+          "image_backpressure_peer_progress_and_drop": {
+            "warmup": 8,
+            "measured": 40
+          }
+        },
+        "modern": {
+          "queue_saturation_and_disconnect": {
+            "warmup": 2,
+            "measured": 5
+          },
+          "resource_rejection_and_model_reload": {
+            "warmup": 2,
+            "measured": 5
+          },
+          "slow_consumer_timeout": {
+            "warmup": 2,
+            "measured": 5
+          },
+          "image_backpressure_peer_progress_and_drop": {
+            "warmup": 2,
+            "measured": 5
+          }
+        }
+      },
+      "measurements": {
+        "synthetic": {
+          "measured_cycles": 400,
+          "service_epochs": 16,
+          "samples": 1429,
+          "faults": {
+            "slow_consumer_timeout": 48,
+            "resource_rejection_and_model_reload": 48,
+            "image_backpressure_peer_progress_and_drop": 48,
+            "queue_saturation_and_disconnect": 48
+          },
+          "operations": {
+            "1/balanced/embedding": {
+              "count": 115,
+              "max_ms": 5.2498,
+              "path": "/v1/embeddings",
+              "mean_ms": 3.5636913043478264
+            },
+            "1/balanced/text": {
+              "count": 115,
+              "max_ms": 31.798600000000004,
+              "path": "/api/v1/generate",
+              "mean_ms": 28.137030434782588
+            },
+            "1/balanced/image": {
+              "count": 103,
+              "max_ms": 76.03609999999999,
+              "path": "/api/v1/generate",
+              "mean_ms": 74.26288640776698
+            },
+            "1/low-memory/embedding": {
+              "count": 115,
+              "max_ms": 4.5926,
+              "path": "/v1/embeddings",
+              "mean_ms": 3.297984347826086
+            },
+            "1/low-memory/text": {
+              "count": 115,
+              "max_ms": 30.3732,
+              "path": "/api/v1/generate",
+              "mean_ms": 27.164573913043476
+            },
+            "1/low-memory/image": {
+              "count": 103,
+              "max_ms": 75.31309999999999,
+              "path": "/api/v1/generate",
+              "mean_ms": 73.10986601941748
+            },
+            "2/balanced/embedding": {
+              "count": 115,
+              "max_ms": 4.5556,
+              "path": "/v1/embeddings",
+              "mean_ms": 3.059203478260868
+            },
+            "2/balanced/text": {
+              "count": 115,
+              "max_ms": 30.445300000000003,
+              "path": "/api/v1/generate",
+              "mean_ms": 26.948027826086964
+            },
+            "2/balanced/image": {
+              "count": 103,
+              "max_ms": 75.1862,
+              "path": "/api/v1/generate",
+              "mean_ms": 72.86466504854367
+            },
+            "2/low-memory/embedding": {
+              "count": 115,
+              "max_ms": 4.4123,
+              "path": "/v1/embeddings",
+              "mean_ms": 3.191794782608693
+            },
+            "2/low-memory/text": {
+              "count": 115,
+              "max_ms": 30.1783,
+              "path": "/api/v1/generate",
+              "mean_ms": 27.006173043478274
+            },
+            "2/low-memory/image": {
+              "count": 103,
+              "max_ms": 75.1498,
+              "path": "/api/v1/generate",
+              "mean_ms": 73.01471941747573
+            }
+          },
+          "sampled_peak_rss_bytes": 22577152,
+          "max_drained_rss_growth_bytes": 3866624,
+          "peak_reserved_bytes": 286116448,
+          "peak_engine_buffer_bytes": 2647072,
+          "rss_acceptance": "evaluated"
+        },
+        "modern": {
+          "measured_cycles": 10,
+          "service_epochs": 2,
+          "samples": 41398,
+          "faults": {
+            "image_backpressure_peer_progress_and_drop": 7,
+            "queue_saturation_and_disconnect": 7,
+            "resource_rejection_and_model_reload": 7,
+            "slow_consumer_timeout": 7
+          },
+          "operations": {
+            "1/balanced/embedding": {
+              "count": 20,
+              "max_ms": 1526.8846,
+              "path": "/v1/embeddings",
+              "mean_ms": 1400.457315
+            },
+            "1/balanced/text": {
+              "count": 20,
+              "max_ms": 59612.8937,
+              "path": "/api/v1/generate",
+              "mean_ms": 41658.977215
+            },
+            "1/balanced/image": {
+              "count": 13,
+              "max_ms": 207247.3944,
+              "path": "/api/v1/generate",
+              "mean_ms": 205829.49244615386
+            }
+          },
+          "sampled_peak_rss_bytes": 161202176,
+          "max_drained_rss_growth_bytes": 4329472,
+          "peak_reserved_bytes": 589188418,
+          "peak_engine_buffer_bytes": 71966224,
+          "rss_acceptance": "evaluated"
+        }
+      }
+    }
+  ],
+  "review": "Official ZIP hashes verified before reading. Original report bytes preserved; declared artifact hashes checked and observer summaries recomputed. Warmup and measured fault counts verified separately.",
+  "scope": "Frozen 400-cycle synthetic configuration matrix plus ten-cycle balanced/concurrency-one Qwen3.5/Nomic workload on three native CPU targets. Same-process service restarts, exact resident drain and bounded-memory/cleanup evidence. Reports bind their original source; later source changes require new qualification.",
+  "gaps": [
+    "Independent numerical and broader pretrained context/profile/concurrency/model/backend matrices remain open.",
+    "Router-in-process workloads do not qualify TCP/TLS or OS socket-buffer behavior.",
+    "Controlled cold-cache performance, GPU, broad security, signing and human release review remain open."
+  ]
+}
