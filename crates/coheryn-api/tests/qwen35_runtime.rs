@@ -201,14 +201,22 @@ async fn native_hybrid_router_cache_batch_images_and_cleanup() {
         .unwrap()
         .extend(sampling.as_object().unwrap().clone());
     let sampled_cached=call(&app,"POST",&format!("{route}/messages"),json!({"expected_revision":4,"idempotency_key":"sampled","content":"Continue.","settings":sampled_settings}),200).await;
-    assert!(sampled_cached["result"]["reused_prompt_tokens"].as_u64().unwrap() > 0);
+    assert!(
+        sampled_cached["result"]["reused_prompt_tokens"]
+            .as_u64()
+            .unwrap()
+            > 0
+    );
     let mut sampled_fresh_body = json!({"model":"q35","messages":[cases[0]["messages"][0],{"role":"assistant","content":first["result"]["text"]},{"role":"user","content":followup},{"role":"assistant","content":second["result"]["text"]},{"role":"user","content":"Continue."}],"max_tokens":4,"threads":1,"profile":"reference","context":256});
     sampled_fresh_body
         .as_object_mut()
         .unwrap()
         .extend(sampling.as_object().unwrap().clone());
     let sampled_fresh = call(&app, "POST", "/api/v1/generate", sampled_fresh_body, 200).await;
-    assert_eq!(sampled_cached["result"]["token_ids"], sampled_fresh["token_ids"]);
+    assert_eq!(
+        sampled_cached["result"]["token_ids"],
+        sampled_fresh["token_ids"]
+    );
     assert_eq!(sampled_cached["result"]["text"], sampled_fresh["text"]);
     let exported = call(&app, "GET", &format!("{route}/export"), Value::Null, 200).await;
     assert_eq!(exported["session"]["cache_reserved_bytes"], 0);
