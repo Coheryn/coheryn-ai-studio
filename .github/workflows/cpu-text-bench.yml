@@ -1,0 +1,73 @@
+name: Native text benchmark qualification
+on:
+  push:
+    branches:
+      - 'development/mandatory-80'
+      - 'qualification/cpu-bench/**'
+    paths:
+      - 'crates/coheryn-engine/**'
+      - 'crates/coheryn-cli/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'rust-toolchain.toml'
+      - 'tools/check_text_bench.py'
+      - 'tools/test_text_bench.py'
+      - 'tools/cpu_qualification/**'
+      - 'fixtures/qwen35/**'
+      - 'fixtures/models.json'
+      - 'fixtures/golden/**'
+      - '.github/workflows/cpu-text-bench.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cpu-text-benchmark-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  benchmark:
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        suite: [gguf-text, qwen35-gguf-q4_k_m-text, qwen35-text]
+        platform:
+          - { os: macos-15, target: aarch64-apple-darwin }
+          - { os: ubuntu-24.04, target: x86_64-unknown-linux-gnu }
+          - { os: windows-2022, target: x86_64-pc-windows-msvc }
+    runs-on: ${{ matrix.platform.os }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.x'
+          check-latest: true
+      - uses: dtolnay/rust-toolchain@1.99.1
+      - name: Verify native runner identity
+        env:
+          EXPECTED_TARGET: ${{ matrix.platform.target }}
+        run: python -c "import os,sys; sys.path.insert(0,'tools'); from verify_cpu_package import native_target; from cpu_qualification.common import require; require(native_target()==os.environ['EXPECTED_TARGET'],'unexpected native runner')"
+      - name: Admit guarded benchmark preparation
+        run: python tools/check_cpu_host.py --wait-for-load-seconds 300 --startup-load-per-cpu 1 --report .cache/text-benchmark-host.json
+      - name: Check benchmark evidence boundaries
+        run: python tools/test_text_bench.py
+      - run: python tools/test_cpu_qualification.py
+      - name: Prepare locked graphs for offline legal checks
+        run: python tools/check_cpu_soak.py --fetch-only --report .cache/text-benchmark-dependencies.json
+      - run: python tools/license_notices.py --tracked
+      - name: Qualify native adapters and capture benchmark observations
+        env:
+          BENCHMARK_SUITE: ${{ matrix.suite }}
+        run: python -c "import os,subprocess,sys; subprocess.run([sys.executable,'tools/check_text_bench.py','--suite',os.environ['BENCHMARK_SUITE'],'--fetch','--report','.cache/text-benchmark-checks.json'],check=True)"
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: text-benchmark-${{ matrix.platform.target }}-${{ matrix.suite }}-${{ github.run_attempt }}
+          include-hidden-files: true
+          if-no-files-found: error
+          path: |
+            .cache/text-benchmark-host.json
+            .cache/text-benchmark-dependencies.json
+            .cache/cpu-soak-checks/text-benchmark-dependencies/**
+            .cache/text-benchmark-checks.json
+            .cache/text-benchmark/**

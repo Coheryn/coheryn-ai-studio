@@ -27,6 +27,8 @@ Package maintenance follows [AGENT.md](AGENT.md); [dependency upgrade notes](doc
 
 ## First native inference
 
+The integrated native `coheryn bench` command uses the text adapter registry; [benchmark commands and qualification scope](docs/BENCHMARKS.md) describe modern-model support and timing limits.
+
 For the prioritized Qwen3.5-0.8B standalone development profile:
 
 ```sh

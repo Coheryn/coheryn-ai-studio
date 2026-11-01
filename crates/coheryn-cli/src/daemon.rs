@@ -4,8 +4,7 @@ use coheryn_api::{
     auth, client::Client, config::ServerConfig, service::Service, wire::GenerationRequest,
 };
 use coheryn_engine::{
-    Cancellation, Error, ErrorCode, GenerationOptions, GenerationResult, Model, Result,
-    tokenizer::Message,
+    Cancellation, Error, ErrorCode, GenerationOptions, GenerationResult, Result, tokenizer::Message,
 };
 use serde_json::json;
 use std::{
@@ -746,7 +745,11 @@ pub async fn bench(cli: &Cli, args: &BenchArgs, cancel: &Cancellation) -> Result
     };
     let loading = std::time::Instant::now();
     let model = if args.standalone {
-        Some(Model::load(&args.model, args.resources.limits())?)
+        Some(coheryn_engine::adapters::Registry::default().load(
+            &args.model,
+            args.resources.limits(),
+            cancel,
+        )?)
     } else {
         None
     };
@@ -762,7 +765,7 @@ pub async fn bench(cli: &Cli, args: &BenchArgs, cancel: &Cancellation) -> Result
     for _ in 0..args.iterations {
         let result = if let Some(model) = &model {
             generate_local(
-                model,
+                model.as_ref(),
                 &args.prompt,
                 &options,
                 (&args.profile, args.threads),
@@ -794,7 +797,7 @@ pub async fn bench(cli: &Cli, args: &BenchArgs, cancel: &Cancellation) -> Result
         runs.push(result);
     }
     print_json(
-        &json!({"backend":"cpu-reference","mode":if args.standalone{"standalone"}else{"daemon-client"},"profile":args.profile,"requested_threads":args.threads,"load_ms":load_ms,"cache_condition":"uncontrolled","runs":runs}),
+        &json!({"backend":"cpu-reference","mode":if args.standalone{"standalone"}else{"daemon-client"},"adapter":model.as_ref().map(|m|m.capabilities()),"profile":args.profile,"requested_threads":args.threads,"load_ms":load_ms,"cache_condition":"uncontrolled","runs":runs}),
     )
 }
 

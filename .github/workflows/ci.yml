@@ -29,6 +29,7 @@ jobs:
       - run: python tools/check_constraint_fixtures.py
       - run: python tools/test_repository_policy.py
       - run: python tools/test_cpu_driver.py
+      - run: python tools/test_text_bench.py
       - run: python tools/check_repository_policy.py
       - uses: dtolnay/rust-toolchain@1.99.1
         with:
