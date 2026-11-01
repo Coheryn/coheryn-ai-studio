@@ -2,6 +2,10 @@
 use crate::{Error, Result};
 use half::f16;
 
+// Initial measured dispatch bounds; other widths keep the original reduction.
+const CERTIFIED_DOT_MIN: usize = 384;
+const CERTIFIED_DOT_MAX: usize = 16_384;
+
 pub fn decode(bytes: &[u8], dtype: u32, output: &mut [f32]) -> Result<()> {
     if crate::quant::is_packed(dtype) {
         return crate::quant::decode(bytes, dtype, output);
@@ -30,7 +34,7 @@ pub fn decode(bytes: &[u8], dtype: u32, output: &mut [f32]) -> Result<()> {
 }
 pub fn dot(a: &[f32], b: &[f32]) -> f32 {
     let count = a.len().min(b.len());
-    if (256..=1 << 20).contains(&count)
+    if (CERTIFIED_DOT_MIN..=CERTIFIED_DOT_MAX).contains(&count)
         && let Some(value) = certified_dot(&a[..count], &b[..count])
     {
         return value;
@@ -46,7 +50,7 @@ fn reference_dot(a: &[f32], b: &[f32]) -> f32 {
 /// See docs/CPU_KERNELS.md for the error bound and domain; no FMA or fast-math.
 fn certified_dot(a: &[f32], b: &[f32]) -> Option<f32> {
     debug_assert_eq!(a.len(), b.len());
-    debug_assert!((256..=1 << 20).contains(&a.len()));
+    debug_assert!((CERTIFIED_DOT_MIN..=CERTIFIED_DOT_MAX).contains(&a.len()));
     let mut sums = [0f64; 4];
     let mut magnitudes = [0f64; 4];
     let (left, left_tail) = a.as_chunks::<4>();
@@ -123,6 +127,9 @@ mod certified_dot_tests {
             258,
             259,
             260,
+            383,
+            384,
+            385,
             511,
             512,
             1023,
@@ -131,7 +138,12 @@ mod certified_dot_tests {
             4096,
             4864,
             8960,
+            16383,
+            16384,
+            16385,
+            32768,
             65535,
+            65536,
             1 << 20,
             (1 << 20) + 1,
         ] {
@@ -152,10 +164,10 @@ mod certified_dot_tests {
 
     #[test]
     fn certified_dot_accepts_unambiguous_results_and_falls_back_at_rounding_boundaries() {
-        let b = [1.; 256];
-        let exact = [1.; 256];
-        assert_eq!(certified_dot(&exact, &b), Some(256.));
-        let mut halfway = [0.; 256];
+        let b = [1.; 512];
+        let exact = [1.; 512];
+        assert_eq!(certified_dot(&exact, &b), Some(512.));
+        let mut halfway = [0.; 512];
         for (base, half, expected) in [
             (1., 2f32.powi(-24), 1.),
             (
@@ -170,12 +182,12 @@ mod certified_dot_tests {
             assert!(certified_dot(&halfway, &b).is_none());
             assert_eq!(dot(&halfway, &b).to_bits(), expected.to_bits());
         }
-        let mut cancellation = [0.; 256];
+        let mut cancellation = [0.; 512];
         cancellation[..4].copy_from_slice(&[1e30, 1., -1e30, 1.]);
         assert!(certified_dot(&cancellation, &b).is_none());
         assert_eq!(dot(&cancellation, &b), 1.);
-        let mut products = [0.; 256];
-        let mut operands = [1.; 256];
+        let mut products = [0.; 512];
+        let mut operands = [1.; 512];
         products[0] = 1. + f32::EPSILON;
         operands[0] = products[0];
         products[1] = -(1. + 2. * f32::EPSILON);
@@ -201,20 +213,20 @@ mod certified_dot_tests {
             (f32::NEG_INFINITY, 1.),
             (f32::NAN, 1.),
         ] {
-            check(&[left; 259], &[right; 259]);
+            check(&[left; 515], &[right; 515]);
         }
         for exceptional in [f32::NAN, f32::INFINITY, f32::NEG_INFINITY, f32::MAX] {
-            for position in [0, 1, 2, 3, 255, 256, 258] {
-                let mut a = [1.; 259];
+            for position in [0, 1, 2, 3, 511, 512, 514] {
+                let mut a = [1.; 515];
                 a[position] = exceptional;
-                check(&a, &[2.; 259]);
+                check(&a, &[2.; 515]);
             }
         }
-        let mut mixed = [1.; 256];
+        let mut mixed = [1.; 512];
         mixed[0] = f32::INFINITY;
         mixed[3] = f32::NEG_INFINITY;
-        check(&mixed, &[1.; 256]);
-        assert!(certified_dot(&[-0.; 256], &[1.; 256]).is_none());
+        check(&mixed, &[1.; 512]);
+        assert!(certified_dot(&[-0.; 512], &[1.; 512]).is_none());
     }
 }
 /// FP16 matvec contract: binary16 operands, F32 products and output, wide reduction.

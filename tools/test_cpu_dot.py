@@ -78,7 +78,7 @@ class DotChecks(unittest.TestCase):
             self.assertEqual((code, calls, result['outcome']), (0, 4, 'pass'))
             self.assertFalse(result['production_ready'])
             self.assertTrue(result['source_unchanged'] and result['owned_cleanup_confirmed'])
-            self.assertEqual(len(result['observations']['cases']), 8)
+            self.assertEqual(len(result['observations']['cases']), 15)
             self.assertTrue(all('log_sha256' in c for c in result['commands']))
 
     def test_host_rejection_starts_no_compiler_or_native_measurement(self):

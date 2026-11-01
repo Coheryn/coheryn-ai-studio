@@ -34,12 +34,19 @@ fn main() {
     let mut cases = Vec::new();
     for (width, cancellation) in [
         (256, false),
+        (384, false),
+        (512, false),
+        (768, false),
         (896, false),
         (1024, false),
         (1536, false),
+        (3072, false),
         (3584, false),
         (4864, false),
         (8960, false),
+        (16384, false),
+        (32768, false),
+        (65536, false),
         (1024, true),
     ] {
         let mut matrix: Vec<_> = (0..ROWS * width).map(|_| value(&mut state)).collect();

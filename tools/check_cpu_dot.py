@@ -16,7 +16,8 @@ from run_cpu_soak import run_child
 from verify_cpu_package import executable_target, native_target
 
 BUILD = ('build', '--release', '--workspace', '--example', 'dot_bench', '--locked')
-CASES = tuple((width, False) for width in (256, 896, 1024, 1536, 3584, 4864, 8960)) + ((1024, True),)
+CASES = tuple((width, False) for width in (256, 384, 512, 768, 896, 1024, 1536, 3072,
+                                        3584, 4864, 8960, 16384, 32768, 65536)) + ((1024, True),)
 
 
 def observations(path):
