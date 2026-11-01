@@ -198,7 +198,7 @@ class SourceIdentityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             for name in ('Cargo.toml', 'Cargo.lock', 'rust-toolchain.toml', 'README.md',
-                         'LICENSE', 'THIRD_PARTY_NOTICES.md', 'AGENT.md', '.gitignore'):
+                         'LICENSE', 'NOTICE', 'THIRD_PARTY_NOTICES.md', 'AGENT.md', '.gitignore', '.gitattributes'):
                 (root / name).write_text('authored fixture')
             fixtures = root / 'fixtures/nested'; fixtures.mkdir(parents=True)
             policy = root / 'resources/policy'; policy.mkdir(parents=True)
@@ -219,6 +219,42 @@ class SourceIdentityTests(unittest.TestCase):
                         path.write_bytes(b'changed bound input')
                         self.assertNotEqual(gate.source_identity(), baseline)
                         path.write_bytes(b'bound input')
+
+    def test_notice_build_configuration_and_complete_legal_payload_changes_invalidate_evidence(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            for name in ('Cargo.toml', 'Cargo.lock', 'rust-toolchain.toml', 'README.md',
+                         'LICENSE', 'NOTICE', 'THIRD_PARTY_NOTICES.md', 'AGENT.md', '.gitignore', '.gitattributes'):
+                (root / name).write_bytes(b'authored fixture')
+            legal = root / 'resources/licensing'
+            legal.mkdir(parents=True)
+            for name in ('dependencies.json', 'assets.json', 'Notice', '.hidden-notice', 'licenses/upstream.txt'):
+                path = legal / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b'original legal bytes')
+            with patch.object(gate, 'ROOT', root):
+                baseline = gate.source_identity()
+                for path in (root / 'NOTICE', root / '.gitattributes', *(p for p in legal.rglob('*') if p.is_file())):
+                    with self.subTest(path=path.relative_to(root).as_posix()):
+                        original = path.read_bytes()
+                        self.assertIn(path.relative_to(root).as_posix(), baseline)
+                        path.write_bytes(b'changed source/legal bytes')
+                        self.assertNotEqual(gate.source_identity(), baseline)
+                        path.write_bytes(original)
+                (root / '.cargo').mkdir()
+                for name in ('config', 'config.toml'):
+                    path = root / '.cargo' / name
+                    path.write_bytes(b'build settings')
+                    self.assertNotEqual(gate.source_identity(), baseline)
+                    path.unlink()
+                    self.assertEqual(gate.source_identity(), baseline)
+                added = legal / 'additional-notice'
+                added.write_bytes(b'new legal bytes')
+                self.assertNotEqual(gate.source_identity(), baseline)
+                added.unlink()
+                self.assertEqual(gate.source_identity(), baseline)
+                (legal / 'Notice').unlink()
+                self.assertNotEqual(gate.source_identity(), baseline)
 
 
 class ReadinessTests(unittest.TestCase):

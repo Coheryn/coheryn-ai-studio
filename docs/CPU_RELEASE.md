@@ -49,6 +49,8 @@ python3 tools/check_independence.py
 
 Known desktop metadata (`.DS_Store`, `Thumbs.db`, `desktop.ini`) is excluded from source fingerprints. Other hidden and unknown fixture files remain bound, and model/reference inputs still have their explicit hash checks. Earlier snapshots retain their original scope and bytes.
 
+Source fingerprints also bind the root `NOTICE`, Git attributes, local Cargo build configuration when present, and every file in the mirrored legal payload. Adding, removing or changing a release notice invalidates earlier source-bound evidence. This extends the fingerprint contract; earlier reports remain attached to their recorded scope and are not relabeled for the stronger contract.
+
 Run real-model opt-ins with `cargo test --release` and keep their reports separate from ordinary-test totals.
 
 Install the latest verified `cargo-fuzz` development tool and pin a sanitizer-capable nightly independently of the production stable toolchain. Record both versions. The bounded campaign runner retains corpus identities, actual coverage, iteration counts, commands, source hashes and log digests:

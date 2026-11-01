@@ -34,7 +34,13 @@ def sha(path):
 
 def source_identity():
     files = [ROOT / name for name in ('Cargo.toml', 'Cargo.lock', 'rust-toolchain.toml', 'README.md',
-                                      'LICENSE', 'THIRD_PARTY_NOTICES.md', 'AGENT.md', '.gitignore')]
+                                      'LICENSE', 'NOTICE', 'THIRD_PARTY_NOTICES.md', 'AGENT.md',
+                                      '.gitignore', '.gitattributes')]
+    # Local build settings and the exact legal payload affect reproducible
+    # release evidence even when the Rust implementation has not changed.
+    files += [ROOT / '.cargo' / name for name in ('config', 'config.toml')
+              if (ROOT / '.cargo' / name).is_file()]
+    files += [p for p in (ROOT / 'resources/licensing').rglob('*') if p.is_file()]
     for directory, suffixes in [('crates', ('.rs', '.toml')), ('tools', ('.py',)),
                                 ('docs', ('.md',)), ('fuzz', ('.rs', '.toml', '.lock')),
                                 ('.github/workflows', ('.yml', '.yaml'))]:
