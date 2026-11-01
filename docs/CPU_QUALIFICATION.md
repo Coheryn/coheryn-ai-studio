@@ -33,7 +33,18 @@ python3 tools/package_cpu_references.py \
   --report target/modern-cpu-reference-data-v1.json
 ```
 
-The result must match the committed current descriptor. Host this exact archive at a reviewed HTTPS location before dispatching remote jobs. No approved location is currently configured, so the remote numerical campaign remains pending. The separately verified three-platform operational smoke does not use or replace this archive. Local packaging performs no publication or remote execution. The workflow accepts a location, with lengths and hashes fixed by the descriptor. Extraction checks every member against the committed inventory and reviewed legal payload, rejecting unknown/missing files, duplicates, links, unsafe/Windows-reserved paths, altered data and oversized expansion. Compressed/expanded limits are 192/256 MiB with at most 4096 files. Legal changes require a newly reviewed bundle; numerical reference identities remain immutable.
+The result must match the committed current descriptor: 140,210,201 bytes with SHA-256 `ae02d59b84d4bf4844edceb70e7f47ba7de9a3128ad9d3450b30e00becaa7f21`. The reviewed local archive and release notes are prepared for an authorized draft release; no remote asset is configured yet, so the remote numerical campaign remains pending. Local packaging performs no publication or remote execution. The separately verified three-platform operational smoke does not use or replace this archive.
+
+The manual workflow accepts exactly one of `reference_bundle_url` (a reviewed public HTTPS location) or `reference_bundle_asset_id` (the numeric release-asset ID in this repository). The asset ID permits an authorized draft to remain unpublished. The workflow supplies its read-only repository token through `COHERYN_REFERENCE_TOKEN` only during acquisition. The downloader sends it only to the fixed repository asset API, strips credentials on every redirect, disables environment proxies, and restricts authenticated asset redirects to GitHub's approved HTTPS hosts. Public-URL mode never attaches this token. Existing verified cache entries need no authentication or network. These authentication paths have offline regression coverage; live draft download still requires an uploaded asset and authorized GitHub access.
+
+For a maintainer fetching a same-repository draft asset, provide `COHERYN_REFERENCE_TOKEN` through the local secret manager or CI environment, then run:
+
+```sh
+python3 tools/fetch_cpu_references.py --github-asset-id ASSET_ID \
+  --output .cache/cpu-reference-data-v1.tar.gz
+```
+
+Both acquisition modes enforce the descriptor's exact size and checksum before atomic cache publication. Extraction checks every member against the committed inventory and reviewed legal payload, rejecting unknown/missing files, duplicates, links, unsafe/Windows-reserved paths, altered data and oversized expansion. Compressed/expanded limits are 192/256 MiB with at most 4096 files. Original reference-data inputs are excluded from uploaded workflow evidence; generated traces and diagnostics remain evidence outputs, with complete license notices included even on failure. Legal changes require a newly reviewed bundle; numerical reference identities remain immutable.
 
 Model acquisition uses revision-pinned publisher/converter URLs, exact lengths/SHA-256, HTTPS redirects, deadlines, disk checks and exclusive atomic publication. Source sidecars and complete paired components are verified. Derived shard files must match their frozen layout hashes. Existing corrupt cache entries fail visibly. `--fetch` explicitly permits acquisition; the default requires cached assets.
 

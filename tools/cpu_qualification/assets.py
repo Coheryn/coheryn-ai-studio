@@ -20,7 +20,7 @@ class HTTPSRedirect(urllib.request.HTTPRedirectHandler):
         return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
-def acquire(path, item, url, fetch, guard=None):
+def acquire(path, item, url, fetch, guard=None, *, opener=None):
     path = Path(path)
     if guard:
         guard.check()
@@ -37,9 +37,10 @@ def acquire(path, item, url, fetch, guard=None):
     path.parent.mkdir(parents=True, exist_ok=True)
     require(not any(p.is_symlink() for p in (path.parent, *path.parent.parents)), 'linked cache directory')
     require(shutil.disk_usage(path.parent).free >= item['bytes'] + (256 << 20), 'insufficient download space')
-    context = ssl.create_default_context(cafile='/etc/ssl/cert.pem' if Path('/etc/ssl/cert.pem').exists() else None)
-    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), HTTPSRedirect(),
-                                        urllib.request.HTTPSHandler(context=context))
+    if opener is None:
+        context = ssl.create_default_context(cafile='/etc/ssl/cert.pem' if Path('/etc/ssl/cert.pem').exists() else None)
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), HTTPSRedirect(),
+                                            urllib.request.HTTPSHandler(context=context))
     descriptor, temporary = tempfile.mkstemp(prefix='.download-', dir=path.parent)
     try:
         size, digest, deadline = 0, hashlib.sha256(), time.monotonic() + 1800

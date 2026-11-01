@@ -3,8 +3,12 @@ on:
   workflow_dispatch:
     inputs:
       reference_bundle_url:
-        description: HTTPS URL of the exact data-only bundle pinned in modern-reference-bundle-v1.json
-        required: true
+        description: Public HTTPS reference-bundle URL; provide this OR the GitHub asset ID
+        required: false
+        type: string
+      reference_bundle_asset_id:
+        description: Same-repository release asset ID (drafts supported); provide this OR the public URL
+        required: false
         type: string
 permissions:
   contents: read
@@ -37,10 +41,24 @@ jobs:
       - run: cargo fetch --locked --manifest-path fuzz/Cargo.toml
       - run: python tools/test_cpu_qualification.py
       - run: python tools/test_cpu_shards.py
+      - run: python tools/test_cpu_reference_fetch.py
       - name: Acquire frozen independent reference data
         env:
           REFERENCE_URL: ${{ inputs.reference_bundle_url }}
-        run: python -c "import os,subprocess,sys; subprocess.run([sys.executable,'tools/fetch_cpu_references.py','--url',os.environ['REFERENCE_URL'],'--output','.cache/cpu-reference-data-v1.tar.gz'],check=True)"
+          REFERENCE_ASSET_ID: ${{ inputs.reference_bundle_asset_id }}
+          COHERYN_REFERENCE_TOKEN: ${{ github.token }}
+        shell: python
+        run: |
+          import os
+          import subprocess
+          import sys
+          url = os.environ.get('REFERENCE_URL', '')
+          asset_id = os.environ.get('REFERENCE_ASSET_ID', '')
+          if bool(url) == bool(asset_id):
+              raise SystemExit('Provide exactly one reference bundle URL or same-repository asset ID')
+          source = ['--url', url] if url else ['--github-asset-id', asset_id]
+          subprocess.run([sys.executable, 'tools/fetch_cpu_references.py', *source,
+                          '--output', '.cache/cpu-reference-data-v1.tar.gz'], check=True)
       - run: python tools/run_cpu_checks.py --report .cache/cpu-qualification-native.json
       - name: Package the checked native candidate
         env:
@@ -53,7 +71,7 @@ jobs:
       - uses: actions/upload-artifact@v7.0.2
         if: always()
         with:
-          name: pinned-model-evidence-${{ matrix.platform.target }}-${{ matrix.group }}
+          name: pinned-model-evidence-${{ matrix.platform.target }}-${{ matrix.group }}-${{ github.run_attempt }}
           path: |
             target/cpu-release/*
             target/cpu-qualification-package.json
@@ -61,5 +79,10 @@ jobs:
             .cache/cpu-checks/cpu-qualification-native/**
             .cache/cpu-model-qualification.json
             .cache/cpu-qualification/cpu-model-qualification/**
+            !.cache/cpu-qualification/cpu-model-qualification/reference-data/**
+            LICENSE
+            NOTICE
+            THIRD_PARTY_NOTICES.md
+            resources/licensing/**
           include-hidden-files: true
           if-no-files-found: error
