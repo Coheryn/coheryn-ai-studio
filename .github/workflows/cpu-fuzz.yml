@@ -1,30 +1,46 @@
 name: Bounded instrumented CPU fuzz campaigns
 on:
+  push:
+    branches:
+      - 'development/mandatory-80'
+      - 'qualification/cpu-fuzz/**'
+    paths:
+      - 'tools/run_cpu_fuzz.py'
+      - 'tools/test_cpu_fuzz.py'
+      - 'tools/cpu_qualification/host.py'
+      - 'fuzz/**'
+      - '.github/workflows/cpu-fuzz.yml'
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   fuzz:
     runs-on: ubuntu-24.04
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.x'
           check-latest: true
-      - uses: dtolnay/rust-toolchain@1.99.1
-      - run: rustup toolchain install nightly-2026-10-30 --profile minimal
-      - run: cargo install cargo-fuzz --version 0.13.2 --locked
-      - run: cargo fetch --manifest-path fuzz/Cargo.toml --locked
-      - run: python tools/run_cpu_fuzz.py --toolchain nightly-2026-10-30 --runs 100000 --report .cache/cpu-fuzz-evidence.json
+      - run: python tools/test_cpu_fuzz.py
+      - name: Admit guarded sanitizer preparation
+        run: python tools/check_cpu_host.py --wait-for-load-seconds 300 --startup-load-per-cpu 1 --report .cache/cpu-fuzz-host.json
+      - name: Prepare and execute bounded sanitizer campaigns under the live guard
+        run: python tools/run_cpu_fuzz.py --prepare --toolchain nightly-2026-10-30 --runs 100000 --report .cache/cpu-fuzz-evidence.json
       - uses: actions/upload-artifact@v7.0.2
         if: always()
         with:
           name: cpu-instrumented-fuzz
           path: |
+            .cache/cpu-fuzz-host.json
             .cache/cpu-fuzz-evidence.json
             .cache/cpu-fuzz/**
             fuzz/corpus/**
             fuzz/artifacts/**
+            LICENSE
+            NOTICE
+            THIRD_PARTY_NOTICES.md
+            resources/licensing/**
           include-hidden-files: true
           if-no-files-found: error

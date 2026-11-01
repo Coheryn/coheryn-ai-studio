@@ -55,10 +55,14 @@ Install the latest verified `cargo-fuzz` development tool and pin a sanitizer-ca
 
 ```sh
 python3 tools/run_cpu_fuzz.py --toolchain nightly-2026-10-30 \
-  --runs 100000 --report fixtures/qualification/cpu-hardening-fuzz-v2.json
+  --runs 100000 --report target/cpu-fuzz-FRESH.json
 ```
 
 Use a fresh report path for each run. Reproducing a campaign requires the recorded seed corpus; mutations and coverage may vary across compilers/platforms. The Safetensors target uses the file loader's shared header validator. The image target covers all three implemented preprocessing profiles. Inputs, output tensors, libFuzzer allocations and per-input time are bounded. Reference files remain immutable.
+
+The runner now applies the unchanged host guard to compiler/tool probes, optional preparation and every campaign. It uses one Cargo job, dedicated owned process groups, per-command deadlines, bounded diagnostic logs and atomic progress checkpoints. `--prepare` explicitly permits guarded installation of the workspace-pinned stable compiler, the pinned nightly and verified stable `cargo-fuzz` 0.13.2, plus locked dependency acquisition; the default requires installed tools and cached dependencies. An unsafe initial host starts no installation, compiler or seed work. Interruptions, failed coverage, source changes or unconfirmed cleanup remain failures with partial evidence preserved. Corpus inventories reject links and excessive bytes/counts; authored seeds are never overwritten.
+
+The [sanitizer workflow](../.github/workflows/cpu-fuzz.yml) executes this path on Linux when its tooling/targets change or on manual dispatch. It retains original diagnostics, corpora and the complete legal payload. Controller regressions simulate admission, interruption and evidence failures without a compiler; only an executed sanitizer report establishes a campaign result. Earlier fuzz records predate this guard and remain historical evidence rather than current-source qualification.
 
 Run `cargo audit` against both workspace and fuzz lockfiles with the current advisory database. Capture the database revision and every warning. The current upstream tokenizer uses the build-time `paste` macro dependency, which has unmaintained advisory `RUSTSEC-2024-0436`; retaining the latest tokenizer does not resolve this warning. It requires an upstream fix or a reviewed replacement/exception before release approval. Do not globally ignore advisories or silently patch numeric/tokenizer behavior.
 
