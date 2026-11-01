@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "kind": "github-native-text-benchmark-checkpoint",
+  "outcome": "incomplete",
+  "production_ready": false,
+  "source_commit": "6c58bb5bfd881551d2743f45e678afeaee3e4e51",
+  "run_id": 41266587467,
+  "run_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41266587467",
+  "expected_matrix": {
+    "targets": [
+      "aarch64-apple-darwin",
+      "x86_64-unknown-linux-gnu",
+      "x86_64-pc-windows-msvc"
+    ],
+    "suites": [
+      "gguf-text",
+      "qwen35-gguf-q4_k_m-text",
+      "qwen35-text"
+    ]
+  },
+  "reviewed": [
+    {
+      "target": "x86_64-pc-windows-msvc",
+      "suite": "gguf-text",
+      "outcome": "pass",
+      "generations": 12,
+      "workers": [
+        1,
+        2,
+        4
+      ],
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-text-bench-gguf-text-x86_64-pc-windows-msvc-checks-v1.json",
+          "bytes": 85352,
+          "sha256": "a94bd7d16ee43c422f325af102098dd4b04cd340c99c35c7ac227b14e7a18c0c"
+        },
+        "native": {
+          "path": "fixtures/qualification/cpu-github-text-bench-gguf-text-x86_64-pc-windows-msvc-native-v1.json",
+          "bytes": 29925,
+          "sha256": "e30daaec2b580d8bd7befe76191ff0e8355607ae5f476badd315fb088cd32559"
+        }
+      },
+      "artifact": {
+        "id": 13068231026,
+        "name": "text-benchmark-x86_64-pc-windows-msvc-gguf-text-1",
+        "digest": "sha256:03e183fc3e68458ffc589249f35c6ed11ab7f2d5d0395d8d02cf05035a0cf324",
+        "size_in_bytes": 66327
+      }
+    },
+    {
+      "target": "aarch64-apple-darwin",
+      "suite": "gguf-text",
+      "outcome": "pass",
+      "generations": 8,
+      "workers": [
+        1,
+        2
+      ],
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-text-bench-gguf-text-aarch64-apple-darwin-checks-v1.json",
+          "bytes": 73694,
+          "sha256": "80df53f54a6716aa508214fff36828e98f03c112771e760cee5e49ed315571a5"
+        },
+        "native": {
+          "path": "fixtures/qualification/cpu-github-text-bench-gguf-text-aarch64-apple-darwin-native-v1.json",
+          "bytes": 20199,
+          "sha256": "f1d16d332784b72726d7bf202cb6737cf1cae1f7e27511fd5d16c2a1858f3952"
+        }
+      },
+      "artifact": {
+        "id": 13068120763,
+        "name": "text-benchmark-aarch64-apple-darwin-gguf-text-1",
+        "digest": "sha256:71e3f15caaa3dc72e830beeb109b2cfeaad4f34c97e09093ac51fc5f3d70350b",
+        "size_in_bytes": 63837
+      }
+    },
+    {
+      "target": "x86_64-unknown-linux-gnu",
+      "suite": "gguf-text",
+      "outcome": "pass",
+      "generations": 12,
+      "workers": [
+        1,
+        2,
+        4
+      ],
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-github-text-bench-gguf-text-x86_64-unknown-linux-gnu-checks-v1.json",
+          "bytes": 84031,
+          "sha256": "192330fd349751cc1a8797511b3b37584832af9c945ff0aba9c51ff96992986b"
+        },
+        "native": {
+          "path": "fixtures/qualification/cpu-github-text-bench-gguf-text-x86_64-unknown-linux-gnu-native-v1.json",
+          "bytes": 29979,
+          "sha256": "e1fe3a4229033cfd555c59771d85269b26ec04d0e33a5a3cb167caebb32ad6d0"
+        }
+      },
+      "artifact": {
+        "id": 13067219239,
+        "name": "text-benchmark-x86_64-unknown-linux-gnu-gguf-text-1",
+        "digest": "sha256:0dff0612d3713d73f48a18c108d9f6ad1e6abfee7d443d30c7863d498584c2d0",
+        "size_in_bytes": 66219
+      }
+    }
+  ],
+  "review": "Official ZIP hashes checked before reading; recorded source hashes match the actual Git revision. Command/toolchain/native-output/observer hashes, every host observation, matrix coverage and every frozen output checked. Original report bytes retained.",
+  "scope": "Selected native CLI routing, repeated fresh generation and frozen greedy-output evidence; timings are observations under uncontrolled cache conditions.",
+  "gaps": [
+    "The complete nine-cell benchmark matrix is not yet reviewed.",
+    "This source has a strict-Clippy test-borrow diagnostic corrected in a later commit; these benchmark results do not establish passing ordinary native CI.",
+    "This checkpoint does not qualify full-array numerical parity, CPU production, GPU, controlled-cache performance or a service SLA."
+  ]
+}
