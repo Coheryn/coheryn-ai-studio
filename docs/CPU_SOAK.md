@@ -172,6 +172,14 @@ python3 tools/run_cpu_soak.py --profile fixtures/soak/cpu-modern-shared-soak-v1.
 
 Campaign execution and review are required before claiming a result. This workload does not close independent numerical parity, broader pretrained concurrency/profile/context coverage, TCP/TLS, security, signing or production review. The approved numerical reference location remains pending.
 
+### Verified sustained checkpoint
+
+[The reviewed sustained record](../fixtures/qualification/cpu-github-sustained-v1.json) binds source `bbeb1bdc6a0763fe86a4550c8d384b87fee0abda` and [the three-platform campaign](https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41188411610). All three native targets passed driver checks, 400 measured synthetic cycles and ten measured modern cycles. Official archive digests, declared artifact hashes and recomputed observer summaries were verified; original report bytes are retained beside the index.
+
+Each synthetic fault scenario occurred eight times during warmup and forty times during measured execution. Each modern fault scenario occurred twice during warmup and five times during measured execution. Modern runs completed twenty text operations, twenty embedding operations and thirteen two-image operations, with shared text/vision residency and independent embeddings. These counts include the explicitly identified setup/warmup operations where applicable; phase-specific faults must not be combined into a measured count.
+
+This closes the selected sustained operational checkpoint for that source. Later runtime or qualification-tool changes require fresh evidence. The independent numerical matrix, broader model/context/profile coverage, TCP/TLS, GPU, security, packaging/signing and human release review remain separate gates; CPU production status is unchanged.
+
 ## Reusing a checked driver
 
 `check_cpu_soak.py` now records the native example executable's path, size and SHA-256 after its complete release tests, strict Clippy checks and explicit non-test executable build. A subsequent run can use `run_cpu_soak.py --build-record PATH`. Reuse requires the exact current source snapshot and native target, passing unfiltered/nonignored tests, checked command-log hashes, successful owned-process cleanup, a healthy completed observer and the unchanged executable. Missing, stale, failed, linked or modified inputs fail before native execution; no fallback compilation occurs.
@@ -179,3 +187,5 @@ Campaign execution and review are required before claiming a result. This worklo
 The standard, smoke and sustained workflows prepare this driver once and reuse it for each workload. Standard native builds also use one Cargo job. CI startup admission waits for load at or below one per logical CPU, leaving headroom beneath the unchanged live cutoff of two per CPU. Other startup/runtime resource limits remain unchanged. The macOS smoke stop on source `bbeb1bd` happened during additional example compilation when load reached 6.0337 on three CPUs, beyond the unchanged cutoff of 6. Avoiding that extra build removes its source of load without weakening admission or the running observer. Current-source execution evidence is still required after this change.
 
 A run with a build record reports `driver_preparation.mode: verified-record` and binds the record and executable hashes. It omits `build_exit` because that run performed no build. Without `--build-record`, the existing guarded build path remains available. Neither mode changes frozen workloads, timeouts, memory ceilings or model correctness criteria.
+
+For source `0155bf1`, [Linux and Windows native CI](https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41263530206) completed successfully. Review verified official archive digests, command-log hashes, all 424 recorded source-file hashes against that Git revision, and the shared executable/record identities. Both synthetic smokes reported `verified-record` and omitted `build_exit`, confirming that reuse executed without an additional compile. The Mac job failed startup host admission before compilation, so this checkpoint does not establish three-platform verification of the reuse change.
