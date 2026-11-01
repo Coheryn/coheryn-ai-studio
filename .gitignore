@@ -9,6 +9,8 @@ __pycache__/
 !/resources/policy/
 !/resources/reference-archive/
 .DS_Store
+Thumbs.db
+desktop.ini
 !/resources/tool-assessment/
 !/resources/licensing/
 !/resources/vlm-provenance/

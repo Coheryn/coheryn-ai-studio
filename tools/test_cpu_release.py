@@ -7,9 +7,12 @@ import struct
 import tarfile
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import check_cpu_release as gate
+import run_cpu_checks as native_checks
+import test_cpu_qualification as qualification_tests
+from cpu_qualification.host import Guard
 from package_cpu_release import archive_bytes, executable_target, build
 import verify_cpu_package as verifier
 
@@ -125,6 +128,97 @@ class PackageTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'passing native checks'):
                 build(root, root / 'out', gate.TARGETS[0], record)
             self.assertFalse((root / 'out').exists())
+
+
+class NativeChecksTests(unittest.TestCase):
+    def execute(self, root, *, unhealthy=False, failed=False, empty=False, filtered=False, changed=False):
+        source = {'owned.rs': 'frozen'}
+        report = root / 'checks.json'
+        (root / 'fixtures').mkdir()
+        (root / 'fixtures/compatibility.json').write_text('{}')
+        (root / 'rust-toolchain.toml').write_text('[toolchain]\nchannel="1.99.1"\n')
+        binary_dir = root / 'target/release'; binary_dir.mkdir(parents=True)
+        suffix = '.exe' if native_checks.os.name == 'nt' else ''
+        for name in ('coheryn', 'coheryn-bench'): (binary_dir / (name + suffix)).write_bytes(b'owned fixture')
+        def child(command, directory, environment, log, timeout, guard, on_started):
+            self.assertEqual(environment['CARGO_BUILD_JOBS'], '1')
+            self.assertEqual(environment['RUST_TEST_THREADS'], '1')
+            self.assertEqual(environment['CARGO_NET_OFFLINE'], 'true')
+            on_started(Mock(poll=Mock(return_value=0)))
+            if command[1:] == ['--version']: log.write_text('cargo 1.99.1 (fixture)\n')
+            elif command[1:] == ['-vV']: log.write_text('rustc 1.99.1 (fixture)\n')
+            elif command[1] == 'test':
+                self.assertIn('--release', command)
+                log.write_text(f'test result: ok. {0 if empty else 7} passed; 0 failed; 2 ignored; 0 measured; {int(filtered)} filtered out\n')
+                return 1 if failed else 0
+            else: log.write_text('native command complete\n')
+            return 0
+        make_guard = lambda directory: Guard(directory, sampler=lambda: {
+            **qualification_tests.QualificationTests.healthy_host(), **({'thermal_state': 'serious'} if unhealthy else {})})
+        with patch.object(native_checks, 'ROOT', root), \
+             patch.object(native_checks, 'source_identity', side_effect=[source, {}] if changed else [source, source]), \
+             patch.object(native_checks, 'native_target', return_value='aarch64-apple-darwin'), \
+             patch.object(native_checks, 'Guard', side_effect=make_guard), \
+             patch.object(native_checks, 'run_child', side_effect=child) as run, \
+             patch.object(native_checks.shutil, 'which', return_value='virtual-rustc'), \
+             patch.object(native_checks.signal, 'signal'), patch('builtins.print'), \
+             patch.dict(native_checks.os.environ, {'CARGO_BUILD_TARGET': ''}), \
+             patch.object(native_checks.sys, 'argv', ['checks', '--report', str(report)]):
+            with self.assertRaises(SystemExit) as outcome: native_checks.main()
+        return json.loads(report.read_text()), outcome.exception.code, run.call_count
+
+    def test_complete_inventory_preserves_release_profile_logs_and_owned_cleanup(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            result, code, calls = self.execute(Path(temporary).resolve())
+            self.assertEqual((code, calls), (0, len(gate.COMMANDS) + 2))
+            self.assertEqual([tuple(c['command']) for c in result['commands']], list(gate.COMMANDS))
+            self.assertTrue(all(c['validated'] and c['exit'] == 0 and c['log_sha256'] for c in result['commands']))
+            self.assertEqual(result['commands'][2]['tests']['passed'], 7)
+            self.assertEqual(result['commands'][2]['tests']['ignored'], 2)
+            self.assertTrue(result['source_unchanged'] and result['owned_cleanup_confirmed'])
+            self.assertEqual(result['execution_settings']['rust_test_threads'], 1)
+            self.assertFalse(result['production_ready'])
+
+    def test_guard_rejection_starts_no_native_command(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            result, code, calls = self.execute(Path(temporary).resolve(), unhealthy=True)
+            self.assertEqual((code, calls, result['outcome']), (1, 0, 'fail'))
+            self.assertIn('thermal', result['host_guard']['stop_reason'])
+
+    def test_empty_failed_filtered_or_source_changed_results_never_pass(self):
+        for setting in ('empty', 'failed', 'filtered', 'changed'):
+            with self.subTest(setting=setting), tempfile.TemporaryDirectory() as temporary:
+                result, code, _ = self.execute(Path(temporary).resolve(), **{setting: True})
+                self.assertEqual((code, result['outcome']), (1, 'fail'))
+                self.assertTrue(all(c['log_sha256'] for c in result['commands']))
+
+
+class SourceIdentityTests(unittest.TestCase):
+    def test_desktop_metadata_is_excluded_but_hidden_and_unknown_fixture_bytes_remain_bound(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            for name in ('Cargo.toml', 'Cargo.lock', 'rust-toolchain.toml', 'README.md',
+                         'LICENSE', 'THIRD_PARTY_NOTICES.md', 'AGENT.md', '.gitignore'):
+                (root / name).write_text('authored fixture')
+            fixtures = root / 'fixtures/nested'; fixtures.mkdir(parents=True)
+            policy = root / 'resources/policy'; policy.mkdir(parents=True)
+            inputs = [fixtures / '.hidden-reference.bin', fixtures / '._reference.bin',
+                      fixtures / '.DS_Store.reference', policy / '.hidden-policy.json']
+            for path in inputs: path.write_bytes(b'bound input')
+            with patch.object(gate, 'ROOT', root):
+                baseline = gate.source_identity()
+                for name in ('.DS_Store', 'Thumbs.db', 'desktop.ini'):
+                    for directory in (fixtures, policy):
+                        path = directory / name; path.write_bytes(b'desktop metadata')
+                        self.assertEqual(gate.source_identity(), baseline)
+                        path.write_bytes(b'changed desktop metadata')
+                        self.assertEqual(gate.source_identity(), baseline)
+                for path in inputs:
+                    with self.subTest(path=path.name):
+                        self.assertIn(path.relative_to(root).as_posix(), baseline)
+                        path.write_bytes(b'changed bound input')
+                        self.assertNotEqual(gate.source_identity(), baseline)
+                        path.write_bytes(b'bound input')
 
 
 class ReadinessTests(unittest.TestCase):

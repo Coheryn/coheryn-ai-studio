@@ -12,6 +12,8 @@ on:
       - 'rust-toolchain.toml'
       - 'tools/check_text_bench.py'
       - 'tools/test_text_bench.py'
+      - 'tools/check_cpu_release.py'
+      - 'tools/run_cpu_checks.py'
       - 'tools/cpu_qualification/**'
       - 'fixtures/qwen35/**'
       - 'fixtures/models.json'

@@ -35,8 +35,8 @@ The [mixed CPU workload soak](CPU_SOAK.md) adds fixed-limit text/image/embedding
 
 ```sh
 ./tools/cargo fmt --all -- --check
-./tools/cargo clippy --workspace --all-targets --locked -- -D warnings
-./tools/cargo test --workspace --locked
+./tools/cargo clippy --release --workspace --all-targets --locked -- -D warnings
+./tools/cargo test --release --workspace --locked
 ./tools/cargo build --release --workspace --locked
 python3 tools/test_cpu_release.py
 python3 tools/license_notices.py
@@ -45,7 +45,11 @@ python3 tools/check_independence.py
 
 `crash_recovery` kills a separate process after a committed receipt or while a durable writer is pending. Reopening must preserve completed output/idempotency and recover the interrupted writer as cancelled, without loading a model. This tests process termination, not power-loss durability or filesystem/hardware failure.
 
-Run real-model opt-ins with `cargo test --release`; unoptimized test binaries are suitable for the bounded ordinary fixtures, not representative inference measurements. Keep their reports separate from ordinary-test totals.
+`tools/run_cpu_checks.py --report FRESH_PATH` executes the complete check inventory under the live host guard with one offline Cargo job and one test-harness thread. Explicit concurrency workloads inside individual tests remain unchanged. Release-profile lint/tests reuse the production dependency graph and exercise deployed arithmetic without building a second debug executable graph. Compiler versions, logs, test totals, execution settings, owned cleanup and host observations are retained; rejected or interrupted checks cannot pass.
+
+Known desktop metadata (`.DS_Store`, `Thumbs.db`, `desktop.ini`) is excluded from source fingerprints. Other hidden and unknown fixture files remain bound, and model/reference inputs still have their explicit hash checks. Earlier snapshots retain their original scope and bytes.
+
+Run real-model opt-ins with `cargo test --release` and keep their reports separate from ordinary-test totals.
 
 Install the latest verified `cargo-fuzz` development tool and pin a sanitizer-capable nightly independently of the production stable toolchain. Record both versions. The bounded campaign runner retains corpus identities, actual coverage, iteration counts, commands, source hashes and log digests:
 

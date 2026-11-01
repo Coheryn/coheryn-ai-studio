@@ -15,8 +15,8 @@ REQUIREMENTS = {'native-checks': True, 'model-matrix': True, 'resource-soak': Tr
                 'dependency-review': False, 'release-review': False}
 COMMANDS = (
     ('cargo', 'fmt', '--all', '--', '--check'),
-    ('cargo', 'clippy', '--workspace', '--all-targets', '--locked', '--', '-D', 'warnings'),
-    ('cargo', 'test', '--workspace', '--locked'),
+    ('cargo', 'clippy', '--release', '--workspace', '--all-targets', '--locked', '--', '-D', 'warnings'),
+    ('cargo', 'test', '--release', '--workspace', '--locked'),
     ('cargo', 'build', '--release', '--workspace', '--locked'),
     ('python', 'tools/test_cpu_release.py'),
     ('python', 'tools/test_cpu_qualification.py'),
@@ -46,7 +46,11 @@ def source_identity():
               and not p.relative_to(ROOT / 'fixtures').parts[0] in ('qualification', 'cpu-release')]
     files += [p for p in (ROOT / 'resources/policy').rglob('*') if p.is_file()
               and 'findings' not in p.name]
-    return {p.relative_to(ROOT).as_posix(): sha(p) for p in sorted(files)}
+    # Desktop directory metadata is not an authored source/reference input.
+    # Keep every other hidden or untracked fixture bound to the snapshot.
+    os_metadata = {'.ds_store', 'thumbs.db', 'desktop.ini'}
+    return {p.relative_to(ROOT).as_posix(): sha(p) for p in sorted(files)
+            if p.name.casefold() not in os_metadata}
 
 
 def bound_file(relative, checksum):
