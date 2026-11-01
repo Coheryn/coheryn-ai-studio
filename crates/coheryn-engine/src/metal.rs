@@ -233,15 +233,15 @@ impl MetalWorkspace {
             output,
             || cancel.check().is_err(),
             &mut || {
-                if let Some(callback) = cooperate.as_deref_mut() {
-                    if let Err(error) = callback() {
-                        let message = error.to_string();
-                        callback_error = Some(error);
-                        return Err(coheryn_metal::Error::new(
-                            coheryn_metal::ErrorKind::Internal,
-                            message,
-                        ));
-                    }
+                if let Some(callback) = cooperate.as_deref_mut()
+                    && let Err(error) = callback()
+                {
+                    let message = error.to_string();
+                    callback_error = Some(error);
+                    return Err(coheryn_metal::Error::new(
+                        coheryn_metal::ErrorKind::Internal,
+                        message,
+                    ));
                 }
                 Ok(())
             },

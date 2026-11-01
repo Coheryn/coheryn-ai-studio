@@ -167,10 +167,7 @@ fn copy_states(destination: &mut [MixerState], source: &[MixerState]) -> Result<
 }
 impl Graph {
     #[cfg(all(feature = "metal", target_os = "macos"))]
-    pub(super) fn gpu_sources(
-        &self,
-        set: &TensorSet,
-    ) -> Result<Vec<crate::metal::MatrixSource>> {
+    pub(super) fn gpu_sources(&self, set: &TensorSet) -> Result<Vec<crate::metal::MatrixSource>> {
         let mut sources = Vec::new();
         sources
             .try_reserve_exact(self.layers.len() * 8 + 1)

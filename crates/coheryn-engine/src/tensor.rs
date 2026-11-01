@@ -84,7 +84,10 @@ impl Workspace {
             ));
         }
         let bytes = execution.capacity_bytes();
-        self.gpu = Some(GpuContext { execution: std::sync::Mutex::new(execution), bytes });
+        self.gpu = Some(GpuContext {
+            execution: std::sync::Mutex::new(execution),
+            bytes,
+        });
         Ok(())
     }
     fn activation(&self, row: usize) -> &quant::QuantizedInput {
@@ -163,7 +166,10 @@ pub(crate) fn matmul_cooperative(
 ) -> Result<()> {
     #[cfg(all(feature = "metal", target_os = "macos"))]
     if let Some(gpu) = &mut work.gpu {
-        let gpu = gpu.execution.get_mut().map_err(|_| Error::resource("GPU workspace ownership poisoned"))?;
+        let gpu = gpu
+            .execution
+            .get_mut()
+            .map_err(|_| Error::resource("GPU workspace ownership poisoned"))?;
         return gpu.multiply(storage, data, tensor, input, output, cancel, cooperate);
     }
     if tensor.dimensions.len() != 2 {
@@ -356,7 +362,13 @@ pub(crate) fn matmul_batch_cooperative(
         // Each lane retains private admitted buffers. The encoded weight
         // allocation is shared; this profile does not claim fused GPU batching.
         for vector in vectors.iter_mut().filter(|vector| vector.error.is_none()) {
-            let gpu = vector.workspace.gpu.as_mut().expect("checked GPU lane").execution.get_mut()
+            let gpu = vector
+                .workspace
+                .gpu
+                .as_mut()
+                .expect("checked GPU lane")
+                .execution
+                .get_mut()
                 .map_err(|_| Error::resource("GPU workspace ownership poisoned"))?;
             if let Err(error) = gpu.multiply(
                 storage,
