@@ -213,7 +213,7 @@ fn native_text_adapters_benchmark_with_frozen_outputs_and_repeated_fresh_session
     }
     for item in &inputs {
         assert_eq!(
-            coheryn_engine::storage::sha256_file(&root.join(item["path"].as_str().unwrap()))
+            coheryn_engine::storage::sha256_file(root.join(item["path"].as_str().unwrap()))
                 .unwrap(),
             item["sha256"].as_str().unwrap()
         );
