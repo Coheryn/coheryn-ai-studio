@@ -4,9 +4,11 @@ import argparse
 import os
 from pathlib import Path
 import platform
+import shutil
 import signal
 import sys
 import time
+import tomllib
 
 from check_cpu_release import ROOT, sha, source_identity
 from cpu_qualification.driver import test_counts
@@ -49,6 +51,7 @@ def main():
     report = {'schema_version': 1, 'kind': 'metal-primitive-checks', 'outcome': 'running',
               'production_ready': False, 'gpu_execution_required': args.gpu,
               'source_snapshot': source, 'source_unchanged': False, 'commands': [],
+              'toolchain': {},
               'fixture_sha256': sha(ROOT / 'fixtures/gpu/metal-dense-v1.json'),
               'scope': 'Optional backend compile/lint and independent dense primitives only; no model, packed-kernel, performance or release qualification.',
               'host': {'system': platform.system(), 'machine': platform.machine(), 'release': platform.release()}}
@@ -63,6 +66,23 @@ def main():
     try:
         guard = Guard(directory)
         guard.start()
+        local_rust = ROOT / '.cache/cargo/bin/rustc'
+        compiler = str(local_rust) if local_rust.exists() else shutil.which('rustc')
+        if not compiler:
+            raise ValueError('native compiler not found')
+        compiler_env = {**environment, 'RUSTUP_HOME': str(ROOT / '.cache/rustup')} if local_rust.exists() else environment
+        version = tomllib.loads((ROOT / 'rust-toolchain.toml').read_text())['toolchain']['channel']
+        for name, command, env in [('cargo', [cargo, '--version'], environment), ('rustc', [compiler, '-vV'], compiler_env)]:
+            log = directory / (name + '.log')
+            code = run_child(command, ROOT, env, log, 30, guard, children.append)
+            if code or log.stat().st_size > 64 << 10:
+                raise ValueError('native compiler identity probe failed')
+            output = log.read_text(encoding='utf-8')
+            if not output.startswith(f'{name} {version} '):
+                raise ValueError('native compiler differs from the pinned toolchain')
+            if name == 'rustc' and '\nhost: aarch64-apple-darwin\n' not in output:
+                raise ValueError('Metal compiler host is not native Apple Silicon')
+            report['toolchain'][name] = {'output': output, 'log': log.relative_to(ROOT).as_posix(), 'log_sha256': sha(log)}
         for number, command in enumerate(commands(args.gpu)):
             log = directory / f'{number}.log'
             row = {'command': list(command), 'exit': None, 'validated': False, 'log': log.relative_to(ROOT).as_posix()}
@@ -94,7 +114,10 @@ def main():
             report['host_guard'] = guard.report()
             if guard.stream.closed: report['host_guard']['log_sha256'] = sha(guard.log)
             if guard.reason or guard.stop_errors: report['outcome'] = 'fail'
-        report['source_unchanged'] = source_identity() == source
+        try:
+            report['source_unchanged'] = source_identity() == source
+        except Exception as error:
+            report['source_identity_error'] = str(error)
         report['owned_cleanup_confirmed'] = all(p.poll() is not None for p in children) and not (guard and guard.stop_errors)
         if not report['source_unchanged'] or not report['owned_cleanup_confirmed']: report['outcome'] = 'fail'
         report['elapsed_seconds'] = time.monotonic() - started

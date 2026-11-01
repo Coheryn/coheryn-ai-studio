@@ -26,7 +26,10 @@ pub struct Error {
 }
 impl Error {
     pub fn new(kind: ErrorKind, message: impl Into<String>) -> Self {
-        Self { kind, message: message.into() }
+        Self {
+            kind,
+            message: message.into(),
+        }
     }
 }
 impl fmt::Display for Error {
@@ -69,17 +72,27 @@ pub struct MatrixShape {
 impl MatrixShape {
     pub fn weight_bytes(self) -> Result<usize> {
         if !(1..=32768).contains(&self.width) || !(1..=1_048_576).contains(&self.rows) {
-            return Err(Error::new(ErrorKind::InvalidInput, "GPU matrix shape exceeds kernel bounds"));
+            return Err(Error::new(
+                ErrorKind::InvalidInput,
+                "GPU matrix shape exceeds kernel bounds",
+            ));
         }
-        self.width.checked_mul(self.rows).and_then(|n| n.checked_mul(self.dtype.bytes()))
+        self.width
+            .checked_mul(self.rows)
+            .and_then(|n| n.checked_mul(self.dtype.bytes()))
             .ok_or_else(|| Error::new(ErrorKind::InvalidInput, "GPU weight size overflow"))
     }
     pub fn workspace_bytes(self, batch: usize) -> Result<usize> {
         self.weight_bytes()?;
         if !(1..=32).contains(&batch) {
-            return Err(Error::new(ErrorKind::InvalidInput, "GPU batch must be between 1 and 32"));
+            return Err(Error::new(
+                ErrorKind::InvalidInput,
+                "GPU batch must be between 1 and 32",
+            ));
         }
-        self.width.checked_add(self.rows).and_then(|n| n.checked_mul(batch))
+        self.width
+            .checked_add(self.rows)
+            .and_then(|n| n.checked_mul(batch))
             .and_then(|n| n.checked_mul(4))
             .ok_or_else(|| Error::new(ErrorKind::InvalidInput, "GPU workspace size overflow"))
     }
@@ -96,11 +109,31 @@ mod tests {
 
     #[test]
     fn shapes_bound_every_shader_index_and_allocation() {
-        let shape = MatrixShape { width: 32768, rows: 1_048_576, dtype: WeightType::F16 };
+        let shape = MatrixShape {
+            width: 32768,
+            rows: 1_048_576,
+            dtype: WeightType::F16,
+        };
         assert_eq!(shape.weight_bytes().unwrap(), 68_719_476_736);
         assert_eq!(shape.workspace_bytes(32).unwrap(), 138_412_032);
-        for (width, rows, batch) in [(0, 1, 1), (1, 0, 1), (32769, 1, 1), (1, 1_048_577, 1), (1, 1, 0), (1, 1, 33), (usize::MAX, usize::MAX, 1)] {
-            assert!(MatrixShape { width, rows, dtype: WeightType::F32 }.workspace_bytes(batch).is_err());
+        for (width, rows, batch) in [
+            (0, 1, 1),
+            (1, 0, 1),
+            (32769, 1, 1),
+            (1, 1_048_577, 1),
+            (1, 1, 0),
+            (1, 1, 33),
+            (usize::MAX, usize::MAX, 1),
+        ] {
+            assert!(
+                MatrixShape {
+                    width,
+                    rows,
+                    dtype: WeightType::F32
+                }
+                .workspace_bytes(batch)
+                .is_err()
+            );
         }
     }
 }
