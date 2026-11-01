@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "kind": "reviewed-positional-storage-native-checkpoint",
+  "outcome": "pass",
+  "production_ready": false,
+  "source_commit": "807fe55807f133d17a7f2e25d701fbd2b5197f20",
+  "run_id": 41279999547,
+  "run_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41279999547",
+  "reviewed": [
+    {
+      "target": "aarch64-apple-darwin",
+      "outcome": "pass",
+      "ordinary_tests": {
+        "suites": 40,
+        "passed": 267,
+        "failed": 0,
+        "ignored": 10,
+        "filtered": 0
+      },
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-positional-native-aarch64-apple-darwin-checks-v1.json",
+          "bytes": 96988,
+          "sha256": "72923ee225c3c9cbdb2058878512822dc5445e915ff0eda8399327c8405d4b7d"
+        },
+        "package": {
+          "path": "fixtures/qualification/cpu-positional-native-aarch64-apple-darwin-package-v1.json",
+          "bytes": 67620,
+          "sha256": "b4e46974aa423efab3286647642cdfe53c7dc85e485c72fef12b39a09eee7db8"
+        },
+        "startup": {
+          "path": "fixtures/qualification/cpu-positional-native-aarch64-apple-darwin-startup-v1.json",
+          "bytes": 68266,
+          "sha256": "19756a98d7176fd8dfd32609c5e70e05b3ee9802d31a7a27d1c00bc461537312"
+        }
+      },
+      "artifact": {
+        "id": 13073790761,
+        "name": "cpu-candidate-aarch64-apple-darwin",
+        "digest": "sha256:1defb17ad4bfc0a7c07daa03728942af0072a6f97ead27211e9262721a8b8f32",
+        "size_in_bytes": 10550207
+      },
+      "candidate": {
+        "archive": "coheryn-ai-studio-0.1.0-dev-aarch64-apple-darwin-cpu-candidate.tar.gz",
+        "sha256": "93102097328c743a5b1ffdfaf268eaff00058d4829a0fa4a151be37e023e2972",
+        "bytes": 10333204
+      }
+    },
+    {
+      "target": "x86_64-pc-windows-msvc",
+      "outcome": "pass",
+      "ordinary_tests": {
+        "suites": 40,
+        "passed": 263,
+        "failed": 0,
+        "ignored": 10,
+        "filtered": 0
+      },
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-positional-native-x86_64-pc-windows-msvc-checks-v1.json",
+          "bytes": 97893,
+          "sha256": "ae261e522477aba9ae71c34fb084a377b921e638b118fcdd9101a5c40ddcf20f"
+        },
+        "package": {
+          "path": "fixtures/qualification/cpu-positional-native-x86_64-pc-windows-msvc-package-v1.json",
+          "bytes": 69154,
+          "sha256": "440fd82a233da2b9d0ec40eb556035a9e60c97dfe9f51723f99812c52f7ef217"
+        },
+        "startup": {
+          "path": "fixtures/qualification/cpu-positional-native-x86_64-pc-windows-msvc-startup-v1.json",
+          "bytes": 69830,
+          "sha256": "8cb5972e8e0d9f15adbe97b8cf87b8013c3f7244751b99edbad69c57f6452ff1"
+        }
+      },
+      "artifact": {
+        "id": 13074221341,
+        "name": "cpu-candidate-x86_64-pc-windows-msvc",
+        "digest": "sha256:c3bed9fbe3072c588963e7fc6dc9008817e84ca3577f23db48bd18f92ebdabb0",
+        "size_in_bytes": 10550977
+      },
+      "candidate": {
+        "archive": "coheryn-ai-studio-0.1.0-dev-x86_64-pc-windows-msvc-cpu-candidate.tar.gz",
+        "sha256": "a88ec9b0c0355396af7983fc348991697f30347f51069972baf8f1add42ce77a",
+        "bytes": 10321786
+      }
+    },
+    {
+      "target": "x86_64-unknown-linux-gnu",
+      "outcome": "pass",
+      "ordinary_tests": {
+        "suites": 40,
+        "passed": 267,
+        "failed": 0,
+        "ignored": 10,
+        "filtered": 0
+      },
+      "reports": {
+        "checks": {
+          "path": "fixtures/qualification/cpu-positional-native-x86_64-unknown-linux-gnu-checks-v1.json",
+          "bytes": 96983,
+          "sha256": "bb5f34a4e3d697f1bffd620403d22f00c4bb70d073b97b5143cbd85df1a281cb"
+        },
+        "package": {
+          "path": "fixtures/qualification/cpu-positional-native-x86_64-unknown-linux-gnu-package-v1.json",
+          "bytes": 67632,
+          "sha256": "f50b84e016c633150d42a4782af29714ef009ef1d97cc214434d4611e5023582"
+        },
+        "startup": {
+          "path": "fixtures/qualification/cpu-positional-native-x86_64-unknown-linux-gnu-startup-v1.json",
+          "bytes": 68278,
+          "sha256": "fb9fcddc037d71a5c53fa851d7b918adb8afd7450f18afba07f7200981594426"
+        }
+      },
+      "artifact": {
+        "id": 13073253263,
+        "name": "cpu-candidate-x86_64-unknown-linux-gnu",
+        "digest": "sha256:07b5b02d4cae539f22bb81533fb951453d1045943281dafbc1433ef58ef2e440",
+        "size_in_bytes": 11523688
+      },
+      "candidate": {
+        "archive": "coheryn-ai-studio-0.1.0-dev-x86_64-unknown-linux-gnu-cpu-candidate.tar.gz",
+        "sha256": "31d7264944cccd86554353312ba1935c8415c2cc57a3ea180ae0686b762aa81f",
+        "bytes": 11334597
+      }
+    }
+  ],
+  "review": "Official GitHub ZIP digests and lengths checked before reading. Complete snapshots reconstructed from the original Git revision. Every native command/compiler/observer log hash, healthy observation and ordinary test total verified. Candidate archives independently verified and unpacked as data, including every member, complete legal payload and executable format. Binary identities bind to native build records; packaged startup results were produced on the corresponding GitHub runners. Original report bytes preserved.",
+  "scope": "Guarded native formatting, strict release all-target Clippy, complete ordinary workspace tests under the optimized qualification profile, release builds, legal/policy checks and packaged CLI startup on three CPU platforms. Qualification inherits release optimization/arithmetic settings and disables cross-crate LTO only for test compilation.",
+  "gaps": [
+    "Reports bind the original recorded revision; later tooling/documentation changes are not relabeled as qualified.",
+    "Ten model-dependent opt-in tests per platform were ignored; independent full-array and broader model matrices remain separate.",
+    "Startup checks cover version/doctor/help with empty PATH; they do not replace real-model CLI/API inference.",
+    "Sustained resource/security, controlled model throughput, GPU, signing and production release review remain separate requirements."
+  ]
+}
