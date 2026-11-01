@@ -16,6 +16,7 @@ class MetalChecksTests(unittest.TestCase):
         fixture = root / 'fixtures/gpu/metal-dense-v1.json'
         fixture.parent.mkdir(parents=True)
         fixture.write_text('{}')
+        (fixture.parent / 'metal-packed-v1.json').write_text('{}')
         (root / 'rust-toolchain.toml').write_text('[toolchain]\nchannel="1.99.1"\n')
         source = {'dense.metal': 'frozen'}
         health = qualification_tests.QualificationTests.healthy_host()
@@ -41,6 +42,7 @@ class MetalChecksTests(unittest.TestCase):
                 if mutation == 'failed': return 1
             else:
                 log.write_text('controlled native preparation\n')
+                if mutation == 'format' and command[1] == 'fmt': return 1
             return 0
 
         end_source = OSError('source read failed') if mutation == 'source-error' else ({} if mutation == 'source' else source)
@@ -60,7 +62,7 @@ class MetalChecksTests(unittest.TestCase):
     def test_live_mode_requires_exact_test_and_preserves_logs_scope_and_cleanup(self):
         with tempfile.TemporaryDirectory() as temporary:
             report, code, calls = self.execute(Path(temporary).resolve())
-            self.assertEqual((code, calls), (0, 9))
+            self.assertEqual((code, calls), (0, 10))
             self.assertTrue(report['gpu_execution_required'])
             self.assertFalse(report['production_ready'])
             self.assertTrue(report['source_unchanged'] and report['owned_cleanup_confirmed'])
@@ -74,6 +76,13 @@ class MetalChecksTests(unittest.TestCase):
             self.assertEqual((code, calls), (0, 7))
             self.assertFalse(report['gpu_execution_required'])
             self.assertTrue(all('--test' not in row['command'] for row in report['commands']))
+
+    def test_format_failure_retains_numeric_feedback_but_cannot_pass(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            report, code, calls = self.execute(Path(temporary).resolve(), 'format')
+            self.assertEqual((code, calls, report['outcome']), (1, 10, 'fail'))
+            self.assertFalse(report['commands'][0]['validated'])
+            self.assertTrue(all(row['validated'] for row in report['commands'][1:]))
 
     def test_unhealthy_host_starts_no_native_work(self):
         with tempfile.TemporaryDirectory() as temporary:

@@ -1,35 +1,11 @@
 #![cfg(all(feature = "metal", target_os = "macos"))]
-use coheryn_metal::{
-    Device, Error, ErrorKind, MatrixShape, MemoryBudget, MemoryLease, Result, WeightType,
-};
+mod common;
+use coheryn_metal::{Device, Error, ErrorKind, MatrixShape, WeightType};
+use common::Budget;
 use std::sync::{
     Arc,
     atomic::{AtomicU64, Ordering},
 };
-
-struct Budget(Arc<AtomicU64>);
-struct Lease {
-    used: Arc<AtomicU64>,
-    bytes: u64,
-}
-impl Drop for Lease {
-    fn drop(&mut self) {
-        self.used.fetch_sub(self.bytes, Ordering::SeqCst);
-    }
-}
-impl MemoryBudget for Budget {
-    fn reserve(&self, bytes: u64) -> Result<Box<dyn MemoryLease>> {
-        self.0
-            .try_update(Ordering::SeqCst, Ordering::SeqCst, |used| {
-                used.checked_add(bytes).filter(|v| *v <= 1 << 20)
-            })
-            .map_err(|_| Error::new(ErrorKind::ResourceExhausted, "test GPU budget exhausted"))?;
-        Ok(Box::new(Lease {
-            used: Arc::clone(&self.0),
-            bytes,
-        }))
-    }
-}
 
 #[test]
 #[ignore = "requires an admitted real unified-memory Metal device"]

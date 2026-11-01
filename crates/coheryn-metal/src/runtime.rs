@@ -272,6 +272,7 @@ impl Workspace {
     }
 
     fn dispatch(&self, matrix: &Matrix, batch: usize, first: usize, rows: usize) -> Result<()> {
+        let row_bytes = matrix.shape.row_bytes()?;
         let command = self
             .device
             .queue
@@ -288,6 +289,7 @@ impl Workspace {
             self.shape.dtype as u32,
             first as u32,
             rows as u32,
+            row_bytes as u32,
         ];
         // SAFETY: only the embedded dense_reference shader is dispatched.
         // Shape bounds were validated before allocation; buffers match its

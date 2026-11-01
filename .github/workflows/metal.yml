@@ -38,6 +38,7 @@ jobs:
           targets: aarch64-apple-darwin
       - run: cargo fetch --locked
       - run: python tools/check_metal_fixtures.py
+      - run: python tools/check_metal_packed_fixtures.py
       - run: python tools/test_metal_checks.py
       - run: python tools/check_cpu_host.py --wait-for-load-seconds 300 --startup-load-per-cpu 1 --report .cache/metal-cross-host.json
       - name: Compile macOS bindings without claiming native GPU execution
@@ -70,6 +71,7 @@ jobs:
           components: rustfmt, clippy
       - run: cargo fetch --locked
       - run: python tools/check_metal_fixtures.py
+      - run: python tools/check_metal_packed_fixtures.py
       - run: python tools/test_metal_checks.py
       - name: Admit native build and GPU checks
         run: python tools/check_cpu_host.py --wait-for-load-seconds 300 --startup-load-per-cpu 1 --report .cache/metal-host.json

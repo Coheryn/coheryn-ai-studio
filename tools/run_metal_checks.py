@@ -35,6 +35,8 @@ def commands(gpu, cross_check=False):
     if gpu:
         result.append(('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-metal',
                        '--features', 'metal', '--test', 'dense', '--locked', '--', '--ignored', '--nocapture'))
+        result.append(('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-metal',
+                       '--features', 'metal', '--test', 'packed', '--locked', '--', '--ignored', '--nocapture'))
         result.append(('cargo', 'test', '--profile', 'qualification', '-p', 'coheryn-engine',
                        '--features', 'metal', '--test', 'metal', '--locked', '--', '--ignored', '--nocapture'))
     return tuple(result)
@@ -69,7 +71,8 @@ def main():
               'source_snapshot': source, 'source_unchanged': False, 'commands': [],
               'toolchain': {},
               'fixture_sha256': sha(ROOT / 'fixtures/gpu/metal-dense-v1.json'),
-              'scope': 'Optional backend compile/lint and independent dense primitives only; no model, packed-kernel, performance or release qualification.',
+              'packed_fixture_sha256': sha(ROOT / 'fixtures/gpu/metal-packed-v1.json'),
+              'scope': 'Optional backend compile/lint and independent dense/packed primitives with F32 operands only; no Q8 activation dot, model, performance or release qualification.',
               'host': {'system': platform.system(), 'machine': platform.machine(), 'release': platform.release()}}
     environment = {**os.environ, 'CARGO_BUILD_JOBS': '1', 'CARGO_INCREMENTAL': '0',
                    'RUST_TEST_THREADS': '1', 'CARGO_NET_OFFLINE': 'true',
@@ -118,8 +121,12 @@ def main():
             row['validated'] = valid
             checkpoint(args.report, report)
             print(('PASS' if valid else 'FAIL') + ' ' + ' '.join(command), flush=True)
-            if not valid:
+            # Preserve compiler/GPU feedback on a formatting-only failure. The
+            # overall report still fails until every required command passes.
+            if not valid and command[1] != 'fmt':
                 raise ValueError('Metal check failed: ' + ' '.join(command))
+        if any(not row['validated'] for row in report['commands']):
+            raise ValueError('Metal formatting failed; other guarded check results retained')
         report['outcome'] = 'pass'
     except (Exception, KeyboardInterrupt) as error:
         report['outcome'], report['error'] = 'fail', str(error)

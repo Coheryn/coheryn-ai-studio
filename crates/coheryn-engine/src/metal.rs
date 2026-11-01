@@ -1,4 +1,4 @@
-//! Optional dense GPU operations under the same engine admission budget.
+//! Optional GPU matrix operations under the same engine admission budget.
 //! Architecture dispatch remains CPU until its GPU execution profile qualifies.
 use crate::{
     Cancellation, Error, ErrorCode, Result, gguf::Tensor, memory::Budget, storage::Storage,
@@ -45,7 +45,7 @@ impl MetalCompute {
     pub fn name(&self) -> String {
         self.0.name()
     }
-    /// Bind a validated dense matrix without copying the model into a CPU heap.
+    /// Bind a validated dense/packed matrix without a full CPU heap copy.
     /// GGUF and Safetensors adapters share this canonical Tensor/Storage view.
     pub fn upload(
         &self,
@@ -59,17 +59,7 @@ impl MetalCompute {
         if tensor.dimensions.len() != 2 {
             return Err(Error::invalid("GPU matrix must have two dimensions"));
         }
-        let dtype = match tensor.dtype {
-            0 => WeightType::F32,
-            1 => WeightType::F16,
-            30 => WeightType::Bf16,
-            _ => {
-                return Err(Error::new(
-                    ErrorCode::UnsupportedFeature,
-                    "Metal dense kernel does not support this tensor encoding",
-                ));
-            }
-        };
+        let dtype = WeightType::try_from(tensor.dtype).map_err(engine_error)?;
         let shape = MatrixShape {
             width: usize::try_from(tensor.dimensions[0])
                 .map_err(|_| Error::invalid("GPU width overflow"))?,
