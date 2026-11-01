@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "kind": "reviewed-qwen35-sampling-engine-checkpoint",
+  "outcome": "pass",
+  "production_ready": false,
+  "source_commit": "02713c471802d541396ca23c507bbd4569c1cc6f",
+  "source_snapshot_matches_recorded_git_revision": true,
+  "engine_rust_sources_match_worktree_at_review": true,
+  "run_id": 41293029219,
+  "run_url": "https://github.com/Coheryn/coheryn-ai-studio/actions/runs/41293029219",
+  "reviewed": [
+    {
+      "target": "aarch64-apple-darwin",
+      "outcome": "pass",
+      "tests": {
+        "suites": 1,
+        "passed": 60,
+        "failed": 0,
+        "ignored": 4,
+        "filtered": 0
+      },
+      "sampling_tests": [
+        "frozen_scalar_answers_survive_hybrid_state_history_and_incremental_decoding",
+        "seeded_native_forwards_match_batched_lanes_and_release_private_scratch",
+        "expanded_image_tokens_replace_text_penalty_history_before_sampling",
+        "invalid_settings_and_under_reserved_sampling_fail_without_leaking_admission"
+      ],
+      "report": {
+        "path": "fixtures/qualification/qwen35-sampling-engine-aarch64-apple-darwin-v1.json",
+        "bytes": 94893,
+        "sha256": "30627ea9bc9f4705b26c52d7457861ae95fc9751d1fec6835fa3a6ddbe1793c2"
+      },
+      "artifact": {
+        "id": 13078546546,
+        "name": "cpu-engine-aarch64-apple-darwin-1",
+        "digest": "sha256:f2198eefc264c40facbe7b3e5694d6abe97e397a8897fb2d2032fc2d320a3fc0",
+        "size_in_bytes": 561703
+      }
+    },
+    {
+      "target": "x86_64-pc-windows-msvc",
+      "outcome": "pass",
+      "tests": {
+        "suites": 1,
+        "passed": 60,
+        "failed": 0,
+        "ignored": 4,
+        "filtered": 0
+      },
+      "sampling_tests": [
+        "frozen_scalar_answers_survive_hybrid_state_history_and_incremental_decoding",
+        "seeded_native_forwards_match_batched_lanes_and_release_private_scratch",
+        "expanded_image_tokens_replace_text_penalty_history_before_sampling",
+        "invalid_settings_and_under_reserved_sampling_fail_without_leaking_admission"
+      ],
+      "report": {
+        "path": "fixtures/qualification/qwen35-sampling-engine-x86_64-pc-windows-msvc-v1.json",
+        "bytes": 95703,
+        "sha256": "0746e80ec683d38d8090312188f72c409753a1ef52f47c0479fde43153999393"
+      },
+      "artifact": {
+        "id": 13077844668,
+        "name": "cpu-engine-x86_64-pc-windows-msvc-1",
+        "digest": "sha256:665f50a7a701b3762bf4187b805302740e74d2ef2c2b76702c06bb336ed8e06b",
+        "size_in_bytes": 561412
+      }
+    },
+    {
+      "target": "x86_64-unknown-linux-gnu",
+      "outcome": "pass",
+      "tests": {
+        "suites": 1,
+        "passed": 60,
+        "failed": 0,
+        "ignored": 4,
+        "filtered": 0
+      },
+      "sampling_tests": [
+        "frozen_scalar_answers_survive_hybrid_state_history_and_incremental_decoding",
+        "seeded_native_forwards_match_batched_lanes_and_release_private_scratch",
+        "expanded_image_tokens_replace_text_penalty_history_before_sampling",
+        "invalid_settings_and_under_reserved_sampling_fail_without_leaking_admission"
+      ],
+      "report": {
+        "path": "fixtures/qualification/qwen35-sampling-engine-x86_64-unknown-linux-gnu-v1.json",
+        "bytes": 94884,
+        "sha256": "b3b8f24942bdcf65955f287cd35750448eadab3bd470907e717c4fdd152a5e70"
+      },
+      "artifact": {
+        "id": 13077543870,
+        "name": "cpu-engine-x86_64-unknown-linux-gnu-1",
+        "digest": "sha256:327bb4dc8d5d2cdac996dd948700cdb354cf2c6ef5b9934305178bedfd2c89ce",
+        "size_in_bytes": 560006
+      }
+    }
+  ],
+  "review": "Official ZIP lengths/digests verified before reading. Complete source snapshots match the recorded Git revision; engine Rust sources also match the review worktree. All command/compiler/test/observer logs and every healthy observation checked. Each of the four new sampling/state regressions explicitly completed on every target, including 72 unchanged independent scalar decisions; ordinary engine test totals recomputed. Complete original legal payload verified and original report bytes preserved.",
+  "scope": "Guarded native workspace formatting, strict engine all-target Clippy and all ordinary release-profile engine library tests on three CPU platforms. New coverage includes frozen scalar/state sampling, tiny native forwards and batch parity, expanded image penalty history, cancellation cleanup and admission rejection.",
+  "gaps": [
+    "These engine-only records cannot qualify or package a full native release; full workspace/API/CLI checks remain separate.",
+    "Real-model benchmark/full-array, sustained resource/security and production qualification remain separate requirements.",
+    "No independently expected sampled model continuations, model-throughput gain or full numerical qualification is established by these library checks."
+  ]
+}

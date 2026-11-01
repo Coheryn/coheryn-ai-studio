@@ -74,3 +74,7 @@ jobs:
             .cache/cpu-soak-checks/text-benchmark-dependencies/**
             .cache/text-benchmark-checks.json
             .cache/text-benchmark/**
+            LICENSE
+            NOTICE
+            THIRD_PARTY_NOTICES.md
+            resources/licensing/**
