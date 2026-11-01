@@ -22,7 +22,8 @@ def sampling_result():
 def api_result():
     return {'schema_version': 1, 'outcome': 'pass',
             'sampling': {'concurrent_results': [sampling_result(), sampling_result()],
-                         'image_result': sampling_result(), 'image_stream_parity': True},
+                         'image_result': sampling_result(), 'image_stream_parity': True,
+                         'cached_result': {**sampling_result(), 'reused_prompt_tokens': 4}, 'fresh_result': sampling_result()},
             'model_manifest_sha256': '0' * 64, 'image_reference_sha256': '0' * 64,
             'test_executable_sha256': '1' * 64, 'external_executor_invoked': False,
             'final_memory': {'reserved': 0, 'session_buffer_capacity_bytes': 0}}
@@ -109,7 +110,8 @@ class BenchmarkChecks(unittest.TestCase):
                 path = Path(temporary) / 'large.json'; path.write_bytes(b' ' * ((2 << 20) + 1))
                 with self.assertRaises(ValueError): runner.validate_native(path, 'qwen35-text')
 
-    def execute(self, root, *, unhealthy=False, filtered=False, failed=False, changed=False, missing=False):
+    def execute(self, root, *, unhealthy=False, filtered=False, failed=False, changed=False, missing=False,
+                api_failed=False, api_filtered=False, api_missing=False):
         source = {'benchmark.rs': 'frozen'}
         report = root / 'report.json'
         (root / 'fixtures').mkdir()
@@ -120,9 +122,10 @@ class BenchmarkChecks(unittest.TestCase):
             if command[1] in ('--version', '-vV'):
                 log.write_text('compiler identity\n'); return 0
             if tuple(command[1:]) == runner.API_COMMAND:
-                log.write_text('test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out\n')
-                Path(environment['COHERYN_Q35_REPORT']).write_text(json.dumps(api_result()))
-                return 0
+                log.write_text(f'test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; {int(api_filtered)} filtered out\n')
+                if not api_missing:
+                    Path(environment['COHERYN_Q35_REPORT']).write_text(json.dumps(api_result()))
+                return 1 if api_failed else 0
             self.assertEqual(tuple(command[1:]), runner.COMMAND)
             log.write_text(f'test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; {int(filtered)} filtered out\n')
             if not missing:
@@ -166,6 +169,15 @@ class BenchmarkChecks(unittest.TestCase):
                 result, code, _, _ = self.execute(Path(temporary).resolve(), **{setting: True})
                 self.assertEqual((code, result['outcome']), (1, 'fail'))
                 self.assertIn('log_sha256', result['commands'][0])
+
+    def test_partial_api_execution_cannot_promote_passing_cli_results(self):
+        for setting in ('api_failed', 'api_filtered', 'api_missing'):
+            with self.subTest(setting=setting), tempfile.TemporaryDirectory() as temporary:
+                result, code, _, _ = self.execute(Path(temporary).resolve(), **{setting: True})
+                self.assertEqual((code, result['outcome']), (1, 'fail'))
+                self.assertEqual(len(result['commands']), 2)
+                self.assertFalse(result['commands'][-1]['validated'])
+                self.assertTrue(result['owned_cleanup_confirmed'])
 
 
 if __name__ == '__main__':

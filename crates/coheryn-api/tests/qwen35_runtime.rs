@@ -195,9 +195,24 @@ async fn native_hybrid_router_cache_batch_images_and_cleanup() {
     let fresh=call(&app,"POST","/api/v1/generate",json!({"model":"q35","messages":[cases[0]["messages"][0],{"role":"assistant","content":first["result"]["text"]},{"role":"user","content":followup}],"max_tokens":4,"threads":1,"profile":"reference","context":256}),200).await;
     assert_eq!(second["result"]["token_ids"], fresh["token_ids"]);
     assert_eq!(second["result"]["text"], fresh["text"]);
+    let mut sampled_settings = settings.clone();
+    sampled_settings
+        .as_object_mut()
+        .unwrap()
+        .extend(sampling.as_object().unwrap().clone());
+    let sampled_cached=call(&app,"POST",&format!("{route}/messages"),json!({"expected_revision":4,"idempotency_key":"sampled","content":"Continue.","settings":sampled_settings}),200).await;
+    assert!(sampled_cached["result"]["reused_prompt_tokens"].as_u64().unwrap() > 0);
+    let mut sampled_fresh_body = json!({"model":"q35","messages":[cases[0]["messages"][0],{"role":"assistant","content":first["result"]["text"]},{"role":"user","content":followup},{"role":"assistant","content":second["result"]["text"]},{"role":"user","content":"Continue."}],"max_tokens":4,"threads":1,"profile":"reference","context":256});
+    sampled_fresh_body
+        .as_object_mut()
+        .unwrap()
+        .extend(sampling.as_object().unwrap().clone());
+    let sampled_fresh = call(&app, "POST", "/api/v1/generate", sampled_fresh_body, 200).await;
+    assert_eq!(sampled_cached["result"]["token_ids"], sampled_fresh["token_ids"]);
+    assert_eq!(sampled_cached["result"]["text"], sampled_fresh["text"]);
     let exported = call(&app, "GET", &format!("{route}/export"), Value::Null, 200).await;
     assert_eq!(exported["session"]["cache_reserved_bytes"], 0);
-    call(&app, "DELETE", &route, json!({"expected_revision":4}), 200).await;
+    call(&app, "DELETE", &route, json!({"expected_revision":6}), 200).await;
     idle(&service).await;
     assert_eq!(service.budget.stats().session_buffer_capacity_bytes, 0);
     let image_reference_path = root.join("fixtures/qwen35/vision/reference-v1.json");
@@ -304,7 +319,7 @@ async fn native_hybrid_router_cache_batch_images_and_cleanup() {
     service.remove("q35").unwrap();
     assert_eq!(service.budget.stats().reserved, 0);
     service.shutdown.cancel();
-    let report = json!({"schema_version":1,"outcome":"pass","sampling":{"concurrent_results":[sampled_a,sampled_b],"image_result":sampled_image_result,"image_stream_parity":true},"scope":"Native pinned checkpoint through authenticated in-process HTTP router; no sockets/network. Manifest import, hybrid cache parity, two-lane frozen-output batching, PNG API/SSE parity, resource/context/malformed/URL rejection, disconnect cleanup and healthy text survival. TCP/CLI client transport and broader image semantics remain separately gated.","model_manifest_sha256":digest(&manifest_path),"image_reference_sha256":digest(&image_reference_path),"test_executable_sha256":digest(&std::env::current_exe().unwrap()),"managed_record":record,"concurrent_results":[a,b],"cached_result":second,"fresh_result":fresh,"image_result":image_result,"stream_frames":frames.len(),"status_before_unload":status,"final_memory":service.budget.stats(),"cache_condition":"uncontrolled","external_executor_invoked":false});
+    let report = json!({"schema_version":1,"outcome":"pass","sampling":{"concurrent_results":[sampled_a,sampled_b],"image_result":sampled_image_result,"image_stream_parity":true,"cached_result":sampled_cached["result"],"fresh_result":sampled_fresh},"scope":"Native pinned checkpoint through authenticated in-process HTTP router; no sockets/network. Manifest import, hybrid cache parity, two-lane frozen-output batching, PNG API/SSE parity, resource/context/malformed/URL rejection, disconnect cleanup and healthy text survival. TCP/CLI client transport and broader image semantics remain separately gated.","model_manifest_sha256":digest(&manifest_path),"image_reference_sha256":digest(&image_reference_path),"test_executable_sha256":digest(&std::env::current_exe().unwrap()),"managed_record":record,"concurrent_results":[a,b],"cached_result":second,"fresh_result":fresh,"image_result":image_result,"stream_frames":frames.len(),"status_before_unload":status,"final_memory":service.budget.stats(),"cache_condition":"uncontrolled","external_executor_invoked":false});
     if let Some(output) = output {
         std::fs::write(output, serde_json::to_vec_pretty(&report).unwrap()).unwrap();
     }

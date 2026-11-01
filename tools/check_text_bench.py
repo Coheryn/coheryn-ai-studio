@@ -44,7 +44,7 @@ def validate_sampling_result(value):
             or any(type(i) is not int or not 0 <= i < 1_000_000 for i in ids)
             or type(value.get('completion_tokens')) is not int or value['completion_tokens'] != len(ids)
             or not isinstance(value.get('text'), str)
-            or metadata.get('threads') != 1 or metadata.get('backend') != 'native-cpu'
+            or type(metadata.get('threads')) is not int or metadata['threads'] != 1 or metadata.get('backend') != 'native-cpu'
             or metadata.get('cache_dtype') != 'f32'):
         raise ValueError('incomplete native sampling output')
 
@@ -116,10 +116,14 @@ def validate_api(path):
             or not isinstance(sampling.get('concurrent_results'), list) or len(sampling['concurrent_results']) != 2):
         raise ValueError('incomplete sampling API coverage')
     a, b = sampling['concurrent_results']
-    for result in (a, b, sampling.get('image_result')):
+    for result in (a, b, sampling.get('image_result'), sampling.get('cached_result'), sampling.get('fresh_result')):
         validate_sampling_result(result)
     if (a['token_ids'], a['text']) != (b['token_ids'], b['text']):
         raise ValueError('concurrent seeded requests disagree')
+    cached, fresh = sampling['cached_result'], sampling['fresh_result']
+    if ((cached['token_ids'], cached['text']) != (fresh['token_ids'], fresh['text'])
+            or type(cached.get('reused_prompt_tokens')) is not int or cached['reused_prompt_tokens'] <= 0):
+        raise ValueError('seeded prefix reuse did not match fresh full-history inference')
     if (value.get('model_manifest_sha256') != sha(ROOT / 'fixtures/qwen35/model.json')
             or value.get('image_reference_sha256') != sha(ROOT / 'fixtures/qwen35/vision/reference-v1.json')
             or re.fullmatch('[0-9a-f]{64}', str(value.get('test_executable_sha256'))) is None
