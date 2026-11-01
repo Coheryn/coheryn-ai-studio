@@ -196,6 +196,15 @@ pub struct Matrix {
     device: Arc<Device>,
     shape: MatrixShape,
 }
+// SAFETY: upload finishes all CPU writes before publishing a Matrix. Its buffer
+// is private and immutable thereafter; every owned shader binds it read-only.
+// Matrix methods expose neither mutable bytes nor raw handles. Retained Metal
+// resources may be released on another thread, the device/queue are Send+Sync,
+// and the admission lease itself requires Send+Sync. Concurrent dispatches
+// therefore share only immutable weights, never activation/output storage.
+unsafe impl Send for Matrix {}
+// SAFETY: the same immutable-resource invariant permits concurrent shared reads.
+unsafe impl Sync for Matrix {}
 impl Matrix {
     pub fn shape(&self) -> MatrixShape {
         self.shape
@@ -212,6 +221,10 @@ pub struct Workspace {
     device: Arc<Device>,
     limits: WorkspaceLimits,
 }
+// SAFETY: private buffers can move between workers only while exclusively
+// owned. multiply requires &mut self and retires all commands before returning
+// or unwinding; an idle Workspace has no GPU access in flight. It is not Sync.
+unsafe impl Send for Workspace {}
 impl Workspace {
     pub fn allocated_bytes(&self) -> u64 {
         self.input.raw.allocatedSize() as u64 + self.output.raw.allocatedSize() as u64

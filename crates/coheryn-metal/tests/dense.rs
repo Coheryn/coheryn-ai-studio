@@ -96,6 +96,36 @@ fn independent_dense_references_admission_cancellation_and_cleanup() {
                 );
             }
         }
+        if case["id"] == "f32-cancellation" {
+            let mut left = device.workspace(shape, batch).unwrap();
+            let mut right = device.workspace(shape, batch).unwrap();
+            let scaled: Vec<_> = input.iter().map(|value| value * 0.5).collect();
+            let barrier = std::sync::Barrier::new(2);
+            let (left_result, right_result) = std::thread::scope(|scope| {
+                let matrix = &matrix;
+                let barrier = &barrier;
+                let input = &input;
+                let left = scope.spawn(move || {
+                    barrier.wait();
+                    let mut result = vec![0.; shape.rows * batch];
+                    left.multiply(matrix, input, &mut result, || false).unwrap();
+                    result
+                });
+                let right = scope.spawn(move || {
+                    barrier.wait();
+                    let mut result = vec![0.; shape.rows * batch];
+                    right.multiply(matrix, &scaled, &mut result, || false).unwrap();
+                    result
+                });
+                (left.join().unwrap(), right.join().unwrap())
+            });
+            assert_eq!(left_result, vec![1.]);
+            assert_eq!(right_result, vec![0.5]);
+            assert_eq!(
+                used.load(Ordering::SeqCst),
+                (shape.weight_bytes().unwrap() + shape.workspace_bytes(batch).unwrap()) as u64
+            );
+        }
         assert_eq!(
             work.multiply(&matrix, &[], &mut actual, || false)
                 .unwrap_err()

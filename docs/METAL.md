@@ -12,6 +12,8 @@ GPU buffers hold reservations from the same engine `Budget` as CPU allocations. 
 
 Only the private platform module allows documented unsafe operations; the engine continues to forbid unsafe code. Buffer pointers never escape. Kernel dimensions, index ranges, device identity and buffer sizes are checked before dispatch. Submitted work retires before output access or resource release, including cancellation and Rust unwinding. Cancellation checks occur between bounded dispatches; a stuck driver does not have a guaranteed cooperative cancellation deadline. Model packages cannot supply shader code.
 
+Immutable matrices can be shared across workers; an idle workspace can move to its owning worker. The private boundary documents these thread-safety invariants explicitly. Workspaces require exclusive access and do not expose shared mutable activation storage. A real-device test submits concurrent reads of one matrix with distinct inputs, moves private workspaces into both workers and checks numerical isolation and reservation reclamation after they join.
+
 The standalone native checks require an admitted Apple Silicon Mac:
 
 ```bash
